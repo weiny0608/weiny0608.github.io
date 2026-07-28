@@ -51,6 +51,89 @@ const Card = ({ children, className = "" }) => (
     </div>
 );
 
+const buildYahooChartUrl = (ticker, query) => {
+    const cleanTicker = encodeURIComponent(ticker.trim().toUpperCase());
+    return `https://query1.finance.yahoo.com/v8/finance/chart/${cleanTicker}?${query}&corsDomain=finance.yahoo.com`;
+};
+
+const fetchJsonWithTimeout = async (url, timeoutMs = 15000) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const text = await response.text();
+        const parsed = JSON.parse(text);
+        if (typeof parsed?.contents === 'string') return JSON.parse(parsed.contents);
+        return parsed;
+    } finally {
+        window.clearTimeout(timeout);
+    }
+};
+
+const fetchYahooJsonp = (url, timeoutMs = 15000) => new Promise((resolve, reject) => {
+    const callbackName = `__fcnYahoo_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const separator = url.includes('?') ? '&' : '?';
+    const script = document.createElement('script');
+    let settled = false;
+
+    const cleanup = () => {
+        delete window[callbackName];
+        script.remove();
+    };
+
+    const timeout = window.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        reject(new Error('Yahoo JSONP timeout'));
+    }, timeoutMs);
+
+    window[callbackName] = (data) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        cleanup();
+        resolve(data);
+    };
+
+    script.onerror = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        cleanup();
+        reject(new Error('Yahoo JSONP blocked'));
+    };
+
+    script.src = `${url}${separator}callback=${callbackName}`;
+    document.head.appendChild(script);
+});
+
+const fetchYahooChart = async (ticker, query) => {
+    const yahooUrl = buildYahooChartUrl(ticker, query);
+    const encodedUrl = encodeURIComponent(yahooUrl);
+    const attempts = [
+        () => fetchYahooJsonp(yahooUrl),
+        () => fetchJsonWithTimeout(`https://api.allorigins.win/raw?url=${encodedUrl}`),
+        () => fetchJsonWithTimeout(`https://api.allorigins.win/get?url=${encodedUrl}`),
+        () => fetchJsonWithTimeout(`https://corsproxy.io/?url=${encodedUrl}`),
+        () => fetchJsonWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodedUrl}`),
+    ];
+
+    let lastError;
+    for (const attempt of attempts) {
+        try {
+            const data = await attempt();
+            if (data?.chart?.result?.[0]) return data;
+            if (data?.chart?.error) throw new Error(data.chart.error.description || data.chart.error.code);
+            throw new Error('Unexpected Yahoo response');
+        } catch (err) {
+            lastError = err;
+        }
+    }
+    throw lastError || new Error('Unable to fetch Yahoo data');
+};
+
 function FCNDashboard() {
     const [activeTab, setActiveTab] = useState('tutorial');
     
@@ -92,14 +175,7 @@ function FCNDashboard() {
         setIsLoading(true);
         setError(null);
         try {
-            // Yahoo Finance Chart API 
-            const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1d`;
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-            
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error('網路請求失敗');
-            
-            const data = await response.json();
+            const data = await fetchYahooChart(ticker, 'interval=1d&range=1d');
             
             if (data.chart && data.chart.error) {
                 throw new Error('找不到該股票代碼');
@@ -142,11 +218,7 @@ function FCNDashboard() {
             
             // 並發請求所有標的近一年的歷史資料 (確保涵蓋startDate)
             const promises = validSymbols.map(async (sym) => {
-                const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`;
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error(`無法獲取 ${sym}`);
-                const data = await response.json();
+                const data = await fetchYahooChart(sym, 'interval=1d&range=1y');
                 if (data.chart.error) throw new Error(`找不到 ${sym}`);
                 return { sym, data: data.chart.result[0] };
             });
@@ -843,6 +915,7 @@ function FCNDashboard() {
         </div>
     );
 }
+
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
