@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FCN Dashboard Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">{"imports":{"react":"https://esm.sh/react@19.0.0","react-dom/client":"https://esm.sh/react-dom@19.0.0/client","recharts":"https://esm.sh/recharts@3.1.0?deps=react@19.0.0,react-dom@19.0.0","lucide-react":"https://esm.sh/lucide-react@0.468.0?deps=react@19.0.0"}}</script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="m-0">
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import { 
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, ReferenceLine, AreaChart, Area, BarChart, Bar, Cell
+} from 'recharts';
+import { Info, TrendingUp, TrendingDown, Minus, RefreshCw, AlertCircle, CheckCircle, Search, HelpCircle, DollarSign, Percent, Calendar, Layers, History } from 'lucide-react';
+
+const scenarioData = {
+    knockOut: [
+        { day: 0, price: 100 },
+        { day: 10, price: 102 },
+        { day: 20, price: 105 },
+        { day: 30, price: 108 }, // KO triggered
+    ],
+    rangeBound: [
+        { day: 0, price: 100 },
+        { day: 30, price: 95 },
+        { day: 60, price: 103 },
+        { day: 90, price: 90 },
+        { day: 120, price: 85 },
+        { day: 150, price: 92 },
+        { day: 180, price: 98 }, // Maturity
+    ],
+    knockIn: [
+        { day: 0, price: 100 },
+        { day: 30, price: 85 },
+        { day: 60, price: 75 },
+        { day: 90, price: 68 }, // KI triggered
+        { day: 120, price: 65 },
+        { day: 150, price: 70 },
+        { day: 180, price: 60 }, // Maturity - takes stock
+    ]
+};
+
+const Card = ({ children, className = "" }) => (
+    <div className={`bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden ${className}`}>
+        {children}
+    </div>
+);
+
+function FCNDashboard() {
+    const [activeTab, setActiveTab] = useState('tutorial');
+    
+    // Stock Tracker State
+    const [symbol, setSymbol] = useState('NVDA');
+    const [stockPrice, setStockPrice] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    
+    // FCN Contract State
+    const [strikePrice, setStrikePrice] = useState(100);
+    const [koLevel, setKoLevel] = useState(105);
+    const [kiLevel, setKiLevel] = useState(70);
+    
+    // FCN Basket State (Worst-Of)
+    const [basketSymbols, setBasketSymbols] = useState(['NVDA', 'AAPL', 'MSFT', '2330.TW']);
+    const [basketData, setBasketData] = useState([]);
+    const [basketIsLoading, setBasketIsLoading] = useState(false);
+    
+    const [startDate, setStartDate] = useState(() => {
+        const d = new Date();
+        d.setMonth(d.getMonth() - 3);
+        return d.toISOString().split('T')[0];
+    });
+    const [memoryKO, setMemoryKO] = useState(false);
+    const [historicalData, setHistoricalData] = useState([]);
+    const [historicalStats, setHistoricalStats] = useState({});
+
+    // Global parameters for Basket (percentages)
+    const [basketStrikePct, setBasketStrikePct] = useState(100);
+    const [basketKoPct, setBasketKoPct] = useState(105);
+    const [basketKiPct, setBasketKiPct] = useState(70);
+
+    // Scenario Simulator State
+    const [activeScenario, setActiveScenario] = useState('rangeBound');
+
+    // 透過 AllOrigins Proxy 串接 Yahoo Finance API 獲取真實即時股價
+    const fetchStockPrice = async (ticker) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            // Yahoo Finance Chart API 
+            const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1d`;
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+            
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('網路請求失敗');
+            
+            const data = await response.json();
+            
+            if (data.chart && data.chart.error) {
+                throw new Error('找不到該股票代碼');
+            }
+            
+            const currentPrice = data.chart.result[0].meta.regularMarketPrice;
+            
+            if (!currentPrice) throw new Error('無法獲取價格');
+
+            setStockPrice(parseFloat(currentPrice.toFixed(2)));
+            
+            // 自動根據真實股價設定發行價與保護/出場價 (預設發行價為現價，KO 105%，KI 70%)
+            if (activeTab === 'tracker') {
+                setStrikePrice(parseFloat(currentPrice.toFixed(2)));
+                setKoLevel(parseFloat((currentPrice * 1.05).toFixed(2)));
+                setKiLevel(parseFloat((currentPrice * 0.70).toFixed(2)));
+            }
+
+        } catch (err) {
+            console.error(err);
+            setError("無法獲取真實股價，請確認代碼是否正確 (台股請加 .TW，如 2330.TW)。");
+            setStockPrice(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // 抓取一籃子股票的真實歷史與即時股價
+    const fetchBasketPrices = async () => {
+        setBasketIsLoading(true);
+        setError(null);
+        try {
+            const validSymbols = basketSymbols.map(s => s?.trim().toUpperCase()).filter(Boolean);
+            if (validSymbols.length === 0) {
+                setBasketIsLoading(false);
+                return;
+            }
+
+            const startTimestamp = new Date(startDate).getTime() / 1000;
+            
+            // 並發請求所有標的近一年的歷史資料 (確保涵蓋startDate)
+            const promises = validSymbols.map(async (sym) => {
+                const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`;
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`無法獲取 ${sym}`);
+                const data = await response.json();
+                if (data.chart.error) throw new Error(`找不到 ${sym}`);
+                return { sym, data: data.chart.result[0] };
+            });
+
+            const fetchedData = await Promise.all(promises);
+
+            let history = [];
+            let stats = {};
+            let currentBasketData = [];
+
+            // 為了畫圖，找出第一個標的的時間軸作為基準 (假設大家交易日差不多)
+            const baseTimestamps = fetchedData[0].data.timestamp || [];
+            
+            // 過濾出 startDate 之後的日期索引
+            const validIndices = baseTimestamps
+                .map((ts, idx) => ({ ts, idx }))
+                .filter(item => item.ts >= startTimestamp);
+
+            if (validIndices.length === 0) throw new Error('選擇的日期無歷史資料，請選擇較近的日期。');
+
+            const initialPriceIndex = validIndices[0].idx;
+
+            // 處理歷史軌跡 (折線圖與記憶KO)
+            validIndices.forEach(({ ts, idx }) => {
+                let dateObj = new Date(ts * 1000);
+                let point = { 
+                    date: `${dateObj.getMonth()+1}/${dateObj.getDate()}` 
+                };
+
+                fetchedData.forEach(({ sym, data }) => {
+                    // 取得當天收盤價與發行日初始價格
+                    const closePrices = data.indicators.quote[0].close;
+                    let closePrice = closePrices[idx];
+                    
+                    // 防錯處理：如果當天沒資料，往前找一天
+                    if (closePrice === null || closePrice === undefined) {
+                        closePrice = closePrices[idx - 1] || closePrices[idx - 2]; 
+                    }
+                    
+                    const initialPrice = closePrices[initialPriceIndex];
+                    
+                    if (closePrice && initialPrice) {
+                        // 計算相對績效 (%) ，以 100% 為基準
+                        const performancePct = (closePrice / initialPrice) * 100;
+                        point[sym] = parseFloat(performancePct.toFixed(2));
+                        
+                        if (!stats[sym]) stats[sym] = { hitKO: false, hitKI: false };
+                        
+                        // 紀錄歷史是否曾觸發
+                        if (performancePct >= basketKoPct) stats[sym].hitKO = true;
+                        if (performancePct <= basketKiPct) stats[sym].hitKI = true;
+                    }
+                });
+                history.push(point);
+            });
+
+            // 處理當前最新表現 (柱狀圖)
+            fetchedData.forEach(({ sym, data }) => {
+                const currentPrice = data.meta.regularMarketPrice;
+                const initialPrice = data.indicators.quote[0].close[initialPriceIndex];
+                
+                if (currentPrice && initialPrice) {
+                    // 計算漲跌幅，例如漲 5% -> performance = 5 (相對於 100% Strike)
+                    const performanceValue = ((currentPrice - initialPrice) / initialPrice) * 100;
+                    currentBasketData.push({
+                        symbol: sym,
+                        initialPrice: initialPrice,
+                        currentPrice: currentPrice,
+                        performance: parseFloat(performanceValue.toFixed(2))
+                    });
+                }
+            });
+
+            setHistoricalData(history);
+            setHistoricalStats(stats);
+            setBasketData(currentBasketData);
+
+        } catch (err) {
+            console.error(err);
+            setError("無法獲取真實股價資訊，請確認代碼是否正確 (台股加.TW)，或稍後再試。");
+            setHistoricalData([]);
+            setBasketData([]);
+        } finally {
+            setBasketIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (activeTab === 'tracker') {
+            if (symbol) fetchStockPrice(symbol);
+        } else if (activeTab === 'basket') {
+            // 自動觸發更新籃子資料若裡面有代碼
+            // if (basketSymbols.some(s => s)) fetchBasketPrices();
+        }
+    }, [activeTab]);
+
+    const getFCNStatus = () => {
+        if (!stockPrice) return null;
+        if (stockPrice >= koLevel) {
+            return { type: 'knockOut', label: '觸發出場 (Knock-Out)', color: 'green', icon: <CheckCircle className="w-5 h-5" />, desc: '提早拿回本金與利息！' };
+        } else if (stockPrice <= kiLevel) {
+            return { type: 'knockIn', label: '觸發承接 (Knock-In)', color: 'red', icon: <AlertCircle className="w-5 h-5" />, desc: '跌破保護價，可能需承接股票。' };
+        } else {
+            return { type: 'safe', label: '安全區間 (Safe)', color: 'blue', icon: <Info className="w-5 h-5" />, desc: '持續領息，等待到期。' };
+        }
+    };
+
+    const status = getFCNStatus();
+
+    const getBasketStatus = () => {
+        if (basketData.length === 0) return null;
+        
+        let worstAsset = basketData[0];
+
+        basketData.forEach(asset => {
+            if (asset.performance < worstAsset.performance) {
+                worstAsset = asset;
+            }
+        });
+
+        const allAboveKO = basketData.every(asset => asset.performance >= (basketKoPct - 100));
+        const anyBelowKI = basketData.some(asset => asset.performance <= (basketKiPct - 100));
+
+        if (allAboveKO) {
+            return { 
+                type: 'knockOut', 
+                label: '觸發出場 (Knock-Out)', 
+                color: 'green', 
+                icon: <CheckCircle className="w-6 h-6" />, 
+                desc: '所有標的皆高於 KO 價，合約提前結束，拿回本金與利息！',
+                worstAsset: worstAsset
+            };
+        } else if (anyBelowKI) {
+            const breachedAsset = basketData.find(asset => asset.performance <= (basketKiPct - 100));
+            return { 
+                type: 'knockIn', 
+                label: '觸發承接風險 (Knock-In)', 
+                color: 'red', 
+                icon: <AlertCircle className="w-6 h-6" />, 
+                desc: `${breachedAsset.symbol} 跌破保護價，若到期未漲回發行價，可能需承接最差標的股票。`,
+                worstAsset: worstAsset
+            };
+        } else {
+            return { 
+                type: 'safe', 
+                label: '安全區間 (Safe)', 
+                color: 'blue', 
+                icon: <Info className="w-6 h-6" />, 
+                desc: '目前最差標的未跌破 KI，且並非所有標的皆達 KO，持續領息中。',
+                worstAsset: worstAsset
+            };
+        }
+    };
+
+    const handleBasketSymbolChange = (index, value) => {
+        const newSymbols = [...basketSymbols];
+        newSymbols[index] = value;
+        setBasketSymbols(newSymbols);
+    };
+
+    const renderTutorial = () => (
+        <div className="space-y-6">
+            <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-slate-800">1分鐘搞懂 FCN (固定收益憑證)</h2>
+                <p className="text-slate-500 mt-2">高利息背後的邏輯：用時間與保護價換取報酬</p>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-4">
+                <Card className="p-5 border-l-4 border-l-blue-500">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><DollarSign size={20} /></div>
+                        <h3 className="font-bold text-slate-700">Strike (發行價)</h3>
+                    </div>
+                    <p className="text-sm text-slate-600">合約開始時的基準價，通常定為 100%。若最終需承接股票，通常以此價格計算。</p>
+                </Card>
+                <Card className="p-5 border-l-4 border-l-green-500">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-green-100 rounded-lg text-green-600"><TrendingUp size={20} /></div>
+                        <h3 className="font-bold text-slate-700">KO (出場價)</h3>
+                    </div>
+                    <p className="text-sm text-slate-600">Knock-Out。通常是 &gt;100%。若股價碰到此價，合約提前結束，你拿回本金+利息。</p>
+                </Card>
+                <Card className="p-5 border-l-4 border-l-red-500">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-red-100 rounded-lg text-red-600"><TrendingDown size={20} /></div>
+                        <h3 className="font-bold text-slate-700">KI (保護價)</h3>
+                    </div>
+                    <p className="text-sm text-slate-600">Knock-In。通常是 70%~85%。跌破此價，到期可能被迫買入股票，承擔帳面虧損。</p>
+                </Card>
+                <Card className="p-5 border-l-4 border-l-purple-500">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-purple-100 rounded-lg text-purple-600"><Percent size={20} /></div>
+                        <h3 className="font-bold text-slate-700">Coupon (票息)</h3>
+                    </div>
+                    <p className="text-sm text-slate-600">只要合約存續，無論股價漲跌（即使破KI），都能定期領到的高額利息。</p>
+                </Card>
+            </div>
+
+            <Card className="mt-8">
+                <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-800">情境模擬器</h3>
+                        <p className="text-sm text-slate-500">點擊下方按鈕觀看不同情境</p>
+                    </div>
+                    <div className="flex bg-slate-100 p-1 rounded-lg">
+                        <button onClick={() => setActiveScenario('knockOut')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'knockOut' ? 'bg-white shadow text-green-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境1: 提早出場 (賺)</button>
+                        <button onClick={() => setActiveScenario('rangeBound')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'rangeBound' ? 'bg-white shadow text-blue-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境2: 區間震盪 (賺)</button>
+                        <button onClick={() => setActiveScenario('knockIn')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'knockIn' ? 'bg-white shadow text-red-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境3: 跌破保護 (賠)</button>
+                    </div>
+                </div>
+                <div className="p-5 h-[400px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={scenarioData[activeScenario]} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                            <XAxis dataKey="day" label={{ value: '天數', position: 'insideBottomRight', offset: -10 }} stroke="#94a3b8" />
+                            <YAxis domain={[50, 120]} label={{ value: '股價 %', angle: -90, position: 'insideLeft' }} stroke="#94a3b8" />
+                            <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                            
+                            <ReferenceLine y={105} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: 'KO 出場價 (105%)', fill: '#22c55e' }} />
+                            <ReferenceLine y={100} stroke="#64748b" label={{ position: 'top', value: '發行價 (100%)', fill: '#64748b' }} />
+                            <ReferenceLine y={70} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'bottom', value: 'KI 保護價 (70%)', fill: '#ef4444' }} />
+                            
+                            <Line type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} name="標的股價" animationDuration={1000} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="bg-slate-50 p-5 border-t border-slate-100">
+                    <h4 className="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                        <Info size={16} /> 
+                        {activeScenario === 'knockOut' && "提早出場 (Knock-Out)"}
+                        {activeScenario === 'rangeBound' && "區間震盪 (Range Bound)"}
+                        {activeScenario === 'knockIn' && "跌破保護價 (Knock-In)"}
+                    </h4>
+                    <p className="text-slate-600 text-sm">
+                        {activeScenario === 'knockOut' && "股價表現強勢，觸碰到 KO 價。合約提早結束，投資人拿回 100% 本金加上期間累積的票息。這是最常見且最理想的狀況。"}
+                        {activeScenario === 'rangeBound' && "股價在 KO 與 KI 之間震盪。只要到期前沒有觸發 KO 或 KI，合約將存續至到期日，投資人可領滿所有票息，並拿回 100% 本金。"}
+                        {activeScenario === 'knockIn' && "市場大跌，股價跌破 KI 保護價（如70%）。雖然票息照領，但到期時如果股價沒有漲回發行價，投資人將會被『強迫以發行價買入股票』，產生帳面虧損。適合看好該股票，願意逢低承接的投資人。"}
+                    </p>
+                </div>
+            </Card>
+        </div>
+    );
+
+    const renderTracker = () => (
+        <div className="space-y-6">
+            <Card className="p-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1 space-y-4">
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-800">FCN 部位追蹤 (真實報價)</h2>
+                            <p className="text-sm text-slate-500">輸入標的代碼與您的合約條件，即時查看是否面臨風險。</p>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                <input 
+                                    type="text" 
+                                    value={symbol}
+                                    onChange={(e) => setSymbol(e.target.value.toUpperCase())}
+                                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all uppercase"
+                                    placeholder="代碼 (美股: NVDA, 台股: 2330.TW)"
+                                />
+                            </div>
+                            <button 
+                                onClick={() => fetchStockPrice(symbol)}
+                                disabled={isLoading}
+                                className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center min-w-[100px]"
+                            >
+                                {isLoading ? <RefreshCw className="animate-spin" size={18} /> : '獲取現價'}
+                            </button>
+                        </div>
+
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label className="block text-xs font-medium text-slate-500 mb-1">KO 出場價</label>
+                                <div className="relative">
+                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                    <input type="number" value={koLevel} onChange={(e) => setKoLevel(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-slate-500 mb-1">發行價 (Strike)</label>
+                                <div className="relative">
+                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                    <input type="number" value={strikePrice} onChange={(e) => setStrikePrice(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-slate-500 mb-1">KI 保護價</label>
+                                <div className="relative">
+                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                    <input type="number" value={kiLevel} onChange={(e) => setKiLevel(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-1">
+                        <div className="bg-slate-50 rounded-xl p-5 h-full border border-slate-100 flex flex-col justify-center relative overflow-hidden">
+                            <div className="absolute -right-10 -top-10 w-32 h-32 bg-slate-200 rounded-full opacity-20 blur-2xl"></div>
+                            
+                            <div className="relative z-10 text-center">
+                                <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-1">{symbol} 當前報價</h3>
+                                <div className="text-4xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">
+                                    <DollarSign size={32} className="text-slate-400" />
+                                    {stockPrice ? stockPrice.toFixed(2) : '--.--'}
+                                </div>
+
+                                {status && (
+                                    <div className={`inline-flex flex-col items-center p-3 px-6 rounded-xl border ${
+                                        status.type === 'safe' ? 'bg-blue-50 border-blue-100' :
+                                        status.type === 'knockOut' ? 'bg-green-50 border-green-100' :
+                                        'bg-red-50 border-red-100'
+                                    }`}>
+                                        <div className={`flex items-center gap-2 font-bold ${
+                                            status.type === 'safe' ? 'text-blue-700' :
+                                            status.type === 'knockOut' ? 'text-green-700' :
+                                            'text-red-700'
+                                        }`}>
+                                            {status.icon}
+                                            <span>{status.label}</span>
+                                        </div>
+                                        <p className={`text-xs mt-1 ${
+                                            status.type === 'safe' ? 'text-blue-600' :
+                                            status.type === 'knockOut' ? 'text-green-600' :
+                                            'text-red-600'
+                                        }`}>{status.desc}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+
+            {stockPrice && (
+                <Card className="p-6">
+                    <h3 className="text-sm font-bold text-slate-700 mb-6 flex items-center gap-2">
+                        水位圖 <Info size={14} className="text-slate-400"/>
+                    </h3>
+                    
+                    <div className="relative pt-6 pb-8">
+                        <div className="h-4 bg-slate-100 rounded-full w-full relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 bg-red-100 w-[20%] border-r border-white"></div>
+                            <div className="absolute left-[20%] top-0 bottom-0 bg-blue-50 w-[60%] border-r border-white"></div>
+                            <div className="absolute left-[80%] right-0 top-0 bottom-0 bg-green-100"></div>
+                        </div>
+
+                        <div className="absolute left-[20%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
+                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-red-500 whitespace-nowrap">KI {kiLevel}</span>
+                        </div>
+                        <div className="absolute left-[50%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
+                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-slate-500 whitespace-nowrap">Strike {strikePrice}</span>
+                        </div>
+                        <div className="absolute left-[80%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
+                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-green-500 whitespace-nowrap">KO {koLevel}</span>
+                        </div>
+
+                        {(() => {
+                            let percentage = 50; 
+                            if (stockPrice <= kiLevel) {
+                                percentage = (stockPrice / kiLevel) * 20;
+                            } else if (stockPrice >= koLevel) {
+                                percentage = 80 + Math.min(((stockPrice - koLevel) / koLevel) * 100, 20);
+                            } else {
+                                const range = koLevel - kiLevel;
+                                const current = stockPrice - kiLevel;
+                                percentage = 20 + (current / range) * 60;
+                            }
+                            percentage = Math.max(2, Math.min(98, percentage));
+
+                            return (
+                                <div 
+                                    className="absolute top-4 -translate-y-1/2 flex flex-col items-center transition-all duration-1000 z-20"
+                                    style={{ left: `${percentage}%` }}
+                                >
+                                    <div className={`w-6 h-6 rounded-full border-4 border-white shadow-md flex items-center justify-center ${
+                                        status?.type === 'safe' ? 'bg-blue-500' :
+                                        status?.type === 'knockOut' ? 'bg-green-500' : 'bg-red-500'
+                                    }`}>
+                                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    </div>
+                                    <div className={`mt-2 px-2 py-1 bg-slate-800 text-white text-xs font-bold rounded shadow ${
+                                        percentage > 85 ? '-translate-x-full' : (percentage < 15 ? 'translate-x-full' : '-translate-x-1/2')
+                                    }`}>
+                                        ${stockPrice.toFixed(2)}
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </div>
+                </Card>
+            )}
+        </div>
+    );
+
+    const renderBasketTracker = () => {
+        const basketStatus = getBasketStatus();
+
+        return (
+            <div className="space-y-6">
+                <Card className="p-6">
+                    <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex-1 space-y-6">
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-800">一籃子 (Worst-Of) 歷史與即時追蹤</h2>
+                                <p className="text-sm text-slate-500">串接真實數據：輸入標的、發行日，分析是否觸發 KI 或全體觸發 KO。</p>
+                            </div>
+                            
+                            <div className="flex flex-col sm:flex-row gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <div className="flex-1">
+                                    <label className="block text-sm font-bold text-slate-700 mb-1 flex items-center gap-1"><Calendar size={16}/> 發行日 (Strike Date)</label>
+                                    <input 
+                                        type="date" 
+                                        value={startDate} 
+                                        onChange={e => setStartDate(e.target.value)} 
+                                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                                    />
+                                </div>
+                                <div className="flex-1 flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700">記憶 KO 功能</label>
+                                        <span className="text-xs text-slate-500">歷史是否曾達 KO</span>
+                                    </div>
+                                    <button 
+                                        onClick={() => setMemoryKO(!memoryKO)} 
+                                        className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${memoryKO ? 'bg-purple-600' : 'bg-slate-300'}`}
+                                    >
+                                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm ${memoryKO ? 'left-7' : 'left-1'}`}></div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="block text-sm font-bold text-slate-700">籃子標的 (台股請加 .TW，如 2330.TW)</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[0, 1, 2, 3].map(index => (
+                                        <div key={index} className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                            <input 
+                                                type="text" 
+                                                value={basketSymbols[index] || ''}
+                                                onChange={(e) => handleBasketSymbolChange(index, e.target.value.toUpperCase())}
+                                                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all uppercase text-sm font-medium"
+                                                placeholder={`標的 ${index + 1}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+                                <div className="flex justify-end pt-2">
+                                     <button 
+                                        onClick={fetchBasketPrices}
+                                        disabled={basketIsLoading}
+                                        className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors flex items-center justify-center min-w-[120px] shadow-sm"
+                                    >
+                                        {basketIsLoading ? <RefreshCw className="animate-spin mr-2" size={18} /> : null}
+                                        {basketIsLoading ? '計算中' : '獲取真實報價分析'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">KO 條件 (全部 &gt;= %)</label>
+                                    <div className="relative">
+                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                        <input type="number" value={basketKoPct} onChange={(e) => setBasketKoPct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Strike 基準 (%)</label>
+                                    <div className="relative">
+                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                        <input type="number" value={basketStrikePct} onChange={(e) => setBasketStrikePct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-slate-100 border border-slate-200 rounded-md text-slate-500 cursor-not-allowed" readOnly />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">KI 條件 (任一 &lt;= %)</label>
+                                    <div className="relative">
+                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                        <input type="number" value={basketKiPct} onChange={(e) => setBasketKiPct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-1">
+                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 h-full border border-slate-700 flex flex-col relative overflow-hidden text-white shadow-xl">
+                                <div className="absolute -right-20 -top-20 w-64 h-64 bg-purple-500 rounded-full opacity-10 blur-3xl"></div>
+                                
+                                {basketData.length > 0 && basketStatus ? (
+                                    <div className="relative z-10 flex flex-col h-full justify-between">
+                                        <div>
+                                            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">當前真實合約狀態</h3>
+                                            <div className={`inline-flex flex-col items-start p-4 rounded-xl border ${
+                                                basketStatus.type === 'safe' ? 'bg-blue-900/40 border-blue-500/30' :
+                                                basketStatus.type === 'knockOut' ? 'bg-green-900/40 border-green-500/30' :
+                                                'bg-red-900/40 border-red-500/30'
+                                            } w-full`}>
+                                                <div className={`flex items-center gap-2 text-xl font-bold ${
+                                                    basketStatus.type === 'safe' ? 'text-blue-400' :
+                                                    basketStatus.type === 'knockOut' ? 'text-green-400' :
+                                                    'text-red-400'
+                                                }`}>
+                                                    {basketStatus.icon}
+                                                    <span>{basketStatus.label}</span>
+                                                </div>
+                                                <p className="text-sm mt-2 text-slate-300 leading-relaxed">{basketStatus.desc}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-6 p-4 bg-black/30 rounded-xl border border-white/5">
+                                            <p className="text-xs text-slate-400 mb-1">最差表現資產 (Worst-Of)</p>
+                                            <div className="flex justify-between items-end">
+                                                <div className="text-3xl font-bold text-white tracking-tight">
+                                                    {basketStatus.worstAsset.symbol}
+                                                </div>
+                                                <div className={`text-xl font-bold flex items-center ${basketStatus.worstAsset.performance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                                    {basketStatus.worstAsset.performance >= 0 ? '+' : ''}{basketStatus.worstAsset.performance}%
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {memoryKO && (
+                                            <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/10">
+                                                <p className="text-xs text-slate-400 mb-2">歷史 KO 觸碰紀錄 (自 {startDate})</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {basketData.map(asset => {
+                                                        const hit = historicalStats[asset.symbol]?.hitKO;
+                                                        return (
+                                                            <div key={asset.symbol} className={`px-2 py-1 text-xs font-medium rounded-md flex items-center gap-1 ${hit ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
+                                                                {asset.symbol} {hit && <CheckCircle size={12} className="text-green-400"/>}
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-slate-500 z-10">
+                                        <Layers size={48} className="mb-4 opacity-50" />
+                                        <p>輸入真實代碼並設定日期</p>
+                                        <p className="text-sm">獲取一籃子真實走勢分析</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
+                {basketData.length > 0 && (
+                    <Card className="p-6">
+                         <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            標的相對表現圖 (現價 vs 發行價)
+                        </h3>
+                        <div className="h-[350px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    data={basketData}
+                                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                                    layout="vertical"
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                                    <XAxis 
+                                        type="number" 
+                                        domain={[-50, 20]}
+                                        tickFormatter={(val) => `${val}%`}
+                                        stroke="#94a3b8"
+                                    />
+                                    <YAxis dataKey="symbol" type="category" stroke="#64748b" fontWeight="bold" width={80} />
+                                    <RechartsTooltip 
+                                        formatter={(value) => [`${value}%`, '績效 (相對於 Strike)']}
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                    />
+                                    
+                                    <ReferenceLine x={basketKoPct - 100} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
+                                    <ReferenceLine x={0} stroke="#64748b" label={{ position: 'bottom', value: `Strike (100%)`, fill: '#64748b' }} />
+                                    <ReferenceLine x={basketKiPct - 100} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'top', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
+
+                                    <Bar dataKey="performance" radius={[0, 4, 4, 0]}>
+                                        {basketData.map((entry, index) => {
+                                            let color = "#3b82f6";
+                                            if (entry.performance <= (basketKiPct - 100)) color = "#ef4444";
+                                            else if (entry.performance >= (basketKoPct - 100)) color = "#22c55e";
+                                            return <Cell key={`cell-${index}`} fill={color} />;
+                                        })}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </Card>
+                )}
+
+                {historicalData.length > 0 && (
+                    <Card className="p-6">
+                        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <History size={20} className="text-purple-600"/> 標的真實歷史走勢圖 (自發行日起)
+                        </h3>
+                        <div className="h-[400px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                    <XAxis dataKey="date" stroke="#94a3b8" tick={{fontSize: 12}} minTickGap={30} />
+                                    <YAxis 
+                                        domain={[
+                                            dataMin => Math.min(dataMin - 10, basketKiPct - 10), 
+                                            dataMax => Math.max(dataMax + 10, basketKoPct + 10)
+                                        ]} 
+                                        tickFormatter={(val) => `${val.toFixed(0)}%`}
+                                        stroke="#94a3b8" 
+                                        width={45}
+                                    />
+                                    <RechartsTooltip 
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        formatter={(value) => [`${value}%`, '']}
+                                    />
+                                    <Legend wrapperStyle={{ paddingTop: '20px' }}/>
+                                    
+                                    <ReferenceLine y={basketKoPct} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
+                                    <ReferenceLine y={100} stroke="#64748b" label={{ position: 'insideBottomLeft', value: `Strike (100%)`, fill: '#64748b' }} />
+                                    <ReferenceLine y={basketKiPct} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'bottom', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
+
+                                    {basketSymbols.map((sym, index) => {
+                                        if (!sym.trim()) return null;
+                                        const colors = ['#8b5cf6', '#3b82f6', '#f59e0b', '#ec4899']; 
+                                        return (
+                                            <Line 
+                                                key={sym} 
+                                                type="monotone" 
+                                                dataKey={sym.toUpperCase()} 
+                                                stroke={colors[index % colors.length]} 
+                                                strokeWidth={2} 
+                                                dot={false} 
+                                                activeDot={{ r: 6 }} 
+                                            />
+                                        );
+                                    })}
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </Card>
+                )}
+            </div>
+        );
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-12">
+            <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold italic">
+                            F
+                        </div>
+                        <span className="font-bold text-xl tracking-tight">FCN<span className="text-blue-600">Master</span></span>
+                    </div>
+                    <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto">
+                        <button 
+                            onClick={() => setActiveTab('tutorial')}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'tutorial' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-600 hover:text-slate-900'}`}
+                        >
+                            快速學習
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('tracker')}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${activeTab === 'tracker' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-600 hover:text-slate-900'}`}
+                        >
+                            <TrendingUp size={16} /> 單一報價
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('basket')}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${activeTab === 'basket' ? 'bg-white shadow-sm text-purple-600' : 'text-slate-600 hover:text-slate-900'}`}
+                        >
+                            <Layers size={16} /> 一籃子 (Worst-Of)
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main className="max-w-5xl mx-auto px-4 mt-8">
+                {activeTab === 'tutorial' && renderTutorial()}
+                {activeTab === 'tracker' && renderTracker()}
+                {activeTab === 'basket' && renderBasketTracker()}
+            </main>
+            
+            <footer className="max-w-5xl mx-auto px-4 mt-12 text-center text-slate-400 text-sm">
+                <p>⚠️ 注意：本工具資料來自免費 API，不保證零延遲。僅供教育與模擬使用，並非實際投資建議。</p>
+            </footer>
+        </div>
+    );
+}
+
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <FCNDashboard />
+  </React.StrictMode>
+);
+
+    </script>
+  </body>
+</html>
