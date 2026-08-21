@@ -160,7 +160,7 @@ function FCNDashboard() {
     });
     const [memoryKO, setMemoryKO] = useState(false);
     const [historicalData, setHistoricalData] = useState([]);
-    const [historicalStats, setHistoricalStats] = useState({});
+    const [kiObservationType, setKiObservationType] = useState('daily');
 
     // Global parameters for Basket (percentages)
     const [basketStrikePct, setBasketStrikePct] = useState(100);
@@ -226,7 +226,6 @@ function FCNDashboard() {
             const fetchedData = await Promise.all(promises);
 
             let history = [];
-            let stats = {};
             let currentBasketData = [];
 
             // 為了畫圖，找出第一個標的的時間軸作為基準 (假設大家交易日差不多)
@@ -265,11 +264,6 @@ function FCNDashboard() {
                         const performancePct = (closePrice / initialPrice) * 100;
                         point[sym] = parseFloat(performancePct.toFixed(2));
                         
-                        if (!stats[sym]) stats[sym] = { hitKO: false, hitKI: false };
-                        
-                        // 紀錄歷史是否曾觸發
-                        if (performancePct >= basketKoPct) stats[sym].hitKO = true;
-                        if (performancePct <= basketKiPct) stats[sym].hitKI = true;
                     }
                 });
                 history.push(point);
@@ -281,19 +275,20 @@ function FCNDashboard() {
                 const initialPrice = data.indicators.quote[0].close[initialPriceIndex];
                 
                 if (currentPrice && initialPrice) {
-                    // 計算漲跌幅，例如漲 5% -> performance = 5 (相對於 100% Strike)
-                    const performanceValue = ((currentPrice - initialPrice) / initialPrice) * 100;
+                    const currentLevel = (currentPrice / initialPrice) * 100;
+                    const performanceValue = currentLevel - 100;
                     currentBasketData.push({
                         symbol: sym,
                         initialPrice: initialPrice,
                         currentPrice: currentPrice,
+                        strikePrice: (initialPrice * basketStrikePct) / 100,
+                        level: parseFloat(currentLevel.toFixed(2)),
                         performance: parseFloat(performanceValue.toFixed(2))
                     });
                 }
             });
 
             setHistoricalData(history);
-            setHistoricalStats(stats);
             setBasketData(currentBasketData);
 
         } catch (err) {
@@ -328,6 +323,14 @@ function FCNDashboard() {
 
     const status = getFCNStatus();
 
+    const getHistoricalHit = (symbol, threshold, direction) => {
+        return historicalData.some(point => {
+            const value = Number(point[symbol]);
+            if (!Number.isFinite(value)) return false;
+            return direction === 'above' ? value >= threshold : value <= threshold;
+        });
+    };
+
     const getBasketStatus = () => {
         if (basketData.length === 0) return null;
         
@@ -339,8 +342,11 @@ function FCNDashboard() {
             }
         });
 
-        const allAboveKO = basketData.every(asset => asset.performance >= (basketKoPct - 100));
-        const anyBelowKI = basketData.some(asset => asset.performance <= (basketKiPct - 100));
+        const allAboveKO = basketData.every(asset => asset.level >= basketKoPct);
+        const terminalKiAsset = basketData.find(asset => asset.level <= basketKiPct);
+        const dailyKiAsset = basketData.find(asset => getHistoricalHit(asset.symbol, basketKiPct, 'below'));
+        const kiTriggerAsset = kiObservationType === 'daily' ? dailyKiAsset : terminalKiAsset;
+        const belowStrike = worstAsset.level <= basketStrikePct;
 
         if (allAboveKO) {
             return { 
@@ -351,14 +357,26 @@ function FCNDashboard() {
                 desc: '所有標的皆高於 KO 價，合約提前結束，拿回本金與利息！',
                 worstAsset: worstAsset
             };
-        } else if (anyBelowKI) {
-            const breachedAsset = basketData.find(asset => asset.performance <= (basketKiPct - 100));
+        } else if (kiTriggerAsset && belowStrike) {
             return { 
                 type: 'knockIn', 
                 label: '觸發承接風險 (Knock-In)', 
                 color: 'red', 
                 icon: <AlertCircle className="w-6 h-6" />, 
-                desc: `${breachedAsset.symbol} 跌破保護價，若到期未漲回發行價，可能需承接最差標的股票。`,
+                desc: kiObservationType === 'daily'
+                    ? `${kiTriggerAsset.symbol} 在觀察期間曾跌破 KI，且目前最差標的低於執行價，可能需承接最差標的股票。`
+                    : `${kiTriggerAsset.symbol} 目前低於期末 KI，且最差標的低於執行價，可能需承接最差標的股票。`,
+                worstAsset: worstAsset
+            };
+        } else if (kiTriggerAsset) {
+            return { 
+                type: 'kiWatch', 
+                label: kiObservationType === 'daily' ? '日 KI 已觸發' : '期末 KI 觀察中', 
+                color: 'amber', 
+                icon: <AlertCircle className="w-6 h-6" />, 
+                desc: kiObservationType === 'daily'
+                    ? `${kiTriggerAsset.symbol} 曾跌破 KI；目前最差標的仍高於執行價，期末需再確認是否承接。`
+                    : `${kiTriggerAsset.symbol} 目前低於 KI，但最差標的仍高於執行價，期末結果需再確認。`,
                 worstAsset: worstAsset
             };
         } else {
@@ -367,7 +385,9 @@ function FCNDashboard() {
                 label: '安全區間 (Safe)', 
                 color: 'blue', 
                 icon: <Info className="w-6 h-6" />, 
-                desc: '目前最差標的未跌破 KI，且並非所有標的皆達 KO，持續領息中。',
+                desc: kiObservationType === 'daily'
+                    ? '觀察期間尚未跌破日 KI，且並非所有標的皆達 KO，持續領息中。'
+                    : '目前未跌破期末 KI，且並非所有標的皆達 KO，持續領息中。',
                 worstAsset: worstAsset
             };
         }
@@ -684,7 +704,7 @@ function FCNDashboard() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
                                 <div>
                                     <label className="block text-xs font-bold text-slate-500 mb-1">KO 條件 (全部 &gt;= %)</label>
                                     <div className="relative">
@@ -693,10 +713,10 @@ function FCNDashboard() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">Strike 基準 (%)</label>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">執行價 / Strike (%)</label>
                                     <div className="relative">
                                         <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                        <input type="number" value={basketStrikePct} onChange={(e) => setBasketStrikePct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-slate-100 border border-slate-200 rounded-md text-slate-500 cursor-not-allowed" readOnly />
+                                        <input type="number" value={basketStrikePct} onChange={(e) => setBasketStrikePct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
                                     </div>
                                 </div>
                                 <div>
@@ -704,6 +724,25 @@ function FCNDashboard() {
                                     <div className="relative">
                                         <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
                                         <input type="number" value={basketKiPct} onChange={(e) => setBasketKiPct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">KI 類型</label>
+                                    <div className="grid grid-cols-2 bg-white border border-slate-200 rounded-md p-0.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setKiObservationType('daily')}
+                                            className={`px-2 py-1.5 text-xs font-bold rounded transition-colors ${kiObservationType === 'daily' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                                        >
+                                            日 KI
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setKiObservationType('terminal')}
+                                            className={`px-2 py-1.5 text-xs font-bold rounded transition-colors ${kiObservationType === 'terminal' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                                        >
+                                            期末 KI
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -720,17 +759,23 @@ function FCNDashboard() {
                                             <div className={`inline-flex flex-col items-start p-4 rounded-xl border ${
                                                 basketStatus.type === 'safe' ? 'bg-blue-900/40 border-blue-500/30' :
                                                 basketStatus.type === 'knockOut' ? 'bg-green-900/40 border-green-500/30' :
+                                                basketStatus.type === 'kiWatch' ? 'bg-amber-900/40 border-amber-500/30' :
                                                 'bg-red-900/40 border-red-500/30'
                                             } w-full`}>
                                                 <div className={`flex items-center gap-2 text-xl font-bold ${
                                                     basketStatus.type === 'safe' ? 'text-blue-400' :
                                                     basketStatus.type === 'knockOut' ? 'text-green-400' :
+                                                    basketStatus.type === 'kiWatch' ? 'text-amber-300' :
                                                     'text-red-400'
                                                 }`}>
                                                     {basketStatus.icon}
                                                     <span>{basketStatus.label}</span>
                                                 </div>
                                                 <p className="text-sm mt-2 text-slate-300 leading-relaxed">{basketStatus.desc}</p>
+                                                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-medium text-slate-400">
+                                                    <span className="px-2 py-1 rounded-md bg-black/20 border border-white/10">Strike {basketStrikePct}%</span>
+                                                    <span className="px-2 py-1 rounded-md bg-black/20 border border-white/10">{kiObservationType === 'daily' ? '日 KI' : '期末 KI'}</span>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -751,10 +796,26 @@ function FCNDashboard() {
                                                 <p className="text-xs text-slate-400 mb-2">歷史 KO 觸碰紀錄 (自 {startDate})</p>
                                                 <div className="flex flex-wrap gap-2">
                                                     {basketData.map(asset => {
-                                                        const hit = historicalStats[asset.symbol]?.hitKO;
+                                                        const hit = getHistoricalHit(asset.symbol, basketKoPct, 'above');
                                                         return (
                                                             <div key={asset.symbol} className={`px-2 py-1 text-xs font-medium rounded-md flex items-center gap-1 ${hit ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
                                                                 {asset.symbol} {hit && <CheckCircle size={12} className="text-green-400"/>}
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {kiObservationType === 'daily' && (
+                                            <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/10">
+                                                <p className="text-xs text-slate-400 mb-2">歷史 KI 觸碰紀錄 (自 {startDate})</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {basketData.map(asset => {
+                                                        const hit = getHistoricalHit(asset.symbol, basketKiPct, 'below');
+                                                        return (
+                                                            <div key={asset.symbol} className={`px-2 py-1 text-xs font-medium rounded-md flex items-center gap-1 ${hit ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
+                                                                {asset.symbol} {hit && <AlertCircle size={12} className="text-red-400"/>}
                                                             </div>
                                                         )
                                                     })}
@@ -777,7 +838,7 @@ function FCNDashboard() {
                 {basketData.length > 0 && (
                     <Card className="p-6">
                          <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                            標的相對表現圖 (現價 vs 發行價)
+                            標的相對表現圖 (現價 vs 發行日基準)
                         </h3>
                         <div className="h-[350px]">
                             <ResponsiveContainer width="100%" height="100%">
@@ -789,25 +850,28 @@ function FCNDashboard() {
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
                                     <XAxis 
                                         type="number" 
-                                        domain={[-50, 20]}
+                                        domain={[
+                                            dataMin => Math.min(dataMin - 10, basketKiPct - 110, basketStrikePct - 110),
+                                            dataMax => Math.max(dataMax + 10, basketKoPct - 90, basketStrikePct - 90)
+                                        ]}
                                         tickFormatter={(val) => `${val}%`}
                                         stroke="#94a3b8"
                                     />
                                     <YAxis dataKey="symbol" type="category" stroke="#64748b" fontWeight="bold" width={80} />
                                     <RechartsTooltip 
-                                        formatter={(value) => [`${value}%`, '績效 (相對於 Strike)']}
+                                        formatter={(value) => [`${value}%`, '績效 (相對發行日)']}
                                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     />
                                     
                                     <ReferenceLine x={basketKoPct - 100} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
-                                    <ReferenceLine x={0} stroke="#64748b" label={{ position: 'bottom', value: `Strike (100%)`, fill: '#64748b' }} />
+                                    <ReferenceLine x={basketStrikePct - 100} stroke="#64748b" label={{ position: 'bottom', value: `Strike (${basketStrikePct}%)`, fill: '#64748b' }} />
                                     <ReferenceLine x={basketKiPct - 100} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'top', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
 
                                     <Bar dataKey="performance" radius={[0, 4, 4, 0]}>
                                         {basketData.map((entry, index) => {
                                             let color = "#3b82f6";
-                                            if (entry.performance <= (basketKiPct - 100)) color = "#ef4444";
-                                            else if (entry.performance >= (basketKoPct - 100)) color = "#22c55e";
+                                            if (entry.level <= basketKiPct) color = "#ef4444";
+                                            else if (entry.level >= basketKoPct) color = "#22c55e";
                                             return <Cell key={`cell-${index}`} fill={color} />;
                                         })}
                                     </Bar>
@@ -829,8 +893,8 @@ function FCNDashboard() {
                                     <XAxis dataKey="date" stroke="#94a3b8" tick={{fontSize: 12}} minTickGap={30} />
                                     <YAxis 
                                         domain={[
-                                            dataMin => Math.min(dataMin - 10, basketKiPct - 10), 
-                                            dataMax => Math.max(dataMax + 10, basketKoPct + 10)
+                                            dataMin => Math.min(dataMin - 10, basketKiPct - 10, basketStrikePct - 10), 
+                                            dataMax => Math.max(dataMax + 10, basketKoPct + 10, basketStrikePct + 10)
                                         ]} 
                                         tickFormatter={(val) => `${val.toFixed(0)}%`}
                                         stroke="#94a3b8" 
@@ -843,7 +907,7 @@ function FCNDashboard() {
                                     <Legend wrapperStyle={{ paddingTop: '20px' }}/>
                                     
                                     <ReferenceLine y={basketKoPct} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
-                                    <ReferenceLine y={100} stroke="#64748b" label={{ position: 'insideBottomLeft', value: `Strike (100%)`, fill: '#64748b' }} />
+                                    <ReferenceLine y={basketStrikePct} stroke="#64748b" label={{ position: 'insideBottomLeft', value: `Strike (${basketStrikePct}%)`, fill: '#64748b' }} />
                                     <ReferenceLine y={basketKiPct} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'bottom', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
 
                                     {basketSymbols.map((sym, index) => {
