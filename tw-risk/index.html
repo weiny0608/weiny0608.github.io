@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f3538">
+  <title>台股風險日報｜客戶簡版</title>
+  <meta name="description" content="以每日風險分數、槓桿燈號與操作節奏，快速掌握台股融資環境。">
+  <style>
+    :root { color-scheme: light; font-family: Inter, "Noto Sans TC", "PingFang TC", system-ui, sans-serif; color: #17363a; background: #f5f3ee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: radial-gradient(circle at 82% 8%, #dceee8 0, transparent 29rem), #f5f3ee; }
+    .page { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 48px; }
+    .header { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; }
+    .brand { display: flex; gap: 10px; align-items: center; color: inherit; text-decoration: none; }
+    .brand-mark { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 11px; background: #174f53; color: white; font-size: 18px; font-weight: 800; }
+    .brand strong, .brand small { display: block; }
+    .brand strong { font-size: 15px; letter-spacing: .02em; }
+    .brand small { margin-top: 2px; color: #718083; font-size: 10px; }
+    .date { text-align: right; color: #778487; font-size: 10px; }
+    .date strong { display: block; margin-top: 2px; color: #28464a; font-size: 13px; }
+    .hero { display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px; }
+    .score-card { overflow: hidden; padding: 28px; border: 1px solid #d8e2df; border-radius: 24px; background: rgba(255,255,255,.9); box-shadow: 0 12px 28px rgba(31,62,60,.06); }
+    .eyebrow { margin: 0; color: #75908d; font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+    .score-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    h1 { margin: 7px 0 0; font-family: Georgia, "Noto Serif TC", serif; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.04em; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 7px 9px; border-radius: 999px; background: #e2f0ea; color: #1c6f59; font-size: 10px; font-weight: 700; }
+    .badge i, .signal i { display: block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .score-main { display: flex; align-items: center; gap: 26px; margin-top: 28px; }
+    .ring { --score: 0; display: grid; flex: 0 0 auto; width: 142px; height: 142px; place-items: center; border-radius: 50%; background: conic-gradient(#1d7770 calc(var(--score) * 1%), #e8eeec 0); }
+    .ring::before { position: absolute; width: 118px; height: 118px; border-radius: 50%; background: white; content: ""; }
+    .ring > div { z-index: 1; text-align: center; }
+    .ring strong { display: block; font-family: Georgia, serif; color: #174f53; font-size: 44px; letter-spacing: -.06em; line-height: .9; }
+    .ring span { color: #8a9696; font-size: 11px; }
+    .summary .pill { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #def0e8; color: #176d56; font-size: 11px; font-weight: 800; }
+    .summary h2 { margin: 11px 0 8px; font-size: 21px; letter-spacing: -.04em; }
+    .summary p { margin: 0; max-width: 330px; color: #68777a; font-size: 13px; line-height: 1.7; }
+    .scale { margin-top: 30px; }
+    .track { position: relative; height: 7px; overflow: visible; border-radius: 9px; background: linear-gradient(90deg, #56b68e 0 20%, #8fcfa8 20% 40%, #e1c675 40% 60%, #e39964 60% 80%, #cb6670 80%); }
+    .pointer { position: absolute; top: -5px; width: 17px; height: 17px; border: 3px solid white; border-radius: 50%; background: #174f53; box-shadow: 0 2px 6px rgba(18,48,49,.25); transform: translateX(-50%); }
+    .labels { display: flex; justify-content: space-between; margin-top: 7px; color: #85918f; font-size: 9px; }
+    .scale > p { margin: 11px 0 0; color: #7c8887; font-size: 10px; }
+    .action-card { padding: 28px; border-radius: 24px; background: #153c40; color: white; box-shadow: 0 12px 28px rgba(28,60,58,.14); }
+    .action-top { display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,.67); font-size: 11px; }
+    .action-top small { padding: 5px 8px; border: 1px solid rgba(255,255,255,.17); border-radius: 999px; }
+    .action-card h2 { margin: 25px 0 20px; font-family: Georgia, "Noto Serif TC", serif; font-size: 29px; letter-spacing: -.05em; line-height: 1.15; }
+    .action-card em { color: #94d9c4; font-style: normal; }
+    .action-list { display: grid; gap: 13px; }
+    .action-list div { display: grid; grid-template-columns: 22px 1fr; gap: 9px; align-items: start; }
+    .action-list span { color: #90d4c0; font-size: 10px; font-weight: 800; }
+    .action-list p { margin: 0; color: rgba(255,255,255,.77); font-size: 12px; line-height: 1.55; }
+    .action-list strong { margin-right: 7px; color: white; }
+    .note { margin: 25px 0 0; padding: 13px; border-radius: 10px; background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); font-size: 10px; line-height: 1.6; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+    .metrics article { padding: 20px; border: 1px solid #dfe6e3; border-radius: 17px; background: rgba(255,255,255,.72); }
+    .metric-label { color: #81908e; font-size: 10px; font-weight: 700; }
+    .metric-label span { margin-right: 6px; color: #7faaa0; }
+    .metrics strong { display: block; margin: 14px 0 7px; color: #204649; font-family: Georgia, serif; font-size: 30px; letter-spacing: -.05em; }
+    .metrics strong small { font-size: 16px; }
+    .metrics p { margin: 0; color: #6f7d7c; font-size: 11px; line-height: 1.5; }
+    .metrics .good { color: #16745e; }
+    .metrics .caution { color: #aa592b; }
+    .trend { display: grid; grid-template-columns: .9fr 1.1fr; gap: 36px; align-items: end; margin-top: 18px; padding: 28px; border-radius: 23px; background: #e7efec; }
+    .trend h2 { margin: 8px 0; font-family: Georgia, "Noto Serif TC", serif; font-size: 26px; letter-spacing: -.04em; }
+    .trend-copy > p:not(.eyebrow) { margin: 0; color: #647573; font-size: 12px; line-height: 1.7; }
+    .signal { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; padding: 9px 12px; border-radius: 999px; background: #fff; color: #176f59; font-size: 10px; font-weight: 800; }
+    .signal.caution { color: #ac582b; }
+    .bars { display: flex; gap: clamp(8px, 2vw, 18px); align-items: end; height: 190px; }
+    .bar { display: grid; flex: 1; height: 100%; grid-template-rows: 18px 1fr 17px 15px; align-items: end; text-align: center; }
+    .bar > span { color: #416766; font-family: Georgia, serif; font-size: 15px; }
+    .bar-well { display: flex; align-items: end; height: 118px; margin: 6px 0; border-bottom: 1px solid #bfd2cc; }
+    .bar-well i { width: 100%; min-height: 14px; border-radius: 7px 7px 2px 2px; background: #4ca484; }
+    .bar-well i.normal { background: #d39b57; }
+    .bar strong { color: #52706e; font-size: 10px; }
+    .bar small { color: #82908e; font-size: 9px; }
+    footer { display: flex; justify-content: space-between; gap: 22px; margin-top: 22px; color: #778482; font-size: 10px; line-height: 1.7; }
+    footer strong, footer span { display: block; }
+    footer span { margin-top: 2px; }
+    footer p { max-width: 480px; margin: 0; text-align: right; }
+    .loading, .error { padding: 70px 20px; text-align: center; color: #657674; }
+    .error { color: #a6532c; }
+    @media (max-width: 760px) { .page { width: min(100% - 28px, 560px); padding-top: 20px; } .hero, .trend { grid-template-columns: 1fr; } .score-card, .action-card { padding: 22px; } .score-main { gap: 17px; } .ring { width: 122px; height: 122px; } .ring::before { width: 100px; height: 100px; } .ring strong { font-size: 37px; } .summary h2 { font-size: 18px; } .metrics { grid-template-columns: 1fr; } .trend { gap: 18px; } footer { display: block; } footer p { margin-top: 13px; text-align: left; } }
+    @media (max-width: 430px) { .header { align-items: flex-start; } .date { padding-top: 3px; } .score-main { align-items: flex-start; flex-direction: column; } .bars { gap: 8px; } }
+  </style>
+</head>
+<body>
+  <main id="app" class="page" aria-live="polite"><div class="loading">正在讀取最新風險資料…</div></main>
+  <script>
+    const app = document.querySelector('#app');
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]);
+    const signed = (value, suffix = '') => `${value > 0 ? '+' : ''}${Number(value).toFixed(1)}${suffix}`;
+
+    function strategy(score) {
+      if (score < 20) return { label: '低壓策略', title: '可分批・可續抱', emphasis: '但不要追價', summary: '槓桿壓力偏低，短線風險降溫', description: '維持率回升、融資未出現快速撤退，目前不需要因整體融資風險急著減碼。', actions: [['新資金', '小額分批，逢回觀察進場'], ['既有部位', '維持正常水位，汰弱留強'], ['交易紀律', '不追高，保留個股停利停損']] };
+      if (score < 40) return { label: '偏低策略', title: '保留彈性・分批布局', emphasis: '部位不要一次到位', summary: '槓桿壓力偏低，市場仍有波動空間', description: '整體融資環境尚稱穩定，可依個股條件分批處理，但避免把風險集中在單一時間點。', actions: [['新資金', '分批布局，優先等待合理切入點'], ['既有部位', '維持核心持股，持續汰弱留強'], ['交易紀律', '不追價，個股風險仍要各自控管']] };
+      if (score < 60) return { label: '正常策略', title: '部位中性・等待確認', emphasis: '減少追價', summary: '融資壓力回到正常區，市場方向仍待確認', description: '不需要大幅調整，但建議讓新舊部位維持均衡，等趨勢更明朗再提高曝險。', actions: [['新資金', '暫採小量或等待確認後再加碼'], ['既有部位', '維持中性水位，檢視弱勢持股'], ['交易紀律', '避免追強勢題材，嚴守停損']] };
+      if (score < 80) return { label: '警戒策略', title: '降低槓桿・汰弱留強', emphasis: '暫緩積極加碼', summary: '融資壓力升溫，短線波動風險增加', description: '資金宜提高防守比例，優先處理風險較高或走勢轉弱的部位。', actions: [['新資金', '暫緩積極進場，保留現金彈性'], ['既有部位', '降低槓桿，優先汰弱勢持股'], ['交易紀律', '收緊停損，避免攤平或追價']] };
+      return { label: '高壓策略', title: '優先降槓桿・保留現金', emphasis: '避免逆勢攤平', summary: '融資壓力偏高，市場修正風險提高', description: '此時重點是控制總曝險與流動性，不以短線反彈作為加碼依據。', actions: [['新資金', '暫不擴大部位，保留現金'], ['既有部位', '優先降低槓桿與高波動持股'], ['交易紀律', '嚴守停損，不逆勢攤平']] };
+    }
+
+    function render(data) {
+      const plan = strategy(data.score);
+      const scoreChange = data.score - data.previousScore;
+      const pressureRising = scoreChange >= 5;
+      const debtRetreating = data.marginDebtChange5d <= -3;
+      const trendMessage = scoreChange <= -5 ? '目前趨勢：風險降溫' : pressureRising ? '目前趨勢：風險升溫' : '目前趨勢：風險變化有限';
+      const actions = plan.actions.map(([label, copy], index) => `<div><span>0${index + 1}</span><p><strong>${escapeHtml(label)}</strong>${escapeHtml(copy)}</p></div>`).join('');
+      const bars = data.trend.map((item) => `<div class="bar"><span>${escapeHtml(item.score)}</span><div class="bar-well"><i class="${item.score >= 40 ? 'normal' : ''}" style="height:${Math.max(item.score, 12)}%"></i></div><strong>${escapeHtml(item.date)}</strong><small>${escapeHtml(item.light)}</small></div>`).join('');
+      app.innerHTML = `
+        <header class="header">
+          <a class="brand" href="https://together-toolbox.weiny0608.chatgpt.site/"><span class="brand-mark">台</span><span><strong>台股風險日報</strong><small>融資槓桿壓力觀察</small></span></a>
+          <div class="date"><span>資料截至</span><strong>${escapeHtml(data.displayDate)}</strong></div>
+        </header>
+        <section class="hero">
+          <article class="score-card">
+            <div class="score-head"><div><p class="eyebrow">MARKET RISK TODAY</p><h1>今日融資風險</h1></div><span class="badge"><i></i>最新完整交易日</span></div>
+            <div class="score-main"><div class="ring" style="--score:${Number(data.score)}"><div><strong>${escapeHtml(data.score)}</strong><span>/ 100</span></div></div><div class="summary"><span class="pill">${escapeHtml(data.light)}</span><h2>${escapeHtml(plan.summary)}</h2><p>${escapeHtml(plan.description)}</p></div></div>
+            <div class="scale"><div class="track"><i class="pointer" style="left:${Number(data.score)}%"></i></div><div class="labels"><span>低壓</span><span>偏低</span><span>正常</span><span>警戒</span><span>高壓</span></div><p>分數越高，代表市場融資壓力越大。</p></div>
+          </article>
+          <aside class="action-card"><div class="action-top"><span>今日參考節奏</span><small>${escapeHtml(plan.label)}</small></div><h2>${escapeHtml(plan.title)}<br><em>${escapeHtml(plan.emphasis)}</em></h2><div class="action-list">${actions}</div><p class="note">融資壓力是整體市場觀察，不代表個股價格便宜；仍需搭配基本面與個人風險承受度。</p></aside>
+        </section>
+        <section class="metrics">
+          <article><div class="metric-label"><span>01</span>透明維持率</div><strong>${Number(data.maintenanceRate).toFixed(1)}<small>%</small></strong><p class="${data.maintenanceChange5d >= 0 ? 'good' : 'caution'}">${signed(data.maintenanceChange5d, ' pp')} ／近 5 日${data.maintenanceChange5d >= 0 ? '改善' : '下滑'}</p></article>
+          <article><div class="metric-label"><span>02</span>5 日融資餘額</div><strong>${signed(data.marginDebtChange5d, '%')}</strong><p class="${debtRetreating ? 'caution' : ''}">${debtRetreating ? '融資撤退加快' : '未出現快速撤退'} ／${debtRetreating ? '留意壓力' : '壓力穩定'}</p></article>
+          <article><div class="metric-label"><span>03</span>風險變化</div><strong>${signed(scoreChange)}</strong><p class="${pressureRising ? 'caution' : 'good'}">${pressureRising ? '風險壓力上升' : scoreChange < 0 ? '風險逐步降溫' : '風險變化有限'} ／前次 ${escapeHtml(data.previousScore)}</p></article>
+        </section>
+        <section class="trend"><div class="trend-copy"><p class="eyebrow">RECENT 5 SESSIONS</p><h2>最近 5 個完整交易日</h2><p>以最近五個完整交易日的變化觀察整體市場槓桿環境；不是單一股票的買賣點。</p><div class="signal ${pressureRising ? 'caution' : ''}"><i></i>${trendMessage}</div></div><div class="bars" aria-label="最近五個完整交易日風險分數">${bars}</div></section>
+        <footer><div><strong>資料來源：TWSE、TPEx 官方公開資料</strong><span>客戶簡版資料產生時間：${escapeHtml(data.generatedAt)}</span></div><p>本頁僅供市場融資風險觀察，不構成個別證券投資建議。實際決策仍應考量投資目標、商品特性與個人風險承受度。</p></footer>`;
+    }
+
+    fetch('./data.json', { cache: 'no-store' }).then((response) => {
+      if (!response.ok) throw new Error('資料檔暫時無法讀取');
+      return response.json();
+    }).then(render).catch(() => {
+      app.innerHTML = '<div class="error">資料更新中，請稍後重新整理。</div>';
+    });
+  </script>
+</body>
+</html>
