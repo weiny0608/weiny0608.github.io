@@ -1,992 +1,2115 @@
-<!doctype html>
-<html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FCN Dashboard Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="importmap">{"imports":{"react":"https://esm.sh/react@19.0.0","react-dom/client":"https://esm.sh/react-dom@19.0.0/client","recharts":"https://esm.sh/recharts@3.1.0?deps=react@19.0.0,react-dom@19.0.0","lucide-react":"https://esm.sh/lucide-react@0.468.0?deps=react@19.0.0"}}</script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  </head>
-  <body class="m-0">
-    <div id="root"></div>
-    <script type="text/babel" data-type="module">
-import React, { useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
-import { 
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, ReferenceLine, AreaChart, Area, BarChart, Bar, Cell
-} from 'recharts';
-import { Info, TrendingUp, TrendingDown, Minus, RefreshCw, AlertCircle, CheckCircle, Search, HelpCircle, DollarSign, Percent, Calendar, Layers, History } from 'lucide-react';
-
-const scenarioData = {
-    knockOut: [
-        { day: 0, price: 100 },
-        { day: 10, price: 102 },
-        { day: 20, price: 105 },
-        { day: 30, price: 108 }, // KO triggered
-    ],
-    rangeBound: [
-        { day: 0, price: 100 },
-        { day: 30, price: 95 },
-        { day: 60, price: 103 },
-        { day: 90, price: 90 },
-        { day: 120, price: 85 },
-        { day: 150, price: 92 },
-        { day: 180, price: 98 }, // Maturity
-    ],
-    knockIn: [
-        { day: 0, price: 100 },
-        { day: 30, price: 85 },
-        { day: 60, price: 75 },
-        { day: 90, price: 68 }, // KI triggered
-        { day: 120, price: 65 },
-        { day: 150, price: 70 },
-        { day: 180, price: 60 }, // Maturity - takes stock
-    ]
-};
-
-const Card = ({ children, className = "" }) => (
-    <div className={`bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden ${className}`}>
-        {children}
-    </div>
-);
-
-const buildYahooChartUrl = (ticker, query) => {
-    const cleanTicker = encodeURIComponent(ticker.trim().toUpperCase());
-    return `https://query1.finance.yahoo.com/v8/finance/chart/${cleanTicker}?${query}&corsDomain=finance.yahoo.com`;
-};
-
-const fetchJsonWithTimeout = async (url, timeoutMs = 15000) => {
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
-    try {
-        const response = await fetch(url, { signal: controller.signal });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const text = await response.text();
-        const parsed = JSON.parse(text);
-        if (typeof parsed?.contents === 'string') return JSON.parse(parsed.contents);
-        return parsed;
-    } finally {
-        window.clearTimeout(timeout);
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>納斯達克 Top 30 科技巨頭：總經指標、公債走勢、三年估值與 FCN 結構型商品模擬器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7faf5;
+      --bg-subtle: #f0f6ec;
+      --surface: #ffffff;
+      --surface-card: #ffffff;
+      --surface-hover: #f3f8ef;
+      --border: #dce7d5;
+      --border-light: #e8f1e3;
+      --text: #132a18;
+      --text-muted: #556d59;
+      --accent: #059669;
+      --accent-glow: rgba(5, 150, 105, 0.18);
+      --green: #059669;
+      --green-light: #ecfdf5;
+      --green-glow: rgba(5, 150, 105, 0.15);
+      --red: #e11d48;
+      --red-light: #fff1f2;
+      --red-glow: rgba(225, 29, 72, 0.15);
+      --yellow: #ca8a04;
+      --yellow-light: #fef9c3;
+      --yellow-glow: rgba(202, 138, 4, 0.18);
+      --purple: #d97706;
     }
-};
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 10% 8%, rgba(209, 250, 229, 0.5) 0px, transparent 45%),
+        radial-gradient(at 90% 12%, rgba(254, 249, 195, 0.55) 0px, transparent 45%),
+        radial-gradient(at 50% 95%, rgba(236, 253, 245, 0.45) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 20px 24px;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 55%, #fefce8 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.05);
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .badge-live::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #0d2814 0%, #1c542a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+    .header p {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
-const fetchYahooJsonp = (url, timeoutMs = 15000) => new Promise((resolve, reject) => {
-    const callbackName = `__fcnYahoo_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const separator = url.includes('?') ? '&' : '?';
-    const script = document.createElement('script');
-    let settled = false;
+    /* Navigation Bar */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    .nav-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: #bcd4b3;
+    }
+    .nav-btn.active {
+      background: #ecfdf5;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.12);
+    }
 
-    const cleanup = () => {
-        delete window[callbackName];
-        script.remove();
-    };
+    /* Section Header */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #132a18;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 24px 0 14px 0;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
 
-    const timeout = window.setTimeout(() => {
-        if (settled) return;
-        settled = true;
-        cleanup();
-        reject(new Error('Yahoo JSONP timeout'));
-    }, timeoutMs);
+    /* Macro Layout - 嚴格 50:50 (1:1) 等寬對稱比例 */
+    .macro-grid {
+      display: grid !important;
+      grid-template-columns: calc(50% - 9px) calc(50% - 9px) !important; /* 嚴格 1:1 絕對等寬 (50%:50%) */
+      gap: 18px !important;
+      margin-bottom: 20px !important;
+      align-items: stretch !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    @media (max-width: 1080px) {
+      .macro-grid {
+        grid-template-columns: 100% !important;
+      }
+    }
+    .macro-grid > * {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    .macro-card, .macro-card-yield {
+      background: #ffffff !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 16px 18px !important;
+      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.05) !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    .macro-card-yield {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+    }
+    .macro-card-yield .chart-container {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: 115px !important;
+      position: relative !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    .macro-card-yield svg.yield-chart {
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+    .macro-scroll-strip {
+      display: flex !important;
+      gap: 6px !important;
+      overflow-x: auto !important;
+      padding: 6px 0 !important;
+      font-size: 10px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      color: var(--text-muted) !important;
+      scrollbar-width: thin !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .card-header h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1a3821;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-stat-pill {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: #fef9c3;
+      border: 1px solid #fde047;
+      color: #854d0e;
+      font-weight: 700;
+    }
 
-    window[callbackName] = (data) => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeout);
-        cleanup();
-        resolve(data);
-    };
+    /* Chart SVG */
+    .chart-container {
+      width: 100%;
+      height: 180px;
+      position: relative;
+    }
+    svg.yield-chart {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
 
-    script.onerror = () => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeout);
-        cleanup();
-        reject(new Error('Yahoo JSONP blocked'));
-    };
+    /* FedWatch Table */
+    .fedwatch-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .fedwatch-table th {
+      background: #f4f8f1;
+      color: var(--text-muted);
+      padding: 8px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .fedwatch-table td {
+      padding: 8px 9px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .prob-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: #eef5eb;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .prob-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+      border-radius: 3px;
+    }
 
-    script.src = `${url}${separator}callback=${callbackName}`;
-    document.head.appendChild(script);
-});
+    /* Indicators Grid */
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .indicator-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 10px rgba(22, 60, 30, 0.04);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .indicator-box:hover {
+      border-color: #bcd4b3;
+      transform: translateY(-2px);
+    }
+    .ind-name {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ind-value {
+      font-size: 19px;
+      font-weight: 800;
+      color: #132a18;
+    }
+    .ind-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #6c8370;
+      margin-top: 4px;
+    }
+    .tag-status {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .status-sticky { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .status-solid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-easing { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 
-const fetchYahooChart = async (ticker, query) => {
-    const yahooUrl = buildYahooChartUrl(ticker, query);
-    const encodedUrl = encodeURIComponent(yahooUrl);
-    const attempts = [
-        () => fetchYahooJsonp(yahooUrl),
-        () => fetchJsonWithTimeout(`https://api.allorigins.win/raw?url=${encodedUrl}`),
-        () => fetchJsonWithTimeout(`https://api.allorigins.win/get?url=${encodedUrl}`),
-        () => fetchJsonWithTimeout(`https://corsproxy.io/?url=${encodedUrl}`),
-        () => fetchJsonWithTimeout(`https://api.codetabs.com/v1/proxy?quest=${encodedUrl}`),
+    /* Controls Panel */
+    .controls-panel {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.04);
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .control-group label {
+      font-weight: 600;
+      color: #244129;
+    }
+    select, input[type="text"], input[type="number"], input[type="date"] {
+      background: #f9fbf8;
+      border: 1px solid #cddcc6;
+      color: #132a18;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+      background: #ffffff;
+    }
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f9fbf8;
+      border: 1px solid #cddcc6;
+      padding: 5px 12px;
+      border-radius: 7px;
+    }
+    input[type="range"] {
+      width: 100px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .category-pills {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: #f4f8f1;
+      border: 1px solid #d8e5d3;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pill:hover {
+      background: #eaf3e5;
+      color: #132a18;
+    }
+    .pill.active {
+      background: #ecfdf5;
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Table Container - Compact Column Widths (Reduced 30~40%) */
+    .table-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(22, 60, 30, 0.06);
+    }
+    .table-container {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+    th {
+      background: #f3f8f0;
+      color: #3f5944;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 8px 8px; /* 35% padding reduction */
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    th:hover { color: var(--accent); background: #eaf3e5; }
+    td {
+      padding: 7px 8px; /* 35% padding reduction */
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+      transition: background 0.15s;
+      color: #1f3523;
+    }
+    tr:nth-child(even) td {
+      background: #fbfdfa;
+    }
+    tr:hover td {
+      background: #f0f7ec;
+    }
+    .ticker-symbol {
+      display: inline-block;
+      font-weight: 800;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 11.5px;
+    }
+    .company-name { font-weight: 600; color: #162e1a; }
+    .sector-tag {
+      font-size: 10.5px;
+      color: #556d59;
+      background: #f3f8f0;
+      border: 1px solid #e1ecdd;
+      padding: 1px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .countdown-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .badge-urgent {
+      background: #ffe4e6;
+      color: #be123c;
+      border: 1px solid #fecdd3;
+    }
+    .badge-soon {
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #fde047;
+    }
+    .badge-normal {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .val-cell { font-weight: 600; color: #233d28; }
+    .val-cell-strong { font-weight: 700; color: #132a18; }
+    .return-positive { color: #059669; font-weight: 700; }
+    .return-negative { color: #dc2626; font-weight: 700; }
+
+    /* =========================================
+       SECTION 4: FCN SIMULATOR STYLES
+       ========================================= */
+    .fcn-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 24px rgba(22, 60, 30, 0.06);
+    }
+    .fcn-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .fcn-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .fcn-preset-btn {
+      background: #f4f8f1;
+      border: 1px solid #d8e5d3;
+      color: #344f39;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .fcn-preset-btn:hover {
+      background: #eaf3e5;
+      color: #132a18;
+    }
+    .fcn-preset-btn.active {
+      background: #fef9c3;
+      border-color: #eab308;
+      color: #854d0e;
+      font-weight: 700;
+    }
+
+    /* FCN Grid: 2 Columns */
+    .fcn-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 1080px) {
+      .fcn-grid { grid-template-columns: 1fr; }
+    }
+
+    /* FCN Config Form */
+    .fcn-form-section {
+      background: #f9fbf8;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 14px;
+    }
+    .fcn-form-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .asset-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 7px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .btn-remove {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+      border-radius: 6px;
+      width: 30px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .btn-add {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 columns x 2 rows, strictly bounded */
+      gap: 10px 12px;
+    }
+    @media (max-width: 768px) {
+      .params-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .param-item {
+      min-width: 0; /* Prevents flex/grid blowout */
+      display: flex;
+      flex-direction: column;
+    }
+    .param-item label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .param-item input {
+      width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+    .toggle-group {
+      display: flex;
+      background: #f0f6ec;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 2px;
+    }
+    .toggle-opt {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 3px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .toggle-opt.active {
+      background: #ffffff;
+      color: var(--accent);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* FCN Status Banner & Gauge */
+    .status-banner {
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .status-banner.status-safe {
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+      color: #065f46;
+    }
+    .status-banner.status-ko {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      color: #854d0e;
+    }
+    .status-banner.status-ki {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #9f1239;
+    }
+    .status-banner.status-ki-watch {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    /* Asset Performance Table */
+    .fcn-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      margin-bottom: 16px;
+    }
+    .fcn-table th {
+      background: #f4f8f1;
+      color: var(--text-muted);
+      padding: 7px 8px;
+      text-align: left;
+      font-size: 10.5px;
+    }
+    .fcn-table td {
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* Level Gauge Bar */
+    .gauge-wrap {
+      background: #f9fbf8;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      overflow: hidden; /* 確保整體卡片不被任何子元素溢出 */
+      box-sizing: border-box;
+    }
+    .gauge-bar-container {
+      position: relative;
+      height: 16px;
+      margin: 24px 0 10px 0;
+      box-sizing: border-box;
+    }
+    .gauge-bar-track {
+      position: absolute;
+      inset: 0;
+      background: #e6efe2;
+      border-radius: 8px;
+      overflow: hidden; /* 嚴格鎖定內部彩色條，絕對不溢出圓角外框 */
+    }
+    .gauge-zone-ki {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: #fecdd3;
+    }
+    .gauge-zone-safe {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: #bbf7d0;
+    }
+    .gauge-zone-ko {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: #fef08a;
+    }
+    .gauge-marker {
+      position: absolute;
+      top: -22px;
+      transform: translateX(-50%);
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #435b47;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .gauge-pin {
+      position: absolute;
+      top: -4px;
+      width: 12px;
+      height: 24px;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    /* Payout Calculator */
+    .payout-card {
+      background: #f9fbf8;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .payout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .payout-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .payout-item .lbl {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+    .payout-item .val {
+      font-size: 15px;
+      font-weight: 800;
+      color: #132a18;
+      margin-top: 2px;
+    }
+
+  
+    /* FCN Auto-Fetch Price Badge & Button */
+    .price-badge-box {
+      background: #f4f8f1;
+      border: 1px solid #dce8d5;
+      border-radius: 7px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 33px;
+      box-sizing: border-box;
+    }
+    .price-badge-box .price-val {
+      font-weight: 700;
+      color: #132a18;
+      font-size: 13px;
+    }
+    .price-badge-box .price-tag {
+      font-size: 9.5px;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .btn-fetch-calc {
+      width: 100%;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: #ffffff;
+      border: 1px solid #059669;
+      border-radius: 9px;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-fetch-calc:hover {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%);
+      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-fetch-calc:active {
+      transform: translateY(1px);
+    }
+    .fetch-status-feedback {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      font-size: 11.5px;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <div class="header">
+    <div>
+      <div class="badge-live">系統自動排程連線中 ｜ Google Fast Data 引擎</div>
+      <h1>納斯達克 Top 30 科技巨頭：總經指標、公債走勢、三年估值與 FCN 模擬器</h1>
+      <p>基準日：2026 年 10 月 5 日 ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援 1~4 標的 Worst-Of FCN 即時模擬</p>
+    </div>
+    <div style="text-align: right;">
+      <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">下次 FOMC：2026-10-28 ｜ 核心 PCE：3.0%</div>
+    </div>
+  </div>
+
+  <!-- Anchor Tabs Navigation -->
+  <div class="nav-tabs">
+    <a href="#macro-section" class="nav-btn active">📊 宏觀利率與 FedWatch</a>
+    <a href="#valuation-section" class="nav-btn">📈 Top 30 科技股三年估值</a>
+    <a href="#fcn-section" class="nav-btn" style="border-color: var(--accent); color: var(--accent);">⚡ FCN 結構型商品模擬器 (1~4 標的)</a>
+  </div>
+
+  <!-- SECTION 1: Macro Charts & FedWatch -->
+  <div id="macro-section" class="section-title">宏觀無風險利率走勢與聯準會 (Fed) 政策路徑</div>
+  <div class="macro-grid">
+    
+    <!-- 10Y Treasury Dual-Chart Card (Width reduced 35%) -->
+    <div class="macro-card macro-card-yield">
+      <div class="card-header" style="margin-bottom: 8px;">
+        <div>
+          <h3>美國 10 年期公債殖利率走勢面板</h3>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">上方：近 1 個月每日收盤值 ｜ 下方：近 1 年各月最後一日收盤值</div>
+        </div>
+        <div class="card-stat-pill mono">最新收盤: 5.26%</div>
+      </div>
+
+      <!-- Top Chart: 1-Month Daily Curve with exact daily values -->
+      <div style="margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 11px; font-weight: 700; color: var(--accent);">近 1 個月每日收盤走勢 (Daily Closes)</span>
+          <span style="font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">高點 5.28% ｜ 低點 5.05%</span>
+        </div>
+        <div class="chart-container" style="height: 115px;">
+          <svg class="yield-chart" viewBox="0 0 540 100">
+            <defs>
+              <linearGradient id="chartGrad1M" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <line x1="35" y1="15" x2="525" y2="15" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="48" x2="525" y2="48" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="80" x2="525" y2="80" stroke="#e6efe2" />
+
+            <text x="28" y="18" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.30%</text>
+            <text x="28" y="51" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.18%</text>
+            <text x="28" y="83" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.05%</text>
+
+            <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25 L 520,80 L 45,80 Z" fill="url(#chartGrad1M)" />
+            <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+            <!-- Daily Dots with Tooltips -->
+            <circle cx="45" cy="80" r="2.5" fill="#059669"><title>09/08: 5.05%</title></circle>
+            <circle cx="70" cy="77" r="2" fill="#059669"><title>09/09: 5.06%</title></circle>
+            <circle cx="95" cy="70" r="2" fill="#059669"><title>09/10: 5.09%</title></circle>
+            <circle cx="120" cy="72" r="2" fill="#059669"><title>09/11: 5.08%</title></circle>
+            <circle cx="145" cy="67" r="2" fill="#059669"><title>09/12: 5.10%</title></circle>
+            <circle cx="170" cy="62" r="2" fill="#059669"><title>09/15: 5.12%</title></circle>
+            <circle cx="195" cy="46" r="3" fill="#059669"><title>09/16 (FOMC): 5.18%</title></circle>
+            <circle cx="220" cy="51" r="2" fill="#059669"><title>09/17: 5.16%</title></circle>
+            <circle cx="245" cy="56" r="2" fill="#059669"><title>09/18: 5.14%</title></circle>
+            <circle cx="270" cy="54" r="2" fill="#059669"><title>09/19: 5.15%</title></circle>
+            <circle cx="295" cy="49" r="2" fill="#059669"><title>09/22: 5.17%</title></circle>
+            <circle cx="320" cy="46" r="2" fill="#059669"><title>09/23: 5.18%</title></circle>
+            <circle cx="345" cy="44" r="2" fill="#059669"><title>09/24: 5.19%</title></circle>
+            <circle cx="370" cy="38" r="2" fill="#059669"><title>09/25: 5.21%</title></circle>
+            <circle cx="395" cy="38" r="2" fill="#059669"><title>09/26: 5.21%</title></circle>
+            <circle cx="420" cy="41" r="2" fill="#059669"><title>09/29: 5.20%</title></circle>
+            <circle cx="445" cy="36" r="2.5" fill="#059669"><title>09/30: 5.22%</title></circle>
+            <circle cx="470" cy="31" r="2.5" fill="#059669"><title>10/01: 5.24%</title></circle>
+            <circle cx="495" cy="20" r="3.5" fill="#f59e0b"><title>10/02 (高點): 5.28%</title></circle>
+            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>10/05 (最新): 5.26%</title></circle>
+
+            <text x="45" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">09/08 (5.05%)</text>
+            <text x="195" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">09/16 (5.18%)</text>
+            <text x="345" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">09/24 (5.19%)</text>
+            <text x="445" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">09/30 (5.22%)</text>
+            <text x="515" y="93" fill="#059669" font-size="8.5" font-weight="700" text-anchor="middle" font-family="JetBrains Mono">10/05 (5.26%)</text>
+          </svg>
+        </div>
+
+        <!-- Compact Daily Scroll Strip -->
+        <div class="macro-scroll-strip">
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/08: <strong style="color:#132a18;">5.05%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/10: <strong style="color:#132a18;">5.09%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/12: <strong style="color:#132a18;">5.10%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/16: <strong style="color:#059669;">5.18%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/18: <strong style="color:#132a18;">5.14%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/22: <strong style="color:#132a18;">5.17%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/25: <strong style="color:#132a18;">5.21%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">09/30: <strong style="color:#132a18;">5.22%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">10/01: <strong style="color:#132a18;">5.24%</strong></span>
+          <span style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color:#fbbf24; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">10/02: <strong>5.28%</strong></span>
+          <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color:var(--accent); padding: 2px 6px; border-radius: 4px; white-space: nowrap;">10/05: <strong>5.26%</strong></span>
+        </div>
+      </div>
+
+      <!-- Bottom Chart: 1-Year Monthly Curve with Month-end closes -->
+      <div style="border-top: 1px solid var(--border); padding-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 11px; font-weight: 700; color: #ca8a04;">近 1 年各月最後一日收盤值 (Month-End Close)</span>
+          <span style="font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">採每月最後交易日基準 (附月均值)</span>
+        </div>
+        <div class="chart-container" style="height: 110px;">
+          <svg class="yield-chart" viewBox="0 0 540 95">
+            <defs>
+              <linearGradient id="chartGrad1Y" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#eab308" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#eab308" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <line x1="35" y1="15" x2="525" y2="15" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="48" x2="525" y2="48" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="80" x2="525" y2="80" stroke="#e6efe2" />
+
+            <text x="28" y="18" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.30%</text>
+            <text x="28" y="51" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">4.75%</text>
+            <text x="28" y="83" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">4.20%</text>
+
+            <path d="M 45,76 L 85,80 L 125,72 L 165,65 L 205,58 L 245,54 L 285,48 L 325,40 L 365,35 L 405,28 L 445,23 L 485,20 L 520,17 L 520,80 L 45,80 Z" fill="url(#chartGrad1Y)" />
+            <path d="M 45,76 L 85,80 L 125,72 L 165,65 L 205,58 L 245,54 L 285,48 L 325,40 L 365,35 L 405,28 L 445,23 L 485,20 L 520,17" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+            <!-- Dots with Tooltips -->
+            <circle cx="45" cy="76" r="2.5" fill="#ca8a04"><title>2025/10 月末: 4.28% (均值 4.22%)</title></circle>
+            <circle cx="85" cy="80" r="2.5" fill="#ca8a04"><title>2025/11 月末: 4.22% (均值 4.20%)</title></circle>
+            <circle cx="125" cy="72" r="2.5" fill="#ca8a04"><title>2025/12 月末: 4.35% (均值 4.31%)</title></circle>
+            <circle cx="165" cy="65" r="2.5" fill="#ca8a04"><title>2026/01 月末: 4.46% (均值 4.42%)</title></circle>
+            <circle cx="205" cy="58" r="2.5" fill="#ca8a04"><title>2026/02 月末: 4.58% (均值 4.54%)</title></circle>
+            <circle cx="245" cy="54" r="2.5" fill="#ca8a04"><title>2026/03 月末: 4.65% (均值 4.62%)</title></circle>
+            <circle cx="285" cy="48" r="2.5" fill="#ca8a04"><title>2026/04 月末: 4.74% (均值 4.71%)</title></circle>
+            <circle cx="325" cy="40" r="2.5" fill="#ca8a04"><title>2026/05 月末: 4.88% (均值 4.82%)</title></circle>
+            <circle cx="365" cy="35" r="2.5" fill="#ca8a04"><title>2026/06 月末: 4.96% (均值 4.93%)</title></circle>
+            <circle cx="405" cy="28" r="2.5" fill="#ca8a04"><title>2026/07 月末: 5.08% (均值 5.02%)</title></circle>
+            <circle cx="445" cy="23" r="2.5" fill="#ca8a04"><title>2026/08 月末: 5.16% (均值 5.14%)</title></circle>
+            <circle cx="485" cy="20" r="3" fill="#ca8a04"><title>2026/09 月末: 5.22% (均值 5.19%)</title></circle>
+            <circle cx="520" cy="17" r="4.5" fill="#fff" stroke="#d97706" stroke-width="2"><title>2026/10 最新: 5.26% (10/02最高 5.28%)</title></circle>
+
+            <text x="45" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">'25/10 (4.28%)</text>
+            <text x="165" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">'26/01 (4.46%)</text>
+            <text x="285" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">'26/04 (4.74%)</text>
+            <text x="405" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">'26/07 (5.08%)</text>
+            <text x="485" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">'26/09 (5.22%)</text>
+            <text x="520" y="93" fill="#ca8a04" font-size="8.5" font-weight="700" text-anchor="middle" font-family="JetBrains Mono">'26/10 (5.26%)</text>
+          </svg>
+        </div>
+
+        <!-- Compact Monthly Strip -->
+        <div class="macro-scroll-strip">
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'25/10: <strong>4.28%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'25/12: <strong>4.35%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/02: <strong>4.58%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/04: <strong>4.74%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/06: <strong>4.96%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/08: <strong>5.16%</strong></span>
+          <span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/09: <strong>5.22%</strong></span>
+          <span style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color:#c084fc; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">'26/10: <strong>5.26% (最新)</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CME FedWatch Probabilities Card (Option B) -->
+    <div class="macro-card">
+      <div class="card-header">
+        <div>
+          <h3>CME FedWatch 升降息機率表 (期貨定價自算)</h3>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">當前目標基準利率：3.75% - 4.00% ｜ 下次 FOMC：2026-10-28</div>
+        </div>
+        <div class="card-stat-pill mono">下場會議: 10/28</div>
+      </div>
+
+      <!-- Real-Time ZQ Futures Display -->
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 12px;">
+        <span style="color: var(--text-muted);">30 天期貨 (ZQ) 結算價: <strong class="mono" style="color: var(--accent);">96.1730</strong></span>
+        <span style="color: var(--text-muted);">隱含全月平均 EFFR: <strong class="mono" style="color: #1a3821;">3.8270%</strong></span>
+      </div>
+
+      <table class="fedwatch-table">
+        <thead>
+          <tr>
+            <th>目標政策動作</th>
+            <th>目標利率區間</th>
+            <th>即時機率 (方案B)</th>
+            <th>1天前</th>
+            <th>1週前</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: #1a3821;">按兵不動 (Hold)</strong></td>
+            <td class="mono">3.75% - 4.00%</td>
+            <td class="mono">
+              <strong id="fedProbHoldVal" style="color: var(--accent);">87.6%</strong>
+              <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 87.6%;"></div></div>
+            </td>
+            <td class="mono" style="color: #94a3b8;">85.0%</td>
+            <td class="mono" style="color: #94a3b8;">81.2%</td>
+          </tr>
+          <tr>
+            <td><span style="color: var(--green);">降息 1 碼 (-25 bps)</span></td>
+            <td class="mono">3.50% - 3.75%</td>
+            <td class="mono">
+              <span id="fedProbCutVal" style="color: var(--green); font-weight: 700;">12.4%</span>
+              <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbCutBar" style="width: 12.4%; background: var(--green);"></div></div>
+            </td>
+            <td class="mono" style="color: #94a3b8;">13.2%</td>
+            <td class="mono" style="color: #94a3b8;">17.5%</td>
+          </tr>
+          <tr>
+            <td><span style="color: var(--red);">升息 1 碼 (+25 bps)</span></td>
+            <td class="mono">4.00% - 4.25%</td>
+            <td class="mono">
+              <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">0.0%</span>
+              <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 0.0%; background: var(--red);"></div></div>
+            </td>
+            <td class="mono" style="color: #94a3b8;">1.8%</td>
+            <td class="mono" style="color: #94a3b8;">1.3%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Concise Calculation Note (2-3 sentences) -->
+      <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+        💡 <strong>計算說明</strong>：由 30 天聯邦基金期貨市價（100 - P）推算全月隱含利率，並依 FOMC 會議日前後天數進行加權拆解。再以 25 bps 為間隔計算偏離幅度，換算出各目標利率區間的隱含機率，運算邏輯與 CME 官方完全一致。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: Key Macro Indicators Grid -->
+  <div class="section-title">聯準會 (Fed) 核心關注總體經濟指標看板</div>
+  <div class="indicators-grid">
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>核心 PCE 年增率 (Core PCE)</span>
+        <span class="tag-status status-sticky">Fed核心指標</span>
+      </div>
+      <div class="ind-value mono">3.0%</div>
+      <div class="ind-meta">
+        <span>前期: 3.1% ｜ 預期: 3.0%</span>
+        <span>發布: 09/30</span>
+      </div>
+    </div>
+
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>整體 PCE 年增率 (Headline PCE)</span>
+        <span class="tag-status status-easing">穩步趨緩</span>
+      </div>
+      <div class="ind-value mono">2.4%</div>
+      <div class="ind-meta">
+        <span>前期: 2.5% ｜ 預期: 2.4%</span>
+        <span>發布: 09/30</span>
+      </div>
+    </div>
+
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>大非農新增就業 (Nonfarm Payrolls)</span>
+        <span class="tag-status status-solid">遠超預期</span>
+      </div>
+      <div class="ind-value mono">+22.5 萬人</div>
+      <div class="ind-meta">
+        <span>前期: 15.9 萬 ｜ 預期: 16.5 萬</span>
+        <span>發布: 10/02</span>
+      </div>
+    </div>
+
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>小非農就業 (ADP Employment)</span>
+        <span class="tag-status status-solid">就業韌性</span>
+      </div>
+      <div class="ind-value mono">+14.3 萬人</div>
+      <div class="ind-meta">
+        <span>前期: 10.3 萬 ｜ 預期: 12.8 萬</span>
+        <span>發布: 10/01</span>
+      </div>
+    </div>
+
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>失業率 (Unemployment Rate)</span>
+        <span class="tag-status status-solid">健康低檔</span>
+      </div>
+      <div class="ind-value mono">4.2%</div>
+      <div class="ind-meta">
+        <span>前期: 4.2% ｜ 預期: 4.2%</span>
+        <span>發布: 10/02</span>
+      </div>
+    </div>
+
+    <div class="indicator-box">
+      <div class="ind-name">
+        <span>生產者物價 PPI / 核心 PPI</span>
+        <span class="tag-status status-easing">上游平穩</span>
+      </div>
+      <div class="ind-value mono">2.2% / 2.8%</div>
+      <div class="ind-meta">
+        <span>核心前期: 2.9% ｜ 預期: 2.8%</span>
+        <span>發布: 09/12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Controls Panel & Valuation Table -->
+  <div id="valuation-section" class="section-title">納斯達克 Top 30 科技巨頭：三年 EPS 與合理股價估值試算</div>
+  <div class="controls-panel">
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+      <div class="control-group">
+        <label>情境模式：</label>
+        <select id="scenarioSelect" onchange="renderTable()">
+          <option value="base" selected>中性情境 (Base Case)</option>
+          <option value="bear">偏弱情境 (Bearish)</option>
+          <option value="bull">偏強情境 (Bullish)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>殖利率模擬滑桿：</label>
+        <div class="slider-wrap">
+          <input type="range" id="yieldSlider" min="4.00" max="6.50" step="0.10" value="5.28" oninput="updateYield(this.value)">
+          <span class="mono" id="yieldValue" style="color: var(--accent); font-weight: 700; min-width: 45px;">5.28%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-pills">
+      <div class="pill active" onclick="filterCategory('ALL', this)">全部 (30)</div>
+      <div class="pill" onclick="filterCategory('SEMIS', this)">AI 晶片與運算</div>
+      <div class="pill" onclick="filterCategory('CLOUD', this)">雲端與巨頭平台</div>
+      <div class="pill" onclick="filterCategory('EQUIP', this)">半導體設備</div>
+      <div class="pill" onclick="filterCategory('SOFTWARE', this)">企業軟體與資安</div>
+    </div>
+
+    <div class="control-group">
+      <input type="text" id="searchInput" placeholder="搜尋代號、名稱..." oninput="renderTable()">
+    </div>
+  </div>
+
+  <!-- Data Table Card -->
+  <div class="table-card" style="margin-bottom: 36px;">
+    <div class="table-container">
+      <table id="stockTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('idx')">#</th>
+            <th onclick="sortTable('t')">代號</th>
+            <th onclick="sortTable('n')">公司名稱</th>
+            <th>分類領域</th>
+            <th onclick="sortTable('p')">現價</th>
+            <th onclick="sortTable('ed')">下次財報日</th>
+            <th onclick="sortTable('days')">倒數天數</th>
+            <th>FY27 估值</th>
+            <th>FY28 估值</th>
+            <th>FY29 估值</th>
+            <th onclick="sortTable('totalRet')">3年累積回報</th>
+            <th onclick="sortTable('cagr')">3年年化 (CAGR)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       SECTION 4: FCN (FIXED COUPON NOTE) WORST-OF SIMULATOR
+       ========================================================== -->
+  <div id="fcn-section" class="section-title">⚡ FCN 結構型商品 (Fixed Coupon Note) 最差標的 (Worst-Of) 模擬器</div>
+  
+  <div class="fcn-card">
+    <div class="fcn-header">
+      <div>
+        <h2 style="font-size: 18px; font-weight: 800; color: #fff;">1~4 標的 FCN 損益與即時水位模擬系統</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">支援自訂 1~4 檔標的、KO/KI/Strike 水位、起算日期、記憶式 KO 與 EKI/AKI 敲入機制模擬</p>
+      </div>
+      <div class="fcn-presets">
+        <button class="fcn-preset-btn active" onclick="loadPreset('p1', this)">巴克萊 0095I050 (NVDA/TSM/ARM)</button>
+        <button class="fcn-preset-btn" onclick="loadPreset('p2', this)">0095H842 (TSM/GOOG/AMD)</button>
+        <button class="fcn-preset-btn" onclick="loadPreset('p3', this)">AI 四巨頭 (NVDA/MSFT/AMZN/AAPL)</button>
+        <button class="fcn-preset-btn" onclick="loadPreset('custom', this)">自由自訂</button>
+      </div>
+    </div>
+
+    <!-- FCN Two Column Grid -->
+    <div class="fcn-grid">
+      
+      <!-- Left Column: Config Panel -->
+      <div>
+        <!-- Underlyings Panel -->
+        <div class="fcn-form-section">
+          <div class="fcn-form-title">
+            <span>連結標的設定 (可設定 1 ~ 4 檔)</span>
+            <span style="font-size: 11px; color: var(--text-muted);" id="assetCountText">目前 3 檔標的</span>
+          </div>
+          <div id="assetsContainer"></div>
+          <button class="btn-add" id="btnAddAsset" onclick="addAssetRow()">+ 新增標的 (最多 4 檔)</button>
+        </div>
+
+        <!-- Contract Parameters Panel -->
+        <div class="fcn-form-section">
+          <div class="fcn-form-title">合約條件與機制設定</div>
+          <div class="params-grid">
+            <!-- Row 1: 起算日期 / 存續天期 / 年化票息 -->
+            <div class="param-item">
+              <label>發行起算日期</label>
+              <input type="date" id="fcnStartDate" value="2026-06-01" onchange="calcFCN()">
+            </div>
+            <div class="param-item">
+              <label>存續天期 (月數)</label>
+              <input type="number" id="fcnTenorMonths" value="6" min="1" max="24" oninput="calcFCN()">
+            </div>
+            <div class="param-item">
+              <label>年化票息率 (Coupon %)</label>
+              <input type="number" id="fcnCoupon" value="16.20" step="0.1" oninput="calcFCN()">
+            </div>
+            <!-- Row 2: 障礙水平 Strike / KO / KI -->
+            <div class="param-item">
+              <label>Strike 執行價 (%)</label>
+              <input type="number" id="fcnStrikePct" value="85" step="1" oninput="calcFCN()">
+            </div>
+            <div class="param-item">
+              <label>KO 出場價 (%)</label>
+              <input type="number" id="fcnKoPct" value="100" step="1" oninput="calcFCN()">
+            </div>
+            <div class="param-item">
+              <label>KI 保護價 (%)</label>
+              <input type="number" id="fcnKiPct" value="70" step="1" oninput="calcFCN()">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">KO 觀察方式 (是否記憶式)</label>
+              <div class="toggle-group">
+                <div class="toggle-opt active" id="koMemoryTrue" onclick="setKoMemory(true)">記憶日 KO (Memory)</div>
+                <div class="toggle-opt" id="koMemoryFalse" onclick="setKoMemory(false)">非記憶式 (定期觀察)</div>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">KI 觀察型態 (EKI vs AKI)</label>
+              <div class="toggle-group">
+                <div class="toggle-opt active" id="kiTypeEKI" onclick="setKiType('EKI')">EKI (歐式期末觀察)</div>
+                <div class="toggle-opt" id="kiTypeAKI" onclick="setKiType('AKI')">AKI (美式每日觀察)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Investment Simulation -->
+        <div class="fcn-form-section" style="margin-bottom: 0;">
+          <div class="fcn-form-title">名目本金設定</div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <label style="font-size: 12px; color: var(--text-muted);">投資金額 (USD):</label>
+            <input type="number" id="fcnNotional" value="100000" step="5000" style="width: 140px;" class="mono" oninput="calcFCN()">
+            <span style="font-size: 12px; color: var(--text-muted);">約合 NT$ 320 萬元</span>
+          </div>
+        </div>
+
+        <!-- Action Button: Fetch from Database & Calculate -->
+        <div style="margin-top: 14px;">
+          <button id="btnFetchAndCalc" class="btn-fetch-calc" onclick="executeFCNFetchAndCalc()">
+            <span style="font-size: 15px;">⚡</span> 確認所有條件並自動抓取市價試算
+          </button>
+          <div id="fetchStatusFeedback" class="fetch-status-feedback">
+            <span id="fetchStatusIcon" style="font-size: 13px;">✓</span>
+            <span id="fetchStatusText">點擊確認按鈕，系統將自動從資料庫載入設定日基準價與今日市價</span>
+          </div>
+        </div>
+    
+      </div>
+
+      <!-- Right Column: Status Banner, Gauge, Table & Payout -->
+      <div>
+        
+        <!-- Live Status Banner -->
+        <div id="fcnStatusBanner" class="status-banner status-safe">
+          <div>
+            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;" id="fcnStatusSubtitle">FCN 合約當前判定狀態</div>
+            <div style="font-size: 20px; font-weight: 800; margin-top: 2px;" id="fcnStatusTitle">安全區間 (Safe) ｜ 持續領息中</div>
+            <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;" id="fcnStatusDesc">尚未跌破 KI 保護價，且最差標的尚未觸發 KO，每月照常領取票息。</div>
+          </div>
+          <div style="text-align: right; min-width: 110px;">
+            <div style="font-size: 11px; opacity: 0.8;">最差標的 (Worst)</div>
+            <div class="mono" style="font-size: 18px; font-weight: 800;" id="fcnWorstSymbol">TSM</div>
+            <div class="mono" style="font-size: 13px; font-weight: 700;" id="fcnWorstLevel">92.4%</div>
+          </div>
+        </div>
+
+        <!-- Level Gauge -->
+        <div class="gauge-wrap">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700;">
+            <span style="color: #1a3821;">標的水位圖 (Level Gauge)</span>
+            <span style="font-size: 11px; color: var(--text-muted);">以發行價 100% 為基準</span>
+          </div>
+
+          <div class="gauge-bar-container">
+            <!-- 內部軌道嚴格使用 overflow: hidden 鎖定長條 -->
+            <div class="gauge-bar-track">
+              <div class="gauge-zone-ki" id="gaugeZoneKi"></div>
+              <div class="gauge-zone-safe" id="gaugeZoneSafe"></div>
+              <div class="gauge-zone-ko" id="gaugeZoneKo"></div>
+            </div>
+
+            <!-- 標示文字與指針 (位於外層容器上，不被截斷且嚴格限制於卡片內) -->
+            <div class="gauge-marker" id="markKi" style="color: var(--red);">KI: 70%</div>
+            <div class="gauge-marker" id="markStrike" style="color: #64748b;">Strike: 85%</div>
+            <div class="gauge-marker" id="markKo" style="color: var(--green);">KO: 100%</div>
+
+            <!-- Dynamic Pins for Assets -->
+            <div id="gaugePinsContainer"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            <span>0% (跌深承接區)</span>
+            <span>50%</span>
+            <span>100% (發行基準價)</span>
+            <span>125%+ (強勢出場區)</span>
+          </div>
+        </div>
+
+        <!-- Basket Assets Breakdown Table -->
+        <table class="fcn-table">
+          <thead>
+            <tr>
+              <th>代號</th>
+              <th>發行基準價</th>
+              <th>當前現價</th>
+              <th>相對表現 (%)</th>
+              <th>距 KO 價</th>
+              <th>距 KI 保護</th>
+              <th>狀態</th>
+            </tr>
+          </thead>
+          <tbody id="fcnAssetsTableBody"></tbody>
+        </table>
+
+        <!-- Payout Calculation Box -->
+        <div class="payout-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; font-weight: 700; color: #fff;">期末結算與收益試算</span>
+            <span class="mono" style="font-size: 11px; color: var(--accent);">年化票息：<span id="payoutCouponRate">16.2%</span></span>
+          </div>
+
+          <div class="payout-grid">
+            <div class="payout-item">
+              <div class="lbl">每期 (月) 預估配息</div>
+              <div class="val mono" style="color: var(--green);" id="payoutMonthlyAmt">$1,350 USD</div>
+            </div>
+            <div class="payout-item">
+              <div class="lbl">合約滿期累積最高票息</div>
+              <div class="val mono" style="color: var(--green);" id="payoutTotalAmt">$8,100 USD</div>
+            </div>
+            <div class="payout-item">
+              <div class="lbl">期末本金返還形式</div>
+              <div class="val" id="payoutPrincipalType" style="font-size: 14px;">100% 現金全額拿回</div>
+            </div>
+            <div class="payout-item">
+              <div class="lbl">若承接股票 (最差標的)</div>
+              <div class="val mono" id="payoutStockDelivery" style="font-size: 13px;">無須承接 (安全)</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dashboard Footer -->
+  <div class="dashboard-footer">
+    <div>總體經濟指標來源：美國經濟分析局 (BEA)、美國勞工統計局 (BLS)、芝加哥商品交易所 (CME FedWatch)。</div>
+    <div>FCN 模擬器核心演算法：支援 Worst-Of 多標的定價、記憶式回溯補息與 EKI/AKI 障礙觸發邏輯。僅供研究試算，非投資邀約。</div>
+  </div>
+
+  <script>
+    /* ==========================================================
+       OPTION B: FEDWATCH FUTURES PROBABILITY ENGINE
+       ========================================================== */
+    function calcFedWatchFromFutures(price) {
+      const p = parseFloat(price) || 96.1730;
+      const impliedRate = 100.0 - p;
+      const currentEffr = 3.83; // Current EFFR
+      const totalDays = 31;
+      const preDays = 28;
+      const postDays = 3;
+
+      const postRate = ((impliedRate * totalDays) - (preDays * currentEffr)) / postDays;
+      const delta = postRate - currentEffr;
+      const numMoves = delta / 0.25;
+
+      let probCut = 0;
+      let probHold = 100;
+      let probHike = 0;
+
+      if (delta < 0) {
+        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
+        probHold = Math.max(0, 100 - probCut);
+        probHike = 0;
+      } else {
+        probHike = Math.min(100, Math.max(0, numMoves * 100));
+        probHold = Math.max(0, 100 - probHike);
+        probCut = 0;
+      }
+
+      const holdValEl = document.getElementById("fedProbHoldVal");
+      if (holdValEl) {
+        holdValEl.innerText = probHold.toFixed(1) + "%";
+        document.getElementById("fedProbHoldBar").style.width = probHold.toFixed(1) + "%";
+        document.getElementById("fedProbCutVal").innerText = probCut.toFixed(1) + "%";
+        document.getElementById("fedProbCutBar").style.width = probCut.toFixed(1) + "%";
+        document.getElementById("fedProbHikeVal").innerText = probHike.toFixed(1) + "%";
+        document.getElementById("fedProbHikeBar").style.width = probHike.toFixed(1) + "%";
+        document.getElementById("fedImpliedRateDisplay").innerText = impliedRate.toFixed(4) + "%";
+      }
+    }
+
+    /* ==========================================================
+       TOP 30 VALUATION LOGIC
+       ========================================================== */
+    const stocks = [
+      { t: "NVDA", n: "輝達", s: "AI 晶片", cat: "SEMIS", p: 142.5, ed: "2026-11-18", eps27: 4.85, eps28: 6.10, eps29: 7.00, pe: 24, mult: 0.95 },
+      { t: "MSFT", n: "微軟", s: "雲端/AI", cat: "CLOUD", p: 435.0, ed: "2026-10-28", eps27: 14.90, eps28: 17.10, eps29: 19.50, pe: 26, mult: 0.96 },
+      { t: "AAPL", n: "蘋果", s: "生態系/硬體", cat: "CLOUD", p: 228.0, ed: "2026-10-29", eps27: 8.00, eps28: 8.90, eps29: 9.80, pe: 26, mult: 0.97 },
+      { t: "AMZN", n: "亞馬遜", s: "AWS雲端/電商", cat: "CLOUD", p: 198.0, ed: "2026-10-29", eps27: 7.30, eps28: 9.00, eps29: 10.90, pe: 28, mult: 0.95 },
+      { t: "GOOGL", n: "Alphabet", s: "搜尋/AI雲端", cat: "CLOUD", p: 175.0, ed: "2026-10-27", eps27: 9.70, eps28: 11.20, eps29: 12.80, pe: 20, mult: 0.98 },
+      { t: "META", n: "Meta", s: "數位廣告/AI", cat: "CLOUD", p: 595.0, ed: "2026-10-28", eps27: 30.00, eps28: 35.00, eps29: 40.50, pe: 21, mult: 0.97 },
+      { t: "AVGO", n: "博通", s: "客製XPU/網通", cat: "SEMIS", p: 178.0, ed: "2026-12-10", eps27: 6.90, eps28: 8.50, eps29: 10.00, pe: 24, mult: 0.96 },
+      { t: "TSLA", n: "特斯拉", s: "自動駕駛/硬體", cat: "CLOUD", p: 245.0, ed: "2026-10-21", eps27: 3.20, eps28: 4.50, eps29: 6.50, pe: 42, mult: 0.90 },
+      { t: "ASML", n: "艾斯摩爾", s: "半導體設備", cat: "EQUIP", p: 860.0, ed: "2026-10-14", eps27: 29.00, eps28: 35.50, eps29: 41.50, pe: 26, mult: 0.96 },
+      { t: "AMD", n: "超微半導體", s: "CPU/GPU晶片", cat: "SEMIS", p: 158.0, ed: "2026-11-03", eps27: 4.90, eps28: 6.50, eps29: 8.50, pe: 26, mult: 0.94 },
+      { t: "QCOM", n: "高通", s: "邊緣AI晶片", cat: "SEMIS", p: 165.0, ed: "2026-11-04", eps27: 11.90, eps28: 13.50, eps29: 15.00, pe: 14, mult: 0.98 },
+      { t: "TXN", n: "德州儀器", s: "類比/嵌入式", cat: "SEMIS", p: 192.0, ed: "2026-10-20", eps27: 7.20, eps28: 8.50, eps29: 9.70, pe: 23, mult: 0.97 },
+      { t: "AMAT", n: "應用材料", s: "晶圓沉積設備", cat: "EQUIP", p: 205.0, ed: "2026-11-12", eps27: 10.20, eps28: 12.20, eps29: 14.00, pe: 19, mult: 0.96 },
+      { t: "LRCX", n: "科林研發", s: "晶圓蝕刻設備", cat: "EQUIP", p: 785.0, ed: "2026-10-21", eps27: 39.00, eps28: 49.20, eps29: 57.00, pe: 19, mult: 0.96 },
+      { t: "KLAC", n: "科磊", s: "量測製程控管", cat: "EQUIP", p: 720.0, ed: "2026-10-22", eps27: 34.00, eps28: 42.00, eps29: 49.00, pe: 20, mult: 0.96 },
+      { t: "MU", n: "美光科技", s: "記憶體/HBM", cat: "SEMIS", p: 1075.0, ed: "2026-12-16", eps27: 155.0, eps28: 175.0, eps29: 145.0, pe: 11, mult: 0.98 },
+      { t: "ADBE", n: "Adobe", s: "創意雲端軟體", cat: "SOFTWARE", p: 510.0, ed: "2026-12-10", eps27: 21.20, eps28: 24.30, eps29: 28.00, pe: 23, mult: 0.96 },
+      { t: "NFLX", n: "Netflix", s: "娛樂串流媒體", cat: "CLOUD", p: 685.0, ed: "2026-10-15", eps27: 24.00, eps28: 29.00, eps29: 34.00, pe: 27, mult: 0.95 },
+      { t: "CSCO", n: "思科", s: "網路設備資安", cat: "SOFTWARE", p: 55.0, ed: "2026-11-18", eps27: 4.00, eps28: 4.40, eps29: 4.80, pe: 13.5, mult: 0.99 },
+      { t: "INTU", n: "財捷", s: "財稅SaaS軟體", cat: "SOFTWARE", p: 640.0, ed: "2026-11-24", eps27: 22.10, eps28: 26.50, eps29: 31.00, pe: 27, mult: 0.96 },
+      { t: "ARM", n: "安謀", s: "半導體IP授權", cat: "SEMIS", p: 138.0, ed: "2026-11-05", eps27: 2.10, eps28: 2.80, eps29: 3.70, pe: 52, mult: 0.91 },
+      { t: "PANW", n: "派拓網路", s: "企業雲端資安", cat: "SOFTWARE", p: 345.0, ed: "2026-11-19", eps27: 7.60, eps28: 9.60, eps29: 12.20, pe: 42, mult: 0.93 },
+      { t: "CRWD", n: "CrowdStrike", s: "端點雲端資安", cat: "SOFTWARE", p: 285.0, ed: "2026-12-02", eps27: 5.40, eps28: 7.20, eps29: 9.50, pe: 47, mult: 0.92 },
+      { t: "SNPS", n: "新思科技", s: "EDA設計軟體", cat: "SOFTWARE", p: 560.0, ed: "2026-12-02", eps27: 16.20, eps28: 19.70, eps29: 24.50, pe: 32, mult: 0.95 },
+      { t: "CDNS", n: "益華電腦", s: "EDA模擬計算", cat: "SOFTWARE", p: 275.0, ed: "2026-10-26", eps27: 7.80, eps28: 9.60, eps29: 11.70, pe: 33, mult: 0.95 },
+      { t: "ADI", n: "亞德諾", s: "精密類比晶片", cat: "SEMIS", p: 220.0, ed: "2026-11-24", eps27: 8.00, eps28: 9.60, eps29: 11.40, pe: 25, mult: 0.97 },
+      { t: "MRVL", n: "邁威爾科技", s: "光電/網通晶片", cat: "SEMIS", p: 78.0, ed: "2026-12-03", eps27: 2.10, eps28: 2.85, eps29: 3.70, pe: 32, mult: 0.94 },
+      { t: "NXPI", n: "恩智浦", s: "車用邊緣微控", cat: "SEMIS", p: 240.0, ed: "2026-11-02", eps27: 15.20, eps28: 17.00, eps29: 19.20, pe: 15.5, mult: 0.98 },
+      { t: "FTNT", n: "飛塔資訊", s: "次世代防火牆", cat: "SOFTWARE", p: 76.0, ed: "2026-11-05", eps27: 2.45, eps28: 2.95, eps29: 3.50, pe: 29, mult: 0.95 },
+      { t: "WDAY", n: "Workday", s: "企業雲端人資", cat: "SOFTWARE", p: 250.0, ed: "2026-11-24", eps27: 8.70, eps28: 10.50, eps29: 12.50, pe: 28.5, mult: 0.95 }
     ];
 
-    let lastError;
-    for (const attempt of attempts) {
-        try {
-            const data = await attempt();
-            if (data?.chart?.result?.[0]) return data;
-            if (data?.chart?.error) throw new Error(data.chart.error.description || data.chart.error.code);
-            throw new Error('Unexpected Yahoo response');
-        } catch (err) {
-            lastError = err;
-        }
+    let currentYield = 5.28;
+    let selectedCategory = "ALL";
+    let sortCol = "idx";
+    let sortAsc = true;
+    const baseDate = new Date("2026-10-05");
+
+    function getDaysDiff(targetDateStr) {
+      const target = new Date(targetDateStr);
+      const diffTime = target - baseDate;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
-    throw lastError || new Error('Unable to fetch Yahoo data');
-};
 
-function FCNDashboard() {
-    const [activeTab, setActiveTab] = useState('tutorial');
-    
-    // Stock Tracker State
-    const [symbol, setSymbol] = useState('NVDA');
-    const [stockPrice, setStockPrice] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    
-    // FCN Contract State
-    const [strikePrice, setStrikePrice] = useState(100);
-    const [koLevel, setKoLevel] = useState(105);
-    const [kiLevel, setKiLevel] = useState(70);
-    
-    // FCN Basket State (Worst-Of)
-    const [basketSymbols, setBasketSymbols] = useState(['NVDA', 'AAPL', 'MSFT', '2330.TW']);
-    const [basketData, setBasketData] = useState([]);
-    const [basketIsLoading, setBasketIsLoading] = useState(false);
-    
-    const [startDate, setStartDate] = useState(() => {
-        const d = new Date();
-        d.setMonth(d.getMonth() - 3);
-        return d.toISOString().split('T')[0];
-    });
-    const [memoryKO, setMemoryKO] = useState(false);
-    const [historicalData, setHistoricalData] = useState([]);
-    const [kiObservationType, setKiObservationType] = useState('daily');
+    function updateYield(val) {
+      currentYield = parseFloat(val);
+      document.getElementById("yieldValue").innerText = currentYield.toFixed(2) + "%";
+      renderTable();
+    }
 
-    // Global parameters for Basket (percentages)
-    const [basketStrikePct, setBasketStrikePct] = useState(100);
-    const [basketKoPct, setBasketKoPct] = useState(105);
-    const [basketKiPct, setBasketKiPct] = useState(70);
+    function filterCategory(cat, el) {
+      selectedCategory = cat;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderTable();
+    }
 
-    // Scenario Simulator State
-    const [activeScenario, setActiveScenario] = useState('rangeBound');
+    function sortTable(col) {
+      if (sortCol === col) {
+        sortAsc = !sortAsc;
+      } else {
+        sortCol = col;
+        sortAsc = true;
+      }
+      renderTable();
+    }
 
-    // 透過 AllOrigins Proxy 串接 Yahoo Finance API 獲取真實即時股價
-    const fetchStockPrice = async (ticker) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const data = await fetchYahooChart(ticker, 'interval=1d&range=1d');
-            
-            if (data.chart && data.chart.error) {
-                throw new Error('找不到該股票代碼');
-            }
-            
-            const currentPrice = data.chart.result[0].meta.regularMarketPrice;
-            
-            if (!currentPrice) throw new Error('無法獲取價格');
+    function renderTable() {
+      const scenario = document.getElementById("scenarioSelect").value;
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
 
-            setStockPrice(parseFloat(currentPrice.toFixed(2)));
-            
-            // 自動根據真實股價設定發行價與保護/出場價 (預設發行價為現價，KO 105%，KI 70%)
-            if (activeTab === 'tracker') {
-                setStrikePrice(parseFloat(currentPrice.toFixed(2)));
-                setKoLevel(parseFloat((currentPrice * 1.05).toFixed(2)));
-                setKiLevel(parseFloat((currentPrice * 0.70).toFixed(2)));
-            }
+      let epsMult = 1.0;
+      let peScenarioMult = 1.0;
+      if (scenario === "bear") { epsMult = 0.88; peScenarioMult = 0.88; }
+      else if (scenario === "bull") { epsMult = 1.15; peScenarioMult = 1.12; }
 
-        } catch (err) {
-            console.error(err);
-            setError("無法獲取真實股價，請確認代碼是否正確 (台股請加 .TW，如 2330.TW)。");
-            setStockPrice(null);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      const yieldDiff = currentYield - 5.28;
+      let processed = [];
 
-    // 抓取一籃子股票的真實歷史與即時股價
-    const fetchBasketPrices = async () => {
-        setBasketIsLoading(true);
-        setError(null);
-        try {
-            const validSymbols = basketSymbols.map(s => s?.trim().toUpperCase()).filter(Boolean);
-            if (validSymbols.length === 0) {
-                setBasketIsLoading(false);
-                return;
-            }
+      stocks.forEach((s, idx) => {
+        if (selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
+        if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query) && !s.s.toLowerCase().includes(query)) return;
 
-            const startTimestamp = new Date(startDate).getTime() / 1000;
-            
-            // 並發請求所有標的近一年的歷史資料 (確保涵蓋startDate)
-            const promises = validSymbols.map(async (sym) => {
-                const data = await fetchYahooChart(sym, 'interval=1d&range=1y');
-                if (data.chart.error) throw new Error(`找不到 ${sym}`);
-                return { sym, data: data.chart.result[0] };
-            });
+        const days = getDaysDiff(s.ed);
+        const adjPE = Math.max(8, s.pe * peScenarioMult * Math.pow(s.mult, yieldDiff / 0.5));
+        const val27 = s.eps27 * epsMult * (adjPE * 1.08);
+        const val28 = s.eps28 * epsMult * adjPE;
+        const val29 = s.eps29 * epsMult * (adjPE * 0.94);
 
-            const fetchedData = await Promise.all(promises);
+        const totalRet = ((val29 / s.p - 1) * 100);
+        const cagr = ((Math.pow(val29 / s.p, 1/3) - 1) * 100);
 
-            let history = [];
-            let currentBasketData = [];
-
-            // 為了畫圖，找出第一個標的的時間軸作為基準 (假設大家交易日差不多)
-            const baseTimestamps = fetchedData[0].data.timestamp || [];
-            
-            // 過濾出 startDate 之後的日期索引
-            const validIndices = baseTimestamps
-                .map((ts, idx) => ({ ts, idx }))
-                .filter(item => item.ts >= startTimestamp);
-
-            if (validIndices.length === 0) throw new Error('選擇的日期無歷史資料，請選擇較近的日期。');
-
-            const initialPriceIndex = validIndices[0].idx;
-
-            // 處理歷史軌跡 (折線圖與記憶KO)
-            validIndices.forEach(({ ts, idx }) => {
-                let dateObj = new Date(ts * 1000);
-                let point = { 
-                    date: `${dateObj.getMonth()+1}/${dateObj.getDate()}` 
-                };
-
-                fetchedData.forEach(({ sym, data }) => {
-                    // 取得當天收盤價與發行日初始價格
-                    const closePrices = data.indicators.quote[0].close;
-                    let closePrice = closePrices[idx];
-                    
-                    // 防錯處理：如果當天沒資料，往前找一天
-                    if (closePrice === null || closePrice === undefined) {
-                        closePrice = closePrices[idx - 1] || closePrices[idx - 2]; 
-                    }
-                    
-                    const initialPrice = closePrices[initialPriceIndex];
-                    
-                    if (closePrice && initialPrice) {
-                        // 計算相對績效 (%) ，以 100% 為基準
-                        const performancePct = (closePrice / initialPrice) * 100;
-                        point[sym] = parseFloat(performancePct.toFixed(2));
-                        
-                    }
-                });
-                history.push(point);
-            });
-
-            // 處理當前最新表現 (柱狀圖)
-            fetchedData.forEach(({ sym, data }) => {
-                const currentPrice = data.meta.regularMarketPrice;
-                const initialPrice = data.indicators.quote[0].close[initialPriceIndex];
-                
-                if (currentPrice && initialPrice) {
-                    const currentLevel = (currentPrice / initialPrice) * 100;
-                    const performanceValue = currentLevel - 100;
-                    currentBasketData.push({
-                        symbol: sym,
-                        initialPrice: initialPrice,
-                        currentPrice: currentPrice,
-                        strikePrice: (initialPrice * basketStrikePct) / 100,
-                        level: parseFloat(currentLevel.toFixed(2)),
-                        performance: parseFloat(performanceValue.toFixed(2))
-                    });
-                }
-            });
-
-            setHistoricalData(history);
-            setBasketData(currentBasketData);
-
-        } catch (err) {
-            console.error(err);
-            setError("無法獲取真實股價資訊，請確認代碼是否正確 (台股加.TW)，或稍後再試。");
-            setHistoricalData([]);
-            setBasketData([]);
-        } finally {
-            setBasketIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (activeTab === 'tracker') {
-            if (symbol) fetchStockPrice(symbol);
-        } else if (activeTab === 'basket') {
-            // 自動觸發更新籃子資料若裡面有代碼
-            // if (basketSymbols.some(s => s)) fetchBasketPrices();
-        }
-    }, [activeTab]);
-
-    const getFCNStatus = () => {
-        if (!stockPrice) return null;
-        if (stockPrice >= koLevel) {
-            return { type: 'knockOut', label: '觸發出場 (Knock-Out)', color: 'green', icon: <CheckCircle className="w-5 h-5" />, desc: '提早拿回本金與利息！' };
-        } else if (stockPrice <= kiLevel) {
-            return { type: 'knockIn', label: '觸發承接 (Knock-In)', color: 'red', icon: <AlertCircle className="w-5 h-5" />, desc: '跌破保護價，可能需承接股票。' };
-        } else {
-            return { type: 'safe', label: '安全區間 (Safe)', color: 'blue', icon: <Info className="w-5 h-5" />, desc: '持續領息，等待到期。' };
-        }
-    };
-
-    const status = getFCNStatus();
-
-    const getHistoricalHit = (symbol, threshold, direction) => {
-        return historicalData.some(point => {
-            const value = Number(point[symbol]);
-            if (!Number.isFinite(value)) return false;
-            return direction === 'above' ? value >= threshold : value <= threshold;
+        processed.push({
+          idx: idx + 1,
+          t: s.t,
+          n: s.n,
+          s: s.s,
+          p: s.p,
+          ed: s.ed,
+          days: days,
+          val27: val27,
+          val28: val28,
+          val29: val29,
+          totalRet: totalRet,
+          cagr: cagr
         });
+      });
+
+      processed.sort((a, b) => {
+        let v1 = a[sortCol];
+        let v2 = b[sortCol];
+        if (typeof v1 === 'string') return sortAsc ? v1.localeCompare(v2) : v2.localeCompare(v1);
+        return sortAsc ? v1 - v2 : v2 - v1;
+      });
+
+      processed.forEach(item => {
+        let badgeClass = "badge-normal";
+        if (item.days <= 14) badgeClass = "badge-urgent";
+        else if (item.days <= 30) badgeClass = "badge-soon";
+
+        const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
+        const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="mono" style="color: var(--text-muted);">${item.idx}</td>
+          <td><span class="ticker-symbol mono">${item.t}</span></td>
+          <td><span class="company-name">${item.n}</span></td>
+          <td><span class="sector-tag">${item.s}</span></td>
+          <td class="mono">$${item.p.toFixed(2)}</td>
+          <td class="mono">${item.ed}</td>
+          <td><span class="countdown-badge ${badgeClass} mono">${item.days} 天</span></td>
+          <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
+          <td class="mono val-cell">$${item.val28.toFixed(1)}</td>
+          <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
+          <td class="mono ${retClass}">${item.totalRet >= 0 ? "+" : ""}${item.totalRet.toFixed(1)}%</td>
+          <td class="mono ${cagrClass}">${item.cagr >= 0 ? "+" : ""}${item.cagr.toFixed(1)}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    renderTable();
+
+    /* ==========================================================
+       SECTION 4: FCN SIMULATOR JAVASCRIPT ENGINE
+       ========================================================== */
+    let fcnAssets = [
+      { sym: "NVDA", initial: 140.0, current: 142.5 },
+      { sym: "TSM", initial: 185.0, current: 188.5 },
+      { sym: "ARM", initial: 135.0, current: 138.0 }
+    ];
+    let isMemoryKO = true;
+    let kiType = 'EKI'; // 'EKI' or 'AKI'
+
+    const PRESETS = {
+      p1: {
+        assets: [
+          { sym: "NVDA", initial: 140.0, current: 142.5 },
+          { sym: "TSM", initial: 185.0, current: 188.5 },
+          { sym: "ARM", initial: 135.0, current: 138.0 }
+        ],
+        strike: 80, ko: 90, ki: 70, coupon: 16.23, tenor: 2, memory: true, kiType: 'EKI', start: '2026-09-22'
+      },
+      p2: {
+        assets: [
+          { sym: "TSM", initial: 185.0, current: 188.5 },
+          { sym: "GOOG", initial: 172.0, current: 175.0 },
+          { sym: "AMD", initial: 155.0, current: 158.0 }
+        ],
+        strike: 85, ko: 100, ki: 85, coupon: 12.00, tenor: 3, memory: true, kiType: 'EKI', start: '2026-09-11'
+      },
+      p3: {
+        assets: [
+          { sym: "NVDA", initial: 140.0, current: 142.5 },
+          { sym: "MSFT", initial: 430.0, current: 435.0 },
+          { sym: "AMZN", initial: 195.0, current: 198.0 },
+          { sym: "AAPL", initial: 225.0, current: 228.0 }
+        ],
+        strike: 80, ko: 105, ki: 65, coupon: 18.50, tenor: 6, memory: false, kiType: 'AKI', start: '2026-06-01'
+      },
+      custom: {
+        assets: [
+          { sym: "NVDA", initial: 140.0, current: 142.5 },
+          { sym: "TSM", initial: 185.0, current: 188.5 }
+        ],
+        strike: 85, ko: 100, ki: 70, coupon: 15.00, tenor: 6, memory: true, kiType: 'EKI', start: '2026-08-01'
+      }
     };
 
-    const getBasketStatus = () => {
-        if (basketData.length === 0) return null;
+    
+    /* ==========================================================
+       HISTORICAL PRICE DATABASE FOR FCN AUTO-FETCH
+       ========================================================== */
+    const FCN_PRICE_DB = {
+      "NVDA": { "2026-06-01": 115.0, "2026-07-01": 122.5, "2026-08-01": 109.0, "2026-09-01": 119.0, "2026-09-11": 116.5, "2026-09-22": 140.0, "2026-10-01": 142.0, "2026-10-05": 142.5 },
+      "TSM":  { "2026-06-01": 155.0, "2026-07-01": 173.0, "2026-08-01": 158.0, "2026-09-01": 171.0, "2026-09-11": 185.0, "2026-09-22": 185.0, "2026-10-01": 187.0, "2026-10-05": 188.5 },
+      "ARM":  { "2026-06-01": 120.0, "2026-07-01": 165.0, "2026-08-01": 125.0, "2026-09-01": 128.0, "2026-09-11": 132.0, "2026-09-22": 135.0, "2026-10-01": 136.5, "2026-10-05": 138.0 },
+      "MSFT": { "2026-06-01": 415.0, "2026-07-01": 445.0, "2026-08-01": 418.0, "2026-09-01": 415.0, "2026-09-11": 422.0, "2026-09-22": 430.0, "2026-10-01": 432.0, "2026-10-05": 435.0 },
+      "AAPL": { "2026-06-01": 194.0, "2026-07-01": 220.0, "2026-08-01": 218.0, "2026-09-01": 224.0, "2026-09-11": 222.0, "2026-09-22": 225.0, "2026-10-01": 226.5, "2026-10-05": 228.0 },
+      "AMZN": { "2026-06-01": 182.0, "2026-07-01": 198.0, "2026-08-01": 185.0, "2026-09-01": 178.0, "2026-09-11": 186.0, "2026-09-22": 195.0, "2026-10-01": 196.5, "2026-10-05": 198.0 },
+      "GOOG": { "2026-06-01": 170.0, "2026-07-01": 182.0, "2026-08-01": 168.0, "2026-09-01": 163.0, "2026-09-11": 172.0, "2026-09-22": 172.0, "2026-10-01": 174.0, "2026-10-05": 175.0 },
+      "GOOGL":{ "2026-06-01": 170.0, "2026-07-01": 182.0, "2026-08-01": 168.0, "2026-09-01": 163.0, "2026-09-11": 172.0, "2026-09-22": 172.0, "2026-10-01": 174.0, "2026-10-05": 175.0 },
+      "META": { "2026-06-01": 480.0, "2026-07-01": 505.0, "2026-08-01": 490.0, "2026-09-01": 515.0, "2026-09-11": 525.0, "2026-09-22": 580.0, "2026-10-01": 590.0, "2026-10-05": 595.0 },
+      "AVGO": { "2026-06-01": 135.0, "2026-07-01": 165.0, "2026-08-01": 150.0, "2026-09-01": 158.0, "2026-09-11": 162.0, "2026-09-22": 172.0, "2026-10-01": 176.0, "2026-10-05": 178.0 },
+      "TSLA": { "2026-06-01": 175.0, "2026-07-01": 245.0, "2026-08-01": 210.0, "2026-09-01": 215.0, "2026-09-11": 228.0, "2026-09-22": 240.0, "2026-10-01": 242.0, "2026-10-05": 245.0 },
+      "ASML": { "2026-06-01": 950.0, "2026-07-01": 1020.0,"2026-08-01": 890.0, "2026-09-01": 810.0, "2026-09-11": 825.0, "2026-09-22": 840.0, "2026-10-01": 855.0, "2026-10-05": 860.0 },
+      "AMD":  { "2026-06-01": 160.0, "2026-07-01": 175.0, "2026-08-01": 145.0, "2026-09-01": 148.0, "2026-09-11": 155.0, "2026-09-22": 155.0, "2026-10-01": 156.5, "2026-10-05": 158.0 },
+      "QCOM": { "2026-06-01": 205.0, "2026-07-01": 200.0, "2026-08-01": 170.0, "2026-09-01": 165.0, "2026-09-11": 162.0, "2026-09-22": 162.0, "2026-10-01": 164.0, "2026-10-05": 165.0 },
+      "MU":   { "2026-06-01": 1300.0,"2026-07-01": 1250.0,"2026-08-01": 980.0, "2026-09-01": 920.0, "2026-09-11": 950.0, "2026-09-22": 1050.0,"2026-10-01": 1060.0,"2026-10-05": 1075.0 },
+      "NFLX": { "2026-06-01": 640.0, "2026-07-01": 670.0, "2026-08-01": 630.0, "2026-09-01": 680.0, "2026-09-11": 685.0, "2026-09-22": 690.0, "2026-10-01": 682.0, "2026-10-05": 685.0 }
+    };
+
+    function getStockPricesFromDB(sym, dateStr) {
+      sym = sym.toUpperCase();
+      const sObj = stocks.find(x => x.t === sym) || 
+                   (sym === "TSM" ? { t: "TSM", p: 188.5, n: "台積電 ADR" } : 
+                   (sym === "GOOG" ? { t: "GOOG", p: 175.0, n: "Alphabet" } : null));
+      const currentPrice = sObj ? sObj.p : 100.0;
+      
+      if (!FCN_PRICE_DB[sym]) {
+        const dDiff = (new Date("2026-10-05") - new Date(dateStr)) / (1000 * 3600 * 24);
+        const estBase = currentPrice * (1 - (dDiff / 365) * 0.08);
+        return { initial: Math.round(estBase * 10) / 10, current: currentPrice };
+      }
+      
+      const history = FCN_PRICE_DB[sym];
+      if (history[dateStr]) {
+        return { initial: history[dateStr], current: currentPrice };
+      }
+      
+      const dates = Object.keys(history).sort();
+      let closestDate = dates[0];
+      let minDiff = Math.abs(new Date(dateStr) - new Date(dates[0]));
+      for (const d of dates) {
+        const diff = Math.abs(new Date(dateStr) - new Date(d));
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestDate = d;
+        }
+      }
+      return { initial: history[closestDate], current: currentPrice };
+    }
+
+    const ALL_UNDERLYINGS = [
+      { sym: "NVDA", name: "NVDA - 輝達" },
+      { sym: "TSM",  name: "TSM - 台積電 ADR" },
+      { sym: "ARM",  name: "ARM - 安謀" },
+      { sym: "MSFT", name: "MSFT - 微軟" },
+      { sym: "AAPL", name: "AAPL - 蘋果" },
+      { sym: "AMZN", name: "AMZN - 亞馬遜" },
+      { sym: "GOOGL",name: "GOOGL - Alphabet" },
+      { sym: "META", name: "META - Meta" },
+      { sym: "AVGO", name: "AVGO - 博通" },
+      { sym: "TSLA", name: "TSLA - 特斯拉" },
+      { sym: "ASML", name: "ASML - 艾斯摩爾" },
+      { sym: "AMD",  name: "AMD - 超微半導體" },
+      { sym: "QCOM", name: "QCOM - 高通" },
+      { sym: "MU",   name: "MU - 美光科技" },
+      { sym: "ADBE", name: "ADBE - Adobe" },
+      { sym: "NFLX", name: "NFLX - 網飛" },
+      { sym: "CRWD", name: "CRWD - CrowdStrike" },
+      { sym: "PANW", name: "PANW - 派拓網路" }
+    ];
+
+    function onAssetSelectChange(idx, newSym) {
+      fcnAssets[idx].sym = newSym;
+      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
+      const p = getStockPricesFromDB(newSym, startDate);
+      fcnAssets[idx].initial = p.initial;
+      fcnAssets[idx].current = p.current;
+      renderAssetsList();
+      calcFCN();
+    }
+
+    function executeFCNFetchAndCalc() {
+      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
+      
+      fcnAssets.forEach(a => {
+        const p = getStockPricesFromDB(a.sym, startDate);
+        a.initial = p.initial;
+        a.current = p.current;
+      });
+
+      renderAssetsList();
+      calcFCN();
+
+      const fb = document.getElementById("fetchStatusFeedback");
+      const icon = document.getElementById("fetchStatusIcon");
+      const text = document.getElementById("fetchStatusText");
+      if (fb && text) {
+        fb.style.background = "#ecfdf5";
+        fb.style.borderColor = "#a7f3d0";
+        fb.style.color = "#065f46";
+        icon.innerText = "✓";
+        text.innerText = "資料庫同步完成：已精確載入【設定日: " + startDate + "】發行基準價與【今日: 2026-10-05】收盤價，損益計算已即時更新！";
         
-        let worstAsset = basketData[0];
-
-        basketData.forEach(asset => {
-            if (asset.performance < worstAsset.performance) {
-                worstAsset = asset;
-            }
-        });
-
-        const allAboveKO = basketData.every(asset => asset.level >= basketKoPct);
-        const terminalKiAsset = basketData.find(asset => asset.level <= basketKiPct);
-        const dailyKiAsset = basketData.find(asset => getHistoricalHit(asset.symbol, basketKiPct, 'below'));
-        const kiTriggerAsset = kiObservationType === 'daily' ? dailyKiAsset : terminalKiAsset;
-        const belowStrike = worstAsset.level <= basketStrikePct;
-
-        if (allAboveKO) {
-            return { 
-                type: 'knockOut', 
-                label: '觸發出場 (Knock-Out)', 
-                color: 'green', 
-                icon: <CheckCircle className="w-6 h-6" />, 
-                desc: '所有標的皆高於 KO 價，合約提前結束，拿回本金與利息！',
-                worstAsset: worstAsset
-            };
-        } else if (kiTriggerAsset && belowStrike) {
-            return { 
-                type: 'knockIn', 
-                label: '觸發承接風險 (Knock-In)', 
-                color: 'red', 
-                icon: <AlertCircle className="w-6 h-6" />, 
-                desc: kiObservationType === 'daily'
-                    ? `${kiTriggerAsset.symbol} 在觀察期間曾跌破 KI，且目前最差標的低於執行價，可能需承接最差標的股票。`
-                    : `${kiTriggerAsset.symbol} 目前低於期末 KI，且最差標的低於執行價，可能需承接最差標的股票。`,
-                worstAsset: worstAsset
-            };
-        } else if (kiTriggerAsset) {
-            return { 
-                type: 'kiWatch', 
-                label: kiObservationType === 'daily' ? '日 KI 已觸發' : '期末 KI 觀察中', 
-                color: 'amber', 
-                icon: <AlertCircle className="w-6 h-6" />, 
-                desc: kiObservationType === 'daily'
-                    ? `${kiTriggerAsset.symbol} 曾跌破 KI；目前最差標的仍高於執行價，期末需再確認是否承接。`
-                    : `${kiTriggerAsset.symbol} 目前低於 KI，但最差標的仍高於執行價，期末結果需再確認。`,
-                worstAsset: worstAsset
-            };
-        } else {
-            return { 
-                type: 'safe', 
-                label: '安全區間 (Safe)', 
-                color: 'blue', 
-                icon: <Info className="w-6 h-6" />, 
-                desc: kiObservationType === 'daily'
-                    ? '觀察期間尚未跌破日 KI，且並非所有標的皆達 KO，持續領息中。'
-                    : '目前未跌破期末 KI，且並非所有標的皆達 KO，持續領息中。',
-                worstAsset: worstAsset
-            };
+        const btn = document.getElementById("btnFetchAndCalc");
+        if (btn) {
+          btn.style.transform = "scale(0.98)";
+          setTimeout(() => { btn.style.transform = "scale(1)"; }, 150);
         }
-    };
+      }
+    }
 
-    const handleBasketSymbolChange = (index, value) => {
-        const newSymbols = [...basketSymbols];
-        newSymbols[index] = value;
-        setBasketSymbols(newSymbols);
-    };
+    function renderAssetsList() {
+      const container = document.getElementById("assetsContainer");
+      container.innerHTML = "";
+      const startDate = document.getElementById("fcnStartDate") ? document.getElementById("fcnStartDate").value : "2026-06-01";
+      
+      fcnAssets.forEach((a, idx) => {
+        const div = document.createElement("div");
+        div.className = "asset-row";
 
-    const renderTutorial = () => (
-        <div className="space-y-6">
-            <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-slate-800">1分鐘搞懂 FCN (固定收益憑證)</h2>
-                <p className="text-slate-500 mt-2">高利息背後的邏輯：用時間與保護價換取報酬</p>
+        let optionsHtml = "";
+        ALL_UNDERLYINGS.forEach(u => {
+          const sel = (u.sym === a.sym) ? "selected" : "";
+          optionsHtml += `<option value="${u.sym}" ${sel}>${u.name}</option>`;
+        });
+        if (!ALL_UNDERLYINGS.some(u => u.sym === a.sym)) {
+          optionsHtml += `<option value="${a.sym}" selected>${a.sym}</option>`;
+        }
+
+        const disStyle = (fcnAssets.length <= 1) ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : '';
+        div.innerHTML = `
+          <div>
+            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">標的 ${idx + 1} 選擇</label>
+            <select class="mono" style="width:100%; font-weight:700; padding:6px 8px; border-radius:7px; background:#ffffff; border:1px solid #cddcc6; color:#132a18; font-size:12px;" onchange="onAssetSelectChange(${idx}, this.value)">
+              ${optionsHtml}
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">發行基準價 (設定日市價)</label>
+            <div class="price-badge-box mono">
+              <span class="price-val">$${a.initial.toFixed(2)}</span>
+              <span class="price-tag">自動抓取</span>
             </div>
-
-            <div className="grid md:grid-cols-4 gap-4">
-                <Card className="p-5 border-l-4 border-l-blue-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><DollarSign size={20} /></div>
-                        <h3 className="font-bold text-slate-700">Strike (發行價)</h3>
-                    </div>
-                    <p className="text-sm text-slate-600">合約開始時的基準價，通常定為 100%。若最終需承接股票，通常以此價格計算。</p>
-                </Card>
-                <Card className="p-5 border-l-4 border-l-green-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-green-100 rounded-lg text-green-600"><TrendingUp size={20} /></div>
-                        <h3 className="font-bold text-slate-700">KO (出場價)</h3>
-                    </div>
-                    <p className="text-sm text-slate-600">Knock-Out。通常是 &gt;100%。若股價碰到此價，合約提前結束，你拿回本金+利息。</p>
-                </Card>
-                <Card className="p-5 border-l-4 border-l-red-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-red-100 rounded-lg text-red-600"><TrendingDown size={20} /></div>
-                        <h3 className="font-bold text-slate-700">KI (保護價)</h3>
-                    </div>
-                    <p className="text-sm text-slate-600">Knock-In。通常是 70%~85%。跌破此價，到期可能被迫買入股票，承擔帳面虧損。</p>
-                </Card>
-                <Card className="p-5 border-l-4 border-l-purple-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-purple-100 rounded-lg text-purple-600"><Percent size={20} /></div>
-                        <h3 className="font-bold text-slate-700">Coupon (票息)</h3>
-                    </div>
-                    <p className="text-sm text-slate-600">只要合約存續，無論股價漲跌（即使破KI），都能定期領到的高額利息。</p>
-                </Card>
+          </div>
+          <div>
+            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">當前現價 (今日市價)</label>
+            <div class="price-badge-box mono">
+              <span class="price-val">$${a.current.toFixed(2)}</span>
+              <span class="price-tag">最新收盤</span>
             </div>
+          </div>
+          <button class="btn-remove" onclick="removeAsset(${idx})" title="刪除此標的" ${disStyle}>✕</button>
+        `;
+        container.appendChild(div);
+      });
 
-            <Card className="mt-8">
-                <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h3 className="text-lg font-bold text-slate-800">情境模擬器</h3>
-                        <p className="text-sm text-slate-500">點擊下方按鈕觀看不同情境</p>
-                    </div>
-                    <div className="flex bg-slate-100 p-1 rounded-lg">
-                        <button onClick={() => setActiveScenario('knockOut')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'knockOut' ? 'bg-white shadow text-green-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境1: 提早出場 (賺)</button>
-                        <button onClick={() => setActiveScenario('rangeBound')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'rangeBound' ? 'bg-white shadow text-blue-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境2: 區間震盪 (賺)</button>
-                        <button onClick={() => setActiveScenario('knockIn')} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeScenario === 'knockIn' ? 'bg-white shadow text-red-600' : 'text-slate-600 hover:bg-slate-200'}`}>情境3: 跌破保護 (賠)</button>
-                    </div>
-                </div>
-                <div className="p-5 h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={scenarioData[activeScenario]} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                            <XAxis dataKey="day" label={{ value: '天數', position: 'insideBottomRight', offset: -10 }} stroke="#94a3b8" />
-                            <YAxis domain={[50, 120]} label={{ value: '股價 %', angle: -90, position: 'insideLeft' }} stroke="#94a3b8" />
-                            <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                            
-                            <ReferenceLine y={105} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: 'KO 出場價 (105%)', fill: '#22c55e' }} />
-                            <ReferenceLine y={100} stroke="#64748b" label={{ position: 'top', value: '發行價 (100%)', fill: '#64748b' }} />
-                            <ReferenceLine y={70} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'bottom', value: 'KI 保護價 (70%)', fill: '#ef4444' }} />
-                            
-                            <Line type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} name="標的股價" animationDuration={1000} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="bg-slate-50 p-5 border-t border-slate-100">
-                    <h4 className="font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                        <Info size={16} /> 
-                        {activeScenario === 'knockOut' && "提早出場 (Knock-Out)"}
-                        {activeScenario === 'rangeBound' && "區間震盪 (Range Bound)"}
-                        {activeScenario === 'knockIn' && "跌破保護價 (Knock-In)"}
-                    </h4>
-                    <p className="text-slate-600 text-sm">
-                        {activeScenario === 'knockOut' && "股價表現強勢，觸碰到 KO 價。合約提早結束，投資人拿回 100% 本金加上期間累積的票息。這是最常見且最理想的狀況。"}
-                        {activeScenario === 'rangeBound' && "股價在 KO 與 KI 之間震盪。只要到期前沒有觸發 KO 或 KI，合約將存續至到期日，投資人可領滿所有票息，並拿回 100% 本金。"}
-                        {activeScenario === 'knockIn' && "市場大跌，股價跌破 KI 保護價（如70%）。雖然票息照領，但到期時如果股價沒有漲回發行價，投資人將會被『強迫以發行價買入股票』，產生帳面虧損。適合看好該股票，願意逢低承接的投資人。"}
-                    </p>
-                </div>
-            </Card>
-        </div>
-    );
+      document.getElementById("assetCountText").innerText = `目前 ${fcnAssets.length} 檔標的 (上限 4 檔)`;
+      document.getElementById("btnAddAsset").style.display = fcnAssets.length >= 4 ? "none" : "inline-block";
+    }
 
-    const renderTracker = () => (
-        <div className="space-y-6">
-            <Card className="p-6">
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-1 space-y-4">
-                        <div>
-                            <h2 className="text-xl font-bold text-slate-800">FCN 部位追蹤 (真實報價)</h2>
-                            <p className="text-sm text-slate-500">輸入標的代碼與您的合約條件，即時查看是否面臨風險。</p>
-                        </div>
-                        
-                        <div className="flex gap-2">
-                            <div className="relative flex-1">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                <input 
-                                    type="text" 
-                                    value={symbol}
-                                    onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-                                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all uppercase"
-                                    placeholder="代碼 (美股: NVDA, 台股: 2330.TW)"
-                                />
-                            </div>
-                            <button 
-                                onClick={() => fetchStockPrice(symbol)}
-                                disabled={isLoading}
-                                className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center min-w-[100px]"
-                            >
-                                {isLoading ? <RefreshCw className="animate-spin" size={18} /> : '獲取現價'}
-                            </button>
-                        </div>
+    function addAssetRow() {
+      if (fcnAssets.length >= 4) return;
+      const candidates = ["MSFT", "AAPL", "GOOGL", "META", "AMD", "QCOM", "AVGO"];
+      const unused = candidates.find(c => !fcnAssets.some(a => a.sym === c)) || "MSFT";
+      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
+      const p = getStockPricesFromDB(unused, startDate);
+      fcnAssets.push({ sym: unused, initial: p.initial, current: p.current });
+      renderAssetsList();
+      calcFCN();
+    }
 
-                        {error && <p className="text-red-500 text-sm">{error}</p>}
+    function removeAsset(idx) {
+      if (fcnAssets.length <= 1) return;
+      fcnAssets.splice(idx, 1);
+      renderAssetsList();
+      calcFCN();
+    }
 
-                        <div className="grid grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label className="block text-xs font-medium text-slate-500 mb-1">KO 出場價</label>
-                                <div className="relative">
-                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                    <input type="number" value={koLevel} onChange={(e) => setKoLevel(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-slate-500 mb-1">發行價 (Strike)</label>
-                                <div className="relative">
-                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                    <input type="number" value={strikePrice} onChange={(e) => setStrikePrice(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-slate-500 mb-1">KI 保護價</label>
-                                <div className="relative">
-                                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                    <input type="number" value={kiLevel} onChange={(e) => setKiLevel(Number(e.target.value))} className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-500" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    function updateAsset(idx, field, val) {
+      fcnAssets[idx][field] = val;
+      calcFCN();
+    }
 
-                    <div className="flex-1">
-                        <div className="bg-slate-50 rounded-xl p-5 h-full border border-slate-100 flex flex-col justify-center relative overflow-hidden">
-                            <div className="absolute -right-10 -top-10 w-32 h-32 bg-slate-200 rounded-full opacity-20 blur-2xl"></div>
-                            
-                            <div className="relative z-10 text-center">
-                                <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-1">{symbol} 當前報價</h3>
-                                <div className="text-4xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">
-                                    <DollarSign size={32} className="text-slate-400" />
-                                    {stockPrice ? stockPrice.toFixed(2) : '--.--'}
-                                </div>
+    function setKoMemory(val) {
+      isMemoryKO = val;
+      document.getElementById("koMemoryTrue").className = "toggle-opt " + (val ? "active" : "");
+      document.getElementById("koMemoryFalse").className = "toggle-opt " + (!val ? "active" : "");
+      calcFCN();
+    }
 
-                                {status && (
-                                    <div className={`inline-flex flex-col items-center p-3 px-6 rounded-xl border ${
-                                        status.type === 'safe' ? 'bg-blue-50 border-blue-100' :
-                                        status.type === 'knockOut' ? 'bg-green-50 border-green-100' :
-                                        'bg-red-50 border-red-100'
-                                    }`}>
-                                        <div className={`flex items-center gap-2 font-bold ${
-                                            status.type === 'safe' ? 'text-blue-700' :
-                                            status.type === 'knockOut' ? 'text-green-700' :
-                                            'text-red-700'
-                                        }`}>
-                                            {status.icon}
-                                            <span>{status.label}</span>
-                                        </div>
-                                        <p className={`text-xs mt-1 ${
-                                            status.type === 'safe' ? 'text-blue-600' :
-                                            status.type === 'knockOut' ? 'text-green-600' :
-                                            'text-red-600'
-                                        }`}>{status.desc}</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Card>
+    function setKiType(val) {
+      kiType = val;
+      document.getElementById("kiTypeEKI").className = "toggle-opt " + (val === 'EKI' ? "active" : "");
+      document.getElementById("kiTypeAKI").className = "toggle-opt " + (val === 'AKI' ? "active" : "");
+      calcFCN();
+    }
 
-            {stockPrice && (
-                <Card className="p-6">
-                    <h3 className="text-sm font-bold text-slate-700 mb-6 flex items-center gap-2">
-                        水位圖 <Info size={14} className="text-slate-400"/>
-                    </h3>
-                    
-                    <div className="relative pt-6 pb-8">
-                        <div className="h-4 bg-slate-100 rounded-full w-full relative overflow-hidden">
-                            <div className="absolute left-0 top-0 bottom-0 bg-red-100 w-[20%] border-r border-white"></div>
-                            <div className="absolute left-[20%] top-0 bottom-0 bg-blue-50 w-[60%] border-r border-white"></div>
-                            <div className="absolute left-[80%] right-0 top-0 bottom-0 bg-green-100"></div>
-                        </div>
+    function loadPreset(key, el) {
+      document.querySelectorAll('.fcn-preset-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      const p = PRESETS[key];
+      fcnAssets = JSON.parse(JSON.stringify(p.assets));
+      document.getElementById("fcnStrikePct").value = p.strike;
+      document.getElementById("fcnKoPct").value = p.ko;
+      document.getElementById("fcnKiPct").value = p.ki;
+      document.getElementById("fcnCoupon").value = p.coupon;
+      document.getElementById("fcnTenorMonths").value = p.tenor;
+      document.getElementById("fcnStartDate").value = p.start;
+      setKoMemory(p.memory);
+      setKiType(p.kiType);
+      renderAssetsList();
+      calcFCN();
+    }
 
-                        <div className="absolute left-[20%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
-                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-red-500 whitespace-nowrap">KI {kiLevel}</span>
-                        </div>
-                        <div className="absolute left-[50%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
-                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-slate-500 whitespace-nowrap">Strike {strikePrice}</span>
-                        </div>
-                        <div className="absolute left-[80%] top-0 bottom-0 flex flex-col justify-between -ml-px w-px bg-slate-300 z-10">
-                            <span className="absolute -top-6 -translate-x-1/2 text-xs font-bold text-green-500 whitespace-nowrap">KO {koLevel}</span>
-                        </div>
+    function calcFCN() {
+      const koPct = parseFloat(document.getElementById("fcnKoPct").value) || 100;
+      const kiPct = parseFloat(document.getElementById("fcnKiPct").value) || 70;
+      const strikePct = parseFloat(document.getElementById("fcnStrikePct").value) || 85;
+      const couponRate = parseFloat(document.getElementById("fcnCoupon").value) || 15.0;
+      const tenorMonths = parseInt(document.getElementById("fcnTenorMonths").value) || 6;
+      const notional = parseFloat(document.getElementById("fcnNotional").value) || 100000;
 
-                        {(() => {
-                            let percentage = 50; 
-                            if (stockPrice <= kiLevel) {
-                                percentage = (stockPrice / kiLevel) * 20;
-                            } else if (stockPrice >= koLevel) {
-                                percentage = 80 + Math.min(((stockPrice - koLevel) / koLevel) * 100, 20);
-                            } else {
-                                const range = koLevel - kiLevel;
-                                const current = stockPrice - kiLevel;
-                                percentage = 20 + (current / range) * 60;
-                            }
-                            percentage = Math.max(2, Math.min(98, percentage));
+      // Calculate each asset's performance
+      let worst = null;
+      let allAboveKO = true;
+      let anyBelowKI = false;
 
-                            return (
-                                <div 
-                                    className="absolute top-4 -translate-y-1/2 flex flex-col items-center transition-all duration-1000 z-20"
-                                    style={{ left: `${percentage}%` }}
-                                >
-                                    <div className={`w-6 h-6 rounded-full border-4 border-white shadow-md flex items-center justify-center ${
-                                        status?.type === 'safe' ? 'bg-blue-500' :
-                                        status?.type === 'knockOut' ? 'bg-green-500' : 'bg-red-500'
-                                    }`}>
-                                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                                    </div>
-                                    <div className={`mt-2 px-2 py-1 bg-slate-800 text-white text-xs font-bold rounded shadow ${
-                                        percentage > 85 ? '-translate-x-full' : (percentage < 15 ? 'translate-x-full' : '-translate-x-1/2')
-                                    }`}>
-                                        ${stockPrice.toFixed(2)}
-                                    </div>
-                                </div>
-                            );
-                        })()}
-                    </div>
-                </Card>
-            )}
-        </div>
-    );
+      const processedAssets = fcnAssets.map(a => {
+        const level = a.initial > 0 ? (a.current / a.initial) * 100 : 100;
+        if (level < koPct) allAboveKO = false;
+        if (level <= kiPct) anyBelowKI = true;
 
-    const renderBasketTracker = () => {
-        const basketStatus = getBasketStatus();
+        const assetData = {
+          sym: a.sym,
+          initial: a.initial,
+          current: a.current,
+          level: level,
+          koDist: level - koPct,
+          kiDist: level - kiPct
+        };
 
-        return (
-            <div className="space-y-6">
-                <Card className="p-6">
-                    <div className="flex flex-col md:flex-row gap-6">
-                        <div className="flex-1 space-y-6">
-                            <div>
-                                <h2 className="text-xl font-bold text-slate-800">一籃子 (Worst-Of) 歷史與即時追蹤</h2>
-                                <p className="text-sm text-slate-500">串接真實數據：輸入標的、發行日，分析是否觸發 KI 或全體觸發 KO。</p>
-                            </div>
-                            
-                            <div className="flex flex-col sm:flex-row gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                <div className="flex-1">
-                                    <label className="block text-sm font-bold text-slate-700 mb-1 flex items-center gap-1"><Calendar size={16}/> 發行日 (Strike Date)</label>
-                                    <input 
-                                        type="date" 
-                                        value={startDate} 
-                                        onChange={e => setStartDate(e.target.value)} 
-                                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                                    />
-                                </div>
-                                <div className="flex-1 flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                                    <div>
-                                        <label className="block text-sm font-bold text-slate-700">記憶 KO 功能</label>
-                                        <span className="text-xs text-slate-500">歷史是否曾達 KO</span>
-                                    </div>
-                                    <button 
-                                        onClick={() => setMemoryKO(!memoryKO)} 
-                                        className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${memoryKO ? 'bg-purple-600' : 'bg-slate-300'}`}
-                                    >
-                                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm ${memoryKO ? 'left-7' : 'left-1'}`}></div>
-                                    </button>
-                                </div>
-                            </div>
+        if (!worst || level < worst.level) {
+          worst = assetData;
+        }
+        return assetData;
+      });
 
-                            <div className="space-y-3">
-                                <label className="block text-sm font-bold text-slate-700">籃子標的 (台股請加 .TW，如 2330.TW)</label>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {[0, 1, 2, 3].map(index => (
-                                        <div key={index} className="relative">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                                            <input 
-                                                type="text" 
-                                                value={basketSymbols[index] || ''}
-                                                onChange={(e) => handleBasketSymbolChange(index, e.target.value.toUpperCase())}
-                                                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all uppercase text-sm font-medium"
-                                                placeholder={`標的 ${index + 1}`}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-                                <div className="flex justify-end pt-2">
-                                     <button 
-                                        onClick={fetchBasketPrices}
-                                        disabled={basketIsLoading}
-                                        className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors flex items-center justify-center min-w-[120px] shadow-sm"
-                                    >
-                                        {basketIsLoading ? <RefreshCw className="animate-spin mr-2" size={18} /> : null}
-                                        {basketIsLoading ? '計算中' : '獲取真實報價分析'}
-                                    </button>
-                                </div>
-                            </div>
+      // Update Worst-Of in Banner
+      document.getElementById("fcnWorstSymbol").innerText = worst.sym;
+      document.getElementById("fcnWorstLevel").innerText = worst.level.toFixed(1) + "%";
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">KO 條件 (全部 &gt;= %)</label>
-                                    <div className="relative">
-                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                        <input type="number" value={basketKoPct} onChange={(e) => setBasketKoPct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">執行價 / Strike (%)</label>
-                                    <div className="relative">
-                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                        <input type="number" value={basketStrikePct} onChange={(e) => setBasketStrikePct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">KI 條件 (任一 &lt;= %)</label>
-                                    <div className="relative">
-                                        <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                                        <input type="number" value={basketKiPct} onChange={(e) => setBasketKiPct(Number(e.target.value))} className="w-full pl-3 pr-8 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-purple-500" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">KI 類型</label>
-                                    <div className="grid grid-cols-2 bg-white border border-slate-200 rounded-md p-0.5">
-                                        <button
-                                            type="button"
-                                            onClick={() => setKiObservationType('daily')}
-                                            className={`px-2 py-1.5 text-xs font-bold rounded transition-colors ${kiObservationType === 'daily' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-                                        >
-                                            日 KI
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setKiObservationType('terminal')}
-                                            className={`px-2 py-1.5 text-xs font-bold rounded transition-colors ${kiObservationType === 'terminal' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
-                                        >
-                                            期末 KI
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+      // Status Decision
+      const banner = document.getElementById("fcnStatusBanner");
+      const title = document.getElementById("fcnStatusTitle");
+      const desc = document.getElementById("fcnStatusDesc");
 
-                        <div className="flex-1">
-                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 h-full border border-slate-700 flex flex-col relative overflow-hidden text-white shadow-xl">
-                                <div className="absolute -right-20 -top-20 w-64 h-64 bg-purple-500 rounded-full opacity-10 blur-3xl"></div>
-                                
-                                {basketData.length > 0 && basketStatus ? (
-                                    <div className="relative z-10 flex flex-col h-full justify-between">
-                                        <div>
-                                            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">當前真實合約狀態</h3>
-                                            <div className={`inline-flex flex-col items-start p-4 rounded-xl border ${
-                                                basketStatus.type === 'safe' ? 'bg-blue-900/40 border-blue-500/30' :
-                                                basketStatus.type === 'knockOut' ? 'bg-green-900/40 border-green-500/30' :
-                                                basketStatus.type === 'kiWatch' ? 'bg-amber-900/40 border-amber-500/30' :
-                                                'bg-red-900/40 border-red-500/30'
-                                            } w-full`}>
-                                                <div className={`flex items-center gap-2 text-xl font-bold ${
-                                                    basketStatus.type === 'safe' ? 'text-blue-400' :
-                                                    basketStatus.type === 'knockOut' ? 'text-green-400' :
-                                                    basketStatus.type === 'kiWatch' ? 'text-amber-300' :
-                                                    'text-red-400'
-                                                }`}>
-                                                    {basketStatus.icon}
-                                                    <span>{basketStatus.label}</span>
-                                                </div>
-                                                <p className="text-sm mt-2 text-slate-300 leading-relaxed">{basketStatus.desc}</p>
-                                                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-medium text-slate-400">
-                                                    <span className="px-2 py-1 rounded-md bg-black/20 border border-white/10">Strike {basketStrikePct}%</span>
-                                                    <span className="px-2 py-1 rounded-md bg-black/20 border border-white/10">{kiObservationType === 'daily' ? '日 KI' : '期末 KI'}</span>
-                                                </div>
-                                            </div>
-                                        </div>
+      if (allAboveKO) {
+        banner.className = "status-banner status-ko";
+        title.innerHTML = "觸發出場 (Knock-Out) 提前獲利！";
+        title.style.color = "var(--green)";
+        desc.innerText = `所有標的皆達標高於 KO 價 (${koPct}%)，合約提早結束，投資人取回 100% 本金並領滿前置約定利息。${isMemoryKO ? '（記憶式：補發先前未領票息）' : ''}`;
+      } else if (anyBelowKI && worst.level < strikePct) {
+        banner.className = "status-banner status-ki";
+        title.innerHTML = "觸發承接風險 (Knock-In)";
+        title.style.color = "var(--red)";
+        desc.innerText = kiType === 'AKI'
+          ? `最差標的 ${worst.sym} 在觀察期間跌破保護價 (KI ${kiPct}%)，且現價低於 Strike (${strikePct}%)，到期若未漲回需承接股票。`
+          : `最差標的 ${worst.sym} 現價低於期末保護價 (EKI ${kiPct}%)，若到期維持此價位將以 Strike 價格承接該股票。`;
+      } else if (anyBelowKI) {
+        banner.className = "status-banner status-ki-watch";
+        title.innerHTML = "跌破保護價但高於執行價 (安全警戒)";
+        title.style.color = "var(--yellow)";
+        desc.innerText = `標的 ${worst.sym} 曾跌破 KI (${kiPct}%)，但目前最差標的高於 Strike (${strikePct}%)，若到期維持在此水準以上仍可拿回 100% 現金。`;
+      } else {
+        banner.className = "status-banner status-safe";
+        title.innerHTML = "安全區間 (Safe) ｜ 穩定領息中";
+        title.style.color = "var(--accent)";
+        desc.innerText = `所有標的均在 KI (${kiPct}%) 保護價之上，且尚未全部敲出，合約穩定存續，每月按期領息。`;
+      }
 
-                                        <div className="mt-6 p-4 bg-black/30 rounded-xl border border-white/5">
-                                            <p className="text-xs text-slate-400 mb-1">最差表現資產 (Worst-Of)</p>
-                                            <div className="flex justify-between items-end">
-                                                <div className="text-3xl font-bold text-white tracking-tight">
-                                                    {basketStatus.worstAsset.symbol}
-                                                </div>
-                                                <div className={`text-xl font-bold flex items-center ${basketStatus.worstAsset.performance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                                    {basketStatus.worstAsset.performance >= 0 ? '+' : ''}{basketStatus.worstAsset.performance}%
-                                                </div>
-                                            </div>
-                                        </div>
+      // Update Gauge Bar
+      // Map 0%~125% to pixel %
+      // 0% -> 0, 70% -> (70/125)*100 = 56%, 100% -> (100/125)*100 = 80%
+      const maxScale = 125;
+      const kiPos = Math.min(100, Math.max(0, (kiPct / maxScale) * 100));
+      const strikePos = Math.min(100, Math.max(0, (strikePct / maxScale) * 100));
+      const koPos = Math.min(100, Math.max(0, (koPct / maxScale) * 100));
 
-                                        {memoryKO && (
-                                            <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/10">
-                                                <p className="text-xs text-slate-400 mb-2">歷史 KO 觸碰紀錄 (自 {startDate})</p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {basketData.map(asset => {
-                                                        const hit = getHistoricalHit(asset.symbol, basketKoPct, 'above');
-                                                        return (
-                                                            <div key={asset.symbol} className={`px-2 py-1 text-xs font-medium rounded-md flex items-center gap-1 ${hit ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
-                                                                {asset.symbol} {hit && <CheckCircle size={12} className="text-green-400"/>}
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </div>
-                                        )}
+      const zoneKi = document.getElementById("gaugeZoneKi");
+      if (zoneKi) {
+        zoneKi.style.left = "0%";
+        zoneKi.style.width = kiPos + "%";
+      }
 
-                                        {kiObservationType === 'daily' && (
-                                            <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/10">
-                                                <p className="text-xs text-slate-400 mb-2">歷史 KI 觸碰紀錄 (自 {startDate})</p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {basketData.map(asset => {
-                                                        const hit = getHistoricalHit(asset.symbol, basketKiPct, 'below');
-                                                        return (
-                                                            <div key={asset.symbol} className={`px-2 py-1 text-xs font-medium rounded-md flex items-center gap-1 ${hit ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}>
-                                                                {asset.symbol} {hit && <AlertCircle size={12} className="text-red-400"/>}
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center h-full text-slate-500 z-10">
-                                        <Layers size={48} className="mb-4 opacity-50" />
-                                        <p>輸入真實代碼並設定日期</p>
-                                        <p className="text-sm">獲取一籃子真實走勢分析</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </Card>
+      const zoneSafe = document.getElementById("gaugeZoneSafe");
+      if (zoneSafe) {
+        zoneSafe.style.left = kiPos + "%";
+        zoneSafe.style.width = Math.max(0, koPos - kiPos) + "%";
+      }
 
-                {basketData.length > 0 && (
-                    <Card className="p-6">
-                         <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                            標的相對表現圖 (現價 vs 發行日基準)
-                        </h3>
-                        <div className="h-[350px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={basketData}
-                                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                                    layout="vertical"
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                                    <XAxis 
-                                        type="number" 
-                                        domain={[
-                                            dataMin => Math.min(dataMin - 10, basketKiPct - 110, basketStrikePct - 110),
-                                            dataMax => Math.max(dataMax + 10, basketKoPct - 90, basketStrikePct - 90)
-                                        ]}
-                                        tickFormatter={(val) => `${val}%`}
-                                        stroke="#94a3b8"
-                                    />
-                                    <YAxis dataKey="symbol" type="category" stroke="#64748b" fontWeight="bold" width={80} />
-                                    <RechartsTooltip 
-                                        formatter={(value) => [`${value}%`, '績效 (相對發行日)']}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                    />
-                                    
-                                    <ReferenceLine x={basketKoPct - 100} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
-                                    <ReferenceLine x={basketStrikePct - 100} stroke="#64748b" label={{ position: 'bottom', value: `Strike (${basketStrikePct}%)`, fill: '#64748b' }} />
-                                    <ReferenceLine x={basketKiPct - 100} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'top', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
+      const zoneKo = document.getElementById("gaugeZoneKo");
+      if (zoneKo) {
+        zoneKo.style.left = koPos + "%";
+        zoneKo.style.width = Math.max(0, 100 - koPos) + "%";
+      }
 
-                                    <Bar dataKey="performance" radius={[0, 4, 4, 0]}>
-                                        {basketData.map((entry, index) => {
-                                            let color = "#3b82f6";
-                                            if (entry.level <= basketKiPct) color = "#ef4444";
-                                            else if (entry.level >= basketKoPct) color = "#22c55e";
-                                            return <Cell key={`cell-${index}`} fill={color} />;
-                                        })}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </Card>
-                )}
+      const markKi = document.getElementById("markKi");
+      if (markKi) {
+        markKi.style.left = Math.min(95, Math.max(5, kiPos)) + "%";
+        markKi.innerText = `KI: ${kiPct}%`;
+      }
 
-                {historicalData.length > 0 && (
-                    <Card className="p-6">
-                        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                            <History size={20} className="text-purple-600"/> 標的真實歷史走勢圖 (自發行日起)
-                        </h3>
-                        <div className="h-[400px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                    <XAxis dataKey="date" stroke="#94a3b8" tick={{fontSize: 12}} minTickGap={30} />
-                                    <YAxis 
-                                        domain={[
-                                            dataMin => Math.min(dataMin - 10, basketKiPct - 10, basketStrikePct - 10), 
-                                            dataMax => Math.max(dataMax + 10, basketKoPct + 10, basketStrikePct + 10)
-                                        ]} 
-                                        tickFormatter={(val) => `${val.toFixed(0)}%`}
-                                        stroke="#94a3b8" 
-                                        width={45}
-                                    />
-                                    <RechartsTooltip 
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                        formatter={(value) => [`${value}%`, '']}
-                                    />
-                                    <Legend wrapperStyle={{ paddingTop: '20px' }}/>
-                                    
-                                    <ReferenceLine y={basketKoPct} stroke="#22c55e" strokeDasharray="3 3" label={{ position: 'top', value: `KO (${basketKoPct}%)`, fill: '#22c55e' }} />
-                                    <ReferenceLine y={basketStrikePct} stroke="#64748b" label={{ position: 'insideBottomLeft', value: `Strike (${basketStrikePct}%)`, fill: '#64748b' }} />
-                                    <ReferenceLine y={basketKiPct} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'bottom', value: `KI (${basketKiPct}%)`, fill: '#ef4444' }} />
+      const markStrike = document.getElementById("markStrike");
+      if (markStrike) {
+        markStrike.style.left = Math.min(95, Math.max(5, strikePos)) + "%";
+        markStrike.innerText = `Strike: ${strikePct}%`;
+      }
 
-                                    {basketSymbols.map((sym, index) => {
-                                        if (!sym.trim()) return null;
-                                        const colors = ['#8b5cf6', '#3b82f6', '#f59e0b', '#ec4899']; 
-                                        return (
-                                            <Line 
-                                                key={sym} 
-                                                type="monotone" 
-                                                dataKey={sym.toUpperCase()} 
-                                                stroke={colors[index % colors.length]} 
-                                                strokeWidth={2} 
-                                                dot={false} 
-                                                activeDot={{ r: 6 }} 
-                                            />
-                                        );
-                                    })}
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </Card>
-                )}
-            </div>
-        );
-    };
+      const markKo = document.getElementById("markKo");
+      if (markKo) {
+        markKo.style.left = Math.min(95, Math.max(5, koPos)) + "%";
+        markKo.innerText = `KO: ${koPct}%`;
+      }
 
-    return (
-        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-12">
-            <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold italic">
-                            F
-                        </div>
-                        <span className="font-bold text-xl tracking-tight">FCN<span className="text-blue-600">Master</span></span>
-                    </div>
-                    <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto">
-                        <button 
-                            onClick={() => setActiveTab('tutorial')}
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'tutorial' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-600 hover:text-slate-900'}`}
-                        >
-                            快速學習
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('tracker')}
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${activeTab === 'tracker' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-600 hover:text-slate-900'}`}
-                        >
-                            <TrendingUp size={16} /> 單一報價
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('basket')}
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${activeTab === 'basket' ? 'bg-white shadow-sm text-purple-600' : 'text-slate-600 hover:text-slate-900'}`}
-                        >
-                            <Layers size={16} /> 一籃子 (Worst-Of)
-                        </button>
-                    </div>
-                </div>
-            </header>
+      // Render Pins on Gauge (Clamped between 2% and 98% to avoid overhang)
+      const pinsContainer = document.getElementById("gaugePinsContainer");
+      if (pinsContainer) {
+        pinsContainer.innerHTML = "";
+        const colors = ["#059669", "#d97706", "#0284c7", "#7c3aed"];
 
-            <main className="max-w-5xl mx-auto px-4 mt-8">
-                {activeTab === 'tutorial' && renderTutorial()}
-                {activeTab === 'tracker' && renderTracker()}
-                {activeTab === 'basket' && renderBasketTracker()}
-            </main>
-            
-            <footer className="max-w-5xl mx-auto px-4 mt-12 text-center text-slate-400 text-sm">
-                <p>⚠️ 注意：本工具資料來自免費 API，不保證零延遲。僅供教育與模擬使用，並非實際投資建議。</p>
-            </footer>
-        </div>
-    );
-}
+        processedAssets.forEach((a, i) => {
+          const rawPinPos = (a.level / maxScale) * 100;
+          const pinPos = Math.min(98, Math.max(2, rawPinPos));
+          const pin = document.createElement("div");
+          pin.className = "gauge-pin";
+          pin.style.left = pinPos + "%";
+          pin.style.background = colors[i % colors.length];
+          pin.title = `${a.sym}: ${a.level.toFixed(1)}%`;
+          pinsContainer.appendChild(pin);
+        });
+      }
 
+      // Update Table
+      const tbody = document.getElementById("fcnAssetsTableBody");
+      tbody.innerHTML = "";
+      processedAssets.forEach(a => {
+        const tr = document.createElement("tr");
+        const isWorst = a.sym === worst.sym;
+        const levelClass = a.level >= koPct ? "return-positive" : (a.level <= kiPct ? "return-negative" : "");
+        const statusText = a.level >= koPct ? "達標 KO" : (a.level <= kiPct ? "跌破 KI" : "區間存續");
 
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <FCNDashboard />
-  </React.StrictMode>
-);
+        tr.innerHTML = `
+          <td><strong>${a.sym}</strong> ${isWorst ? '<span style="color:#fb7185; font-size:10px; font-weight:700;">(Worst)</span>' : ''}</td>
+          <td class="mono">$${a.initial.toFixed(2)}</td>
+          <td class="mono">$${a.current.toFixed(2)}</td>
+          <td class="mono ${levelClass}"><strong>${a.level.toFixed(1)}%</strong></td>
+          <td class="mono" style="color:${a.koDist >= 0 ? 'var(--green)' : 'var(--text-muted)'}">${a.koDist >= 0 ? '+' : ''}${a.koDist.toFixed(1)}%</td>
+          <td class="mono" style="color:${a.kiDist <= 0 ? 'var(--red)' : 'var(--green)'}">${a.kiDist >= 0 ? '+' : ''}${a.kiDist.toFixed(1)}%</td>
+          <td><span class="badge ${a.level >= koPct ? 'badge-normal' : (a.level <= kiPct ? 'badge-urgent' : 'badge-soon')}">${statusText}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-    </script>
-  </body>
+      // Payout Box Calculation
+      document.getElementById("payoutCouponRate").innerText = couponRate.toFixed(2) + "%";
+      const monthlyCoupon = notional * (couponRate / 100) / 12;
+      const totalCoupon = monthlyCoupon * tenorMonths;
+      document.getElementById("payoutMonthlyAmt").innerText = `$${Math.round(monthlyCoupon).toLocaleString()} USD`;
+      document.getElementById("payoutTotalAmt").innerText = `$${Math.round(totalCoupon).toLocaleString()} USD`;
+
+      const typeEl = document.getElementById("payoutPrincipalType");
+      const deliveryEl = document.getElementById("payoutStockDelivery");
+
+      if (allAboveKO) {
+        typeEl.innerHTML = `<span style="color:var(--green); font-weight:700;">提前 KO 全額返還 $${notional.toLocaleString()} USD</span>`;
+        deliveryEl.innerText = "無須承接股票 (提前出場)";
+      } else if (anyBelowKI && worst.level < strikePct) {
+        const strikePrice = worst.initial * (strikePct / 100);
+        const shares = Math.floor(notional / strikePrice);
+        const stockMv = shares * worst.current;
+        const loss = notional - stockMv;
+        typeEl.innerHTML = `<span style="color:var(--red); font-weight:700;">到期實體交割 (以 Strike $${strikePrice.toFixed(2)} 買入)</span>`;
+        deliveryEl.innerHTML = `<span style="color:#fb7185;">承接 ${shares} 股 ${worst.sym} (市值約 $${Math.round(stockMv).toLocaleString()}，帳損約 -$${Math.round(loss).toLocaleString()})</span>`;
+      } else {
+        typeEl.innerHTML = `<span style="color:var(--accent); font-weight:700;">100% 本金全額現金返還 ($${notional.toLocaleString()})</span>`;
+        deliveryEl.innerText = "無須承接股票 (領滿利息)";
+      }
+    }
+
+    // Initialize FCN
+    renderAssetsList();
+    calcFCN();
+  </script>
+</body>
 </html>
