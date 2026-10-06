@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>納斯達克 Top 30 科技巨頭：總經指標、公債走勢、三年估值與 FCN 結構型商品模擬器</title>
+  <title>美股儀表板：標普 500、道瓊、納斯達克巨頭估值、總經指標與 FCN 結構型商品模擬器</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -890,6 +890,55 @@
       transition: all 0.3s;
     }
     
+  
+    /* Index Switcher Tabs */
+    .index-switcher-wrap {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .index-tab {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    }
+    .index-tab:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: #bcd4b3;
+    }
+    .index-tab.active {
+      background: #ecfdf5;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.18);
+    }
+    .idx-badge {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin-right: 3px;
+      opacity: 0.35;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+    .idx-badge.active-idx.spx { opacity: 1; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .idx-badge.active-idx.ndx { opacity: 1; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .idx-badge.active-idx.dow { opacity: 1; background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+
   </style>
 </head>
 <body>
@@ -898,8 +947,8 @@
   <div class="header">
     <div>
       <div class="badge-live">系統自動排程連線中 ｜ Google Fast Data 引擎</div>
-      <h1>納斯達克 Top 30 科技巨頭：總經指標、公債走勢、三年估值與 FCN 模擬器</h1>
-      <p>基準日：2026 年 10 月 5 日 ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援 1~4 標的 Worst-Of FCN 即時模擬</p>
+      <h1>美股儀表板：標普 500、道瓊與納斯達克巨頭三年估值動態</h1>
+      <p>基準日：2026 年 10 月 5 日 ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援標普 500、納斯達克與道瓊三大指數切換 ｜ 1~4 標的 Worst-Of FCN 即時模擬</p>
     </div>
     <div style="text-align: right;">
       <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
@@ -910,7 +959,7 @@
   <!-- Anchor Tabs Navigation -->
   <div class="nav-tabs">
     <a href="#macro-section" class="nav-btn active">📊 宏觀利率與 FedWatch</a>
-    <a href="#valuation-section" class="nav-btn">📈 Top 30 科技股三年估值</a>
+    <a href="#valuation-section" class="nav-btn">📈 美股三大指數估值總覽</a>
     <a href="#fcn-section" class="nav-btn" style="border-color: var(--accent); color: var(--accent);">⚡ FCN 結構型商品模擬器 (1~4 標的)</a>
   </div>
 
@@ -1207,7 +1256,7 @@
   </div>
 
   <!-- SECTION 3: Controls Panel & Valuation Table -->
-  <div id="valuation-section" class="section-title">納斯達克 Top 30 科技巨頭：三年 EPS 與合理股價估值試算</div>
+  <div id="valuation-section" class="section-title">美股三大指數巨頭估值：標普 500 ｜ 納斯達克 100 ｜ 道瓊 30 三年 EPS 與合理股價試算</div>
   <div class="controls-panel">
     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
       <div class="control-group">
@@ -1250,6 +1299,7 @@
             <th onclick="sortTable('idx')">#</th>
             <th onclick="sortTable('t')">代號</th>
             <th onclick="sortTable('n')">公司名稱</th>
+            <th>所屬指數</th>
             <th>分類領域</th>
             <th onclick="sortTable('p')">現價</th>
             <th onclick="sortTable('ed')">下次財報日</th>
@@ -1521,38 +1571,7 @@
     /* ==========================================================
        TOP 30 VALUATION LOGIC
        ========================================================== */
-    const stocks = [
-      { t: "NVDA", n: "輝達", s: "AI 晶片", cat: "SEMIS", p: 142.5, ed: "2026-11-18", eps27: 4.85, eps28: 6.10, eps29: 7.00, pe: 24, mult: 0.95 },
-      { t: "MSFT", n: "微軟", s: "雲端/AI", cat: "CLOUD", p: 435.0, ed: "2026-10-28", eps27: 14.90, eps28: 17.10, eps29: 19.50, pe: 26, mult: 0.96 },
-      { t: "AAPL", n: "蘋果", s: "生態系/硬體", cat: "CLOUD", p: 228.0, ed: "2026-10-29", eps27: 8.00, eps28: 8.90, eps29: 9.80, pe: 26, mult: 0.97 },
-      { t: "AMZN", n: "亞馬遜", s: "AWS雲端/電商", cat: "CLOUD", p: 198.0, ed: "2026-10-29", eps27: 7.30, eps28: 9.00, eps29: 10.90, pe: 28, mult: 0.95 },
-      { t: "GOOGL", n: "Alphabet", s: "搜尋/AI雲端", cat: "CLOUD", p: 175.0, ed: "2026-10-27", eps27: 9.70, eps28: 11.20, eps29: 12.80, pe: 20, mult: 0.98 },
-      { t: "META", n: "Meta", s: "數位廣告/AI", cat: "CLOUD", p: 595.0, ed: "2026-10-28", eps27: 30.00, eps28: 35.00, eps29: 40.50, pe: 21, mult: 0.97 },
-      { t: "AVGO", n: "博通", s: "客製XPU/網通", cat: "SEMIS", p: 178.0, ed: "2026-12-10", eps27: 6.90, eps28: 8.50, eps29: 10.00, pe: 24, mult: 0.96 },
-      { t: "TSLA", n: "特斯拉", s: "自動駕駛/硬體", cat: "CLOUD", p: 245.0, ed: "2026-10-21", eps27: 3.20, eps28: 4.50, eps29: 6.50, pe: 42, mult: 0.90 },
-      { t: "ASML", n: "艾斯摩爾", s: "半導體設備", cat: "EQUIP", p: 860.0, ed: "2026-10-14", eps27: 29.00, eps28: 35.50, eps29: 41.50, pe: 26, mult: 0.96 },
-      { t: "AMD", n: "超微半導體", s: "CPU/GPU晶片", cat: "SEMIS", p: 158.0, ed: "2026-11-03", eps27: 4.90, eps28: 6.50, eps29: 8.50, pe: 26, mult: 0.94 },
-      { t: "QCOM", n: "高通", s: "邊緣AI晶片", cat: "SEMIS", p: 165.0, ed: "2026-11-04", eps27: 11.90, eps28: 13.50, eps29: 15.00, pe: 14, mult: 0.98 },
-      { t: "TXN", n: "德州儀器", s: "類比/嵌入式", cat: "SEMIS", p: 192.0, ed: "2026-10-20", eps27: 7.20, eps28: 8.50, eps29: 9.70, pe: 23, mult: 0.97 },
-      { t: "AMAT", n: "應用材料", s: "晶圓沉積設備", cat: "EQUIP", p: 205.0, ed: "2026-11-12", eps27: 10.20, eps28: 12.20, eps29: 14.00, pe: 19, mult: 0.96 },
-      { t: "LRCX", n: "科林研發", s: "晶圓蝕刻設備", cat: "EQUIP", p: 785.0, ed: "2026-10-21", eps27: 39.00, eps28: 49.20, eps29: 57.00, pe: 19, mult: 0.96 },
-      { t: "KLAC", n: "科磊", s: "量測製程控管", cat: "EQUIP", p: 720.0, ed: "2026-10-22", eps27: 34.00, eps28: 42.00, eps29: 49.00, pe: 20, mult: 0.96 },
-      { t: "MU", n: "美光科技", s: "記憶體/HBM", cat: "SEMIS", p: 1075.0, ed: "2026-12-16", eps27: 155.0, eps28: 175.0, eps29: 145.0, pe: 11, mult: 0.98 },
-      { t: "ADBE", n: "Adobe", s: "創意雲端軟體", cat: "SOFTWARE", p: 510.0, ed: "2026-12-10", eps27: 21.20, eps28: 24.30, eps29: 28.00, pe: 23, mult: 0.96 },
-      { t: "NFLX", n: "Netflix", s: "娛樂串流媒體", cat: "CLOUD", p: 685.0, ed: "2026-10-15", eps27: 24.00, eps28: 29.00, eps29: 34.00, pe: 27, mult: 0.95 },
-      { t: "CSCO", n: "思科", s: "網路設備資安", cat: "SOFTWARE", p: 55.0, ed: "2026-11-18", eps27: 4.00, eps28: 4.40, eps29: 4.80, pe: 13.5, mult: 0.99 },
-      { t: "INTU", n: "財捷", s: "財稅SaaS軟體", cat: "SOFTWARE", p: 640.0, ed: "2026-11-24", eps27: 22.10, eps28: 26.50, eps29: 31.00, pe: 27, mult: 0.96 },
-      { t: "ARM", n: "安謀", s: "半導體IP授權", cat: "SEMIS", p: 138.0, ed: "2026-11-05", eps27: 2.10, eps28: 2.80, eps29: 3.70, pe: 52, mult: 0.91 },
-      { t: "PANW", n: "派拓網路", s: "企業雲端資安", cat: "SOFTWARE", p: 345.0, ed: "2026-11-19", eps27: 7.60, eps28: 9.60, eps29: 12.20, pe: 42, mult: 0.93 },
-      { t: "CRWD", n: "CrowdStrike", s: "端點雲端資安", cat: "SOFTWARE", p: 285.0, ed: "2026-12-02", eps27: 5.40, eps28: 7.20, eps29: 9.50, pe: 47, mult: 0.92 },
-      { t: "SNPS", n: "新思科技", s: "EDA設計軟體", cat: "SOFTWARE", p: 560.0, ed: "2026-12-02", eps27: 16.20, eps28: 19.70, eps29: 24.50, pe: 32, mult: 0.95 },
-      { t: "CDNS", n: "益華電腦", s: "EDA模擬計算", cat: "SOFTWARE", p: 275.0, ed: "2026-10-26", eps27: 7.80, eps28: 9.60, eps29: 11.70, pe: 33, mult: 0.95 },
-      { t: "ADI", n: "亞德諾", s: "精密類比晶片", cat: "SEMIS", p: 220.0, ed: "2026-11-24", eps27: 8.00, eps28: 9.60, eps29: 11.40, pe: 25, mult: 0.97 },
-      { t: "MRVL", n: "邁威爾科技", s: "光電/網通晶片", cat: "SEMIS", p: 78.0, ed: "2026-12-03", eps27: 2.10, eps28: 2.85, eps29: 3.70, pe: 32, mult: 0.94 },
-      { t: "NXPI", n: "恩智浦", s: "車用邊緣微控", cat: "SEMIS", p: 240.0, ed: "2026-11-02", eps27: 15.20, eps28: 17.00, eps29: 19.20, pe: 15.5, mult: 0.98 },
-      { t: "FTNT", n: "飛塔資訊", s: "次世代防火牆", cat: "SOFTWARE", p: 76.0, ed: "2026-11-05", eps27: 2.45, eps28: 2.95, eps29: 3.50, pe: 29, mult: 0.95 },
-      { t: "WDAY", n: "Workday", s: "企業雲端人資", cat: "SOFTWARE", p: 250.0, ed: "2026-11-24", eps27: 8.70, eps28: 10.50, eps29: 12.50, pe: 28.5, mult: 0.95 }
-    ];
+    const stocks = [{"t": "NVDA", "n": "輝達", "s": "AI 晶片/伺服器", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 142.5, "ed": "2026-11-18", "eps27": 4.85, "eps28": 6.1, "eps29": 7.0, "pe": 24, "mult": 0.95}, {"t": "MSFT", "n": "微軟", "s": "企業雲端/AI平台", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": true, "p": 435.0, "ed": "2026-10-28", "eps27": 14.9, "eps28": 17.1, "eps29": 19.5, "pe": 26, "mult": 0.96}, {"t": "AAPL", "n": "蘋果", "s": "終端硬體/生態系", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": true, "p": 228.0, "ed": "2026-10-29", "eps27": 8.0, "eps28": 8.9, "eps29": 9.8, "pe": 26, "mult": 0.97}, {"t": "AMZN", "n": "亞馬遜", "s": "AWS雲端/電商", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": true, "p": 198.0, "ed": "2026-10-29", "eps27": 7.3, "eps28": 9.0, "eps29": 10.9, "pe": 28, "mult": 0.95}, {"t": "GOOGL", "n": "Alphabet", "s": "搜尋引擎/AI雲端", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": false, "p": 175.0, "ed": "2026-10-27", "eps27": 9.7, "eps28": 11.2, "eps29": 12.8, "pe": 20, "mult": 0.98}, {"t": "META", "n": "Meta", "s": "社群廣告/開源AI", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": false, "p": 595.0, "ed": "2026-10-28", "eps27": 30.0, "eps28": 35.0, "eps29": 40.5, "pe": 21, "mult": 0.97}, {"t": "TSLA", "n": "特斯拉", "s": "自動駕駛/機器人", "cat": "CLOUD", "sp500": true, "nasdaq": true, "dow": false, "p": 245.0, "ed": "2026-10-21", "eps27": 3.2, "eps28": 4.5, "eps29": 6.5, "pe": 42, "mult": 0.9}, {"t": "AVGO", "n": "博通", "s": "客製XPU/網通", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 178.0, "ed": "2026-12-10", "eps27": 6.9, "eps28": 8.5, "eps29": 10.0, "pe": 24, "mult": 0.96}, {"t": "TSM", "n": "台積電 ADR", "s": "先進晶圓製造", "cat": "SEMIS", "sp500": false, "nasdaq": false, "dow": false, "p": 188.5, "ed": "2026-10-16", "eps27": 8.5, "eps28": 10.2, "eps29": 12.0, "pe": 22, "mult": 0.96}, {"t": "ASML", "n": "艾斯摩爾", "s": "EUV 微影設備", "cat": "SEMIS", "sp500": false, "nasdaq": true, "dow": false, "p": 860.0, "ed": "2026-10-14", "eps27": 29.0, "eps28": 35.5, "eps29": 41.5, "pe": 26, "mult": 0.96}, {"t": "AMD", "n": "超微半導體", "s": "伺服器CPU/GPU", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 158.0, "ed": "2026-11-03", "eps27": 4.9, "eps28": 6.5, "eps29": 8.5, "pe": 26, "mult": 0.94}, {"t": "QCOM", "n": "高通", "s": "邊緣端AI/通訊", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 165.0, "ed": "2026-11-04", "eps27": 11.9, "eps28": 13.5, "eps29": 15.0, "pe": 14, "mult": 0.98}, {"t": "TXN", "n": "德州儀器", "s": "類比與嵌入處理", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 192.0, "ed": "2026-10-20", "eps27": 7.2, "eps28": 8.5, "eps29": 9.7, "pe": 23, "mult": 0.97}, {"t": "AMAT", "n": "應用材料", "s": "晶圓薄膜沉積", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 205.0, "ed": "2026-11-12", "eps27": 10.2, "eps28": 12.2, "eps29": 14.0, "pe": 19, "mult": 0.96}, {"t": "LRCX", "n": "科林研發", "s": "晶圓蝕刻沉積", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 785.0, "ed": "2026-10-21", "eps27": 39.0, "eps28": 49.2, "eps29": 57.0, "pe": 19, "mult": 0.96}, {"t": "KLAC", "n": "科磊", "s": "晶圓缺陷量測", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 720.0, "ed": "2026-10-22", "eps27": 34.0, "eps28": 42.0, "eps29": 49.0, "pe": 20, "mult": 0.96}, {"t": "MU", "n": "美光科技", "s": "HBM/DRAM記憶體", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 107.5, "ed": "2026-12-16", "eps27": 12.5, "eps28": 14.5, "eps29": 12.0, "pe": 11, "mult": 0.98}, {"t": "ARM", "n": "安謀", "s": "處理器架構IP", "cat": "SEMIS", "sp500": false, "nasdaq": true, "dow": false, "p": 138.0, "ed": "2026-11-05", "eps27": 2.1, "eps28": 2.8, "eps29": 3.7, "pe": 52, "mult": 0.91}, {"t": "ADI", "n": "亞德諾", "s": "高性能類比訊號", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": false, "p": 220.0, "ed": "2026-11-24", "eps27": 8.0, "eps28": 9.6, "eps29": 11.4, "pe": 25, "mult": 0.97}, {"t": "MRVL", "n": "邁威爾科技", "s": "資料中心光電網通", "cat": "SEMIS", "sp500": false, "nasdaq": true, "dow": false, "p": 78.0, "ed": "2026-12-03", "eps27": 2.1, "eps28": 2.85, "eps29": 3.7, "pe": 32, "mult": 0.94}, {"t": "NXPI", "n": "恩智浦", "s": "車用與邊緣微控", "cat": "SEMIS", "sp500": false, "nasdaq": true, "dow": false, "p": 240.0, "ed": "2026-11-02", "eps27": 15.2, "eps28": 17.0, "eps29": 19.2, "pe": 15.5, "mult": 0.98}, {"t": "INTC", "n": "英特爾", "s": "晶圓代工與CPU", "cat": "SEMIS", "sp500": true, "nasdaq": true, "dow": true, "p": 23.5, "ed": "2026-10-22", "eps27": 1.2, "eps28": 1.8, "eps29": 2.4, "pe": 16, "mult": 0.96}, {"t": "ORCL", "n": "甲骨文", "s": "企業資料庫/OCI", "cat": "SOFTWARE", "sp500": true, "nasdaq": false, "dow": false, "p": 168.0, "ed": "2026-12-08", "eps27": 7.2, "eps28": 8.5, "eps29": 9.8, "pe": 22, "mult": 0.96}, {"t": "CRM", "n": "Salesforce", "s": "CRM雲端與AI Agent", "cat": "SOFTWARE", "sp500": true, "nasdaq": false, "dow": true, "p": 285.0, "ed": "2026-11-25", "eps27": 11.5, "eps28": 13.2, "eps29": 15.2, "pe": 25, "mult": 0.96}, {"t": "ADBE", "n": "Adobe", "s": "創意多媒體雲端", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 510.0, "ed": "2026-12-10", "eps27": 21.2, "eps28": 24.3, "eps29": 28.0, "pe": 23, "mult": 0.96}, {"t": "NOW", "n": "ServiceNow", "s": "企業IT工作流SaaS", "cat": "SOFTWARE", "sp500": true, "nasdaq": false, "dow": false, "p": 890.0, "ed": "2026-10-21", "eps27": 17.5, "eps28": 21.5, "eps29": 26.0, "pe": 45, "mult": 0.93}, {"t": "INTU", "n": "財捷", "s": "財務會計SaaS", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 640.0, "ed": "2026-11-24", "eps27": 22.1, "eps28": 26.5, "eps29": 31.0, "pe": 27, "mult": 0.96}, {"t": "PANW", "n": "派拓網路", "s": "次世代防火牆資安", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 345.0, "ed": "2026-11-19", "eps27": 7.6, "eps28": 9.6, "eps29": 12.2, "pe": 42, "mult": 0.93}, {"t": "CRWD", "n": "CrowdStrike", "s": "雲端端點安全平台", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 285.0, "ed": "2026-12-02", "eps27": 5.4, "eps28": 7.2, "eps29": 9.5, "pe": 47, "mult": 0.92}, {"t": "PLTR", "n": "Palantir", "s": "國防AI大數據分析", "cat": "SOFTWARE", "sp500": true, "nasdaq": false, "dow": false, "p": 42.0, "ed": "2026-11-02", "eps27": 0.55, "eps28": 0.75, "eps29": 1.05, "pe": 60, "mult": 0.9}, {"t": "IBM", "n": "IBM", "s": "混合雲與量子運算", "cat": "SOFTWARE", "sp500": true, "nasdaq": false, "dow": true, "p": 215.0, "ed": "2026-10-21", "eps27": 11.2, "eps28": 12.1, "eps29": 13.0, "pe": 18, "mult": 0.98}, {"t": "CSCO", "n": "思科系統", "s": "企業網路與安全", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": true, "p": 55.0, "ed": "2026-11-18", "eps27": 4.0, "eps28": 4.4, "eps29": 4.8, "pe": 13.5, "mult": 0.99}, {"t": "SNPS", "n": "新思科技", "s": "EDA電子設計軟體", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 560.0, "ed": "2026-12-02", "eps27": 16.2, "eps28": 19.7, "eps29": 24.5, "pe": 32, "mult": 0.95}, {"t": "CDNS", "n": "益華電腦", "s": "EDA模擬計算", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 275.0, "ed": "2026-10-26", "eps27": 7.8, "eps28": 9.6, "eps29": 11.7, "pe": 33, "mult": 0.95}, {"t": "FTNT", "n": "飛塔資訊", "s": "次世代防火牆/SASE", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 76.0, "ed": "2026-11-05", "eps27": 2.45, "eps28": 2.95, "eps29": 3.5, "pe": 29, "mult": 0.95}, {"t": "WDAY", "n": "Workday", "s": "企業雲端人資財務", "cat": "SOFTWARE", "sp500": true, "nasdaq": true, "dow": false, "p": 250.0, "ed": "2026-11-24", "eps27": 8.7, "eps28": 10.5, "eps29": 12.5, "pe": 28.5, "mult": 0.95}, {"t": "UBER", "n": "Uber", "s": "叫車平台與外送網", "cat": "CLOUD", "sp500": true, "nasdaq": false, "dow": false, "p": 78.0, "ed": "2026-11-05", "eps27": 2.8, "eps28": 3.6, "eps29": 4.5, "pe": 25, "mult": 0.96}, {"t": "BRK.B", "n": "波克夏海瑟威", "s": "多元控股與產物保險", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": false, "p": 450.0, "ed": "2026-11-02", "eps27": 22.0, "eps28": 24.5, "eps29": 27.0, "pe": 19, "mult": 0.99}, {"t": "JPM", "n": "摩根大通", "s": "全球全能投資銀行", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": true, "p": 218.0, "ed": "2026-10-11", "eps27": 18.5, "eps28": 20.2, "eps29": 22.0, "pe": 12, "mult": 0.99}, {"t": "V", "n": "Visa", "s": "全球數位支付清算", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": true, "p": 275.0, "ed": "2026-10-22", "eps27": 12.0, "eps28": 13.8, "eps29": 15.6, "pe": 24, "mult": 0.98}, {"t": "MA", "n": "萬事達卡", "s": "支付網絡與金融科技", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": false, "p": 485.0, "ed": "2026-10-30", "eps27": 17.5, "eps28": 20.5, "eps29": 23.8, "pe": 26, "mult": 0.97}, {"t": "BAC", "n": "美國銀行", "s": "商業銀行與財富管理", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": false, "p": 42.0, "ed": "2026-10-15", "eps27": 3.8, "eps28": 4.25, "eps29": 4.7, "pe": 11, "mult": 0.99}, {"t": "WFC", "n": "富國銀行", "s": "零售與不動產信貸", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": false, "p": 60.0, "ed": "2026-10-11", "eps27": 5.6, "eps28": 6.2, "eps29": 6.9, "pe": 10.5, "mult": 0.99}, {"t": "GS", "n": "高盛集團", "s": "投資銀行與證券交易", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": true, "p": 490.0, "ed": "2026-10-14", "eps27": 43.0, "eps28": 48.0, "eps29": 53.0, "pe": 12, "mult": 0.99}, {"t": "MS", "n": "摩根士丹利", "s": "財富管理與機構證券", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": false, "p": 105.0, "ed": "2026-10-15", "eps27": 8.2, "eps28": 9.2, "eps29": 10.2, "pe": 13, "mult": 0.99}, {"t": "AXP", "n": "美國運通", "s": "高階消費卡與信貸", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": true, "p": 265.0, "ed": "2026-10-16", "eps27": 15.5, "eps28": 17.8, "eps29": 20.2, "pe": 16, "mult": 0.98}, {"t": "TRV", "n": "旅行家集團", "s": "商業與產物保險", "cat": "FINANCE", "sp500": true, "nasdaq": false, "dow": true, "p": 235.0, "ed": "2026-10-17", "eps27": 19.5, "eps28": 21.5, "eps29": 23.5, "pe": 11, "mult": 0.99}, {"t": "LLY", "n": "禮來", "s": "GLP-1 減重與糖尿病", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": false, "p": 910.0, "ed": "2026-10-29", "eps27": 28.0, "eps28": 36.0, "eps29": 44.0, "pe": 35, "mult": 0.96}, {"t": "UNH", "n": "聯合健康", "s": "健康保險與醫療服務", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": true, "p": 585.0, "ed": "2026-10-14", "eps27": 31.0, "eps28": 35.0, "eps29": 39.5, "pe": 19, "mult": 0.99}, {"t": "JNJ", "n": "嬌生", "s": "創新製藥與醫療器材", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": true, "p": 162.0, "ed": "2026-10-14", "eps27": 11.0, "eps28": 11.8, "eps29": 12.6, "pe": 15, "mult": 0.99}, {"t": "ABBV", "n": "艾伯維", "s": "免疫腫瘤創新藥", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": false, "p": 190.0, "ed": "2026-10-24", "eps27": 12.5, "eps28": 14.0, "eps29": 15.5, "pe": 15, "mult": 0.99}, {"t": "MRK", "n": "默克", "s": "腫瘤免疫 Keytruda", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": true, "p": 115.0, "ed": "2026-10-29", "eps27": 9.5, "eps28": 10.5, "eps29": 11.4, "pe": 13, "mult": 0.99}, {"t": "AMGN", "n": "安進", "s": "生物製藥與抗體", "cat": "HEALTH", "sp500": true, "nasdaq": true, "dow": true, "p": 320.0, "ed": "2026-10-30", "eps27": 21.0, "eps28": 23.2, "eps29": 25.5, "pe": 15.5, "mult": 0.99}, {"t": "TMO", "n": "賽默飛世爾", "s": "生科儀器與實驗檢測", "cat": "HEALTH", "sp500": true, "nasdaq": false, "dow": false, "p": 590.0, "ed": "2026-10-22", "eps27": 25.0, "eps28": 28.5, "eps29": 32.5, "pe": 24, "mult": 0.98}, {"t": "WMT", "n": "沃爾瑪", "s": "全球全通路零售龍頭", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 80.0, "ed": "2026-11-19", "eps27": 2.95, "eps28": 3.3, "eps29": 3.7, "pe": 27, "mult": 0.98}, {"t": "COST", "n": "好市多", "s": "會員制倉儲批發", "cat": "CONSUMER", "sp500": true, "nasdaq": true, "dow": false, "p": 880.0, "ed": "2026-12-10", "eps27": 19.5, "eps28": 22.0, "eps29": 25.0, "pe": 44, "mult": 0.95}, {"t": "PG", "n": "寶僑", "s": "民生家用品消費", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 172.0, "ed": "2026-10-16", "eps27": 7.4, "eps28": 7.95, "eps29": 8.55, "pe": 24, "mult": 0.99}, {"t": "HD", "n": "家得寶", "s": "家居建材零售", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 405.0, "ed": "2026-11-12", "eps27": 16.2, "eps28": 17.8, "eps29": 19.5, "pe": 23, "mult": 0.98}, {"t": "MCD", "n": "麥當勞", "s": "全球連鎖快餐加盟", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 295.0, "ed": "2026-10-28", "eps27": 13.2, "eps28": 14.5, "eps29": 15.9, "pe": 22, "mult": 0.98}, {"t": "KO", "n": "可口可樂", "s": "無酒精飲料龍頭", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 69.0, "ed": "2026-10-22", "eps27": 3.1, "eps28": 3.32, "eps29": 3.56, "pe": 23, "mult": 0.99}, {"t": "PEP", "n": "百事公司", "s": "休閒食品與飲料", "cat": "CONSUMER", "sp500": true, "nasdaq": true, "dow": false, "p": 170.0, "ed": "2026-10-08", "eps27": 8.7, "eps28": 9.4, "eps29": 10.15, "pe": 20, "mult": 0.99}, {"t": "NKE", "n": "耐吉", "s": "運動鞋類與服飾", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 82.0, "ed": "2026-12-18", "eps27": 3.4, "eps28": 4.1, "eps29": 4.8, "pe": 24, "mult": 0.97}, {"t": "DIS", "n": "迪士尼", "s": "主題樂園與影視串流", "cat": "CONSUMER", "sp500": true, "nasdaq": false, "dow": true, "p": 95.0, "ed": "2026-11-13", "eps27": 5.4, "eps28": 6.3, "eps29": 7.2, "pe": 18, "mult": 0.98}, {"t": "XOM", "n": "埃克森美孚", "s": "上游探勘與石化能源", "cat": "ENERGY", "sp500": true, "nasdaq": false, "dow": false, "p": 122.0, "ed": "2026-10-30", "eps27": 9.5, "eps28": 10.2, "eps29": 11.0, "pe": 13, "mult": 0.99}, {"t": "CVX", "n": "雪佛龍", "s": "全球能源綜合開發", "cat": "ENERGY", "sp500": true, "nasdaq": false, "dow": true, "p": 150.0, "ed": "2026-10-30", "eps27": 13.0, "eps28": 14.2, "eps29": 15.5, "pe": 12, "mult": 0.99}, {"t": "CAT", "n": "開拓重工", "s": "工程重機與礦業動力", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": true, "p": 385.0, "ed": "2026-10-24", "eps27": 23.5, "eps28": 26.0, "eps29": 28.5, "pe": 16, "mult": 0.98}, {"t": "GE", "n": "奇異航太", "s": "商用與軍用航太發動機", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": false, "p": 185.0, "ed": "2026-10-21", "eps27": 5.4, "eps28": 6.5, "eps29": 7.8, "pe": 32, "mult": 0.96}, {"t": "BA", "n": "波音", "s": "民航客機與軍工防務", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": true, "p": 155.0, "ed": "2026-10-22", "eps27": 5.0, "eps28": 8.5, "eps29": 11.0, "pe": 20, "mult": 0.96}, {"t": "HON", "n": "漢威聯合", "s": "工業自動化與航太控制", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": true, "dow": true, "p": 205.0, "ed": "2026-10-23", "eps27": 11.5, "eps28": 12.8, "eps29": 14.1, "pe": 18, "mult": 0.98}, {"t": "RTX", "n": "雷神技術", "s": "飛彈防空與國防航空", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": false, "p": 122.0, "ed": "2026-10-21", "eps27": 6.2, "eps28": 7.1, "eps29": 8.0, "pe": 19, "mult": 0.98}, {"t": "UNP", "n": "聯合太平洋", "s": "橫貫鐵路幹線貨運", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": false, "p": 240.0, "ed": "2026-10-16", "eps27": 12.8, "eps28": 14.2, "eps29": 15.6, "pe": 19, "mult": 0.98}, {"t": "VZ", "n": "威訊通訊", "s": "全國寬頻與5G電信", "cat": "CLOUD", "sp500": true, "nasdaq": false, "dow": true, "p": 44.0, "ed": "2026-10-22", "eps27": 4.8, "eps28": 5.0, "eps29": 5.2, "pe": 9.5, "mult": 0.99}, {"t": "SHW", "n": "宣偉塗料", "s": "工業防腐與建築塗裝", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": true, "p": 375.0, "ed": "2026-10-22", "eps27": 13.5, "eps28": 15.2, "eps29": 17.0, "pe": 24, "mult": 0.98}, {"t": "DOW", "n": "陶氏化學", "s": "特殊聚合物與包裝", "cat": "INDUSTRIALS", "sp500": true, "nasdaq": false, "dow": true, "p": 52.0, "ed": "2026-10-24", "eps27": 3.5, "eps28": 4.2, "eps29": 4.9, "pe": 13, "mult": 0.98}];
 
     let currentYield = 5.28;
     let selectedCategory = "ALL";
@@ -1569,6 +1588,16 @@
     function updateYield(val) {
       currentYield = parseFloat(val);
       document.getElementById("yieldValue").innerText = currentYield.toFixed(2) + "%";
+      renderTable();
+    }
+
+    
+    let selectedIndexFilter = 'ALL';
+
+    function setIndexFilter(idxMode, el) {
+      selectedIndexFilter = idxMode;
+      document.querySelectorAll('.index-tab').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
       renderTable();
     }
 
@@ -1590,7 +1619,15 @@
     }
 
     function renderTable() {
-      const scenario = document.getElementById("scenarioSelect").value;
+
+      // Update count indicators
+      const elAll = document.getElementById("countAll");
+      if (elAll) {
+        elAll.innerText = stocks.length;
+        document.getElementById("countSP500").innerText = stocks.filter(s => s.sp500).length;
+        document.getElementById("countNasdaq").innerText = stocks.filter(s => s.nasdaq).length;
+        document.getElementById("countDow").innerText = stocks.filter(s => s.dow).length;
+      }      const scenario = document.getElementById("scenarioSelect").value;
       const query = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
@@ -1604,6 +1641,9 @@
       let processed = [];
 
       stocks.forEach((s, idx) => {
+        if (selectedIndexFilter === 'SP500' && !s.sp500) return;
+        if (selectedIndexFilter === 'NASDAQ' && !s.nasdaq) return;
+        if (selectedIndexFilter === 'DOW' && !s.dow) return;
         if (selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
         if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query) && !s.s.toLowerCase().includes(query)) return;
 
@@ -1621,6 +1661,9 @@
           t: s.t,
           n: s.n,
           s: s.s,
+          sp500: s.sp500,
+          nasdaq: s.nasdaq,
+          dow: s.dow,
           p: s.p,
           ed: s.ed,
           days: days,
@@ -1647,11 +1690,16 @@
         const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
         const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
 
+        const spxBadge = item.sp500 ? '<span class="idx-badge active-idx spx">S&P</span>' : '<span class="idx-badge">S&P</span>';
+        const ndxBadge = item.nasdaq ? '<span class="idx-badge active-idx ndx">NDX</span>' : '<span class="idx-badge">NDX</span>';
+        const dowBadge = item.dow ? '<span class="idx-badge active-idx dow">DOW</span>' : '<span class="idx-badge">DOW</span>';
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td class="mono" style="color: var(--text-muted);">${item.idx}</td>
           <td><span class="ticker-symbol mono">${item.t}</span></td>
           <td><span class="company-name">${item.n}</span></td>
+          <td style="white-space:nowrap;">${spxBadge}${ndxBadge}${dowBadge}</td>
           <td><span class="sector-tag">${item.s}</span></td>
           <td class="mono">$${item.p.toFixed(2)}</td>
           <td class="mono">${item.ed}</td>
