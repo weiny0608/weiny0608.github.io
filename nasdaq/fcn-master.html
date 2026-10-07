@@ -72,6 +72,8 @@ const GOOGLE_FINANCE_LATEST_CLOSES = {
     "XLF":  { current: 54.50,  m3: 50.00,  m6: 47.00,  y1: 41.00 },
     "TLT":  { current: 98.50,  m3: 95.00,  m6: 92.00,  y1: 90.00 },
     "ARKK": { current: 62.00,  m3: 55.00,  m6: 48.00,  y1: 42.00 },
+    "GLD":  { current: 382.27, m3: 340.00, m6: 310.00, y1: 245.00 },
+    "SLV":  { current: 43.50,  m3: 38.00,  m6: 34.00,  y1: 28.00 },
     "NVDA": { current: 238.90, m3: 182.50, m6: 145.00, y1: 120.00 },
     "TSM":  { current: 485.80, m3: 365.20, m6: 280.00, y1: 175.00 },
     "AAPL": { current: 332.89, m3: 285.40, m6: 250.00, y1: 220.00 },
@@ -611,7 +613,7 @@ function FCNDashboard() {
                                     value={symbol}
                                     onChange={(e) => setSymbol(e.target.value.toUpperCase())}
                                     className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all uppercase"
-                                    placeholder="美股與 ADR 代碼 (如 NVDA, TSM, AAPL, MSFT...)"
+                                    placeholder="美股、ADR 與 ETF 代碼 (如 NVDA, TSM, QQQ, GLD...)"
                                 />
                             </div>
                             <button 
