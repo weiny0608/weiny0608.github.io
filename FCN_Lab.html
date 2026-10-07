@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="本機運算的四標的 FCN 歷史回測與條件情境模擬器。">
+<title>FCN Lab · 四標的結構型商品模擬器</title>
+<style>
+:root{--bg:#0b1019;--panel:#121a26;--panel2:#182333;--line:#263448;--text:#edf3fc;--muted:#94a4ba;--teal:#69e0c1;--blue:#8baaff;--orange:#efbc77;--red:#f08e99;--purple:#c3a0f6;--radius:16px;--font:Inter,"Segoe UI","Microsoft JhengHei","PingFang TC",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 var(--font)}button,input,select{font:inherit}button,a,input,select,summary{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--teal)}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.42}a{color:var(--teal);text-underline-offset:3px}h1,h2,h3,p{margin:0}h1{font-size:30px;letter-spacing:-.8px;font-weight:650;line-height:1.4}h2{font-size:17px;font-weight:650}h3{font-size:14px;font-weight:650}small{font-size:11px}.muted{color:var(--muted)}.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-variant-numeric:tabular-nums}.positive{color:var(--teal)}.negative{color:var(--red)}.warntext{color:var(--orange)}.hidden{display:none!important}
+.wrap{max-width:1560px;margin:0 auto;padding:0 28px}header{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:13px}.brandmark{width:37px;height:37px;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;padding:8px;border:1px solid #35605f;border-radius:9px;transform:rotate(-3deg)}.brandmark i{background:var(--teal);border-radius:1px}.brandmark i:nth-child(2){opacity:.6}.brandmark i:nth-child(3){opacity:.4}.brandname{font-size:20px;letter-spacing:1px;font-weight:650}.brandname span{font-weight:400;color:var(--muted)}.brand-sub{font-size:10px;letter-spacing:2px;color:var(--muted)}.head-right{display:flex;align-items:center;gap:12px}.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border:1px solid var(--line);border-radius:30px;font-size:11px;color:var(--muted);white-space:nowrap}.pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}.pill.good{color:var(--teal);border-color:#30554f}.pill.demo{color:var(--orange);border-color:#685337;background:#30271a}.hero{padding:28px 0 22px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.eyebrow{color:var(--teal);font-size:11px;letter-spacing:2px;margin-bottom:7px}.hero p{margin-top:8px;color:var(--muted);font-size:13px}.hero-note{text-align:right;color:var(--muted);font-size:11px;max-width:240px}.hero-note strong{display:block;color:var(--text);font-size:12px;font-weight:500}
+.source-panel{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px}.source-row{display:flex;align-items:flex-end;gap:16px}.source-title{min-width:173px;padding-bottom:5px}.source-title small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.keyfield{flex:1;max-width:460px}.field label,.keyfield label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.input-wrap{position:relative}.input-wrap .suffix{position:absolute;right:12px;top:10px;pointer-events:none;color:var(--muted);font-size:12px}.input-wrap input{padding-right:37px}input,select{background:#0d1521;border:1px solid #304157;color:var(--text);border-radius:8px;padding:9px 11px;min-width:0;width:100%;height:40px;transition:border .15s}input::placeholder{color:#65788f}input:focus,select:focus{border-color:var(--teal)}input[type=checkbox]{width:15px;height:15px;accent-color:var(--teal);padding:0;flex-shrink:0}input[type=date]{color-scheme:dark;font-size:12px}select{padding-right:20px}input[type=number]{appearance:textfield;-moz-appearance:textfield}input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none}.check{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);cursor:pointer}.source-foot{display:flex;gap:18px;flex-wrap:wrap;margin-top:11px;font-size:11px;color:var(--muted)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:8px;padding:9px 13px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:12px;font-weight:550;min-height:39px;white-space:nowrap}.btn:hover{border-color:#66839e;background:#213147}.btn.primary{background:var(--teal);border-color:var(--teal);color:#102620}.btn.primary:hover{background:#8cebd2}.btn.ghost{background:transparent}.btn.icon{width:40px;padding:8px}.source-help{max-width:235px;font-size:11px;line-height:1.7;color:var(--muted)}
+.layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:20px;align-items:start}.panel{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}.panel-head .step{font:11px Consolas,monospace;color:var(--teal);padding-right:9px}.panel-body{padding:18px 20px}.settings .panel-body{padding-top:14px}.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted);margin:2px 0 11px}.tickers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ticker-label{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);margin-bottom:5px}.swatch{display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}.ticker input{text-transform:uppercase;font:650 16px Consolas,monospace;letter-spacing:1px;height:44px}.tiny{font-size:11px;line-height:1.6;color:var(--muted);margin-top:9px}.divider{height:1px;background:var(--line);margin:18px 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}.fields.three{grid-template-columns:repeat(3,1fr);gap:7px}.field.full{grid-column:1/-1}.fields.three input{padding-left:9px;padding-right:21px}.fields.three .suffix{right:7px}.barrier-help{padding:10px 11px;background:#0d1521;border-radius:8px;color:var(--muted);font-size:11px;margin-top:12px;line-height:1.8}.toggle-card{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:11px 12px;border:1px solid var(--line);border-radius:9px;margin:13px 0}.toggle-card span{font-size:12px}.toggle-card small{display:block;color:var(--muted);font-size:10px}.toggle{width:35px;height:21px;background:#304159;border-radius:30px;position:relative;border:none;flex-shrink:0;padding:0}.toggle::after{content:"";position:absolute;width:15px;height:15px;left:3px;top:3px;border-radius:50%;background:#abb7c9;transition:all .2s}.toggle[aria-checked=true]{background:#335f55}.toggle[aria-checked=true]::after{left:17px;background:var(--teal)}details{font-size:12px}summary{cursor:pointer;color:var(--muted);font-size:12px;padding:5px 0}details[open] summary{margin-bottom:10px}.actions{display:grid;gap:8px;margin-top:18px}.actions .btn{width:100%}.fetch-info{text-align:center;font-size:10px;color:var(--muted);margin-top:8px}.content{min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}.content>*{min-width:0}.banner{overflow-wrap:anywhere}.banner{border-radius:9px;padding:12px 15px;border:1px solid #635132;background:#302619;color:#efc88b;font-size:12px}.banner.error{border-color:#70404b;background:#331d27;color:#ffb4bd}.banner.info{border-color:#365869;background:#162933;color:#b2d8e5}.banner.success{border-color:#315b50;background:#152c26;color:#a4e2ce}.banner strong{display:block;font-size:12px;margin-bottom:2px}.status-box:empty{display:none}.status-box{white-space:pre-line}.demo-watermark{border:1px dashed #70573a;background:#2b241b;border-radius:9px;color:#edc284;font-size:11px;text-align:center;padding:8px;letter-spacing:.3px}.overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.metric{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:16px 15px;min-height:145px;position:relative;overflow:hidden}.metric:first-child{border-top:2px solid var(--teal)}.metric-label{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center}.metric-value{font:600 25px/1.3 Consolas,"Microsoft JhengHei",monospace;margin:12px 0 6px;letter-spacing:-.5px;word-break:break-word}.metric-value.text{font-size:20px}.metric-sub{font-size:10px;color:var(--muted);line-height:1.8}.metric small{font-size:11px}.chart-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:19px 20px 8px}.chart-title p{font-size:11px;color:var(--muted);margin-top:3px}.chart-controls{display:flex;gap:7px}.chart-controls select{height:31px;padding:4px 24px 4px 8px;font-size:11px;max-width:145px}.legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:7px 20px 1px;min-height:32px}.legend-item{display:inline-flex;align-items:center;gap:6px;font:11px Consolas,monospace}.chart-holder{position:relative;height:322px;margin:0 12px 0 5px}.chart-holder svg{width:100%;height:100%;display:block}.chart-tooltip{position:absolute;z-index:4;pointer-events:none;background:#0b111dee;border:1px solid #506078;border-radius:8px;box-shadow:0 8px 25px #0007;padding:10px 13px;font-size:11px;min-width:177px;line-height:1.9}.tooltip-row{display:flex;justify-content:space-between;gap:18px}.empty-chart{height:322px;display:flex;flex-direction:column;align-items:center;justify-content:center;background-image:linear-gradient(#22304455 1px,transparent 1px),linear-gradient(90deg,#22304455 1px,transparent 1px);background-size:100% 58px,13% 100%;background-position:0 40px;margin:0 20px 0 52px}.empty-glyph{width:52px;height:38px;margin-bottom:14px;color:var(--teal)}.empty-chart h3{font-size:16px}.empty-chart p{max-width:360px;text-align:center;margin-top:7px;color:var(--muted);font-size:12px}.chart-bottom{padding:10px 20px 16px;border-top:1px solid #26344888;display:flex;justify-content:space-between;gap:12px;font-size:10px;color:var(--muted)}.chart-boundaries{display:flex;gap:13px;flex-wrap:wrap}.dash{display:inline-block;width:14px;border-top:2px dashed currentColor;vertical-align:middle;margin-right:4px}.summaryline{border-top:1px solid var(--line);padding:15px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.summaryline .value{font:14px Consolas,monospace;margin-top:4px}.summaryline .label{font-size:10px;color:var(--muted)}
+.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}.data-table th{text-align:right;padding:11px 14px;color:var(--muted);font-weight:400;background:#101824;border-bottom:1px solid var(--line)}.data-table td{text-align:right;padding:14px;border-bottom:1px solid #233145;vertical-align:middle;font-family:Consolas,"Microsoft JhengHei",monospace}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table tr:last-child td{border-bottom:none}.data-table tbody tr:hover{background:#1a2635}.data-table tr.worst-row{background:#28302355}.data-table .symbol-cell{font-size:13px;font-weight:650;display:flex;gap:8px;align-items:center}.data-table .subcell{display:block;color:var(--muted);font:9px var(--font);margin-top:3px;white-space:normal;min-width:80px}.data-table .worst-tag{color:var(--orange);font:9px var(--font);border:1px solid #60543a;padding:1px 4px;border-radius:4px;display:inline-block;margin-top:5px}.table-note{padding:12px 20px;color:var(--muted);font-size:10px;border-top:1px solid var(--line);line-height:1.8}.table-toolbar{display:flex;gap:7px;align-items:center}.table-toolbar .btn{font-size:10px;min-height:29px;padding:4px 9px}.empty-cell{text-align:center!important;color:var(--muted);padding:30px!important}
+.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.event-list{max-height:291px;overflow:auto;padding:4px 20px 14px}.event{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:11px}.event:last-child{border-bottom:0}.event-date{color:var(--muted);font:10px Consolas,monospace;padding-top:3px}.event-content strong{font-size:11px;font-weight:550;display:block;margin-bottom:3px}.event-content p{font-size:10px;color:var(--muted);line-height:1.7}.outcome{padding:15px 20px}.outcome-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;font-size:11px;color:var(--muted);border-bottom:1px solid #233145}.outcome-row:last-of-type{border:0}.outcome-row strong{font:13px Consolas,monospace;color:var(--text);text-align:right}.outcome-total{padding-top:12px;margin-top:3px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}.outcome-total strong{font:22px Consolas,monospace;color:var(--teal)}.stress-body{padding:15px 20px}.stress-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stress-result{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#0d1521;border-radius:9px;padding:14px;margin-top:14px}.stress-result strong{font:19px Consolas,monospace}.stress-footer{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}.rules{margin-top:22px;border-top:1px solid var(--line);padding:22px 0 28px}.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.rule h3{color:var(--text);font-size:12px;margin-bottom:8px}.rule p{font-size:11px;color:var(--muted);line-height:1.9;margin-bottom:7px}.rule .formula{font:11px/1.9 Consolas,"Microsoft JhengHei",monospace;color:#b9cadd;background:#121b28;padding:9px;border-radius:7px}.sources{font-size:10px;line-height:1.9;color:var(--muted);margin-top:16px}.sources a{margin-right:16px}.footer{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:18px 0 25px;color:var(--muted);font-size:10px}.footer p{max-width:870px}.busy-dot{display:inline-block;width:12px;height:12px;border:2px solid #274338;border-top-color:#0b211a;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#dirtyBanner{margin-bottom:0}#warnList{display:grid;gap:7px}#warnList:empty{display:none}
+@media(min-width:1450px){.layout{grid-template-columns:350px minmax(0,1fr)}.chart-holder,.empty-chart{height:344px}.metric-value{font-size:28px}.metric-value.text{font-size:22px}}
+@media(max-width:1180px){.wrap{padding:0 20px}.layout{grid-template-columns:302px minmax(0,1fr);gap:15px}.overview{grid-template-columns:repeat(2,1fr)}.metric{min-height:119px}.metric-value{margin:8px 0 3px}.source-help{display:none}.lower-grid{grid-template-columns:1fr}.metric-value.text{font-size:22px}}
+@media(max-width:820px){.wrap{padding:0 15px}header{height:68px}.head-right .pill:first-child{display:none}.hero{padding:23px 0 18px}h1{font-size:24px}.hero-note{display:none}.source-row{flex-wrap:wrap;gap:11px}.source-title{width:100%}.keyfield{min-width:200px;max-width:none}.source-foot{gap:10px}.layout{grid-template-columns:1fr}.settings .panel-body{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}.settings .full-width{grid-column:1/-1}.settings .divider{margin:14px 0}.settings .block{min-width:0}.overview{grid-template-columns:repeat(4,1fr)}.metric{padding:13px 11px}.metric-value{font-size:23px}.metric-value.text{font-size:18px}.rules-grid{grid-template-columns:1fr;gap:15px}.footer{flex-direction:column;gap:8px}.chart-controls select{max-width:125px}}
+@media(max-width:530px){.wrap{padding:0 11px}.source-panel{padding:15px}.source-row .btn{flex:1}.keyfield{flex-basis:100%}.source-title{padding:0}.source-foot .check{width:100%}.hero p{font-size:11px}h1{font-size:22px}.hero .eyebrow{font-size:9px}.settings .panel-body{display:block;padding:16px}.settings .block{margin-bottom:15px}.overview{grid-template-columns:repeat(2,1fr)}.panel-head{padding:15px 16px}.chart-top{padding:16px 14px 8px;flex-wrap:wrap}.chart-controls{width:100%}.chart-controls select{max-width:none;flex:1}.legend{padding-left:15px;gap:12px}.chart-holder{height:287px;margin-left:0;margin-right:3px}.chart-bottom{padding:10px 14px;flex-direction:column}.summaryline{padding:13px 14px;gap:7px}.summaryline .value{font-size:11px}.stress-grid{grid-template-columns:repeat(2,1fr)}.stress-result{flex-wrap:wrap}.table-toolbar .btn:first-child{display:none}.brand-sub{font-size:8px;letter-spacing:1.5px}.brandname{font-size:18px}.pill{font-size:10px;padding:4px 7px}.head-right{gap:5px}}
+@media print{body{background:white;color:#111}.wrap{max-width:none;padding:0}.source-panel,.settings,.hero-note,.btn,.head-right,.stress-panel,.chart-controls,.footer,.rules{display:none!important}.layout{display:block}.panel,.metric{background:white;border:1px solid #999;color:#111;break-inside:avoid}.muted,.metric-sub,.metric-label,.chart-title p,.table-note,.data-table th,.subcell{color:#444!important}.content{gap:12px}.data-table th{background:#eee}.table-wrap{overflow:visible}.data-table{font-size:8px}.data-table td,.data-table th{padding:6px}.data-table tbody tr{background:white}.overview{grid-template-columns:repeat(4,1fr)}.lower-grid{grid-template-columns:1fr 1fr}.outcome-row strong,.outcome-total strong{color:#111}.event-list{max-height:none}.chart-holder{height:300px}.banner,.demo-watermark{background:#fff;color:#333}.summaryline{color:#111}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="brand"><div class="brandmark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="brandname">FCN <span>Lab</span></div><div class="brand-sub">STRUCTURED NOTES PLAYGROUND</div></div></div>
+ <div class="head-right"><a href="./index.html" class="btn ghost" style="min-height:28px;padding:3px 10px;font-size:11px;text-decoration:none;border-color:var(--line);color:var(--text)">← 返回主儀表板</a><span class="pill">本機運算 · 不上傳持倉</span><span class="pill" id="sourcePill"><i class="dot"></i>尚未載入行情</span></div>
+</header>
+<section class="hero">
+ <div><div class="eyebrow">FOUR ASSETS. ONE CONTRACT.</div><h1>FCN 結構型商品模擬器</h1><p>自訂條款、追蹤四檔美股，掌握最差標的與 KO / KI 狀態。</p></div>
+ <div class="hero-note"><strong>歷史回測 × 條款監控 × 到期情境</strong>非銀行報價系統，不推估公允價或未來機率。</div>
+</section>
+<section class="source-panel" aria-label="行情來源設定">
+ <div class="source-row">
+  <div class="source-title"><h3>安全行情來源</h3><small>Twelve Data · 美股 / USD</small></div>
+  <span class="pill good"><i class="dot"></i>API Key 由安全後端保管</span>
+  <button type="button" class="btn" id="demoBtn">試跑離線示範</button>
+  <div class="source-help">行情請求經安全代理轉送；API Key 不會傳到瀏覽器或放在公開網頁中。</div>
+ </div>
+ <div class="source-foot"><span id="keyPrivacy">完整更新最多 8 次資料請求；使用資格與額度依行情服務帳戶方案而定。</span></div>
+</section>
+<div class="layout">
+ <aside class="panel settings">
+  <div class="panel-head"><h2><span class="step">01</span>建立合約</h2><button type="button" class="btn ghost" id="resetBtn" style="min-height:28px;padding:3px 9px;font-size:10px">重設</button></div>
+  <form id="configForm" novalidate>
+  <div class="panel-body">
+   <div class="block">
+    <div class="section-label">UNDERLYING BASKET / 連結標的</div>
+    <div class="tickers">
+     <div class="ticker"><label class="ticker-label" for="symbol0"><i class="swatch" style="background:var(--teal)"></i>標的 01</label><input id="symbol0" value="AAPL" maxlength="20" spellcheck="false" autocomplete="off" placeholder="AAPL"></div>
+     <div class="ticker"><label class="ticker-label" for="symbol1"><i class="swatch" style="background:var(--blue)"></i>標的 02</label><input id="symbol1" value="MSFT" maxlength="20" spellcheck="false" autocomplete="off" placeholder="MSFT"></div>
+     <div class="ticker"><label class="ticker-label" for="symbol2"><i class="swatch" style="background:var(--orange)"></i>標的 03</label><input id="symbol2" value="NVDA" maxlength="20" spellcheck="false" autocomplete="off" placeholder="NVDA"></div>
+     <div class="ticker"><label class="ticker-label" for="symbol3"><i class="swatch" style="background:var(--purple)"></i>標的 04</label><input id="symbol3" value="TSLA" maxlength="20" spellcheck="false" autocomplete="off" placeholder="TSLA"></div>
+    </div>
+    <p class="tiny">可輸入 1–4 檔，空白略過；不同股別請用資料商代碼，例如 BRK.B。預填標的僅供操作。</p>
+    <div class="divider"></div>
+    <div class="section-label">BARRIERS / 期初價百分比</div>
+    <div class="fields three">
+     <div class="field"><label for="strike">STRIKE</label><div class="input-wrap"><input id="strike" type="number" value="80" step="0.1" min="0.1" max="300"><span class="suffix">%</span></div></div>
+     <div class="field"><label for="ko">KO</label><div class="input-wrap"><input id="ko" type="number" value="100" step="0.1" min="0.1" max="300"><span class="suffix">%</span></div></div>
+     <div class="field"><label for="ki">KI</label><div class="input-wrap"><input id="ki" type="number" value="60" step="0.1" min="0.1" max="300"><span class="suffix">%</span></div></div>
+    </div>
+    <div class="toggle-card"><div><span>記憶式 KO</span><small>各標的分別達標後，跨觀察日保留紀錄</small></div><button type="button" id="memory" class="toggle" role="switch" aria-checked="false" aria-label="記憶式 KO"></button></div>
+    <div class="fields">
+     <div class="field"><label for="kiType">KI 類型</label><select id="kiType"><option value="EKI">EKI · 到期觀察</option><option value="AKI">AKI · 期間觀察</option></select></div>
+     <div class="field"><label for="koFrequency">KO 觀察頻率</label><select id="koFrequency"><option value="monthly">每月期末</option><option value="daily">每日收盤</option></select></div>
+    </div>
+    <div class="barrier-help" id="ruleHint">普通 KO：同一觀察日，所有標的均須達標。<br>EKI：只在最終觀察日判斷 KI。</div>
+   </div>
+   <div class="block">
+    <div class="divider"></div>
+    <div class="section-label">TERM & COUPON / 期間與票息</div>
+    <div class="fields">
+     <div class="field"><label for="startDate">期初定價日</label><input type="date" id="startDate"></div>
+     <div class="field"><label for="asOfDate">合約回測截至日</label><input type="date" id="asOfDate"></div>
+     <div class="field"><label for="tenor">存續期間</label><div class="input-wrap"><input type="number" id="tenor" value="6" min="1" max="36" step="1"><span class="suffix">月</span></div></div>
+     <div class="field"><label for="guarantee">保證領息期間</label><div class="input-wrap"><input type="number" id="guarantee" value="2" min="0" max="36" step="1"><span class="suffix">月</span></div></div>
+     <div class="field"><label for="coupon">年化票息（自行輸入）</label><div class="input-wrap"><input type="number" id="coupon" value="12" min="0" max="100" step="0.1"><span class="suffix">%</span></div></div>
+     <div class="field"><label for="notional">名目本金（USD）</label><input type="number" id="notional" value="100000" min="1" step="1000"></div>
+    </div>
+    <p class="tiny" id="scheduleHint">保證期內不 KO，也不累積 KO 記憶；AKI 仍持續觀察。保證領息不是保本保證。</p>
+    <div class="divider"></div>
+    <details id="advanced">
+     <summary>進階設定與既有合約期初價</summary>
+     <div class="fields">
+      <div class="field full"><label for="akiPrice">AKI 觀察價格（僅 AKI 適用）</label><select id="akiPrice"><option value="close">每日收盤價</option><option value="low">每日最低價 · 盤中觸價近似</option></select></div>
+      <div class="field"><label for="kiInclusive">KI 等號規則</label><select id="kiInclusive"><option value="true">≤ KI 即觸發</option><option value="false">&lt; KI 才觸發</option></select></div>
+      <div class="field"><label for="basis">票息計息基礎</label><select id="basis"><option value="365">ACT / 365F</option><option value="360">ACT / 360</option></select></div>
+      <div class="field full"><label for="snapshotMode">最差標的比較基準</label><select id="snapshotMode"><option value="latest">最新報價快照（非回測日）</option><option value="asof">合約回測截至日的共同收盤價</option></select></div>
+     </div>
+     <p class="tiny" style="margin:12px 0 8px">手動期初價（留白＝定價日收盤價）<br>須與載入日線使用相同拆股調整口徑。</p>
+     <div class="fields">
+      <div class="field"><label for="initial0">標的 01 期初價</label><input id="initial0" type="number" step="any" min="0.000001" placeholder="自動"></div>
+      <div class="field"><label for="initial1">標的 02 期初價</label><input id="initial1" type="number" step="any" min="0.000001" placeholder="自動"></div>
+      <div class="field"><label for="initial2">標的 03 期初價</label><input id="initial2" type="number" step="any" min="0.000001" placeholder="自動"></div>
+      <div class="field"><label for="initial3">標的 04 期初價</label><input id="initial3" type="number" step="any" min="0.000001" placeholder="自動"></div>
+     </div>
+    </details>
+   </div>
+   <div class="full-width">
+    <div class="actions"><button type="submit" class="btn primary" id="runBtn">取得行情並模擬 <span aria-hidden="true">→</span></button><button type="button" class="btn ghost" id="recalcBtn" disabled>使用既有行情重算 · 不耗 API</button></div>
+    <div class="fetch-info" id="fetchInfo">完整更新：每檔日線 1 點 ＋ 最新報價 1 點</div>
+   </div>
+  </div>
+  </form>
+ </aside>
+ <main class="content" aria-label="模擬結果">
+  <div id="statusBox" class="status-box" role="status" aria-live="polite"></div>
+  <div id="dirtyBanner" class="banner hidden">條件已變更；下方仍是上次結果。請按「使用既有行情重算」或重新取得行情。</div>
+  <div id="demoBanner" class="demo-watermark hidden">DEMO / 全部價格為程式合成，非真實市場行情。示範結果不可用於交易。</div>
+  <div id="warnList"></div>
+  <section class="overview" aria-label="核心指標">
+   <article class="metric"><div class="metric-label" id="worstLabel">最新比較最差標的</div><div class="metric-value" id="worstValue">—</div><div class="metric-sub" id="worstSub">以「比較價 ÷ 期初價」排序<br>不是以當日漲跌幅排序</div></article>
+   <article class="metric"><div class="metric-label">合約狀態</div><div class="metric-value text" id="contractValue">待模擬</div><div class="metric-sub" id="contractSub">以已結束交易日的日線判定</div></article>
+   <article class="metric"><div class="metric-label">KI 狀態</div><div class="metric-value text" id="kiValue">—</div><div class="metric-sub" id="kiSub">EKI / AKI 分開判定<br>觸發 KI 不等於立即接股</div></article>
+   <article class="metric"><div class="metric-label">模型累計應計票息 · USD</div><div class="metric-value" id="couponValue">—</div><div class="metric-sub" id="couponSub">非已支付金額，不含本金損益</div></article>
+  </section>
+  <section class="panel">
+   <div class="chart-top"><div class="chart-title"><h2>標的走勢與障礙價</h2><p id="chartSubtitle">所有標的期初價標準化為 100%，比較相對表現。</p></div><div class="chart-controls"><label class="sr-only" for="chartAsset">圖表標的</label><select id="chartAsset" disabled><option value="all">全部標的 · %</option></select><label class="sr-only" for="chartRange">圖表期間</label><select id="chartRange"><option value="contract">合約有效期間</option><option value="all">回測截至日全區間</option></select></div></div>
+   <div id="chartLegend" class="legend"><span class="legend-item muted">行情載入後顯示比較線</span></div>
+   <div id="chartEmpty" class="empty-chart"><svg class="empty-glyph" viewBox="0 0 52 38" fill="none" aria-hidden="true"><path d="M2 33L14 21L23 26L36 9L49 4" stroke="currentColor" stroke-width="2"/><path d="M2 11L17 15L29 8L49 28" stroke="#8BAAFF" stroke-width="1.5" opacity=".7"/></svg><h3>讓條款變成可觀察的路徑</h3><p>輸入 API Key 取得真實行情，或點「試跑離線示範」立即檢視功能。</p></div>
+   <div id="chartHolder" class="chart-holder hidden"><svg id="chart" role="img" aria-label="標的歷史股價與 STRIKE、KO、KI 障礙價走勢圖"></svg><div id="chartTooltip" class="chart-tooltip hidden"></div></div>
+   <div class="chart-bottom"><div class="chart-boundaries"><span style="color:var(--teal)"><i class="dash"></i>KO</span><span style="color:var(--orange)"><i class="dash"></i>STRIKE</span><span style="color:var(--red)"><i class="dash"></i>KI</span><span>移動滑鼠 / 觸控查看每日價格</span></div><span id="chartDataNote">日線與盤中快照分開，不拼接盤中假收盤。</span></div>
+   <div class="summaryline"><div><div class="label">實際期初定價日</div><div class="value" id="actualStart">—</div></div><div><div class="label">最早 KO 觀察日（* 為待確認）</div><div class="value" id="firstKO">—</div></div><div><div class="label">名目最終觀察日</div><div class="value" id="maturityDate">—</div></div></div>
+  </section>
+  <section class="panel">
+   <div class="panel-head"><div><h2>四標的數據</h2><p class="muted" id="snapshotCaption" style="font-size:10px;margin-top:3px">最新比較價與合約截至日判定，會分別標示時間。</p></div><div class="table-toolbar"><button class="btn ghost" type="button" id="exportJson" disabled>匯出報告 JSON</button><button class="btn ghost" type="button" id="exportCsv" disabled>每日數據 CSV ↓</button></div></div>
+   <div class="table-wrap"><table class="data-table"><thead><tr><th>標的</th><th>期初價 S₀</th><th>比較價 / 時間</th><th>相對期初</th><th>期初至今漲跌</th><th>STRIKE 價</th><th>KO 價</th><th>KI 價</th><th>KO 紀錄</th><th>KI 紀錄</th></tr></thead><tbody id="assetRows"><tr><td class="empty-cell" colspan="10">載入行情後，將列出每檔價格、障礙價與觀察紀錄。</td></tr></tbody></table></div>
+   <div class="table-note" id="tableNote">比較價格皆以美元計價。沒有行情時不補造價格；不以較便宜的股價認定最差標的。</div>
+  </section>
+  <div class="lower-grid">
+   <section class="panel"><div class="panel-head"><h2>合約觀察紀錄</h2><span class="pill" id="memoryCount">KO 尚無紀錄</span></div><div class="event-list" id="eventList"><p class="muted" style="padding:20px 0;font-size:12px">定價、KO 達標、KI 觸發與到期事件會依時間列出。</p></div></section>
+   <section class="panel"><div class="panel-head"><h2>現金流與本金價值</h2><span class="muted" style="font-size:10px">USD · 模型值</span></div><div class="outcome" id="outcome"><div class="outcome-row"><span>名目本金</span><strong>—</strong></div><div class="outcome-row"><span>本金價值</span><strong>尚未模擬</strong></div><div class="outcome-row"><span>模型應計票息</span><strong>—</strong></div><div class="outcome-total"><span>合計價值</span><strong>—</strong></div><p class="tiny">未到期時不將本金假設為已全額收回，也不提供提前解約估值。</p></div></section>
+  </div>
+  <section class="panel stress-panel" id="stressPanel">
+   <div class="panel-head"><h2>到期壓力測試</h2><span class="pill">條件情境 · 非預測</span></div>
+   <div class="stress-body"><p class="muted" style="font-size:11px;margin-bottom:12px">輸入各標的「到期價 ÷ 期初價」百分比。假設整段期間不 KO，檢視本金與全期票息的變化。</p><div class="stress-grid" id="stressInputs"><p class="muted" style="font-size:11px;grid-column:1/-1">先載入行情，便可自訂四檔到期價情境。</p></div><div class="stress-footer"><label class="check"><input type="checkbox" id="stressKI" disabled>AKI：假設未來曾觸及 KI（EKI 不適用）</label><button type="button" class="btn ghost" id="stressBtn" disabled style="min-height:30px;padding:4px 11px">計算情境</button></div><div class="stress-result hidden" id="stressResult"></div><p class="tiny" id="stressNote">不包含機率模型、路徑預測、匯率、稅、交易費用或發行人信用風險。</p></div>
+  </section>
+ </main>
+</div>
+<section class="rules">
+ <details id="rulesDetails">
+  <summary style="font-size:13px;color:var(--text)">模型定義、資料限制與操作說明</summary>
+  <div class="rules-grid">
+   <div class="rule"><h3>01 / 本工具採用的 KO 與 KI 定義</h3><p>普通 KO：同一有效觀察日，全部標的的收盤價均 ≥ 各自 KO 價。記憶式 KO：各標的在有效觀察日曾達 KO 的紀錄累積，不須同日；全部累積完成即贖回。不是「記憶票息」。</p><p>EKI 僅在最終觀察日以收盤價判定。AKI 從定價日後的首個交易日起至合約終止，逐日觀察；可選收盤或日低價。日低價僅近似盤中觸價，並非逐筆連續監控。KI 的 ≤ / &lt; 可自行設定。</p><p>KO 觀察包含最終觀察日；若同日滿足 KO 與 KI，模型以 KO 贖回優先。各發行人的實際條款可能不同。</p></div>
+   <div class="rule"><h3>02 / 保證領息、到期損益與計息</h3><p>保證 g 個月，最早在第 g 個月屆滿當日 KO（g=0 的每日 KO 則從次一交易日起；月 KO 至少從第 1 月期末）。保證期內不累積 KO 記憶，但 AKI 照常；並非發行人違約下仍保證給付。</p><p>未 KO 到期時：若籃子任一標的曾按所選規則觸發 KI，且最差標的低於 STRIKE，使用最差標的計算本金價值。否則本金按面額計算。</p><div class="formula">r = min(到期價 / 期初價)<br>受損本金價值 = 本金 × r / (STRIKE / 100)<br>應計票息 = 本金 × 年票息 × 實際天數 / 365 或 360</div><p style="margin-top:8px">股數為理論小數股；未處理整股交割、畸零現金與結算落差。起日算入、終日不算入；計息日直接視同定價／終止日，未模擬發行及支付交割日落差。</p></div>
+   <div class="rule"><h3>03 / 日線、最新報價與資料品質</h3><p>所有標的採同一基準日。假日與觀察日依四檔共同有日線的下一日順延；部分標的缺少同一天資料時，停止計算，不以前值補齊。若所有標的同時漏日，工具無法僅靠該來源偵測；不是交易所正式日曆。</p><p>紐約當日的日線須到當地 18:00 後才納入，以避開未完成日 K；仍非銀行正式定盤。最新 quote 只供快照比較，不觸發合約事件。時間不同步或部分 quote 缺失，整籃統一退回共同日收盤價。</p><p>日線要求 splits 調整、不做股息總報酬調整。手動 S₀ 必須採同一口徑；拆股、合併、下市、停牌、分拆與特殊現金股利仍應核對發行人調整條款。歷史資料不是未來預測。</p></div>
+  </div>
+  <div class="sources"><strong>官方資料與條款參考（查核：2026-10-07）</strong><br><a href="https://twelvedata.com/docs" target="_blank" rel="noopener noreferrer">Twelve Data API 文件 ↗</a><a href="https://twelvedata.com/pricing.md" target="_blank" rel="noopener noreferrer">免費方案 / 額度 / 授權 ↗</a><a href="https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted" target="_blank" rel="noopener noreferrer">價格調整口徑 ↗</a><a href="https://www.dbs.com.hk/private-banking/investments/product-suite/structured-investments/fixed-coupon-notes" target="_blank" rel="noopener noreferrer">DBS FCN 機制與風險 ↗</a><br>Basic 官方列示每分鐘 8 點、每日 800 點；每個 symbol 的 time_series 與 quote 各 1 點，費率及權限以服務商最新說明為準。Individual 用途限個人、內部、非商業；公司使用、對客展示與資料再散布須另核對商業方案及交易所授權。<br>此檔可直接以瀏覽器開啟。若公司政策限制 file:// 聯網，可在檔案所在目錄執行 <code>python -m http.server 8000</code>，再開啟 <code>http://localhost:8000/FCN_Simulator.html</code>；這不會繞過資料商的 CORS 或存取限制。連線錯誤不會自動改用合成行情。API Key 只送到資料商，不包含在匯出檔案中。</div>
+ </details>
+</section>
+<footer class="footer"><p>風險提醒：FCN 非保本商品，可能損失全部本金，並承擔發行人信用及流動性風險。此工具用於條款理解與情境比較，未納入全部真實契約細節，不構成投資建議、成交依據或銀行贖回報價。請以正式 term sheet 為準。</p><span class="mono">FCN LAB / v1.0.0<br>SELF-CONTAINED HTML</span></footer>
+</div>
+<script>
+/* FCN Lab v1.0.0 - deterministic contract engine. Dates are ISO civil dates. */
+'use strict';
+const FCNCore = (() => {
+ const DAY = 86400000, EPS = 1e-10;
+ const parse = s => {
+  if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) throw new Error('INVALID_DATE');
+  const d = new Date(s + 'T00:00:00Z');
+  if (!Number.isFinite(+d) || d.toISOString().slice(0,10) !== s) throw new Error('INVALID_DATE');
+  return d;
+ };
+ const iso = d => d.toISOString().slice(0,10);
+ const plusDays = (s,n) => iso(new Date(+parse(s) + n*DAY));
+ const days = (a,b) => Math.round((+parse(b)-+parse(a))/DAY);
+ function addMonths(s,n) {
+  const d=parse(s), year=d.getUTCFullYear(), month=d.getUTCMonth(), day=d.getUTCDate();
+  const first=new Date(Date.UTC(year,month+n,1));
+  const last=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
+  first.setUTCDate(Math.min(day,last)); return iso(first);
+ }
+ const hitKI = (r,c) => c.kiInclusive ? r <= c.ki/100+EPS : r < c.ki/100-EPS;
+ const hitKO = (r,c) => r >= c.ko/100-EPS;
+ const worst = ratios => {
+  const value=Math.min(...ratios);
+  return { index:ratios.indexOf(value), value, ties:ratios.map((r,i)=>Math.abs(r-value)<EPS?i:-1).filter(i=>i>=0) };
+ };
+ function validate(c) {
+  parse(c.start); parse(c.asOf);
+  if (c.start>c.asOf) throw new Error('START_AFTER_ASOF');
+  if (!Array.isArray(c.assets)||c.assets.length<1||c.assets.length>4) throw new Error('ASSET_COUNT');
+  if (new Set(c.assets.map(x=>x.symbol)).size !== c.assets.length) throw new Error('DUPLICATE_SYMBOL');
+  for (const a of c.assets) {
+   if (!/^[A-Z0-9][A-Z0-9.\-]{0,19}$/.test(a.symbol)) throw new Error('INVALID_SYMBOL');
+   if (a.initial!=null && (!Number.isFinite(a.initial)||a.initial<=0)) throw new Error('INVALID_INITIAL');
+  }
+  for (const k of ['strike','ki','ko']) if (!Number.isFinite(c[k])||c[k]<=0||c[k]>300) throw new Error('INVALID_BARRIER');
+  if (c.ki>c.strike||c.strike>c.ko) throw new Error('BARRIER_ORDER');
+  if (!Number.isInteger(c.tenor)||c.tenor<1||c.tenor>36) throw new Error('INVALID_TENOR');
+  if (!Number.isInteger(c.guarantee)||c.guarantee<0||c.guarantee>c.tenor) throw new Error('INVALID_GUARANTEE');
+  if (!Number.isFinite(c.notional)||c.notional<=0||c.notional>1e12) throw new Error('INVALID_NOTIONAL');
+  if (!Number.isFinite(c.coupon)||c.coupon<0||c.coupon>100) throw new Error('INVALID_COUPON');
+  if (!['AKI','EKI'].includes(c.kiType)||!['close','low'].includes(c.akiPrice)||!['daily','monthly'].includes(c.koFrequency)||![360,365].includes(c.basis)) throw new Error('INVALID_OPTION');
+ }
+ function align(c,series,cutoff) {
+  validate(c);
+  const maps=c.assets.map(a=>{
+   const s=series[a.symbol];
+   if (!s||!Array.isArray(s.bars)) throw new Error('MISSING_SYMBOL:'+a.symbol);
+   const map=new Map();
+   for(const b of s.bars) {
+    parse(b.date);
+    if(!Number.isFinite(b.close)||b.close<0) throw new Error('BAD_CLOSE:'+a.symbol+':'+b.date);
+    if(b.low!=null&&(!Number.isFinite(b.low)||b.low<0||b.low>b.close+EPS)) throw new Error('BAD_LOW:'+a.symbol+':'+b.date);
+    if(map.has(b.date)) throw new Error('DUPLICATE_DATE:'+a.symbol+':'+b.date);
+    if(b.date>=c.start&&b.date<=cutoff) map.set(b.date,b);
+   }
+   return map;
+  });
+  const union=[...new Set(maps.flatMap(m=>[...m.keys()]))].sort();
+  if(!union.length) throw new Error('NO_DATA');
+  const gaps=union.filter(d=>maps.some(m=>!m.has(d)));
+  if(gaps.length) {
+   const d=gaps[0], missing=c.assets.filter((a,i)=>!maps[i].has(d)).map(a=>a.symbol).join(',');
+   throw new Error('INCOMPLETE_DAY:'+d+':'+missing);
+  }
+  const first=union[0];
+  if(days(c.start,first)>7) throw new Error('MISSING_INCEPTION:'+first);
+  const initials=c.assets.map((a,i)=>a.initial??maps[i].get(first).close);
+  if(initials.some(x=>x<=0)) throw new Error('ZERO_INITIAL');
+  const rows=union.map(date=>({date,prices:maps.map(m=>m.get(date).close),lows:maps.map(m=>m.get(date).low??null)}));
+  return {rows,initials,start:first};
+ }
+ function evaluate(c,aligned) {
+  validate(c);
+  const all=aligned.rows.filter(r=>r.date>=aligned.start&&r.date<=c.asOf);
+  if(!all.length) throw new Error('NO_DATA');
+  const start=aligned.start, initials=aligned.initials;
+  const maturity=addMonths(start,c.tenor), lockEnd=addMonths(start,c.guarantee);
+  const maturityRow=all.find(r=>r.date>=maturity);
+  if(maturityRow&&days(maturity,maturityRow.date)>7) throw new Error('MISSING_MATURITY:'+maturity);
+  const finalDate=maturityRow?.date??null;
+  const monthly=new Set();
+  for(let m=Math.max(1,c.guarantee);m<=c.tenor;m++) {
+   const target=addMonths(start,m), row=all.find(r=>r.date>=target);
+   if(row) {
+    if(days(target,row.date)>7) throw new Error('MISSING_OBSERVATION:'+target);
+    monthly.add(row.date);
+   }
+  }
+  const firstEligible=all.find(r=>r.date>start&&r.date>=lockEnd);
+  const koEligible=(row)=>row.date>start&&row.date>=lockEnd&&(c.koFrequency==='daily'||monthly.has(row.date));
+  let memory=initials.map(()=>false), koFirst=initials.map(()=>null), kiFirst=initials.map(()=>null);
+  let kiTriggered=false, koDate=null, endDate=all.at(-1).date, ended=false, kind='ALIVE';
+  let lastRatios=all[0].prices.map((p,i)=>p/initials[i]), lastRow=all[0];
+  const events=[], observed=[];
+  function event(date,type,ratios,detail={}) {events.push({date,type,worst:worst(ratios),memory:memory.filter(Boolean).length,...detail});}
+  event(start,'START',lastRatios);
+  for(const row of all) {
+   if(row.date===start) continue; // Observation begins after the initial fixing.
+   const ratios=row.prices.map((p,i)=>p/initials[i]);
+   const isFinal=finalDate!==null&&row.date===finalDate;
+   const newly=[];
+   if(c.kiType==='AKI') {
+    const probes=c.akiPrice==='low'?row.lows:row.prices;
+    if(probes.some(v=>v===null)) throw new Error('MISSING_LOW:'+row.date);
+    probes.forEach((p,i)=>{if(hitKI(p/initials[i],c)&&!kiFirst[i]){kiFirst[i]=row.date;newly.push(i);}});
+   } else if(isFinal) {
+    ratios.forEach((r,i)=>{if(hitKI(r,c)){kiFirst[i]=row.date;newly.push(i);}});
+   }
+   if(newly.length) {kiTriggered=true;event(row.date,'KI',ratios,{assets:newly});}
+   const eligible=koEligible(row);
+   if(eligible) {
+    const hit=ratios.map(r=>hitKO(r,c)), added=[];
+    hit.forEach((yes,i)=>{if(yes&&!memory[i]){memory[i]=true;koFirst[i]=row.date;added.push(i);}});
+    const called=c.memory?memory.every(Boolean):hit.every(Boolean);
+    if(c.memory&&added.length) event(row.date,'MEMORY',ratios,{assets:added});
+    observed.push({date:row.date,ratios:[...ratios],hit:[...hit],memory:[...memory],called});
+    if(called) {
+     koDate=row.date;endDate=row.date;ended=true;kind='KO';lastRatios=ratios;lastRow=row;
+     event(row.date,'KO',ratios,{atMaturity:isFinal});break;
+    }
+    if(c.koFrequency==='monthly') event(row.date,'OBSERVATION',ratios,{hit:hit.filter(Boolean).length});
+   }
+   lastRatios=ratios;lastRow=row;
+   if(isFinal){endDate=row.date;ended=true;kind='MATURED';event(row.date,'MATURITY',ratios);break;}
+  }
+  const w=worst(lastRatios);
+  const loss=ended&&kind!=='KO'&&kiTriggered&&w.value<c.strike/100-EPS;
+  const principalValue=ended?(loss?c.notional*Math.max(0,w.value)/(c.strike/100):c.notional):null;
+  const accrued=c.notional*(c.coupon/100)*days(start,endDate)/c.basis;
+  const total=ended?principalValue+accrued:null;
+  const couponSchedule=[];
+  let prev=start;
+  for(let m=1;m<=c.tenor;m++) {
+   const planned=addMonths(start,m), effective=all.find(r=>r.date>=planned)?.date;
+   if(!effective||effective>endDate) break;
+   couponSchedule.push({date:effective,from:prev,days:days(prev,effective),amount:c.notional*c.coupon/100*days(prev,effective)/c.basis});prev=effective;
+   if(prev===endDate)break;
+  }
+  if(prev<endDate)couponSchedule.push({date:endDate,from:prev,days:days(prev,endDate),amount:c.notional*c.coupon/100*days(prev,endDate)/c.basis,partial:true});
+  return {start,maturity,finalDate,lockEnd,firstKO:firstEligible?(c.koFrequency==='daily'?firstEligible.date:[...monthly][0]??null):null,initials,ended,kind,loss,kiTriggered,kiFirst,koFirst,memory,koDate,endDate,ratios:lastRatios,lastRow,worst:w,principalValue,coupon:accrued,total,returnRate:ended?(total/c.notional-1):null,theoreticalShares:loss?c.notional/(initials[w.index]*c.strike/100):null,events,observations:observed,couponSchedule,days:days(start,endDate)};
+ }
+ function stress(c,result,terminalRatios,extraKI=false) {
+  if(terminalRatios.length!==c.assets.length||terminalRatios.some(r=>!Number.isFinite(r)||r<0))throw new Error('INVALID_TERMINAL');
+  const w=worst(terminalRatios);
+  const breached=terminalRatios.some(r=>hitKI(r,c));
+  const ki=c.kiType==='EKI'?breached:(result.kiTriggered||extraKI||breached);
+  const loss=ki&&w.value<c.strike/100-EPS;
+  const principal=loss?c.notional*w.value/(c.strike/100):c.notional;
+  const coupon=c.notional*c.coupon/100*days(result.start,result.maturity)/c.basis;
+  return {worst:w,ki,loss,principal,coupon,total:principal+coupon,returnRate:(principal+coupon)/c.notional-1};
+ }
+ return {parse,iso,plusDays,days,addMonths,hitKI,hitKO,worst,validate,align,evaluate,stress};
+})();
+if(typeof module!=='undefined'&&module.exports)module.exports=FCNCore;
+
+</script>
+<script>
+
+'use strict';
+const $ = id => document.getElementById(id);
+const C = FCNCore;
+const COLORS=['#69e0c1','#8baaff','#efbc77','#c3a0f6'];
+const state={bundle:null,view:null,dirty:false,busy:false,chart:null};
+const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const numFmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const money=v=>numFmt(v,2);
+const pct=v=>numFmt(v*100,2)+'%';
+const signedPct=v=>(v>0?'+':'')+pct(v);
+const cls=v=>v<0?'negative':v>0?'positive':'muted';
+function nyClock(date=new Date()){
+ const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+ return {date:`${p.year}-${p.month}-${p.day}`,hour:Number(p.hour),minute:Number(p.minute),time:`${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute} ET`};
+}
+function closedCutoff(){const n=nyClock();return n.hour>=18?n.date:C.plusDays(n.date,-1);}
+function errorText(err){
+ const raw=err instanceof Error?err.message:String(err),parts=raw.split(':'),key=parts[0];
+ const messages={
+ INVALID_DATE:'請填寫有效日期。',START_AFTER_ASOF:'期初定價日不可晚於回測截至日。',
+ ASSET_COUNT:'請輸入 1–4 檔美股代碼。',DUPLICATE_SYMBOL:'連結標的不可以重複，請使用不同股票代碼。',
+ INVALID_SYMBOL:'代碼只接受英文、數字、句點及連字號，最長 20 字元；例如 AAPL、BRK.B。',
+ INVALID_INITIAL:'手動期初價必須大於 0；不設定時請留白。',INVALID_BARRIER:'STRIKE、KO、KI 須大於 0 且不超過 300%。',
+ BARRIER_ORDER:'本模型支援 KI ≤ STRIKE ≤ KO。請調整障礙價百分比。',
+ INVALID_TENOR:'存續期間請填 1–36 的整數月。',INVALID_GUARANTEE:'保證領息月數須為 0 至存續月數的整數。',
+ INVALID_NOTIONAL:'本金須大於 0，且不超過 1 兆美元。',INVALID_COUPON:'年票息須介於 0% 與 100%。',
+ INVALID_OPTION:'請使用有效的觀察及計息選項。',NO_DATA:'所選期間沒有共同的已完成日線。請將定價日往前調整，或檢查行情來源。',
+ ZERO_INITIAL:'定價日股價為 0，不能用作期初價。',INVALID_TERMINAL:'請填寫每檔有效的到期價百分比，且不得小於 0。',
+ MISSING_SYMBOL:`缺少 ${parts[1]??''} 行情。變更股票後請重新取得行情。`,
+ BAD_CLOSE:`${parts[1]??''} 的 ${parts[2]??''} 收盤價無效。已停止計算，沒有補值。`,
+ BAD_LOW:`${parts[1]??''} 的 ${parts[2]??''} 最低價無效。`,
+ DUPLICATE_DATE:`${parts[1]??''} 在 ${parts[2]??''} 出現重複日線，請核對資料。`,
+ INCOMPLETE_DAY:`${parts[1]??''} 缺少 ${parts[2]??''} 日線。為避免漏判 KO / KI，整籃停止計算；請檢查上市日、停牌或資料缺漏。`,
+ MISSING_INCEPTION:`資料未涵蓋期初定價日，第一筆共同日線是 ${parts[1]??''}。請重取資料或調整日期。`,
+ MISSING_MATURITY:`缺少 ${parts[1]??''} 附近的最終觀察日資料，無法可靠結算。`,
+ MISSING_OBSERVATION:`缺少 ${parts[1]??''} 附近的觀察日資料，無法可靠判定。`,
+ MISSING_LOW:`${parts[1]??''} 缺少最低價，不能使用日低價 AKI。請重新載入或改用收盤價。`
+ };
+ let text=messages[key]??raw;
+ return text;
+}
+function status(text,type='info'){
+ const box=$('statusBox');box.className='status-box'+(text?' banner '+type:'');box.textContent=text;
+}
+function setBusy(b){
+ state.busy=b; $('runBtn').disabled=b;$('demoBtn').disabled=b;$('resetBtn').disabled=b;
+ $('recalcBtn').disabled=b||!state.bundle;
+ $('runBtn').innerHTML=b?'<span class="busy-dot" aria-hidden="true"></span> 正在取得四檔資料…':'取得行情並模擬 <span aria-hidden="true">→</span>';
+}
+function requiredNumber(id){const val=$(id).value.trim();if(val==='')throw new Error(`請填寫「${$(id).closest('.field')?.querySelector('label')?.textContent??id}」。`);return Number(val);}
+function getConfig(){
+ const assets=[];
+ for(let i=0;i<4;i++){
+  const symbol=$('symbol'+i).value.trim().toUpperCase();
+  if(symbol)assets.push({symbol,initial:$('initial'+i).value.trim()===''?null:Number($('initial'+i).value),slot:i});
+ }
+ const c={assets,start:$('startDate').value,asOf:$('asOfDate').value,strike:requiredNumber('strike'),ko:requiredNumber('ko'),ki:requiredNumber('ki'),tenor:requiredNumber('tenor'),guarantee:requiredNumber('guarantee'),coupon:requiredNumber('coupon'),notional:requiredNumber('notional'),memory:$('memory').getAttribute('aria-checked')==='true',kiType:$('kiType').value,koFrequency:$('koFrequency').value,akiPrice:$('akiPrice').value,kiInclusive:$('kiInclusive').value==='true',basis:Number($('basis').value),snapshotMode:$('snapshotMode').value};
+ C.validate(c);
+ const today=nyClock().date;
+ if(c.asOf>today||c.start>today)throw new Error('線上／歷史回測日期不可晚於紐約今天。未來價格請使用下方到期壓力測試，不會產生假行情。');
+ if(C.days(c.start,today)>3653)throw new Error('此版本每次最多載入約 10 年日線，請縮短回測期間。');
+ return c;
+}
+function updateRuleHint(){
+ const memory=$('memory').getAttribute('aria-checked')==='true';
+ $('ruleHint').innerHTML=(memory?'記憶 KO：各標的於有效觀察日分別達標，累積完成即贖回。':'普通 KO：同一觀察日，所有標的均須達標。')+'<br>'+($('kiType').value==='EKI'?'EKI：只在最終觀察日判斷 KI。':$('akiPrice').value==='low'?'AKI：逐日最低價近似盤中觸價，觸發後保留紀錄。':'AKI：逐日收盤價觀察，觸發後保留紀錄。');
+ $('akiPrice').disabled=$('kiType').value!=='AKI';
+ const g=Number($('guarantee').value),f=$('koFrequency').value;
+ $('scheduleHint').textContent=`最早 KO：${f==='monthly'?`第 ${Math.max(1,g)} 月期末`:g===0?'定價日後首個交易日':`滿 ${g} 個月當日`}（無共同日線則順延）。此前不累積 KO 記憶，AKI 仍觀察。保證領息不是保本。`;
+}
+function markDirty(){updateRuleHint();if(state.view){state.dirty=true;$('dirtyBanner').classList.remove('hidden');}}
+function resetDefaults(){
+ const now=nyClock().date;$('configForm').reset();
+ $('startDate').value=C.addMonths(now,-3);$('asOfDate').value=now;
+ $('startDate').max=now;$('asOfDate').max=now;
+ $('memory').setAttribute('aria-checked','false');updateRuleHint();markDirty();
+}
+const API_PROXY_URL='https://fcn-market-proxy.weiny0608.workers.dev';
+async function requestAPI(endpoint,params){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+ try{
+  const response=await fetch(API_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint,params}),signal:controller.signal,mode:'cors',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store'});
+  let json;try{json=await response.json();}catch{throw new Error('資料商回傳非 JSON 內容，請稍後重試。');}
+  if(response.status===429||json.code===429)throw new Error('資料服務回報請求過於頻繁或方案額度已用盡（HTTP 429）。請稍候再試，或查看 Twelve Data 帳戶額度。');
+  if(!response.ok||json.status==='error'||json.code>=400)throw new Error('行情服務：'+String(json.message??`HTTP ${response.status}`));
+  return json;
+ }catch(e){
+  if(e.name==='AbortError')throw new Error('行情請求逾時。請確認網路，再重新取得資料。');
+  if(e instanceof TypeError)throw new Error('無法連上安全行情服務。請檢查網路或稍後再試；也可明確選擇離線示範。');
+  throw e;
+ }finally{clearTimeout(timer);}
+}
+function parseSeries(json,symbol){
+ if(!json.meta||!Array.isArray(json.values)||!json.values.length)throw new Error(`${symbol} 沒有可用日線，請核對代碼、日期與帳戶權限。`);
+ if(json.meta.currency!=='USD')throw new Error(`${symbol} 的資料幣別不是 USD；此版本只接受美元美股。`);
+ const bars=json.values.map(v=>{
+  if(typeof v.datetime!=='string'||v.close==null||String(v.close).trim()==='')throw new Error(`${symbol} 日線缺少日期或收盤價。`);
+  return {date:v.datetime.slice(0,10),close:Number(v.close),low:v.low==null||v.low===''?null:Number(v.low),open:v.open==null?null:Number(v.open),high:v.high==null?null:Number(v.high),volume:v.volume==null?null:Number(v.volume)};
+ }).sort((a,b)=>a.date.localeCompare(b.date));
+ return {meta:json.meta,bars};
+}
+function parseQuote(q,symbol){
+ const price=Number(q.close),ts=Number(q.last_quote_at);
+ if(q.currency&&q.currency!=='USD')throw new Error(`${symbol} 報價幣別不是 USD。`);
+ if(q.close==null||q.close===''||!Number.isFinite(price)||price<0)throw new Error(`${symbol} 無有效最新報價。`);
+ if(!Number.isFinite(ts)||ts<=0)throw new Error(`${symbol} 最新報價缺少有效 last_quote_at（最新分鐘時間），改採共同日收盤價。`);
+ const timestamp=ts>1e12?ts:ts*1000;
+ if(timestamp>Date.now()+300000)throw new Error(`${symbol} 報價時間在未來，已排除。`);
+ const n=nyClock(new Date(timestamp));
+ return {symbol,price,timestamp,date:n.date,time:n.time,isMarketOpen:q.is_market_open===true,previousClose:Number(q.previous_close),name:q.name??'',exchange:q.exchange??''};
+}
+async function runOnline(event){
+ event?.preventDefault();if(state.busy)return;
+ try{
+  const c=getConfig();
+  if(API_PROXY_URL.includes('<YOUR-CLOUDFLARE-SUBDOMAIN>'))throw new Error('安全行情服務尚未完成部署；你仍可先使用「試跑離線示範」。');
+  setBusy(true);status('正在取得日線與最新報價。只有整籃日線驗證通過後，才會更新結果。');
+  const today=nyClock().date,seriesParams={interval:'1day',start_date:C.plusDays(c.start,-7),end_date:today,outputsize:5000,order:'ASC',adjust:'splits',country:'United States',timezone:'America/New_York'};
+  const seriesJobs=c.assets.map(a=>requestAPI('time_series',{...seriesParams,symbol:a.symbol}).then(j=>parseSeries(j,a.symbol)));
+  const quoteJobs=c.assets.map(a=>requestAPI('quote',{symbol:a.symbol,country:'United States'}).then(j=>parseQuote(j,a.symbol)));
+  const [histories,quotes]=await Promise.all([Promise.allSettled(seriesJobs),Promise.allSettled(quoteJobs)]);
+  const failures=histories.map((r,i)=>r.status==='rejected'?`${c.assets[i].symbol}：${errorText(r.reason)}`:null).filter(Boolean);
+  if(failures.length)throw new Error('整籃行情載入失敗，沒有生成新結果。\n'+failures.join('\n'));
+  const bundle={mode:'LIVE',source:'Twelve Data',fetchedAt:new Date().toISOString(),requestedStart:c.start,series:{},quotes:{},quoteErrors:[]};
+  c.assets.forEach((a,i)=>{bundle.series[a.symbol]=histories[i].value;if(quotes[i].status==='fulfilled')bundle.quotes[a.symbol]=quotes[i].value;else bundle.quoteErrors.push(a.symbol+'：'+errorText(quotes[i].reason));});
+  const view=prepareView(c,bundle);
+  state.bundle=bundle;commitView(view);
+  status(`已載入 ${c.assets.length} 檔真實行情；合約計算使用截至 ${view.result.lastRow.date} 的有效日線。最新報價快照不作為 KO / KI 定盤。`,'success');
+ }catch(e){status(errorText(e),'error');}
+ finally{setBusy(false);refreshQuotaInfo();}
+}
+function refreshQuotaInfo(){ $('fetchInfo').textContent='完整更新：每檔日線 1 點 ＋ 最新報價 1 點；實際頻率仍受資料商方案限制。'; }
+function prepareView(c,bundle){
+ if(c.start<bundle.requestedStart)throw new Error('新的期初日早於已載入範圍，請重新取得行情。');
+ const cutoff=closedCutoff(),aligned=C.align(c,bundle.series,cutoff);
+ for(let i=1;i<aligned.rows.length;i++){
+  if(C.days(aligned.rows[i-1].date,aligned.rows[i].date)>7)throw new Error(`共同日線在 ${aligned.rows[i-1].date} 至 ${aligned.rows[i].date} 有超過 7 日的缺口。可能是停牌或漏資料，已停止回測。`);
+ }
+ const result=C.evaluate(c,aligned),asOfRow=aligned.rows.filter(r=>r.date<=c.asOf).at(-1),latestRow=aligned.rows.at(-1);
+ const warnings=[];
+ if(result.start!==c.start)warnings.push(`期初日 ${c.start} 沒有共同日線，已順延至 ${result.start}；存續期及障礙價以此日重新起算。`);
+ if(c.assets.some(a=>a.initial!==null))warnings.push('已採用手動期初價。請確認它與 splits 調整日線的口徑一致，否則障礙事件及損益可能失真。');
+ if(C.days(asOfRow.date,c.asOf)>5)warnings.push(`回測截至日為 ${c.asOf}，但最後共同日線停在 ${asOfRow.date}。結果不是最新市場狀態。`);
+ if(!result.ended&&c.asOf>=result.maturity)warnings.push('名目最終觀察日已屆至，但尚無可用的到期日線；目前只顯示最後已知狀態，沒有假設到期全額返還。');
+ if(c.kiType==='AKI'&&c.akiPrice==='low')warnings.push('AKI 使用日低價近似盤中觸價，不代表取得全市場逐筆資料，也不保證能重現銀行連續觀察結果。');
+ if(bundle.mode==='LIVE')warnings.push('免費／低頻行情不等於銀行正式定盤。日線採 splits 調整；請核對公司行動、觀察日與實際 term sheet。');
+ let row=c.snapshotMode==='asof'?asOfRow:latestRow;
+ let snapshot={prices:[...row.prices],times:c.assets.map(()=>row.date+' 收盤'),date:row.date,label:c.snapshotMode==='asof'?'回測截至日共同收盤價':'最新共同日線收盤價',kind:'DAILY'};
+ if(c.snapshotMode==='latest'&&bundle.mode==='LIVE'){
+  const quotes=c.assets.map(a=>bundle.quotes[a.symbol]),complete=quotes.every(Boolean);
+  const coherent=complete&&quotes.every(q=>q.date===quotes[0].date&&q.date>=latestRow.date)&&Math.max(...quotes.map(q=>q.timestamp))-Math.min(...quotes.map(q=>q.timestamp))<=15*60000;
+  if(coherent)snapshot={prices:quotes.map(q=>q.price),times:quotes.map(q=>q.time),date:quotes[0].date,label:'最新報價快照（來源分鐘時點非完全同步）',kind:'QUOTE'};
+  else warnings.push('最新報價不完整、跨交易日或相差超過 15 分鐘；整籃比較已統一改用同一共同收盤日，未混用盤中價與舊價。'+(bundle.quoteErrors?.length?' '+bundle.quoteErrors.join('；'):''));
+  if(C.days(snapshot.date,nyClock().date)>5)warnings.push(`最新比較價停在 ${snapshot.date}，距紐約今天超過 5 日，請核對資料是否過期。`);
+ }
+ if(bundle.mode==='DEMO')snapshot.label='合成示範日線（非市場行情）';
+ snapshot.ratios=snapshot.prices.map((p,i)=>p/result.initials[i]);snapshot.worst=C.worst(snapshot.ratios);
+ return {config:c,bundle,result,aligned,snapshot,warnings,asOfRow};
+}
+function commitView(view){
+ state.view=view;
+ try{state.dirty=JSON.stringify(getConfig())!==JSON.stringify(view.config);}catch(e){state.dirty=true;}
+ $('dirtyBanner').classList.toggle('hidden',!state.dirty);
+ $('recalcBtn').disabled=false;render();
+}
+function recalc(){
+ if(!state.bundle||state.busy)return;
+ try{const c=getConfig();commitView(prepareView(c,state.bundle));status('已使用原有行情重新計算，未發出 API 請求。資料時間維持原載入時間。','success');}
+ catch(e){status(errorText(e),'error');}
+}
+function interpolate(anchors,t){
+ for(let i=1;i<anchors.length;i++)if(t<=anchors[i][0]){
+  const a=anchors[i-1],b=anchors[i],f=(t-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*f;
+ }return anchors.at(-1)[1];
+}
+function makeDemo(c){
+ let end=closedCutoff(),dates=[];
+ for(let d=c.start;d<=end;d=C.plusDays(d,1)){const day=C.parse(d).getUTCDay();if(day!==0&&day!==6)dates.push(d);}
+ if(dates.length<8)throw new Error('離線示範至少需要約兩週的日期區間，請將期初定價日往前移。');
+ const anchors=[
+  [[0,100],[.22,107],[.47,104],[.7,113],[1,116]],
+  [[0,100],[.23,96],[.5,104],[.75,109],[1,107]],
+  [[0,100],[.2,87],[.43,92],[.63,112],[.82,108],[1,112]],
+  [[0,100],[.2,89],[.4,74],[.62,55],[.76,66],[1,76]]
+ ];
+ const bundle={mode:'DEMO',source:'程式合成示範 / 非真實行情',fetchedAt:new Date().toISOString(),requestedStart:c.start,series:{},quotes:{},quoteErrors:[]};
+ c.assets.forEach((a,i)=>{
+  const bars=dates.map((date,j)=>{
+   const t=j/(dates.length-1),base=interpolate(anchors[a.slot??i],t),wiggle=j===0?0:Math.sin(j*1.11+i*.7)*.62;
+   const close=Math.max(.01,base+wiggle);
+   return {date,close,open:close,high:close*1.008,low:close*.992,volume:1000000+j*100};
+  });
+  bundle.series[a.symbol]={meta:{symbol:a.symbol,currency:'USD',exchange:'SYNTHETIC',type:'DEMO'},bars};
+ });return bundle;
+}
+function runDemo(){
+ if(state.busy)return;
+ try{
+  const c=getConfig();const bundle=makeDemo(c);commitView(prepareView(c,bundle));state.bundle=bundle;
+  $('recalcBtn').disabled=false;
+  status('已載入離線合成行情。價格不是美股歷史資料；可以修改記憶 KO、AKI / EKI、期間與障礙價後重算。','info');
+ }catch(e){status(errorText(e),'error');}
+}
+function render(){
+ const v=state.view,{config:c,bundle:b,result:r,snapshot:s}=v;
+ $('sourcePill').className='pill '+(b.mode==='DEMO'?'demo':'good');$('sourcePill').innerHTML='<i class="dot"></i>'+ (b.mode==='DEMO'?'DEMO · 合成行情':'Twelve Data · 已載入');
+ $('demoBanner').classList.toggle('hidden',b.mode!=='DEMO');
+ $('warnList').innerHTML=v.warnings.map(w=>'<div class="banner">'+esc(w)+'</div>').join('');
+ $('worstLabel').textContent=c.snapshotMode==='asof'?'回測日比較最差標的':'最新比較最差標的';
+ $('worstValue').textContent=s.worst.ties.map(i=>c.assets[i].symbol).join(' / ');
+ $('worstValue').style.fontSize=s.worst.ties.length>2?'18px':'';
+ $('worstSub').innerHTML=`相對期初 <b class="${cls(s.worst.value-1)}">${pct(s.worst.value)}</b> <span class="${cls(s.worst.value-1)}">(${signedPct(s.worst.value-1)})</span><br>${esc(s.date)} · ${b.mode==='DEMO'?'合成示範':s.kind==='QUOTE'?'報價快照':'共同收盤價'}`;
+ const overdue=!r.ended&&c.asOf>=r.maturity;
+ $('contractValue').textContent=r.kind==='KO'?'已 KO 贖回':r.ended?r.loss?'到期本金受損':'到期全額本金':overdue?'待到期資料':'存續中';
+ $('contractValue').className='metric-value text '+(r.loss?'negative':r.ended?'positive':'');
+ $('contractSub').innerHTML=`判定至 ${r.endDate}<br>${r.kind==='KO'?'KO 後停止 KI／記憶／計息':r.ended?'到期結算為模型現金等值':'未結算；不提供提前解約估值'}`;
+ $('kiValue').textContent=r.kiTriggered?'已觸發 KI':c.kiType==='EKI'&&!r.ended?'到期才觀察':r.kind==='KO'&&c.kiType==='EKI'?'KO · 無須觀察':'未觸發 KI';
+ $('kiValue').className='metric-value text '+(r.kiTriggered?'warntext':'');
+ $('kiSub').innerHTML=esc(c.kiType)+(c.kiType==='AKI'?' · '+(c.akiPrice==='low'?'日低價近似':'每日收盤'):' · 最終日收盤')+'<br>'+(r.kiTriggered?'觸發不等於立即損失本金':'判定不採用最新盤中快照');
+ $('couponValue').textContent=money(r.coupon);$('couponSub').innerHTML=`年票息 ${numFmt(c.coupon,2)}% · ACT/${c.basis}<br>累計 ${r.days} 天；非已支付金額`;
+ $('actualStart').textContent=r.start;$('firstKO').textContent=r.firstKO??(c.koFrequency==='monthly'?C.addMonths(r.start,Math.max(1,c.guarantee))+'*':(c.guarantee===0?C.plusDays(r.start,1):r.lockEnd)+'*');
+ $('maturityDate').textContent=r.maturity;
+ $('snapshotCaption').textContent=`${s.label} · ${s.date} ｜ 資料載入 ${new Date(b.fetchedAt).toLocaleString('zh-TW',{hour12:false})}`;
+ $('assetRows').innerHTML=c.assets.map((a,i)=>{
+  const initial=r.initials[i],ratio=s.ratios[i],isWorst=s.worst.ties.includes(i),koRecord=c.memory?(r.memory[i]?'已記憶':'未記憶'):(s.prices[i]>=initial*c.ko/100?'快照達標*':'快照未達*');
+  const kiRecord=r.kiFirst[i]?'已觸發':c.kiType==='EKI'&&!r.ended?'待到期':r.kind==='KO'&&c.kiType==='EKI'?'未到期已 KO':'未觸發';
+  const sourceInitial=a.initial===null?'日線自動':'手動設定';
+  return `<tr class="${isWorst?'worst-row':''}"><td><span class="symbol-cell"><i class="swatch" style="background:${COLORS[a.slot??i]}"></i>${esc(a.symbol)}</span>${isWorst?'<span class="worst-tag">WORST OF</span>':''}<span class="subcell">${esc(b.series[a.symbol].meta.exchange??'USD')}</span></td><td>${numFmt(initial,4)}<span class="subcell">${sourceInitial} · ${r.start}</span></td><td>${numFmt(s.prices[i],4)}<span class="subcell">${esc(s.times[i])}</span></td><td class="${cls(ratio-1)}">${pct(ratio)}</td><td class="${cls(ratio-1)}">${signedPct(ratio-1)}</td><td>${numFmt(initial*c.strike/100,4)}</td><td>${numFmt(initial*c.ko/100,4)}</td><td>${numFmt(initial*c.ki/100,4)}</td><td>${koRecord}<span class="subcell">${c.memory?(r.koFirst[i]??'有效觀察日才記錄'):'* 僅比較價，不是 KO 事件'}</span></td><td class="${r.kiFirst[i]?'warntext':''}">${kiRecord}<span class="subcell">${r.kiFirst[i]??c.kiType}</span></td></tr>`;
+ }).join('');
+ const different=s.date!==r.endDate;
+ $('tableNote').textContent=`合約事件只判定到 ${r.endDate}；${different?'比較價日期不同，不會回頭改寫已結束合約。':'比較快照不直接作為障礙事件。'} 最差標的＝比較價 / 期初價最低者；若並列，全部標示。USD；顯示價格四捨五入，但判定使用未四捨五入數值。`;
+ $('memoryCount').textContent=c.memory?`KO 記憶 ${r.memory.filter(Boolean).length} / ${c.assets.length}`:`有效 KO 觀察 ${r.observations.length} 次`;
+ const eventNames={START:'合約定價',KI:c.kiType+' 觸發',MEMORY:'新增 KO 記憶',KO:'KO 贖回',OBSERVATION:'月度 KO 觀察 · 未贖回',MATURITY:'最終觀察日結算'};
+ $('eventList').innerHTML=r.events.slice().reverse().map(e=>{
+  const w=c.assets[e.worst.index].symbol;
+  let detail=e.type==='START'?`期初 ${r.start}；名目到期 ${r.maturity}`:`當日最差 ${w} · ${pct(e.worst.value)}`;
+  if(e.assets)detail+='；'+e.assets.map(i=>c.assets[i].symbol).join('、');
+  if(e.type==='MEMORY')detail+=`；累計 ${e.memory}/${c.assets.length}`;
+  if(e.type==='OBSERVATION')detail+=`；同日達標 ${e.hit}/${c.assets.length}`;
+  if(e.type==='KO')detail+=(e.atMaturity?'；最終觀察日 KO 優先':'；本金按面額贖回')+'，停止後續觀察';
+  return `<div class="event"><div class="event-date">${e.date}</div><div class="event-content"><strong class="${e.type==='KI'?'warntext':e.type==='KO'?'positive':''}">${eventNames[e.type]}</strong><p>${esc(detail)}</p></div></div>`;
+ }).join('');
+ $('outcome').innerHTML=`<div class="outcome-row"><span>名目本金</span><strong>$${money(c.notional)}</strong></div><div class="outcome-row"><span>${r.loss?'交割標的市值 · 現金等值':'本金價值 · 合約結束時'}</span><strong>${r.ended?'$'+money(r.principalValue):'未結算 / 不估值'}</strong></div><div class="outcome-row"><span>模型應計票息</span><strong>$${money(r.coupon)}</strong></div><div class="outcome-row"><span>本金與票息合計報酬率</span><strong class="${r.ended?cls(r.returnRate):''}">${r.ended?signedPct(r.returnRate):'—'}</strong></div><div class="outcome-total"><span>${r.ended?'合計價值 · 非年化':'存續中 · 非贖回報價'}</span><strong>${r.ended?'$'+money(r.total):'—'}</strong></div><p class="tiny">${r.loss?`最差標的 ${esc(c.assets[r.worst.index].symbol)}；理論交割股數 ${numFmt(r.theoreticalShares,6)} 股。未處理整股／畸零現金；不是按 KI 價接股。`:r.ended?'本金按面額計；票息依模型天數累計。未計入發行人違約、稅、費用與結算日差異。':'只有 KO 或到期後才計算本金返還／交割價值；應計票息不代表已收到的現金。'}</p>`;
+ const old=$('chartAsset').value;$('chartAsset').innerHTML='<option value="all">全部標的 · %</option>'+c.assets.map((a,i)=>`<option value="${i}">${esc(a.symbol)} · USD</option>`).join('');
+ $('chartAsset').value=old==='all'||Number(old)<c.assets.length?old:'all';$('chartAsset').disabled=false;
+ $('chartEmpty').classList.add('hidden');$('chartHolder').classList.remove('hidden');
+ $('exportCsv').disabled=false;$('exportJson').disabled=false;
+ $('stressInputs').innerHTML=c.assets.map((a,i)=>`<div class="field"><label for="terminal${i}"><i class="swatch" style="background:${COLORS[a.slot??i]};margin-right:4px"></i>${esc(a.symbol)} 到期 / S₀</label><div class="input-wrap"><input id="terminal${i}" type="number" min="0" max="10000" step="0.1" value="${(s.ratios[i]*100).toFixed(2)}"><span class="suffix">%</span></div></div>`).join('');
+ $('stressKI').checked=false;$('stressKI').disabled=c.kiType!=='AKI';$('stressBtn').disabled=false;
+ renderStress();drawChart();
+}
+function renderStress(){
+ if(!state.view)return;const {config:c,result:r}=state.view;
+ try{
+  const ratios=c.assets.map((a,i)=>{if($('terminal'+i).value.trim()==='')throw new Error('INVALID_TERMINAL');return Number($('terminal'+i).value)/100;});
+  const s=C.stress(c,r,ratios,$('stressKI').checked);
+  $('stressResult').classList.remove('hidden');
+  $('stressResult').innerHTML=`<div><span class="muted" style="font-size:10px">條件情境合計價值 · USD</span><br><strong class="${cls(s.returnRate)}">$${money(s.total)}</strong></div><div style="font-size:11px">本金 ${money(s.principal)} ＋ 全期票息 ${money(s.coupon)}<br><span class="${cls(s.returnRate)}">總報酬 ${signedPct(s.returnRate)}</span> · ${s.ki?'KI 成立':'KI 未成立'} · 最差 ${esc(c.assets[s.worst.index].symbol)}</div>`;
+  $('stressNote').textContent=(r.ended?'此合約在回測中已結束；下方是「忽略已發生 KO／到期、假設持有全期」的反事實比較，不是續存結果。':'此情境明確忽略未來 KO，不能由單一到期價推導路徑依賴商品的完整結果。')+' '+(c.kiType==='AKI'?'AKI 合併截至回測日的已觸發紀錄、勾選的未來觸發假設與到期價。':'EKI 只依輸入的到期價判定。')+' 全期票息使用名目到期日，未作假日展期。';
+ }catch(e){$('stressResult').classList.remove('hidden');$('stressResult').textContent=errorText(e);}
+}
+function drawChart(){
+ if(!state.view)return;
+ const v=state.view,{config:c,result:r}=v,svg=$('chart'),holder=$('chartHolder');
+ let rows=v.aligned.rows.filter(x=>x.date<=c.asOf);
+ if($('chartRange').value==='contract')rows=rows.filter(x=>x.date<=r.endDate);
+ if(!rows.length)return;
+ const selected=$('chartAsset').value,inds=selected==='all'?c.assets.map((a,i)=>i):[Number(selected)],normalized=selected==='all';
+ const W=Math.max(holder.clientWidth,340),H=holder.clientHeight||320;
+ const pad={left:53,right:63,top:26,bottom:40},pw=W-pad.left-pad.right,ph=H-pad.top-pad.bottom;
+ const basis=normalized?100:r.initials[inds[0]];
+ const value=(row,i)=>normalized?row.prices[i]/r.initials[i]*100:row.prices[i];
+ const vals=rows.flatMap(row=>inds.map(i=>value(row,i)));
+ const thresholds=[{v:c.ko/100*basis,label:'KO',color:'#69e0c1'},{v:c.strike/100*basis,label:'STRIKE',color:'#efbc77'},{v:c.ki/100*basis,label:'KI',color:'#f08e99'}];
+ let lo=Math.min(...vals,...thresholds.map(t=>t.v),basis),hi=Math.max(...vals,...thresholds.map(t=>t.v),basis),span=hi-lo||20;
+ lo=Math.max(0,lo-span*.12);hi+=span*.12;span=hi-lo;
+ const t0=+C.parse(rows[0].date),t1=+C.parse(rows.at(-1).date),ts=Math.max(t1-t0,86400000);
+ const x=date=>pad.left+(+C.parse(date)-t0)/ts*pw,y=v=>pad.top+(hi-v)/span*ph;
+ const clipId='chartClip';
+ let s=`<title>${esc(normalized?'相對期初表現':c.assets[inds[0]].symbol+' 股價')}；${rows[0].date} 至 ${rows.at(-1).date}；${v.bundle.mode==='DEMO'?'合成示範':'Twelve Data'}</title><defs><clipPath id="${clipId}"><rect x="${pad.left}" y="${pad.top}" width="${pw}" height="${ph}"/></clipPath></defs>`;
+ const kiY=y(c.ki/100*basis);
+ s+=`<rect x="${pad.left}" y="${Math.max(pad.top,kiY)}" width="${pw}" height="${Math.max(0,H-pad.bottom-Math.max(pad.top,kiY))}" fill="#f08e99" opacity=".045"/>`;
+ if(r.lockEnd>rows[0].date){const lx=Math.min(pad.left+pw,x(r.lockEnd));if(lx>pad.left)s+=`<rect x="${pad.left}" y="${pad.top}" width="${lx-pad.left}" height="${ph}" fill="#9aacc9" opacity=".035"/><text x="${pad.left+6}" y="${pad.top+11}" fill="#8393aa" font-size="9">KO 鎖定期</text>`;}
+ for(let k=0;k<=4;k++){
+  const val=lo+span*k/4,Y=y(val);
+  s+=`<line x1="${pad.left}" y1="${Y}" x2="${pad.left+pw}" y2="${Y}" stroke="#243247" stroke-width="1"/><text x="${pad.left-8}" y="${Y+4}" text-anchor="end" fill="#91a0b6" font-size="10" font-family="Consolas,monospace">${numFmt(val,span<10?1:0)}${normalized?'%':''}</text>`;
+ }
+ const nt=W<480?3:5;
+ for(let k=0;k<nt;k++){
+  const idx=Math.round((rows.length-1)*k/(nt-1)),row=rows[idx],X=x(row.date);
+  s+=`<line x1="${X}" y1="${pad.top}" x2="${X}" y2="${pad.top+ph}" stroke="#213046" stroke-width="1" opacity=".5"/><text x="${X}" y="${H-17}" text-anchor="middle" fill="#91a0b6" font-size="10" font-family="Consolas,monospace">${row.date.slice(5)}</text>`;
+ }
+ if(Math.abs(c.ko-100)>.001&&Math.abs(c.strike-100)>.001&&Math.abs(c.ki-100)>.001)s+=`<line x1="${pad.left}" y1="${y(basis)}" x2="${pad.left+pw}" y2="${y(basis)}" stroke="#718096" stroke-dasharray="2 5" opacity=".5"/>`;
+ const groups=[];
+ thresholds.forEach(t=>{const g=groups.find(g=>Math.abs(g.v-t.v)<1e-8);if(g)g.label+='/'+t.label;else groups.push({...t});});
+ groups.forEach(t=>{const Y=y(t.v);s+=`<line x1="${pad.left}" y1="${Y}" x2="${pad.left+pw}" y2="${Y}" stroke="${t.color}" stroke-width="1" stroke-dasharray="5 5" opacity=".65"/><text x="${pad.left+pw+6}" y="${Y+3}" fill="${t.color}" font-size="9" font-family="Consolas,monospace">${t.label}</text>`;});
+ if(r.ended&&r.endDate>=rows[0].date&&r.endDate<=rows.at(-1).date){const X=x(r.endDate);s+=`<line x1="${X}" x2="${X}" y1="${pad.top}" y2="${pad.top+ph}" stroke="#d1dae7" opacity=".65" stroke-dasharray="3 4"/><text x="${Math.min(pad.left+pw-5,Math.max(pad.left+20,X-5))}" y="${pad.top-9}" fill="#cbd5e4" text-anchor="end" font-size="9">${r.kind==='KO'?'KO 贖回':'到期結算'}</text>`;}
+ s+=`<g clip-path="url(#${clipId})">`;
+ inds.forEach(i=>{
+  const color=COLORS[c.assets[i].slot??i],d=rows.map((row,j)=>(j?'L':'M')+x(row.date).toFixed(2)+','+y(value(row,i)).toFixed(2)).join(' ');
+  s+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${x(rows.at(-1).date)}" cy="${y(value(rows.at(-1),i))}" r="3" fill="${color}"/>`;
+ });
+ s+=`</g><line id="crosshair" x1="0" x2="0" y1="${pad.top}" y2="${pad.top+ph}" stroke="#c4d1e3" stroke-width="1" opacity="0" stroke-dasharray="3 3"/><rect x="${pad.left}" y="${pad.top}" width="${pw}" height="${ph}" fill="transparent" id="chartHit"/>`;
+ svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML=s;
+ $('chartLegend').innerHTML=inds.map(i=>`<span class="legend-item"><i class="swatch" style="background:${COLORS[c.assets[i].slot??i]}"></i>${esc(c.assets[i].symbol)}</span>`).join('')+(v.bundle.mode==='DEMO'?'<span class="legend-item warntext">SYNTHETIC DATA</span>':'');
+ $('chartSubtitle').textContent=normalized?'期初價 = 100% · 每條線對應一檔標的，不是 FCN 淨值。':`${c.assets[inds[0]].symbol} 股價（USD）· 障礙價換算自該標的期初價。`;
+ $('chartDataNote').textContent=`${rows.length} 筆共同日線 · ${rows[0].date} 至 ${rows.at(-1).date}`+($('chartRange').value==='all'&&r.ended?' · 終止後路徑僅供參考':'');
+ state.chart={rows,W,H,pad,pw,ph,t0,ts,x,inds,normalized};
+}
+function chartMove(ev){
+ if(!state.chart||!state.view)return;
+ const g=state.chart,v=state.view,rect=$('chart').getBoundingClientRect(),px=(ev.clientX-rect.left)/rect.width*g.W;
+ if(px<g.pad.left||px>g.pad.left+g.pw){chartLeave();return;}
+ const target=g.t0+Math.max(0,Math.min(1,(px-g.pad.left)/g.pw))*g.ts;
+ let l=0,h=g.rows.length-1;while(l<h){const m=Math.floor((l+h)/2);if(+C.parse(g.rows[m].date)<target)l=m+1;else h=m;}
+ let i=l;if(i>0&&Math.abs(+C.parse(g.rows[i-1].date)-target)<Math.abs(+C.parse(g.rows[i].date)-target))i--;
+ const row=g.rows[i],X=g.x(row.date),cross=$('crosshair');
+ if(cross){cross.setAttribute('x1',X);cross.setAttribute('x2',X);cross.setAttribute('opacity','.7');}
+ const tip=$('chartTooltip');
+ tip.innerHTML=`<strong>${row.date}${v.bundle.mode==='DEMO'?' · DEMO':''}</strong>`+g.inds.map(j=>`<div class="tooltip-row"><span style="color:${COLORS[v.config.assets[j].slot??j]}">${esc(v.config.assets[j].symbol)}</span><span>$${numFmt(row.prices[j],2)} · ${pct(row.prices[j]/v.result.initials[j])}</span></div>`).join('');
+ tip.classList.remove('hidden');
+ const left=Math.max(3,Math.min(rect.width-tip.offsetWidth-4,ev.clientX-rect.left+14));
+ tip.style.left=left+'px';tip.style.top='12px';
+}
+function chartLeave(){$('chartTooltip').classList.add('hidden');$('crosshair')?.setAttribute('opacity','0');}
+function saveFile(name,text,mime){
+ const blob=new Blob([text],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportCSV(){
+ if(!state.view)return;const {config:c,result:r,aligned:a,bundle:b}=state.view;
+ const cell=x=>{let text=String(x??'');if(/^[=+\-@]/.test(text)&&!Number.isFinite(Number(text)))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';};
+ const header=['date','data_mode','contract_active_on_date',...c.assets.flatMap(a=>[a.symbol+'_close_USD',a.symbol+'_low_USD',a.symbol+'_initial_USD',a.symbol+'_pct_of_initial'])];
+ const lines=[header.map(cell).join(','),...a.rows.filter(row=>row.date<=c.asOf).map(row=>[row.date,b.mode,row.date<=r.endDate?'YES':'NO',...c.assets.flatMap((asset,i)=>[row.prices[i],row.lows[i]??'',r.initials[i],row.prices[i]/r.initials[i]*100])].map(cell).join(','))];
+ saveFile(`FCN_${b.mode}_${c.asOf}_daily.csv`,'\uFEFF'+lines.join('\r\n'),'text/csv;charset=utf-8');
+}
+function exportJSON(){
+ if(!state.view)return;const v=state.view;
+ const data={application:'FCN Lab',version:'1.0.0',exportedAt:new Date().toISOString(),disclaimer:'Research model; not a bank quote. DEMO data are synthetic.',dataMode:v.bundle.mode,source:v.bundle.source,fetchedAt:v.bundle.fetchedAt,config:v.config,snapshot:v.snapshot,result:v.result,warnings:v.warnings,assumptions:{dayCount:'ACT/'+v.config.basis,KO:'Memory is per asset on eligible observations only; no memory during lockout; KO takes priority at final date.',KI:'Basket-any trigger, worst-of terminal delivery; AKI excludes initial fixing.',calendar:'Following common data date, not an official exchange calendar.',settlement:'Fractional-share cash-equivalent; no credit risk, tax, fees, settlement lag, or fair value.'}};
+ saveFile(`FCN_${v.bundle.mode}_${v.config.asOf}_report.json`,JSON.stringify(data,null,2),'application/json;charset=utf-8');
+}
+$('configForm').addEventListener('submit',runOnline);
+$('configForm').addEventListener('input',markDirty);
+$('configForm').addEventListener('change',markDirty);
+$('memory').addEventListener('click',()=>{$('memory').setAttribute('aria-checked',$('memory').getAttribute('aria-checked')==='true'?'false':'true');markDirty();});
+$('demoBtn').addEventListener('click',runDemo);$('recalcBtn').addEventListener('click',recalc);
+$('resetBtn').addEventListener('click',resetDefaults);
+$('chartAsset').addEventListener('change',drawChart);$('chartRange').addEventListener('change',drawChart);
+$('chart').addEventListener('pointermove',chartMove);$('chart').addEventListener('pointerleave',chartLeave);
+$('stressBtn').addEventListener('click',renderStress);$('stressInputs').addEventListener('input',renderStress);$('stressKI').addEventListener('change',renderStress);
+$('exportCsv').addEventListener('click',exportCSV);$('exportJson').addEventListener('click',exportJSON);
+new ResizeObserver(()=>{if(state.view)drawChart();}).observe($('chartHolder'));
+resetDefaults();
+window.FCNLab={version:'1.0.0',core:C,getConfig,prepareView,makeDemo,parseSeries,parseQuote,getState:()=>state};
+
+</script>
+</body>
+</html>
