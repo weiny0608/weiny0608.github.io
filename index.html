@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>全球巨頭財務體質與公司債投資儀表板 ｜ 基本面穩健度、債務到期分佈 (Debt Wall) 與壓力測試</title>
+  <title>全球市場與結構型商品觀測中樞 ｜ 公債殖利率、關鍵總經指標與投資儀表板</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,45 +22,49 @@
       --accent-glow: rgba(5, 150, 105, 0.18);
       --green: #059669;
       --green-light: #ecfdf5;
-      --green-glow: rgba(5, 150, 105, 0.15);
       --red: #e11d48;
       --red-light: #fff1f2;
-      --red-glow: rgba(225, 29, 72, 0.15);
       --yellow: #ca8a04;
       --yellow-light: #fef9c3;
-      --yellow-glow: rgba(202, 138, 4, 0.18);
       --blue: #2563eb;
       --blue-light: #eff6ff;
+      --purple: #7c3aed;
+      --purple-light: #f5f3ff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(at 10% 8%, rgba(209, 250, 229, 0.5) 0px, transparent 45%),
+        radial-gradient(at 10% 8%, rgba(209, 250, 229, 0.55) 0px, transparent 45%),
         radial-gradient(at 90% 12%, rgba(254, 249, 195, 0.55) 0px, transparent 45%),
         radial-gradient(at 50% 95%, rgba(236, 253, 245, 0.45) 0px, transparent 50%);
       background-attachment: fixed;
       color: var(--text);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 20px 24px;
+      padding: 24px 28px;
       min-height: 100vh;
       line-height: 1.5;
     }
     .mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* Header */
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* Top Header */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       flex-wrap: wrap;
       gap: 16px;
-      padding: 18px 22px;
-      margin-bottom: 20px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
       background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 55%, #fefce8 100%);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.05);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px -2px rgba(22, 60, 30, 0.05);
     }
     .badge-live {
       display: inline-flex;
@@ -69,9 +73,9 @@
       background: #ecfdf5;
       border: 1px solid #a7f3d0;
       color: #065f46;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 4px 11px;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -88,7 +92,7 @@
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .header h1 {
-      font-size: 23px;
+      font-size: 25px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #0d2814 0%, #1c542a 100%);
@@ -98,76 +102,50 @@
     }
     .header p {
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 13.5px;
     }
 
-    /* Navigation Bar */
-    .nav-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .nav-btn {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-    }
-    .nav-btn:hover {
-      background: var(--surface-hover);
-      color: var(--text);
-      border-color: #bcd4b3;
-    }
-    .nav-btn.active {
-      background: #ecfdf5;
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.12);
-    }
-
-    /* Section Header */
+    /* Section Title */
     .section-title {
       font-size: 16px;
       font-weight: 700;
       color: #132a18;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
-      margin: 24px 0 14px 0;
+      margin: 28px 0 16px 0;
     }
-    .section-title::before {
+    .section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title-left::before {
       content: '';
       display: inline-block;
       width: 4px;
-      height: 16px;
+      height: 17px;
       background: var(--accent);
       border-radius: 2px;
+    }
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     /* Macro Layout */
     .macro-grid {
       display: grid !important;
-      grid-template-columns: calc(50% - 9px) calc(50% - 9px) !important;
-      gap: 18px !important;
-      margin-bottom: 20px !important;
+      grid-template-columns: calc(50% - 10px) calc(50% - 10px) !important;
+      gap: 20px !important;
+      margin-bottom: 24px !important;
       align-items: stretch !important;
       width: 100% !important;
       box-sizing: border-box !important;
     }
-    @media (max-width: 1080px) {
+    @media (max-width: 1024px) {
       .macro-grid {
         grid-template-columns: 100% !important;
       }
@@ -175,13 +153,14 @@
     .macro-card {
       background: #ffffff !important;
       border: 1px solid var(--border) !important;
-      border-radius: 12px !important;
-      padding: 16px 18px !important;
+      border-radius: 14px !important;
+      padding: 18px 22px !important;
       box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.05) !important;
       min-width: 0 !important;
-      max-width: 100% !important;
       box-sizing: border-box !important;
-      overflow: hidden !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .card-header {
       display: flex;
@@ -190,14 +169,13 @@
       margin-bottom: 12px;
     }
     .card-header h3 {
-      font-size: 13.5px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #1a3821;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
     .card-stat-pill {
-      font-size: 12px;
+      font-size: 12.5px;
       padding: 3px 10px;
       border-radius: 6px;
       background: #fef9c3;
@@ -209,7 +187,7 @@
     /* Chart SVG */
     .chart-container {
       width: 100%;
-      height: 115px;
+      height: 120px;
       position: relative;
     }
     svg.yield-chart {
@@ -218,1220 +196,570 @@
       overflow: visible;
     }
 
-    /* Rating Table */
-    .rating-matrix-table {
+    /* FedWatch Table */
+    .fedwatch-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 12px;
     }
-    .rating-matrix-table th {
+    .fedwatch-table th {
       background: #f4f8f1;
       color: var(--text-muted);
-      padding: 7px 8px;
+      padding: 8px 10px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       text-align: left;
       border-bottom: 1px solid var(--border);
     }
-    .rating-matrix-table td {
-      padding: 7px 8px;
+    .fedwatch-table td {
+      padding: 8px 10px;
       border-bottom: 1px solid var(--border-light);
     }
-    .rating-badge {
-      display: inline-block;
-      font-weight: 800;
-      font-size: 10.5px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      text-align: center;
-    }
-    .r-aaa { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .r-aa  { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-    .r-a   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-    .r-bbb { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
-    .r-hy  { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
-
-    /* Control Panel */
-    .controls-panel {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.04);
-    }
-    .control-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--text-muted);
-    }
-    .control-group label {
-      font-weight: 600;
-      color: #244129;
-    }
-    select, input[type="text"], input[type="number"] {
-      background: #f9fbf8;
-      border: 1px solid #cddcc6;
-      color: #132a18;
-      padding: 6px 12px;
-      border-radius: 7px;
-      font-size: 12.5px;
-      outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
-    }
-    select:focus, input[type="text"]:focus, input[type="number"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-glow);
-      background: #ffffff;
-    }
-
-    /* Category Filter Pills */
-    .category-pills {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .pill {
-      background: #f4f8f1;
-      border: 1px solid #d8e5d3;
-      color: var(--text-muted);
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .pill:hover {
-      background: #eaf3e5;
-      color: #132a18;
-    }
-    .pill.active {
-      background: #ecfdf5;
-      border-color: var(--accent);
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    /* Table Styles */
-    .table-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .prob-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: #eef5eb;
+      border-radius: 3px;
       overflow: hidden;
-      box-shadow: 0 6px 24px rgba(22, 60, 30, 0.06);
-      margin-bottom: 24px;
+      margin-top: 4px;
     }
-    .table-container {
-      overflow-x: auto;
-      max-height: 520px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      text-align: left;
-    }
-    th {
-      background: #f3f8f0;
-      color: #3f5944;
-      font-weight: 700;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      padding: 9px 8px;
-      white-space: nowrap;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      user-select: none;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-    th:hover { color: var(--accent); background: #eaf3e5; }
-    td {
-      padding: 7px 8px;
-      border-bottom: 1px solid var(--border-light);
-      white-space: nowrap;
-      transition: background 0.15s;
-      color: #1f3523;
-    }
-    tr:nth-child(even) td {
-      background: #fbfdfa;
-    }
-    tr:hover td {
-      background: #f0f7ec;
+    .prob-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+      border-radius: 3px;
     }
 
-    /* Tag styles */
-    .seniority-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-      display: inline-block;
+    /* Indicators Grid */
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
     }
-    .sen-senior { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-    .sen-sub { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
-    .sen-nonpref { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
-
-    .risk-badge {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-weight: 700;
+    @media (max-width: 1200px) {
+      .indicators-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
-    .risk-safe { background: #dcfce7; color: #166534; }
-    .risk-mod { background: #e0f2fe; color: #075985; }
-    .risk-agg { background: #ffedd5; color: #9a3412; }
-
-    /* Debt Wall & Stress Test Section */
-    .simulator-card {
+    @media (max-width: 680px) {
+      .indicators-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .indicator-box {
       background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 26px;
-      box-shadow: 0 6px 24px rgba(22, 60, 30, 0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 3px 12px rgba(22, 60, 30, 0.04);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
-    .sim-grid {
+    .indicator-box:hover {
+      border-color: #bcd4b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(22, 60, 30, 0.08);
+    }
+    .ind-name {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ind-value {
+      font-size: 21px;
+      font-weight: 800;
+      color: #132a18;
+      letter-spacing: -0.5px;
+    }
+    .ind-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #6c8370;
+      margin-top: 6px;
+    }
+    .tag-status {
+      display: inline-block;
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .status-sticky { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .status-solid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-easing { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+
+    /* ========================================================
+       PORTAL NAVIGATION CARDS (4 Icons Layout)
+       ======================================================== */
+    .portals-grid {
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 22px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
     }
     @media (max-width: 1080px) {
-      .sim-grid { grid-template-columns: 1fr; }
+      .portals-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
-    .sim-panel {
-      background: #f9fbf8;
+    @media (max-width: 600px) {
+      .portals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .portal-card {
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 24px 22px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 18px -2px rgba(22, 60, 30, 0.05);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
-    .sim-title {
-      font-size: 13px;
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: transparent;
+      transition: background 0.25s;
+    }
+    .portal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px -4px rgba(22, 60, 30, 0.12);
+      border-color: #bcd4b3;
+    }
+    .portal-card.card-stock:hover::before { background: #059669; }
+    .portal-card.card-bond:hover::before { background: #2563eb; }
+    .portal-card.card-fcn-lab:hover::before { background: #ca8a04; }
+    .portal-card.card-fcn-master:hover::before { background: #7c3aed; }
+
+    .portal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .portal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s;
+    }
+    .portal-card:hover .portal-icon {
+      transform: scale(1.08);
+    }
+    .icon-stock { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .icon-bond { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .icon-fcn-lab { background: #fefce8; color: #ca8a04; border: 1px solid #fde047; }
+    .icon-fcn-master { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+
+    .portal-badge {
+      font-size: 11px;
       font-weight: 700;
-      color: var(--accent);
+      padding: 3px 9px;
+      border-radius: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
+    }
+    .badge-stock { background: #ecfdf5; color: #065f46; }
+    .badge-bond { background: #eff6ff; color: #1e40af; }
+    .badge-fcn-lab { background: #fef9c3; color: #854d0e; }
+    .badge-fcn-master { background: #f5f3ff; color: #6b21a8; }
+
+    .portal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #132a18;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .portal-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .portal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-light);
+      padding-top: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .portal-link-text {
+      color: var(--text);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s, color 0.2s;
+    }
+    .portal-card:hover .portal-link-text {
+      color: var(--accent);
+      gap: 8px;
+    }
+
+    /* Footer */
+    .footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    /* Slider Row */
-    .slider-row {
-      margin-bottom: 14px;
-    }
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11.5px;
-      font-weight: 600;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid var(--border);
+      padding: 22px 0 32px;
       color: var(--text-muted);
-      margin-bottom: 5px;
-    }
-    .slider-label .val-display {
-      color: #132a18;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    /* Metric Result Box */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .metric-box {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 10px 12px;
-    }
-    .metric-box .label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-    .metric-box .num {
-      font-size: 17px;
-      font-weight: 800;
-      color: #132a18;
-      margin-top: 2px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .metric-box .delta {
-      font-size: 10.5px;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    /* Status banner */
-    .diag-banner {
-      border-radius: 9px;
-      padding: 12px 14px;
-      margin-top: 14px;
       font-size: 12px;
-      line-height: 1.5;
-    }
-    .diag-safe {
-      background: #ecfdf5;
-      border: 1px solid #86efac;
-      color: #065f46;
-    }
-    .diag-warn {
-      background: #fefce8;
-      border: 1px solid #fde047;
-      color: #854d0e;
-    }
-    .diag-alert {
-      background: #fff1f2;
-      border: 1px solid #fecdd3;
-      color: #9f1239;
-    }
-
-    /* Quick Action Button */
-    .btn-act {
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      color: #065f46;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-act:hover {
-      background: #059669;
-      color: #ffffff;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header -->
-  <div class="header">
-    <div>
-      <div class="badge-live">企業基本面與信用風險觀測網 ｜ 10Y 美債 5.28% 定錨</div>
-      <h1>全球巨頭財務體質與公司債投資儀表板 (Corporate Bond & Solvency Analyzer)</h1>
-      <p>基準日：2026 年 10 月 ｜ 涵蓋精選公司債報價清單、發行人穩健度指標、自由現金流 (FCF) 與債務到期壓力模擬</p>
-    </div>
-    <div style="text-align: right;">
-      <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
-      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">US IG OAS 利差: +118 bps ｜ 下次 FOMC: 2026-10-28</div>
-    </div>
-  </div>
-
-  <!-- Navigation Tabs -->
-  <div class="nav-tabs">
-    <a href="#macro-section" class="nav-btn active">📊 宏觀利率與信用利差矩陣</a>
-    <a href="./FCN_Lab.html" class="nav-btn" target="_blank" style="border-color: #059669; background: #ecfdf5; color: #065f46; font-weight: 800;">🧪 FCN Lab (四標的雲端模擬器)</a>
-    <a href="./nasdaq/fcn-master" class="nav-btn" target="_blank" style="border-color: var(--accent); color: var(--accent);">⚡ Worst-Of FCN 客戶模擬器</a>
-    <a href="./nasdaq/" class="nav-btn" target="_blank">📈 美股巨頭三年估值 (前往 /nasdaq/)</a>
-    <a href="./large-company-financial-dashboard/" class="nav-btn" target="_blank">📜 公司債獨立儀表板</a>
-    <a href="#featured-bonds-section" class="nav-btn">📜 精選公司債行情與發行人觀測</a>
-    <a href="#credit-matrix-section" class="nav-btn">🏢 發行人財務體質與償債安全榜</a>
-    <a href="#debt-wall-section" class="nav-btn" style="border-color: var(--accent); color: var(--accent);">⚡ 債務到期分佈 (Debt Wall) 與壓力測試</a>
-  </div>
-
-  <!-- SECTION 1: Macro & Credit Rating Matrix -->
-  <div id="macro-section" class="section-title">宏觀無風險利率走勢與各信評等級殖利率矩陣</div>
-  <div class="macro-grid">
-    
-    <!-- Left: Treasury & Spread Dual Curve -->
-    <div class="macro-card">
-      <div class="card-header">
-        <div>
-          <h3>美國 10 年期公債殖利率與信用利差走勢</h3>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">近 1 個月每日收盤值 ｜ 基準定錨 5.28%</div>
-        </div>
-        <div class="card-stat-pill mono">最新收盤: 5.26%</div>
-      </div>
-
-      <div class="chart-container">
-        <svg class="yield-chart" viewBox="0 0 540 100">
-          <defs>
-            <linearGradient id="chartGrad1M" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
-              <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
-            </linearGradient>
-          </defs>
-          <line x1="35" y1="15" x2="525" y2="15" stroke="#e6efe2" stroke-dasharray="2,2" />
-          <line x1="35" y1="48" x2="525" y2="48" stroke="#e6efe2" stroke-dasharray="2,2" />
-          <line x1="35" y1="80" x2="525" y2="80" stroke="#e6efe2" />
-
-          <text x="28" y="18" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.30%</text>
-          <text x="28" y="51" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.18%</text>
-          <text x="28" y="83" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.05%</text>
-
-          <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25 L 520,80 L 45,80 Z" fill="url(#chartGrad1M)" />
-          <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-
-          <circle cx="45" cy="80" r="2.5" fill="#059669"><title>09/08: 5.05%</title></circle>
-          <circle cx="195" cy="46" r="3" fill="#059669"><title>09/16: 5.18%</title></circle>
-          <circle cx="370" cy="38" r="2" fill="#059669"><title>09/25: 5.21%</title></circle>
-          <circle cx="495" cy="20" r="3.5" fill="#f59e0b"><title>10/02 (高點): 5.28%</title></circle>
-          <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新: 5.26%</title></circle>
-        </svg>
-      </div>
-
-      <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 8px;">
-        <span><strong>投資級 (IG) 利差：</strong> +118 bps (處歷史中間分位)</span>
-        <span><strong>非投資級 (HY) 利差：</strong> +320 bps</span>
-        <span><strong>實質利率 (TIPS)：</strong> 2.05%</span>
-      </div>
-    </div>
-
-    <!-- Right: Credit Rating Matrix & Default Rates -->
-    <div class="macro-card">
-      <div class="card-header">
-        <div>
-          <h3>信評等級基準殖利率與利差矩陣 (Rating Matrix)</h3>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">固定收益定價參考 ｜ 存續期間與資本利得敏感度</div>
-        </div>
-        <div class="card-stat-pill mono">BBB利差: +145 bps</div>
-      </div>
-
-      <table class="rating-matrix-table">
-        <thead>
-          <tr>
-            <th>信評級別</th>
-            <th>代表性企業</th>
-            <th>平均殖利率</th>
-            <th>美債利差</th>
-            <th>5年累積違約率</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="rating-badge r-aaa">AAA</span></td>
-            <td>微軟 (MSFT)、嬌生 (JNJ)、世銀 (IBRD)</td>
-            <td class="mono font-bold" style="color: #065f46;">4.20% ~ 4.45%</td>
-            <td class="mono">+45 bps</td>
-            <td class="mono" style="color: #059669;">0.08%</td>
-          </tr>
-          <tr>
-            <td><span class="rating-badge r-aa">AA / Aa</span></td>
-            <td>蘋果 (AAPL)、台積電 (TSM)、沃爾瑪 (WMT)、波克夏 (BRK)</td>
-            <td class="mono font-bold">4.45% ~ 4.85%</td>
-            <td class="mono">+75 bps</td>
-            <td class="mono" style="color: #059669;">0.24%</td>
-          </tr>
-          <tr>
-            <td><span class="rating-badge r-a">A / A2</span></td>
-            <td>摩根大通 (JPM)、美銀 (BAC)、亞馬遜 (AMZN)、豐田 (TOYOTA)</td>
-            <td class="mono font-bold">4.85% ~ 5.35%</td>
-            <td class="mono">+115 bps</td>
-            <td class="mono">0.68%</td>
-          </tr>
-          <tr>
-            <td><span class="rating-badge r-bbb">BBB / Baa</span></td>
-            <td>甲骨文 (ORCL)、AT&T (T)、通用汽車 (GM)、英特爾 (INTC)</td>
-            <td class="mono font-bold" style="color: #854d0e;">5.35% ~ 6.10%</td>
-            <td class="mono">+165 bps</td>
-            <td class="mono" style="color: #ca8a04;">1.85%</td>
-          </tr>
-          <tr>
-            <td><span class="rating-badge r-hy">BB (非投資級)</span></td>
-            <td>高收益投機級群體</td>
-            <td class="mono font-bold" style="color: #be123c;">6.50% ~ 7.80%</td>
-            <td class="mono">+310 bps</td>
-            <td class="mono" style="color: #dc2626;">7.92%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 2: Featured Bond Market Watch -->
-  <div id="featured-bonds-section" class="section-title">精選公司債行情與發行人觀測清單</div>
-  
-  <!-- Filter Controls -->
-  <div class="controls-panel">
-    <div class="category-pills" id="bond-sector-filters">
-      <div class="pill active" onclick="filterBonds('ALL')">全部債券 (75+)</div>
-      <div class="pill" onclick="filterBonds('TECH')">科技與通訊巨頭</div>
-      <div class="pill" onclick="filterBonds('FIN')">全球金融銀行龍頭</div>
-      <div class="pill" onclick="filterBonds('HEALTH_CONS')">醫療消費與零售</div>
-      <div class="pill" onclick="filterBonds('AUTO_IND')">汽車工業與能源</div>
-      <div class="pill" onclick="filterBonds('SOV')">主權與超主權債</div>
-    </div>
-
-    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-      <div class="control-group">
-        <label>最低殖利率 (YTM):</label>
-        <select id="filter-ytm" onchange="renderBondTable()">
-          <option value="0">全部區間</option>
-          <option value="4.5">4.5% 以上</option>
-          <option value="5.0" selected>5.0% 以上 (熱門高息)</option>
-          <option value="5.5">5.5% 以上</option>
-          <option value="6.0">6.0% 以上 (次順位/高票息)</option>
-        </select>
-      </div>
-
-      <div class="control-group">
-        <label>搜尋代碼/發行人:</label>
-        <input type="text" id="search-bond" placeholder="如 AAPL, JPM, GM, 匯豐, 豐田..." oninput="renderBondTable()" style="width: 180px;">
-      </div>
-    </div>
-  </div>
-
-  <!-- Table Card: Featured Bonds -->
-  <div class="table-card">
-    <div class="table-container">
-      <table id="bonds-table">
-        <thead>
-          <tr>
-            <th onclick="sortBonds('issuer')">發行人 / 債券簡稱 ⬍</th>
-            <th onclick="sortBonds('coupon')">票面利率 ⬍</th>
-            <th onclick="sortBonds('maturity')">到期日 ⬍</th>
-            <th onclick="sortBonds('price')">參考買價 ⬍</th>
-            <th onclick="sortBonds('ytm')">到期殖利率 (YTM) ⬍</th>
-            <th>信評 (穆迪/標普/惠譽)</th>
-            <th>償還順位</th>
-            <th>客戶屬性</th>
-            <th style="text-align: center;">壓力測試聯動</th>
-          </tr>
-        </thead>
-        <tbody id="bonds-tbody">
-          <!-- Populated by JS -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 3: Corporate Credit Health Matrix -->
-  <div id="credit-matrix-section" class="section-title">核心企業財務體質與償債安全矩陣 (基本面健康指標)</div>
-  
-  <div class="controls-panel">
-    <div class="category-pills" id="corp-sector-filters">
-      <div class="pill active" onclick="filterCorps('ALL')">全部企業 (60+)</div>
-      <div class="pill" onclick="filterCorps('NET_CASH')">👑 零淨負債/淨現金公司</div>
-      <div class="pill" onclick="filterCorps('HIGH_FCF')">💰 自由現金流印鈔機 (> $15B)</div>
-      <div class="pill" onclick="filterCorps('HIGH_COV')">🛡️ 利息保障倍數 > 20x</div>
-      <div class="pill" onclick="filterCorps('ALERT')">⚠️ 需留意再融資壓力</div>
-    </div>
-
-    <div class="control-group">
-      <input type="text" id="search-corp" placeholder="搜尋公司名稱或代號..." oninput="renderCorpTable()" style="width: 180px;">
-    </div>
-  </div>
-
-  <div class="table-card">
-    <div class="table-container">
-      <table id="corps-table">
-        <thead>
-          <tr>
-            <th onclick="sortCorps('symbol')">公司代碼 / 名稱 ⬍</th>
-            <th>所屬產業</th>
-            <th>信評等級</th>
-            <th onclick="sortCorps('interestCoverage')">利息保障倍數 (Coverage) ⬍</th>
-            <th onclick="sortCorps('fcf')">自由現金流 (FCF) ⬍</th>
-            <th onclick="sortCorps('fcfMargin')">FCF 利潤率 ⬍</th>
-            <th onclick="sortCorps('netDebtEbitda')">淨負債 / EBITDA ⬍</th>
-            <th onclick="sortCorps('cashToDebt')">現金儲備 / 短期債務 ⬍</th>
-            <th onclick="sortCorps('altmanZ')">Altman Z 破產預警指數 ⬍</th>
-            <th style="text-align: center;">操作</th>
-          </tr>
-        </thead>
-        <tbody id="corps-tbody">
-          <!-- Populated by JS -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 4: Interactive Debt Wall & Stress Test Simulator -->
-  <div id="debt-wall-section" class="section-title">互動工具：債務到期分佈 (Debt Wall) 與極端償債壓力測試模擬器</div>
-  
-  <div class="simulator-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+  <div class="wrap">
+    <!-- Top Header -->
+    <div class="header">
       <div>
-        <h2 style="font-size: 17px; font-weight: 800; color: #132a18;">目標企業償債能力壓力測試 (Solvency Stress Test)</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">模擬當大環境遭遇營收下滑與借貸利率攀升時，發行人的現金流與利息防禦能力</p>
+        <div class="badge-live">美股與全球金融觀測中樞 ｜ 全天候即時定錨</div>
+        <h1>全球金融市場與結構型商品觀測首頁 (Global Markets Hub)</h1>
+        <p>基準日：2026 年 10 月 ｜ 即時總經公債利率定錨 ｜ 整合美股估值、全球債券體質與 FCN 結構型商品雙核心實驗室</p>
       </div>
-
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <span style="font-size: 12.5px; font-weight: 700; color: #1f3523;">選擇觀測企業：</span>
-        <select id="sim-company-select" onchange="loadCompanyToSim(this.value)" style="font-weight: 700; color: #065f46; font-size: 13px;">
-          <!-- Populated by JS -->
-        </select>
+      <div style="text-align: right;">
+        <div class="mono" style="font-size: 20px; font-weight: 800; color: var(--accent);" id="header-us10y">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">下次 FOMC：2026-10-28 ｜ 核心 PCE：3.0%</div>
       </div>
     </div>
 
-    <div class="sim-grid">
-      
-      <!-- Left: Debt Wall by Year (SVG Bar Chart) -->
-      <div class="sim-panel">
-        <div class="sim-title">
-          <span id="debt-wall-title">債務到期階梯分佈 (Debt Wall & Maturity Ladder)</span>
-          <span class="mono" id="total-debt-tag" style="font-size: 11px; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 7px; border-radius: 4px; color: #065f46;">總債務: $101.0B</span>
+    <!-- MODULE: Macro Yield & Indicators -->
+    <div class="section-title">
+      <div class="section-title-left">宏觀無風險公債殖利率與關鍵總經指標</div>
+      <div class="section-subtitle">殖利率每日即時連線 ｜ 總經數據依官方週期按月更新</div>
+    </div>
+
+    <!-- Macro Grid (10Y Yield Card + FedWatch Card) -->
+    <div class="macro-grid">
+      <!-- Left: 10Y Yield Daily Closes Card -->
+      <div class="macro-card">
+        <div class="card-header">
+          <div>
+            <h3>美國 10 年期公債殖利率走勢面板</h3>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">近 1 個月每日收盤趨勢 ｜ 定錨點 5.28%</div>
+          </div>
+          <div class="card-stat-pill mono" id="macro-latest-pill">最新: 5.26%</div>
         </div>
 
-        <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
-          各年度預計到期需償還/再融資之本金規模 (十億美元 $B)：
-        </div>
+        <div class="chart-container">
+          <svg class="yield-chart" viewBox="0 0 540 100">
+            <defs>
+              <linearGradient id="chartGrad1M" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <line x1="35" y1="15" x2="525" y2="15" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="48" x2="525" y2="48" stroke="#e6efe2" stroke-dasharray="2,2" />
+            <line x1="35" y1="80" x2="525" y2="80" stroke="#e6efe2" />
 
-        <div class="chart-container" style="height: 160px;">
-          <svg id="debt-wall-svg" viewBox="0 0 500 130" style="width: 100%; height: 100%;">
-            <!-- Rendered by JS -->
+            <text x="28" y="18" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.30%</text>
+            <text x="28" y="51" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.18%</text>
+            <text x="28" y="83" fill="#556d59" font-size="9" text-anchor="end" font-family="JetBrains Mono">5.05%</text>
+
+            <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25 L 520,80 L 45,80 Z" fill="url(#chartGrad1M)" />
+            <path d="M 45,80 L 70,77 L 95,70 L 120,72 L 145,67 L 170,62 L 195,46 L 220,51 L 245,56 L 270,54 L 295,49 L 320,46 L 345,44 L 370,38 L 395,38 L 420,41 L 445,36 L 470,31 L 495,20 L 520,25" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+            <circle cx="45" cy="80" r="2.5" fill="#059669"><title>09/08: 5.05%</title></circle>
+            <circle cx="195" cy="46" r="3" fill="#059669"><title>09/16: 5.18%</title></circle>
+            <circle cx="370" cy="38" r="2" fill="#059669"><title>09/25: 5.21%</title></circle>
+            <circle cx="495" cy="20" r="3.5" fill="#f59e0b"><title>10/02 (高點): 5.28%</title></circle>
+            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新: 5.26%</title></circle>
           </svg>
         </div>
 
         <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 8px;">
-          <span id="near-term-risk"><strong>近 2 年到期本金：</strong> $18.5B (佔 18.3%)</span>
-          <span id="cash-buffer-tag"><strong>現有現金及短投儲備：</strong> $65.2B (充足)</span>
+          <span><strong>10Y TIPS 實質利率：</strong> 2.05%</span>
+          <span><strong>10Y 殖利率區間：</strong> 5.05% ~ 5.28%</span>
+          <span><strong>定錨水準：</strong> 5.28%</span>
         </div>
       </div>
 
-      <!-- Right: Interactive Stress Test Sliders & Diagnostic Box -->
-      <div class="sim-panel">
-        <div class="sim-title">
-          <span>極端情境壓力測試滑桿</span>
-          <button class="btn-act" onclick="resetStressSliders()">重設情境</button>
+      <!-- Right: FedWatch Probability Card -->
+      <div class="macro-card">
+        <div class="card-header">
+          <div>
+            <h3>聯準會利率路徑與 FedWatch 降息機率</h3>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">下次利率決議：2026-10-28 ｜ 目前基準：5.25% ~ 5.50%</div>
+          </div>
+          <div class="card-stat-pill mono">降息 1 碼機率: 92.5%</div>
         </div>
 
-        <!-- Slider 1: EBITDA / Revenue Shock -->
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>營收 / EBITDA 衝擊幅度 (EBITDA Shock)</span>
-            <span class="val-display" id="val-ebitda-shock">0%</span>
-          </div>
-          <input type="range" id="range-ebitda-shock" min="-35" max="0" value="0" step="5" oninput="updateStressSim()">
-        </div>
+        <table class="fedwatch-table">
+          <thead>
+            <tr>
+              <th>目標利率區間</th>
+              <th>隱含政策方向</th>
+              <th>市場預期機率</th>
+              <th style="width: 35%;">機率分佈條</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono font-bold">5.00% - 5.25%</td>
+              <td>降息 1 碼 (-25 bps)</td>
+              <td class="mono font-bold" style="color: #065f46;">92.5%</td>
+              <td>
+                <div class="prob-bar-wrap">
+                  <div class="prob-bar" style="width: 92.5%;"></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">4.75% - 5.00%</td>
+              <td>降息 2 碼 (-50 bps)</td>
+              <td class="mono font-bold">7.5%</td>
+              <td>
+                <div class="prob-bar-wrap">
+                  <div class="prob-bar" style="width: 7.5%; background: #38bdf8;"></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">5.25% - 5.50%</td>
+              <td>維持現狀 (按兵不動)</td>
+              <td class="mono" style="color: var(--text-muted);">0.0%</td>
+              <td>
+                <div class="prob-bar-wrap">
+                  <div class="prob-bar" style="width: 0%;"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-        <!-- Slider 2: Refinancing Spread / Interest Rate Surge -->
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>新發債與再融資利率升息幅度 (Refinancing Rate)</span>
-            <span class="val-display" id="val-rate-hike">+0 bps</span>
-          </div>
-          <input type="range" id="range-rate-hike" min="0" max="300" value="0" step="25" oninput="updateStressSim()">
+        <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 8px;">
+          <span><strong>利率定錨：</strong> 降息循環延續</span>
+          <span><strong>市場共識：</strong> 年底前再降 50 bps</span>
         </div>
+      </div>
+    </div>
 
-        <!-- Slider 3: CapEx Reduction/Expansion -->
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>資本支出變動調整 (CapEx Response)</span>
-            <span class="val-display" id="val-capex-change">0%</span>
-          </div>
-          <input type="range" id="range-capex-change" min="-25" max="25" value="0" step="5" oninput="updateStressSim()">
+    <!-- Indicators Grid (6 Key Indicators) -->
+    <div class="indicators-grid">
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>核心 PCE 年增率</span>
+          <span class="tag-status status-sticky">Fed 核心指標</span>
         </div>
-
-        <!-- Dynamic Results Grid -->
-        <div class="metric-grid">
-          <div class="metric-box">
-            <div class="label">壓力後利息保障倍數</div>
-            <div class="num" id="res-stressed-coverage">42.2x</div>
-            <div class="delta" id="res-delta-coverage" style="color: #059669;">基準: 42.2x</div>
-          </div>
-          <div class="metric-box">
-            <div class="label">壓力後自由現金流 (FCF)</div>
-            <div class="num" id="res-stressed-fcf">$108.0B</div>
-            <div class="delta" id="res-delta-fcf" style="color: #059669;">基準: $108.0B</div>
-          </div>
-          <div class="metric-box">
-            <div class="label">壓力後淨負債 / EBITDA</div>
-            <div class="num" id="res-stressed-leverage">0.26x</div>
-            <div class="delta" id="res-delta-leverage">健康水位</div>
-          </div>
-          <div class="metric-box">
-            <div class="label">破產風險評級 (Altman Z)</div>
-            <div class="num" id="res-stressed-z">8.20</div>
-            <div class="delta" style="color: #059669;">綠色極安全區</div>
-          </div>
+        <div class="ind-value mono">3.0%</div>
+        <div class="ind-meta">
+          <span>前值: 2.8%</span>
+          <span>按月官方公布</span>
         </div>
-
-        <!-- Solvency Verdict Banner -->
-        <div class="diag-banner diag-safe" id="solvency-banner">
-          <strong>🟢 體質極度穩健：</strong> 即使在營業利益大幅下滑與借貸成本上升情境下，利息保障倍數仍保持在健康區間以上，自由現金流充沛，債券到期還本付息能力極強。
-        </div>
-
       </div>
 
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>美國最新 CPI</span>
+          <span class="tag-status status-easing">穩步趨緩</span>
+        </div>
+        <div class="ind-value mono">2.4%</div>
+        <div class="ind-meta">
+          <span>預期: 2.3%</span>
+          <span>按月官方公布</span>
+        </div>
+      </div>
+
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>非農就業人口變動</span>
+          <span class="tag-status status-solid">遠超預期</span>
+        </div>
+        <div class="ind-value mono">+22.5 萬人</div>
+        <div class="ind-meta">
+          <span>預期: +14.0 萬</span>
+          <span>每月首週五公布</span>
+        </div>
+      </div>
+
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>ADP 小非農就業</span>
+          <span class="tag-status status-solid">就業韌性</span>
+        </div>
+        <div class="ind-value mono">+14.3 萬人</div>
+        <div class="ind-meta">
+          <span>前值: +10.3 萬</span>
+          <span>按月官方公布</span>
+        </div>
+      </div>
+
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>失業率 (U-3)</span>
+          <span class="tag-status status-solid">健康低檔</span>
+        </div>
+        <div class="ind-value mono">4.2%</div>
+        <div class="ind-meta">
+          <span>前值: 4.3%</span>
+          <span>充分就業區間</span>
+        </div>
+      </div>
+
+      <div class="indicator-box">
+        <div class="ind-name">
+          <span>生產者物價 (PPI)</span>
+          <span class="tag-status status-easing">上游平穩</span>
+        </div>
+        <div class="ind-value mono">1.7%</div>
+        <div class="ind-meta">
+          <span>年增率 YoY</span>
+          <span>成本壓力降溫</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOUR PORTAL NAVIGATION TILES -->
+    <div class="section-title">
+      <div class="section-title-left">四大核心觀測儀表板捷徑</div>
+      <div class="section-subtitle">點擊即可前往專屬獨立儀表板深入分析</div>
+    </div>
+
+    <div class="portals-grid">
+      <!-- 1. 美股觀測儀表板 -->
+      <a href="./nasdaq/" class="portal-card card-stock" target="_blank">
+        <div>
+          <div class="portal-top">
+            <div class="portal-icon icon-stock">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+              </svg>
+            </div>
+            <span class="portal-badge badge-stock">美股巨頭</span>
+          </div>
+          <h3 class="portal-title">１．美股觀測儀表板</h3>
+          <p class="portal-desc">標普 500、道瓊、納斯達克巨頭三年估值動態、基本面營收獲利與歷史倒推本益比矩陣。</p>
+        </div>
+        <div class="portal-footer">
+          <span>S&P 500 · 納斯達克 · 道瓊</span>
+          <span class="portal-link-text">進入儀表板 →</span>
+        </div>
+      </a>
+
+      <!-- 2. 債券觀測儀表板 -->
+      <a href="./large-company-financial-dashboard/" class="portal-card card-bond" target="_blank">
+        <div>
+          <div class="portal-top">
+            <div class="portal-icon icon-bond">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <span class="portal-badge badge-bond">固收信用</span>
+          </div>
+          <h3 class="portal-title">２．債券觀測儀表板</h3>
+          <p class="portal-desc">全球 75+ 檔精選投資級與次順位公司債行情、發行人自由現金流、Debt Wall 債務階梯與償債壓力測試。</p>
+        </div>
+        <div class="portal-footer">
+          <span>75+ 檔公司債 · 債務階梯</span>
+          <span class="portal-link-text">進入儀表板 →</span>
+        </div>
+      </a>
+
+      <!-- 3. FCN LAB -->
+      <a href="./FCN_Lab.html" class="portal-card card-fcn-lab" target="_blank">
+        <div>
+          <div class="portal-top">
+            <div class="portal-icon icon-fcn-lab">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2v7.31L4.69 17.5a2 2 0 0 0 1.71 3h11.2a2 2 0 0 0 1.71-3L14 9.31V2"></path>
+                <path d="M8.5 2h7"></path>
+                <path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path>
+              </svg>
+            </div>
+            <span class="portal-badge badge-fcn-lab">結構進階</span>
+          </div>
+          <h3 class="portal-title">３．ＦＣＮ ＬＡＢ</h3>
+          <p class="portal-desc">四標的 Worst-Of 結構型商品專業實驗室，支援 Twelve Data 雲端代理、自訂條款與到期情境壓力測試。</p>
+        </div>
+        <div class="portal-footer">
+          <span>Twelve Data · 四標的進階版</span>
+          <span class="portal-link-text">進入實驗室 →</span>
+        </div>
+      </a>
+
+      <!-- 4. FCN MASTER -->
+      <a href="./nasdaq/fcn-master" class="portal-card card-fcn-master" target="_blank">
+        <div>
+          <div class="portal-top">
+            <div class="portal-icon icon-fcn-master">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <span class="portal-badge badge-fcn-master">客戶模擬</span>
+          </div>
+          <h3 class="portal-title">４．ＦＣＮＭＡＳＴＥＲ</h3>
+          <p class="portal-desc">Worst-Of FCN 客戶專用即時模擬器，支援全美股多交易所線上即時報價、單一標的部位追蹤與 4 檔一籃子到期結算分析。</p>
+        </div>
+        <div class="portal-footer">
+          <span>全美股即時資料庫 · 互動模擬</span>
+          <span class="portal-link-text">進入模擬器 →</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>全球金融市場觀測中樞 ｜ 整合美股估值、全球債券體質與結構型商品模擬</div>
+      <div class="mono" style="font-size: 11px;">GitHub Pages 靜態無伺服器部署 ｜ 支援跨平台瀏覽</div>
     </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
+  <!-- Client-side Real-time Yield Hook -->
   <script>
-    // ==========================================
-    // 1. FEATURED BONDS DATA (All 75+ Bonds)
-    // ==========================================
-    const BONDS_DATA = [
-      // 科技與通訊
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 4 3/4 05/12/35", coupon: 4.75, mat: "2035/05/12", price: 99.95, ytm: 4.53, spread: 35, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 4 1/2 02/23/36", coupon: 4.50, mat: "2036/02/23", price: 98.40, ytm: 4.33, spread: 30, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 4.3 05/10/33", coupon: 4.30, mat: "2033/05/10", price: 98.79, ytm: 4.12, spread: 28, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 4.15 05/10/30", coupon: 4.15, mat: "2030/05/10", price: 99.13, ytm: 3.97, spread: 25, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 3 1/4 08/08/29", coupon: 3.25, mat: "2029/08/08", price: 96.63, ytm: 3.19, spread: 20, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AAPL", name: "蘋果公司", bond: "AAPL 1.7 08/05/31", coupon: 1.70, mat: "2031/08/05", price: 87.24, ytm: 1.84, spread: 22, rating: "Aaa/AA+", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "MSFT", name: "微軟公司", bond: "MSFT 4.1 02/06/37", coupon: 4.10, mat: "2037/02/06", price: 93.82, ytm: 4.13, spread: 25, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "MSFT", name: "微軟公司", bond: "MSFT 3 1/2 02/12/35", coupon: 3.50, mat: "2035/02/12", price: 91.81, ytm: 3.60, spread: 20, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "MSFT", name: "微軟公司", bond: "MSFT 4.2 11/03/35", coupon: 4.20, mat: "2035/11/03", price: 96.75, ytm: 4.11, spread: 25, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "MSFT", name: "微軟公司", bond: "MSFT 3.45 08/08/36", coupon: 3.45, mat: "2036/08/08", price: 88.79, ytm: 3.66, spread: 22, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "NVDA", name: "輝達公司", bond: "NVDA 2.85 04/01/30", coupon: 2.85, mat: "2030/04/01", price: 94.11, ytm: 2.87, spread: 22, rating: "Aa1/AA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AMZN", name: "亞馬遜公司", bond: "AMZN 4.8 12/05/34", coupon: 4.80, mat: "2034/12/05", price: 99.64, ytm: 4.57, spread: 45, rating: "A1/AA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AMZN", name: "亞馬遜公司", bond: "AMZN 4.7 12/01/32", coupon: 4.70, mat: "2032/12/01", price: 99.95, ytm: 4.46, spread: 42, rating: "A1/AA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "AMZN", name: "亞馬遜公司", bond: "AMZN 3 7/8 08/22/37", coupon: 3.875, mat: "2037/08/22", price: 88.87, ytm: 4.11, spread: 48, rating: "A1/AA", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "AMZN", name: "亞馬遜公司", bond: "AMZN 3.6 04/13/32", coupon: 3.60, mat: "2032/04/13", price: 94.18, ytm: 3.62, spread: 38, rating: "A1/AA", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "TSM", name: "台積電亞利桑那", bond: "TAISEM 4 1/4 04/22/32", coupon: 4.25, mat: "2032/04/22", price: 98.05, ytm: 4.10, spread: 35, rating: "Aa3/AA-", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "TSM", name: "台積電全球", bond: "TAISEM 4 5/8 07/22/32", coupon: 4.625, mat: "2032/07/22", price: 100.02, ytm: 4.38, spread: 40, rating: "Aa3/AA-", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "TSM", name: "台積電全球", bond: "TAISEM 2 1/4 04/23/31", coupon: 2.25, mat: "2031/04/23", price: 89.65, ytm: 2.38, spread: 30, rating: "Aa3/AA-", sen: "優先無擔保", risk: "保守型", sector: "TECH" },
-      { symbol: "ORCL", name: "甲骨文公司", bond: "ORCL 4.9 02/06/33", coupon: 4.90, mat: "2033/02/06", price: 94.62, ytm: 4.88, spread: 85, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "ORCL", name: "甲骨文公司", bond: "ORCL 2.95 04/01/30", coupon: 2.95, mat: "2030/04/01", price: 91.48, ytm: 3.05, spread: 75, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "QCOM", name: "高通公司", bond: "QCOM 4.65 05/20/35", coupon: 4.65, mat: "2035/05/20", price: 97.51, ytm: 4.52, spread: 50, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "QCOM", name: "高通公司", bond: "QCOM 5.4 05/20/33", coupon: 5.40, mat: "2033/05/20", price: 103.23, ytm: 4.97, spread: 55, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "TXN", name: "德州儀器", bond: "TXN 5.1 05/23/35", coupon: 5.10, mat: "2035/05/23", price: 100.40, ytm: 4.82, spread: 45, rating: "Aa3/A+", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "INTC", name: "英特爾", bond: "INTC 5.15 02/21/34", coupon: 5.15, mat: "2034/02/21", price: 99.63, ytm: 4.90, spread: 95, rating: "Baa2/BBB", sen: "優先無擔保", risk: "積極型", sector: "TECH" },
-      { symbol: "INTC", name: "英特爾", bond: "INTC 5.2 02/10/33", coupon: 5.20, mat: "2033/02/10", price: 100.52, ytm: 4.91, spread: 92, rating: "Baa2/BBB", sen: "優先無擔保", risk: "積極型", sector: "TECH" },
-      { symbol: "INTC", name: "英特爾", bond: "INTC 4.15 08/05/32", coupon: 4.15, mat: "2032/08/05", price: 95.41, ytm: 4.12, spread: 85, rating: "Baa2/BBB", sen: "優先無擔保", risk: "積極型", sector: "TECH" },
-      { symbol: "IBM", name: "國際商業機器", bond: "IBM 4.9 02/05/34", coupon: 4.90, mat: "2034/02/05", price: 98.14, ytm: 4.75, spread: 60, rating: "A3/A", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "IBM", name: "國際商業機器", bond: "IBM 4 3/4 02/06/33", coupon: 4.75, mat: "2033/02/06", price: 98.94, ytm: 4.55, spread: 55, rating: "A3/A", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "HPQ", name: "惠普公司", bond: "HPQ 5 1/2 01/15/33", coupon: 5.50, mat: "2033/01/15", price: 101.75, ytm: 5.13, spread: 90, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "HPE", name: "慧與企業公司", bond: "HPE 6.2 10/15/35", coupon: 6.20, mat: "2035/10/15", price: 106.65, ytm: 5.52, spread: 110, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "TENCNT", name: "騰訊控股", bond: "TENCNT 2.88 04/22/31", coupon: 2.88, mat: "2031/04/22", price: 92.79, ytm: 2.93, spread: 45, rating: "A1/A+", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "T", name: "AT&T公司", bond: "T 4.9 08/15/37", coupon: 4.90, mat: "2037/08/15", price: 94.99, ytm: 4.87, spread: 90, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "T", name: "AT&T公司", bond: "T 5 1/4 03/01/37", coupon: 5.25, mat: "2037/03/01", price: 97.94, ytm: 5.08, spread: 95, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "T", name: "AT&T公司", bond: "T 5.4 02/15/34", coupon: 5.40, mat: "2034/02/15", price: 100.97, ytm: 5.08, spread: 85, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "VZ", name: "威瑞森電信", bond: "VZ 5 1/4 04/02/35", coupon: 5.25, mat: "2035/04/02", price: 99.56, ytm: 5.01, spread: 85, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "VZ", name: "威瑞森電信", bond: "VZ 5.05 05/09/33", coupon: 5.05, mat: "2033/05/09", price: 100.28, ytm: 4.78, spread: 75, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "VOD", name: "沃達豐集團", bond: "VOD 6.15 02/27/37", coupon: 6.15, mat: "2037/02/27", price: 106.37, ytm: 5.49, spread: 110, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-      { symbol: "BRITEL", name: "英國電信公司", bond: "BRITEL 9 5/8 12/15/30", coupon: 9.625, mat: "2030/12/15", price: 118.11, ytm: 7.79, spread: 260, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "TECH" },
-
-      // 全球金融銀行
-      { symbol: "JPM", name: "摩根大通銀行", bond: "JPM 5.576 07/23/36", coupon: 5.576, mat: "2036/07/23", price: 100.85, ytm: 5.25, spread: 95, rating: "A1/A/AA-", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "JPM", name: "摩根大通銀行", bond: "JPM 6.4 05/15/38", coupon: 6.40, mat: "2038/05/15", price: 109.30, ytm: 5.58, spread: 110, rating: "A1/A/AA", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "JPM", name: "摩根大通銀行", bond: "JPM 4.946 10/22/35", coupon: 4.946, mat: "2035/10/22", price: 97.75, ytm: 4.79, spread: 80, rating: "A1/A/AA", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "JPM", name: "摩根大通銀行", bond: "JPM 6.254 10/23/34", coupon: 6.254, mat: "2034/10/23", price: 106.36, ytm: 5.59, spread: 105, rating: "A1/A/AA", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "JPM", name: "摩根大通銀行", bond: "JPM 5.717 09/14/33", coupon: 5.717, mat: "2033/09/14", price: 102.61, ytm: 5.30, spread: 90, rating: "A2/A/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "BAC", name: "美國銀行", bond: "BAC 5.518 10/25/35", coupon: 5.518, mat: "2035/10/25", price: 99.95, ytm: 5.24, spread: 95, rating: "A1/A/AA-", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "BAC", name: "美國銀行", bond: "BAC 6.11 01/29/37", coupon: 6.11, mat: "2037/01/29", price: 104.62, ytm: 5.55, spread: 115, rating: "A3/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "BAC", name: "美國銀行", bond: "BAC 7 3/4 05/14/38", coupon: 7.75, mat: "2038/05/14", price: 118.47, ytm: 6.24, spread: 160, rating: "A3/A/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "MS", name: "摩根士丹利", bond: "MS 5.948 01/19/38", coupon: 5.948, mat: "2038/01/19", price: 102.38, ytm: 5.51, spread: 110, rating: "Baa1/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "MS", name: "摩根士丹利", bond: "MS 5.664 04/17/36", coupon: 5.664, mat: "2036/04/17", price: 101.98, ytm: 5.27, spread: 95, rating: "A1/A/A+", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "MS", name: "摩根士丹利", bond: "MS 6.342 10/18/33", coupon: 6.342, mat: "2033/10/18", price: 106.10, ytm: 5.69, spread: 118, rating: "A1/A/A+", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "GS", name: "高盛集團", bond: "GS 6 3/4 10/01/37", coupon: 6.75, mat: "2037/10/01", price: 108.36, ytm: 5.93, spread: 135, rating: "A2/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "GS", name: "高盛集團", bond: "GS 5.016 10/23/35", coupon: 5.016, mat: "2035/10/23", price: 97.62, ytm: 4.87, spread: 85, rating: "A2/BBB+/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "C", name: "花旗集團", bond: "C 5.827 02/13/35", coupon: 5.827, mat: "2035/02/13", price: 101.33, ytm: 5.46, spread: 110, rating: "Baa2/BBB/BBB+", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "C", name: "花旗集團", bond: "C 6.174 05/25/34", coupon: 6.174, mat: "2034/05/25", price: 103.94, ytm: 5.65, spread: 115, rating: "Baa2/BBB/BBB+", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "WFC", name: "富國銀行", bond: "WFC 5.605 04/23/36", coupon: 5.605, mat: "2036/04/23", price: 101.74, ytm: 5.23, spread: 92, rating: "A1/BBB+/A-", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "WFC", name: "富國銀行", bond: "WFC 6.491 10/23/34", coupon: 6.491, mat: "2034/10/23", price: 107.46, ytm: 5.50, spread: 108, rating: "A1/BBB+/A-", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "AXP", name: "美國運通", bond: "AXP 5.915 04/25/35", coupon: 5.915, mat: "2035/04/25", price: 102.95, ytm: 5.45, spread: 105, rating: "A3/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "AXP", name: "美國運通", bond: "AXP 5 5/8 07/28/34", coupon: 5.625, mat: "2034/07/28", price: 101.55, ytm: 5.26, spread: 95, rating: "A3/BBB/BBB", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "HSBC", name: "匯豐控股", bond: "HSBC 6.8 06/01/38", coupon: 6.80, mat: "2038/06/01", price: 108.24, ytm: 5.97, spread: 140, rating: "Baa1/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "HSBC", name: "匯豐控股", bond: "HSBC 7.399 11/13/34", coupon: 7.399, mat: "2034/11/13", price: 110.63, ytm: 6.36, spread: 165, rating: "Baa1/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "HSBC", name: "匯豐控股", bond: "HSBC 8.113 11/03/33", coupon: 8.113, mat: "2033/11/03", price: 114.15, ytm: 6.79, spread: 195, rating: "Baa1/BBB-/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "UBS", name: "瑞銀集團", bond: "UBS 6.301 09/22/34", coupon: 6.301, mat: "2034/09/22", price: 105.85, ytm: 5.67, spread: 115, rating: "A2/A/A+", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "UBS", name: "瑞銀集團", bond: "UBS 9.016 11/15/33", coupon: 9.016, mat: "2033/11/15", price: 120.35, ytm: 7.16, spread: 215, rating: "A2/A/A+", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "BNP", name: "法國巴黎銀行", bond: "BNP 5.906 11/19/35", coupon: 5.906, mat: "2035/11/19", price: 100.99, ytm: 5.55, spread: 110, rating: "Baa2/BBB+/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "DB", name: "德意志銀行", bond: "DB 7.079 02/10/34", coupon: 7.079, mat: "2034/02/10", price: 106.58, ytm: 6.32, spread: 160, rating: "Baa3/BBB-/BBB", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "ACAFP", name: "法國農業信貸", bond: "ACAFP 6.251 01/10/35", coupon: 6.251, mat: "2035/01/10", price: 103.17, ytm: 5.76, spread: 120, rating: "Baa1/BBB-/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "SOCGEN", name: "法國興業銀行", bond: "SOCGEN 6.221 06/15/33", coupon: 6.221, mat: "2033/06/15", price: 102.75, ytm: 5.76, spread: 125, rating: "Baa3/BBB-/BBB", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "STANLN", name: "渣打集團", bond: "STANLN 6.097 01/11/35", coupon: 6.097, mat: "2035/01/11", price: 103.57, ytm: 5.60, spread: 115, rating: "A3/BBB-/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "NWG", name: "國民西敏集團", bond: "NWG 6.016 03/02/34", coupon: 6.016, mat: "2034/03/02", price: 104.29, ytm: 5.49, spread: 110, rating: "A3/A/A+", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "LLOYDS", name: "勞埃德銀行", bond: "LLOYDS 7.953 11/15/33", coupon: 7.953, mat: "2033/11/15", price: 112.82, ytm: 6.72, spread: 185, rating: "Baa1/BBB-/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "MUFG", name: "三菱日聯金融", bond: "MUFG 5.615 04/24/36", coupon: 5.615, mat: "2036/04/24", price: 101.81, ytm: 5.23, spread: 90, rating: "A1/A/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "SUMIBK", name: "三井住友金融", bond: "SUMIBK 5.632 01/15/35", coupon: 5.632, mat: "2035/01/15", price: 102.35, ytm: 5.25, spread: 92, rating: "A1/A/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "MIZUHO", name: "瑞穗金融集團", bond: "MIZUHO 5.594 07/10/35", coupon: 5.594, mat: "2035/07/10", price: 101.77, ytm: 5.21, spread: 88, rating: "A1/A/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "NOMURA", name: "野村控股公司", bond: "NOMURA 5.783 07/03/34", coupon: 5.783, mat: "2034/07/03", price: 102.57, ytm: 5.35, spread: 95, rating: "Baa1/BBB+/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "MQGAU", name: "麥格理集團", bond: "MQGAU 6.255 12/07/34", coupon: 6.255, mat: "2034/12/07", price: 105.69, ytm: 5.63, spread: 110, rating: "A1/BBB+/A", sen: "優先無擔保", risk: "穩健型", sector: "FIN" },
-      { symbol: "CBAAU", name: "澳洲聯邦銀行", bond: "CBAAU 5.837 03/13/34", coupon: 5.837, mat: "2034/03/13", price: 102.47, ytm: 5.41, spread: 98, rating: "A2/A/AA-", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "NAB", name: "澳洲國民銀行", bond: "NAB 6.429 01/12/33", coupon: 6.429, mat: "2033/01/12", price: 105.57, ytm: 5.79, spread: 115, rating: "A3/A/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "WSTP", name: "西太平洋銀行", bond: "WSTP 6.82 11/17/33", coupon: 6.82, mat: "2033/11/17", price: 108.39, ytm: 5.98, spread: 130, rating: "A3/A/A", sen: "次順位", risk: "積極型", sector: "FIN" },
-      { symbol: "RY", name: "加拿大皇家銀行", bond: "RY 5.15 02/01/34", coupon: 5.15, mat: "2034/02/01", price: 101.29, ytm: 4.83, spread: 72, rating: "A1/A/AA", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "MET", name: "大都會人壽", bond: "MET 5.7 06/15/35", coupon: 5.70, mat: "2035/06/15", price: 103.71, ytm: 5.22, spread: 85, rating: "A3/A/A", sen: "優先無擔保", risk: "穩健型", sector: "FIN" },
-      { symbol: "ORIX", name: "歐力士公司", bond: "ORIX 5.2 09/13/32", coupon: 5.20, mat: "2032/09/13", price: 100.64, ytm: 4.89, spread: 75, rating: "A3/BBB+/A", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-      { symbol: "INTNED", name: "荷蘭國際集團", bond: "INTNED 6.114 09/11/34", coupon: 6.114, mat: "2034/09/11", price: 105.24, ytm: 5.53, spread: 110, rating: "Baa1/A/A-", sen: "優先無擔保", risk: "積極型", sector: "FIN" },
-
-      // 醫療消費與零售
-      { symbol: "JNJ", name: "嬌生公司", bond: "JNJ 5.95 08/15/37", coupon: 5.95, mat: "2037/08/15", price: 108.84, ytm: 5.20, spread: 45, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "HEALTH_CONS" },
-      { symbol: "JNJ", name: "嬌生公司", bond: "JNJ 5 03/01/35", coupon: 5.00, mat: "2035/03/01", price: 101.90, ytm: 4.66, spread: 40, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "HEALTH_CONS" },
-      { symbol: "UNH", name: "聯合健康集團", bond: "UNH 4 5/8 07/15/35", coupon: 4.625, mat: "2035/07/15", price: 96.21, ytm: 4.55, spread: 48, rating: "A2/A+/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "UNH", name: "聯合健康集團", bond: "UNH 6 5/8 11/15/37", coupon: 6.625, mat: "2037/11/15", price: 110.73, ytm: 5.69, spread: 98, rating: "A2/A-/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "WMT", name: "沃爾瑪公司", bond: "WMT 4.9 04/28/35", coupon: 4.90, mat: "2035/04/28", price: 100.26, ytm: 4.64, spread: 45, rating: "Aa2/AA", sen: "優先無擔保", risk: "保守型", sector: "HEALTH_CONS" },
-      { symbol: "WMT", name: "沃爾瑪公司", bond: "WMT 6.2 04/15/38", coupon: 6.20, mat: "2038/04/15", price: 110.32, ytm: 5.35, spread: 85, rating: "Aa2/AA", sen: "優先無擔保", risk: "保守型", sector: "HEALTH_CONS" },
-      { symbol: "MRK", name: "默克藥廠", bond: "MRK 6.55 09/15/37", coupon: 6.55, mat: "2037/09/15", price: 111.36, ytm: 5.58, spread: 82, rating: "Aa3/A+", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "PFE", name: "輝瑞大藥廠", bond: "PFE 4 12/15/36", coupon: 4.00, mat: "2036/12/15", price: 91.05, ytm: 4.35, spread: 60, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "ABBV", name: "艾伯維公司", bond: "ABBV 4 1/2 05/14/35", coupon: 4.50, mat: "2035/05/14", price: 95.61, ytm: 4.46, spread: 55, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "CVS", name: "CVS保健公司", bond: "CVS 4.78 03/25/38", coupon: 4.78, mat: "2038/03/25", price: 92.62, ytm: 5.05, spread: 95, rating: "Baa3/BBB", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "MCD", name: "麥當勞公司", bond: "MCD 4.7 12/09/35", coupon: 4.70, mat: "2035/12/09", price: 97.03, ytm: 4.58, spread: 55, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "PEP", name: "百事可樂公司", bond: "PEP 5.0 02/07/35", coupon: 5.00, mat: "2035/02/07", price: 99.93, ytm: 4.75, spread: 50, rating: "A1/A+", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "KHC", name: "卡夫亨氏", bond: "KHC 5 07/15/35", coupon: 5.00, mat: "2035/07/15", price: 96.55, ytm: 4.90, spread: 88, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "DIS", name: "華特迪士尼", bond: "DIS 6.65 11/15/37", coupon: 6.65, mat: "2037/11/15", price: 111.64, ytm: 5.68, spread: 95, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "MMM", name: "3M公司", bond: "MMM 5.7 03/15/37", coupon: 5.70, mat: "2037/03/15", price: 103.28, ytm: 5.23, spread: 80, rating: "A3/BBB+/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "KMB", name: "金百利克拉克", bond: "KMB 6 5/8 08/01/37", coupon: 6.625, mat: "2037/08/01", price: 112.64, ytm: 5.60, spread: 92, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-      { symbol: "CMCSA", name: "康卡斯特公司", bond: "CMCSA 5.3 06/01/34", coupon: 5.30, mat: "2034/06/01", price: 100.38, ytm: 5.03, spread: 78, rating: "A3/A/A", sen: "優先無擔保", risk: "穩健型", sector: "HEALTH_CONS" },
-
-      // 汽車工業與能源
-      { symbol: "GM", name: "通用汽車公司", bond: "GM 5.15 04/01/38", coupon: 5.15, mat: "2038/04/01", price: 94.25, ytm: 5.36, spread: 115, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "GM", name: "通用汽車公司", bond: "GM 6.6 04/01/36", coupon: 6.60, mat: "2036/04/01", price: 106.33, ytm: 4.90, spread: 95, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "TOYOTA", name: "豐田汽車公司", bond: "TOYOTA 5.123 07/13/33", coupon: 5.123, mat: "2033/07/13", price: 101.33, ytm: 4.79, spread: 55, rating: "A1/A+", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "BMW", name: "BMW美國資本", bond: "BMW 5.15 08/11/33", coupon: 5.15, mat: "2033/08/11", price: 99.89, ytm: 4.88, spread: 65, rating: "A2/A", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "MBGGR", name: "梅賽德斯賓士", bond: "MBGGR 8 1/2 01/18/31", coupon: 8.50, mat: "2031/01/18", price: 114.31, ytm: 7.10, spread: 180, rating: "A2/A", sen: "優先無擔保", risk: "保守型", sector: "AUTO_IND" },
-      { symbol: "VW", name: "福斯汽車金融", bond: "VW 5.9 09/12/33", coupon: 5.90, mat: "2033/09/12", price: 102.27, ytm: 5.47, spread: 98, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "XOM", name: "埃克森美孚", bond: "XOM 2.61 10/15/30", coupon: 2.61, mat: "2030/10/15", price: 92.50, ytm: 2.67, spread: 35, rating: "Aa2/AA-", sen: "優先無擔保", risk: "保守型", sector: "AUTO_IND" },
-      { symbol: "ARAMCO", name: "沙烏地阿美石油", bond: "ARAMCO 5 3/8 06/02/35", coupon: 5.375, mat: "2035/06/02", price: 98.30, ytm: 5.11, spread: 75, rating: "Aa3/A+", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "BPLN", name: "BP資本市場", bond: "BPLN 5.227 11/17/34", coupon: 5.227, mat: "2034/11/17", price: 100.78, ytm: 4.93, spread: 65, rating: "A1/A-", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "CEG", name: "星座能源公司", bond: "CEG 6 1/8 01/15/34", coupon: 6.125, mat: "2034/01/15", price: 105.57, ytm: 5.52, spread: 95, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "AUTO_IND" },
-      { symbol: "EDF", name: "法國電力有限責任", bond: "EDF 6 1/4 05/23/33", coupon: 6.25, mat: "2033/05/23", price: 106.10, ytm: 5.61, spread: 110, rating: "Baa1/BBB+", sen: "優先無擔保", risk: "積極型", sector: "AUTO_IND" },
-
-      // 主權與超主權
-      { symbol: "IBRD", name: "世界銀行", bond: "IBRD 4 01/10/31", coupon: 4.00, mat: "2031/01/10", price: 98.70, ytm: 3.85, spread: 15, rating: "Aaa/AAA", sen: "優先無擔保", risk: "保守型", sector: "SOV" },
-      { symbol: "KSA", name: "沙烏地阿拉伯政府", bond: "KSA 5 01/16/34", coupon: 5.00, mat: "2034/01/16", price: 101.54, ytm: 4.78, spread: 60, rating: "Aa3/A+", sen: "優先無擔保", risk: "穩健型", sector: "SOV" },
-      { symbol: "QATAR", name: "卡達政府國際債", bond: "QATAR 9 3/4 06/15/30", coupon: 9.75, mat: "2030/06/15", price: 118.00, ytm: 7.89, spread: 210, rating: "Aa2/AA", sen: "優先無擔保", risk: "穩健型", sector: "SOV" },
-      { symbol: "CDEL", name: "智利國家銅業", bond: "CDEL 3 09/30/29", coupon: 3.00, mat: "2029/09/30", price: 93.60, ytm: 3.03, spread: 70, rating: "Baa2/BBB+", sen: "優先無擔保", risk: "穩健型", sector: "SOV" },
-      { symbol: "PLNIJ", name: "印尼國家電力", bond: "PLNIJ 3 06/30/30", coupon: 3.00, mat: "2030/06/30", price: 91.20, ytm: 3.11, spread: 90, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "SOV" },
-      { symbol: "PERTIU", name: "印尼國家石油", bond: "PERTIU 3.1 08/27/30", coupon: 3.10, mat: "2030/08/27", price: 91.40, ytm: 3.20, spread: 95, rating: "Baa2/BBB", sen: "優先無擔保", risk: "穩健型", sector: "SOV" }
-    ];
-
-    // ==========================================
-    // 2. CORPORATE CREDIT HEALTH DATA (All 60+ Companies)
-    // ==========================================
-    const CORPS_DATA = [
-      // 科技與雲端
-      { symbol: "MSFT", name: "微軟 (Microsoft)", sector: "科技軟體", rating: "Aaa / AAA", ebitda: 125.0, interest: 2.1, interestCoverage: 59.5, fcf: 74.1, fcfMargin: 30.2, totalDebt: 75.0, cash: 80.0, netDebtEbitda: -0.04, shortTermDebt: 8.0, cashToDebt: 10.0, altmanZ: 9.12, dueNearTermPct: 10.5, debtMaturities: [{yr:"2026",amt:5.2},{yr:"2027",amt:6.0},{yr:"2028",amt:8.5},{yr:"2029",amt:7.2},{yr:"2030",amt:10.1},{yr:"2031+",amt:38.0}] },
-      { symbol: "AAPL", name: "蘋果 (Apple)", sector: "消費電子", rating: "Aaa / AA+", ebitda: 135.0, interest: 3.2, interestCoverage: 42.2, fcf: 108.0, fcfMargin: 28.1, totalDebt: 101.0, cash: 65.2, netDebtEbitda: 0.26, shortTermDebt: 15.0, cashToDebt: 4.35, altmanZ: 8.20, dueNearTermPct: 18.3, debtMaturities: [{yr:"2026",amt:8.5},{yr:"2027",amt:10.0},{yr:"2028",amt:12.5},{yr:"2029",amt:11.0},{yr:"2030",amt:14.0},{yr:"2031+",amt:45.0}] },
-      { symbol: "NVDA", name: "輝達 (NVIDIA)", sector: "半導體", rating: "Aa1 / AA", ebitda: 85.0, interest: 0.3, interestCoverage: 283.3, fcf: 60.5, fcfMargin: 48.4, totalDebt: 10.5, cash: 35.0, netDebtEbitda: -0.29, shortTermDebt: 1.2, cashToDebt: 29.1, altmanZ: 18.5, dueNearTermPct: 11.4, debtMaturities: [{yr:"2026",amt:1.2},{yr:"2027",amt:1.5},{yr:"2028",amt:1.8},{yr:"2029",amt:1.0},{yr:"2030",amt:2.5},{yr:"2031+",amt:2.5}] },
-      { symbol: "GOOGL", name: "Alphabet (Google)", sector: "網路服務", rating: "Aa2 / AA+", ebitda: 115.0, interest: 0.4, interestCoverage: 287.5, fcf: 72.0, fcfMargin: 22.5, totalDebt: 28.5, cash: 105.0, netDebtEbitda: -0.66, shortTermDebt: 4.0, cashToDebt: 26.2, altmanZ: 11.2, dueNearTermPct: 14.0, debtMaturities: [{yr:"2026",amt:3.5},{yr:"2027",amt:4.2},{yr:"2028",amt:3.8},{yr:"2029",amt:4.0},{yr:"2030",amt:5.0},{yr:"2031+",amt:8.0}] },
-      { symbol: "AMZN", name: "亞馬遜 (Amazon)", sector: "雲端電商", rating: "A1 / AA", ebitda: 110.0, interest: 3.4, interestCoverage: 32.3, fcf: 54.0, fcfMargin: 9.2, totalDebt: 82.0, cash: 88.0, netDebtEbitda: -0.05, shortTermDebt: 12.0, cashToDebt: 7.33, altmanZ: 5.30, dueNearTermPct: 14.6, debtMaturities: [{yr:"2026",amt:6.5},{yr:"2027",amt:8.0},{yr:"2028",amt:11.5},{yr:"2029",amt:12.0},{yr:"2030",amt:14.0},{yr:"2031+",amt:30.0}] },
-      { symbol: "TSM", name: "台積電 (TSMC)", sector: "晶圓代工", rating: "Aa3 / AA-", ebitda: 45.0, interest: 0.8, interestCoverage: 56.2, fcf: 26.5, fcfMargin: 32.3, totalDebt: 32.0, cash: 55.0, netDebtEbitda: -0.51, shortTermDebt: 6.0, cashToDebt: 9.17, altmanZ: 7.85, dueNearTermPct: 18.7, debtMaturities: [{yr:"2026",amt:4.5},{yr:"2027",amt:5.5},{yr:"2028",amt:5.0},{yr:"2029",amt:4.0},{yr:"2030",amt:6.0},{yr:"2031+",amt:7.0}] },
-      { symbol: "ORCL", name: "甲骨文 (Oracle)", sector: "企業雲端", rating: "Baa2 / BBB", ebitda: 22.5, interest: 3.4, interestCoverage: 6.62, fcf: 12.2, fcfMargin: 23.5, totalDebt: 85.0, cash: 10.2, netDebtEbitda: 3.32, shortTermDebt: 7.0, cashToDebt: 1.45, altmanZ: 2.65, dueNearTermPct: 15.3, debtMaturities: [{yr:"2026",amt:6.0},{yr:"2027",amt:7.0},{yr:"2028",amt:9.5},{yr:"2029",amt:8.5},{yr:"2030",amt:11.0},{yr:"2031+",amt:43.0}] },
-      { symbol: "QCOM", name: "高通 (Qualcomm)", sector: "通訊晶片", rating: "A2 / A", ebitda: 14.5, interest: 0.6, interestCoverage: 24.2, fcf: 10.5, fcfMargin: 27.6, totalDebt: 15.5, cash: 12.0, netDebtEbitda: 0.24, shortTermDebt: 2.5, cashToDebt: 4.80, altmanZ: 6.45, dueNearTermPct: 16.1, debtMaturities: [{yr:"2026",amt:1.5},{yr:"2027",amt:2.0},{yr:"2028",amt:2.5},{yr:"2029",amt:2.0},{yr:"2030",amt:3.0},{yr:"2031+",amt:4.5}] },
-      { symbol: "TXN", name: "德州儀器 (TI)", sector: "類比半導體", rating: "Aa3 / A+", ebitda: 8.8, interest: 0.4, interestCoverage: 22.0, fcf: 5.2, fcfMargin: 28.9, totalDebt: 12.0, cash: 8.5, netDebtEbitda: 0.40, shortTermDebt: 1.5, cashToDebt: 5.67, altmanZ: 7.10, dueNearTermPct: 12.5, debtMaturities: [{yr:"2026",amt:1.0},{yr:"2027",amt:1.2},{yr:"2028",amt:1.8},{yr:"2029",amt:1.5},{yr:"2030",amt:2.0},{yr:"2031+",amt:4.5}] },
-      { symbol: "INTC", name: "英特爾 (Intel)", sector: "半導體製造", rating: "Baa2 / BBB", ebitda: 12.0, interest: 1.8, interestCoverage: 6.67, fcf: -8.5, fcfMargin: -15.5, totalDebt: 50.0, cash: 22.0, netDebtEbitda: 2.33, shortTermDebt: 5.5, cashToDebt: 4.00, altmanZ: 1.82, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:4.0},{yr:"2027",amt:5.0},{yr:"2028",amt:6.5},{yr:"2029",amt:7.0},{yr:"2030",amt:8.5},{yr:"2031+",amt:19.0}] },
-      { symbol: "IBM", name: "IBM", sector: "資訊科技", rating: "A3 / A", ebitda: 14.5, interest: 1.5, interestCoverage: 9.67, fcf: 12.5, fcfMargin: 20.1, totalDebt: 54.0, cash: 13.0, netDebtEbitda: 2.83, shortTermDebt: 6.5, cashToDebt: 2.00, altmanZ: 2.45, dueNearTermPct: 20.4, debtMaturities: [{yr:"2026",amt:5.0},{yr:"2027",amt:6.0},{yr:"2028",amt:7.0},{yr:"2029",amt:6.5},{yr:"2030",amt:8.0},{yr:"2031+",amt:21.5}] },
-      { symbol: "HPQ", name: "惠普 (HP Inc)", sector: "個人電腦", rating: "Baa2 / BBB", ebitda: 4.8, interest: 0.5, interestCoverage: 9.60, fcf: 3.2, fcfMargin: 6.0, totalDebt: 10.5, cash: 2.8, netDebtEbitda: 1.60, shortTermDebt: 1.8, cashToDebt: 1.56, altmanZ: 2.35, dueNearTermPct: 25.7, debtMaturities: [{yr:"2026",amt:1.2},{yr:"2027",amt:1.5},{yr:"2028",amt:1.8},{yr:"2029",amt:1.5},{yr:"2030",amt:2.0},{yr:"2031+",amt:2.5}] },
-      { symbol: "HPE", name: "慧與 (HPE)", sector: "伺服器基建", rating: "Baa2 / BBB", ebitda: 4.2, interest: 0.45, interestCoverage: 9.33, fcf: 2.1, fcfMargin: 7.2, totalDebt: 12.0, cash: 3.5, netDebtEbitda: 2.02, shortTermDebt: 2.0, cashToDebt: 1.75, altmanZ: 2.15, dueNearTermPct: 22.5, debtMaturities: [{yr:"2026",amt:1.5},{yr:"2027",amt:1.8},{yr:"2028",amt:2.0},{yr:"2029",amt:2.2},{yr:"2030",amt:2.0},{yr:"2031+",amt:2.5}] },
-      { symbol: "TENCNT", name: "騰訊控股", sector: "網路科技", rating: "A1 / A+", ebitda: 32.0, interest: 1.1, interestCoverage: 29.1, fcf: 24.5, fcfMargin: 26.8, totalDebt: 45.0, cash: 52.0, netDebtEbitda: -0.22, shortTermDebt: 7.0, cashToDebt: 7.43, altmanZ: 6.80, dueNearTermPct: 15.5, debtMaturities: [{yr:"2026",amt:3.5},{yr:"2027",amt:4.0},{yr:"2028",amt:5.5},{yr:"2029",amt:5.0},{yr:"2030",amt:7.0},{yr:"2031+",amt:20.0}] },
-
-      // 電信龍頭
-      { symbol: "T", name: "AT&T", sector: "電信服務", rating: "Baa2 / BBB", ebitda: 43.0, interest: 6.7, interestCoverage: 6.42, fcf: 17.5, fcfMargin: 14.1, totalDebt: 136.0, cash: 3.8, netDebtEbitda: 3.07, shortTermDebt: 9.5, cashToDebt: 0.40, altmanZ: 1.45, dueNearTermPct: 16.2, debtMaturities: [{yr:"2026",amt:9.5},{yr:"2027",amt:12.5},{yr:"2028",amt:13.0},{yr:"2029",amt:14.5},{yr:"2030",amt:15.0},{yr:"2031+",amt:71.5}] },
-      { symbol: "VZ", name: "威瑞森 (Verizon)", sector: "電信服務", rating: "Baa1 / BBB+", ebitda: 48.0, interest: 5.6, interestCoverage: 8.57, fcf: 19.2, fcfMargin: 14.3, totalDebt: 145.0, cash: 4.5, netDebtEbitda: 2.92, shortTermDebt: 11.0, cashToDebt: 0.41, altmanZ: 1.65, dueNearTermPct: 15.2, debtMaturities: [{yr:"2026",amt:10.5},{yr:"2027",amt:11.5},{yr:"2028",amt:14.0},{yr:"2029",amt:13.5},{yr:"2030",amt:16.0},{yr:"2031+",amt:79.5}] },
-      { symbol: "VOD", name: "沃達豐 (Vodafone)", sector: "歐洲電信", rating: "Baa2 / BBB", ebitda: 14.2, interest: 1.8, interestCoverage: 7.89, fcf: 5.1, fcfMargin: 11.8, totalDebt: 45.0, cash: 5.5, netDebtEbitda: 2.78, shortTermDebt: 5.0, cashToDebt: 1.10, altmanZ: 1.55, dueNearTermPct: 18.8, debtMaturities: [{yr:"2026",amt:4.0},{yr:"2027",amt:4.5},{yr:"2028",amt:5.5},{yr:"2029",amt:5.0},{yr:"2030",amt:6.0},{yr:"2031+",amt:20.0}] },
-      { symbol: "BRITEL", name: "英國電信 (BT)", sector: "英國電信", rating: "Baa2 / BBB", ebitda: 9.8, interest: 1.2, interestCoverage: 8.17, fcf: 2.0, fcfMargin: 7.5, totalDebt: 24.5, cash: 2.0, netDebtEbitda: 2.30, shortTermDebt: 2.5, cashToDebt: 0.80, altmanZ: 1.48, dueNearTermPct: 19.6, debtMaturities: [{yr:"2026",amt:2.2},{yr:"2027",amt:2.6},{yr:"2028",amt:3.0},{yr:"2029",amt:3.2},{yr:"2030",amt:3.5},{yr:"2031+",amt:10.0}] },
-
-      // 金融銀行龍頭
-      { symbol: "JPM", name: "摩根大通 (JPMorgan)", sector: "金融銀行", rating: "A1 / A / AA-", ebitda: 78.0, interest: 18.5, interestCoverage: 4.22, fcf: 48.0, fcfMargin: 28.5, totalDebt: 320.0, cash: 550.0, netDebtEbitda: -2.95, shortTermDebt: 45.0, cashToDebt: 12.2, altmanZ: 3.10, dueNearTermPct: 14.0, debtMaturities: [{yr:"2026",amt:20.0},{yr:"2027",amt:25.0},{yr:"2028",amt:32.0},{yr:"2029",amt:35.0},{yr:"2030",amt:40.0},{yr:"2031+",amt:168.0}] },
-      { symbol: "BAC", name: "美國銀行 (BofA)", sector: "金融銀行", rating: "A1 / A / AA-", ebitda: 52.0, interest: 14.0, interestCoverage: 3.71, fcf: 34.0, fcfMargin: 32.0, totalDebt: 280.0, cash: 380.0, netDebtEbitda: -1.92, shortTermDebt: 38.0, cashToDebt: 10.0, altmanZ: 2.85, dueNearTermPct: 15.0, debtMaturities: [{yr:"2026",amt:18.0},{yr:"2027",amt:24.0},{yr:"2028",amt:28.0},{yr:"2029",amt:30.0},{yr:"2030",amt:35.0},{yr:"2031+",amt:145.0}] },
-      { symbol: "MS", name: "摩根士丹利", sector: "投資銀行", rating: "A1 / A / A+", ebitda: 24.0, interest: 6.2, interestCoverage: 3.87, fcf: 16.5, fcfMargin: 27.5, totalDebt: 220.0, cash: 160.0, netDebtEbitda: 2.50, shortTermDebt: 28.0, cashToDebt: 5.71, altmanZ: 2.70, dueNearTermPct: 17.2, debtMaturities: [{yr:"2026",amt:18.0},{yr:"2027",amt:20.0},{yr:"2028",amt:25.0},{yr:"2029",amt:26.0},{yr:"2030",amt:30.0},{yr:"2031+",amt:101.0}] },
-      { symbol: "GS", name: "高盛集團 (Goldman)", sector: "投資銀行", rating: "A2 / BBB+ / A", ebitda: 22.0, interest: 7.5, interestCoverage: 2.93, fcf: 14.0, fcfMargin: 28.0, totalDebt: 260.0, cash: 180.0, netDebtEbitda: 3.64, shortTermDebt: 32.0, cashToDebt: 5.62, altmanZ: 2.45, dueNearTermPct: 18.5, debtMaturities: [{yr:"2026",amt:22.0},{yr:"2027",amt:26.0},{yr:"2028",amt:30.0},{yr:"2029",amt:28.0},{yr:"2030",amt:32.0},{yr:"2031+",amt:122.0}] },
-      { symbol: "C", name: "花旗集團 (Citi)", sector: "綜合銀行", rating: "A3 / BBB+ / A", ebitda: 36.0, interest: 12.0, interestCoverage: 3.00, fcf: 22.0, fcfMargin: 26.5, totalDebt: 270.0, cash: 290.0, netDebtEbitda: -0.56, shortTermDebt: 35.0, cashToDebt: 8.28, altmanZ: 2.30, dueNearTermPct: 16.5, debtMaturities: [{yr:"2026",amt:20.0},{yr:"2027",amt:24.5},{yr:"2028",amt:28.0},{yr:"2029",amt:30.0},{yr:"2030",amt:35.0},{yr:"2031+",amt:132.5}] },
-      { symbol: "WFC", name: "富國銀行", sector: "消費金融", rating: "A1 / BBB+ / A-", ebitda: 38.0, interest: 8.5, interestCoverage: 4.47, fcf: 25.0, fcfMargin: 29.0, totalDebt: 175.0, cash: 195.0, netDebtEbitda: -0.53, shortTermDebt: 22.0, cashToDebt: 8.86, altmanZ: 2.80, dueNearTermPct: 14.5, debtMaturities: [{yr:"2026",amt:12.0},{yr:"2027",amt:14.0},{yr:"2028",amt:18.0},{yr:"2029",amt:20.0},{yr:"2030",amt:25.0},{yr:"2031+",amt:86.0}] },
-      { symbol: "AXP", name: "美國運通", sector: "信用卡支付", rating: "A3 / BBB+ / A", ebitda: 14.5, interest: 2.5, interestCoverage: 5.80, fcf: 12.0, fcfMargin: 20.0, totalDebt: 48.0, cash: 35.0, netDebtEbitda: 0.90, shortTermDebt: 7.0, cashToDebt: 5.00, altmanZ: 3.45, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:4.0},{yr:"2027",amt:4.8},{yr:"2028",amt:6.0},{yr:"2029",amt:6.5},{yr:"2030",amt:7.0},{yr:"2031+",amt:19.7}] },
-      { symbol: "HSBC", name: "匯豐控股", sector: "跨國銀行", rating: "Baa1 / BBB+ / A", ebitda: 42.0, interest: 10.5, interestCoverage: 4.00, fcf: 28.0, fcfMargin: 40.0, totalDebt: 160.0, cash: 320.0, netDebtEbitda: -3.81, shortTermDebt: 22.0, cashToDebt: 14.5, altmanZ: 2.80, dueNearTermPct: 15.0, debtMaturities: [{yr:"2026",amt:11.0},{yr:"2027",amt:13.0},{yr:"2028",amt:16.0},{yr:"2029",amt:18.0},{yr:"2030",amt:22.0},{yr:"2031+",amt:80.0}] },
-      { symbol: "UBS", name: "瑞銀集團", sector: "財富管理", rating: "A2 / A / A+", ebitda: 18.0, interest: 4.8, interestCoverage: 3.75, fcf: 12.0, fcfMargin: 26.0, totalDebt: 110.0, cash: 180.0, netDebtEbitda: -3.89, shortTermDebt: 15.0, cashToDebt: 12.0, altmanZ: 2.65, dueNearTermPct: 16.0, debtMaturities: [{yr:"2026",amt:8.0},{yr:"2027",amt:9.5},{yr:"2028",amt:12.0},{yr:"2029",amt:13.0},{yr:"2030",amt:15.0},{yr:"2031+",amt:52.5}] },
-      { symbol: "BNP", name: "法國巴黎銀行", sector: "歐洲銀行", rating: "Baa2 / BBB+ / A", ebitda: 32.0, interest: 8.0, interestCoverage: 4.00, fcf: 19.5, fcfMargin: 35.0, totalDebt: 150.0, cash: 260.0, netDebtEbitda: -3.44, shortTermDebt: 20.0, cashToDebt: 13.0, altmanZ: 2.75, dueNearTermPct: 14.5, debtMaturities: [{yr:"2026",amt:10.0},{yr:"2027",amt:12.0},{yr:"2028",amt:15.0},{yr:"2029",amt:16.0},{yr:"2030",amt:20.0},{yr:"2031+",amt:77.0}] },
-      { symbol: "DB", name: "德意志銀行", sector: "歐洲銀行", rating: "Baa3 / BBB- / BBB", ebitda: 14.0, interest: 4.5, interestCoverage: 3.11, fcf: 8.5, fcfMargin: 28.0, totalDebt: 120.0, cash: 170.0, netDebtEbitda: -3.57, shortTermDebt: 18.0, cashToDebt: 9.44, altmanZ: 2.15, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:9.5},{yr:"2027",amt:12.0},{yr:"2028",amt:14.0},{yr:"2029",amt:15.0},{yr:"2030",amt:18.0},{yr:"2031+",amt:51.5}] },
-      { symbol: "MUFG", name: "三菱日聯金融", sector: "日本銀行", rating: "A1 / A / A", ebitda: 28.0, interest: 6.0, interestCoverage: 4.67, fcf: 18.0, fcfMargin: 42.0, totalDebt: 110.0, cash: 420.0, netDebtEbitda: -11.0, shortTermDebt: 14.0, cashToDebt: 30.0, altmanZ: 3.20, dueNearTermPct: 12.0, debtMaturities: [{yr:"2026",amt:6.0},{yr:"2027",amt:7.2},{yr:"2028",amt:10.0},{yr:"2029",amt:12.0},{yr:"2030",amt:15.0},{yr:"2031+",amt:59.8}] },
-      { symbol: "SUMIBK", name: "三井住友金融", sector: "日本銀行", rating: "A1 / A / A", ebitda: 22.0, interest: 5.0, interestCoverage: 4.40, fcf: 14.5, fcfMargin: 38.0, totalDebt: 95.0, cash: 350.0, netDebtEbitda: -11.6, shortTermDebt: 12.0, cashToDebt: 29.1, altmanZ: 3.15, dueNearTermPct: 13.0, debtMaturities: [{yr:"2026",amt:5.5},{yr:"2027",amt:6.8},{yr:"2028",amt:9.0},{yr:"2029",amt:10.5},{yr:"2030",amt:13.0},{yr:"2031+",amt:50.2}] },
-      { symbol: "MIZUHO", name: "瑞穗金融集團", sector: "日本銀行", rating: "A1 / A / A", ebitda: 19.5, interest: 4.5, interestCoverage: 4.33, fcf: 12.8, fcfMargin: 36.0, totalDebt: 88.0, cash: 310.0, netDebtEbitda: -11.4, shortTermDebt: 11.0, cashToDebt: 28.2, altmanZ: 3.10, dueNearTermPct: 13.5, debtMaturities: [{yr:"2026",amt:5.0},{yr:"2027",amt:6.5},{yr:"2028",amt:8.5},{yr:"2029",amt:10.0},{yr:"2030",amt:12.0},{yr:"2031+",amt:46.0}] },
-      { symbol: "BRK", name: "波克夏海瑟威", sector: "多元金融", rating: "Aa2 / AA", ebitda: 55.0, interest: 4.2, interestCoverage: 13.1, fcf: 38.0, fcfMargin: 10.5, totalDebt: 125.0, cash: 325.0, netDebtEbitda: -3.64, shortTermDebt: 15.0, cashToDebt: 21.6, altmanZ: 4.80, dueNearTermPct: 14.0, debtMaturities: [{yr:"2026",amt:8.0},{yr:"2027",amt:9.5},{yr:"2028",amt:12.0},{yr:"2029",amt:14.0},{yr:"2030",amt:16.0},{yr:"2031+",amt:65.5}] },
-
-      // 醫療消費與零售
-      { symbol: "JNJ", name: "嬌生 (JNJ)", sector: "醫療製藥", rating: "Aaa / AAA", ebitda: 30.0, interest: 1.0, interestCoverage: 30.0, fcf: 18.2, fcfMargin: 21.4, totalDebt: 35.0, cash: 24.0, netDebtEbitda: 0.36, shortTermDebt: 5.0, cashToDebt: 4.80, altmanZ: 4.90, dueNearTermPct: 14.2, debtMaturities: [{yr:"2026",amt:3.0},{yr:"2027",amt:3.5},{yr:"2028",amt:4.0},{yr:"2029",amt:4.5},{yr:"2030",amt:5.0},{yr:"2031+",amt:15.0}] },
-      { symbol: "UNH", name: "聯合健康", sector: "醫療健保", rating: "A2 / A+", ebitda: 34.0, interest: 3.6, interestCoverage: 9.44, fcf: 26.0, fcfMargin: 7.1, totalDebt: 68.0, cash: 28.0, netDebtEbitda: 1.17, shortTermDebt: 9.0, cashToDebt: 3.11, altmanZ: 3.80, dueNearTermPct: 16.5, debtMaturities: [{yr:"2026",amt:5.5},{yr:"2027",amt:6.5},{yr:"2028",amt:8.0},{yr:"2029",amt:9.0},{yr:"2030",amt:11.0},{yr:"2031+",amt:28.0}] },
-      { symbol: "WMT", name: "沃爾瑪 (Walmart)", sector: "民生零售", rating: "Aa2 / AA", ebitda: 38.0, interest: 2.4, interestCoverage: 15.8, fcf: 15.5, fcfMargin: 2.3, totalDebt: 60.0, cash: 12.5, netDebtEbitda: 1.25, shortTermDebt: 8.5, cashToDebt: 1.47, altmanZ: 4.50, dueNearTermPct: 21.0, debtMaturities: [{yr:"2026",amt:6.0},{yr:"2027",amt:7.0},{yr:"2028",amt:8.0},{yr:"2029",amt:8.5},{yr:"2030",amt:10.5},{yr:"2031+",amt:20.0}] },
-      { symbol: "MRK", name: "默克藥廠", sector: "生物製藥", rating: "Aa3 / A+", ebitda: 20.5, interest: 1.2, interestCoverage: 17.1, fcf: 13.5, fcfMargin: 22.0, totalDebt: 36.0, cash: 11.5, netDebtEbitda: 1.20, shortTermDebt: 4.5, cashToDebt: 2.56, altmanZ: 4.60, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:3.0},{yr:"2027",amt:3.5},{yr:"2028",amt:4.5},{yr:"2029",amt:4.0},{yr:"2030",amt:5.5},{yr:"2031+",amt:15.5}] },
-      { symbol: "PFE", name: "輝瑞大藥廠", sector: "生物製藥", rating: "A2 / A", ebitda: 19.0, interest: 2.3, interestCoverage: 8.26, fcf: 9.2, fcfMargin: 15.6, totalDebt: 64.0, cash: 12.0, netDebtEbitda: 2.74, shortTermDebt: 7.5, cashToDebt: 1.60, altmanZ: 2.85, dueNearTermPct: 20.5, debtMaturities: [{yr:"2026",amt:6.0},{yr:"2027",amt:7.0},{yr:"2028",amt:8.5},{yr:"2029",amt:8.0},{yr:"2030",amt:9.5},{yr:"2031+",amt:25.0}] },
-      { symbol: "ABBV", name: "艾伯維 (AbbVie)", sector: "生物製藥", rating: "A2 / A", ebitda: 25.0, interest: 2.6, interestCoverage: 9.62, fcf: 18.0, fcfMargin: 32.5, totalDebt: 62.0, cash: 13.5, netDebtEbitda: 1.94, shortTermDebt: 6.8, cashToDebt: 1.99, altmanZ: 3.10, dueNearTermPct: 17.5, debtMaturities: [{yr:"2026",amt:5.0},{yr:"2027",amt:6.0},{yr:"2028",amt:7.5},{yr:"2029",amt:8.0},{yr:"2030",amt:9.5},{yr:"2031+",amt:26.0}] },
-      { symbol: "CVS", name: "CVS保健公司", sector: "連鎖藥局", rating: "Baa3 / BBB", ebitda: 17.5, interest: 2.8, interestCoverage: 6.25, fcf: 10.5, fcfMargin: 2.9, totalDebt: 65.0, cash: 9.0, netDebtEbitda: 3.20, shortTermDebt: 8.0, cashToDebt: 1.13, altmanZ: 2.10, dueNearTermPct: 22.0, debtMaturities: [{yr:"2026",amt:6.5},{yr:"2027",amt:7.8},{yr:"2028",amt:8.5},{yr:"2029",amt:8.0},{yr:"2030",amt:9.2},{yr:"2031+",amt:25.0}] },
-      { symbol: "MCD", name: "麥當勞", sector: "連鎖餐飲", rating: "Baa1 / BBB+", ebitda: 14.0, interest: 1.6, interestCoverage: 8.75, fcf: 7.2, fcfMargin: 28.0, totalDebt: 52.0, cash: 4.5, netDebtEbitda: 3.39, shortTermDebt: 4.2, cashToDebt: 1.07, altmanZ: 3.20, dueNearTermPct: 15.0, debtMaturities: [{yr:"2026",amt:3.5},{yr:"2027",amt:4.2},{yr:"2028",amt:5.5},{yr:"2029",amt:5.8},{yr:"2030",amt:6.5},{yr:"2031+",amt:26.5}] },
-      { symbol: "PEP", name: "百事可樂", sector: "食品飲料", rating: "A1 / A+", ebitda: 17.0, interest: 1.3, interestCoverage: 13.1, fcf: 9.0, fcfMargin: 9.8, totalDebt: 44.0, cash: 8.0, netDebtEbitda: 2.12, shortTermDebt: 5.5, cashToDebt: 1.45, altmanZ: 4.10, dueNearTermPct: 19.0, debtMaturities: [{yr:"2026",amt:3.8},{yr:"2027",amt:4.5},{yr:"2028",amt:5.8},{yr:"2029",amt:5.5},{yr:"2030",amt:6.8},{yr:"2031+",amt:17.6}] },
-      { symbol: "KHC", name: "卡夫亨氏", sector: "食品製造", rating: "Baa2 / BBB", ebitda: 6.5, interest: 0.9, interestCoverage: 7.22, fcf: 3.2, fcfMargin: 12.0, totalDebt: 20.0, cash: 1.8, netDebtEbitda: 2.80, shortTermDebt: 2.0, cashToDebt: 0.90, altmanZ: 1.95, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:1.6},{yr:"2027",amt:2.0},{yr:"2028",amt:2.5},{yr:"2029",amt:2.4},{yr:"2030",amt:3.0},{yr:"2031+",amt:8.5}] },
-      { symbol: "DIS", name: "華特迪士尼", sector: "影視娛樂", rating: "A2 / A", ebitda: 17.0, interest: 1.9, interestCoverage: 8.95, fcf: 9.5, fcfMargin: 10.5, totalDebt: 46.0, cash: 7.5, netDebtEbitda: 2.26, shortTermDebt: 4.5, cashToDebt: 1.67, altmanZ: 2.85, dueNearTermPct: 18.5, debtMaturities: [{yr:"2026",amt:4.0},{yr:"2027",amt:4.5},{yr:"2028",amt:5.5},{yr:"2029",amt:5.0},{yr:"2030",amt:6.5},{yr:"2031+",amt:20.5}] },
-      { symbol: "MMM", name: "3M公司", sector: "工業製造", rating: "A3 / BBB+/A", ebitda: 7.5, interest: 0.8, interestCoverage: 9.38, fcf: 4.8, fcfMargin: 18.5, totalDebt: 16.5, cash: 4.8, netDebtEbitda: 1.56, shortTermDebt: 2.2, cashToDebt: 2.18, altmanZ: 2.90, dueNearTermPct: 22.0, debtMaturities: [{yr:"2026",amt:1.5},{yr:"2027",amt:1.8},{yr:"2028",amt:2.2},{yr:"2029",amt:2.0},{yr:"2030",amt:2.5},{yr:"2031+",amt:6.5}] },
-      { symbol: "KMB", name: "金百利克拉克", sector: "日用消費", rating: "A2 / A", ebitda: 3.8, interest: 0.35, interestCoverage: 10.9, fcf: 2.4, fcfMargin: 11.5, totalDebt: 8.5, cash: 1.2, netDebtEbitda: 1.92, shortTermDebt: 1.0, cashToDebt: 1.20, altmanZ: 3.40, dueNearTermPct: 18.0, debtMaturities: [{yr:"2026",amt:0.8},{yr:"2027",amt:1.0},{yr:"2028",amt:1.2},{yr:"2029",amt:1.1},{yr:"2030",amt:1.4},{yr:"2031+",amt:3.0}] },
-      { symbol: "CMCSA", name: "康卡斯特", sector: "寬頻媒體", rating: "A3 / A / A", ebitda: 38.0, interest: 4.2, interestCoverage: 9.05, fcf: 16.0, fcfMargin: 13.0, totalDebt: 98.0, cash: 7.5, netDebtEbitda: 2.38, shortTermDebt: 8.0, cashToDebt: 0.94, altmanZ: 2.20, dueNearTermPct: 16.5, debtMaturities: [{yr:"2026",amt:7.0},{yr:"2027",amt:8.5},{yr:"2028",amt:10.0},{yr:"2029",amt:9.5},{yr:"2030",amt:11.5},{yr:"2031+",amt:51.5}] },
-
-      // 汽車工業與綜合能源
-      { symbol: "GM", name: "通用汽車 (GM)", sector: "汽車製造", rating: "Baa2 / BBB", ebitda: 18.0, interest: 1.9, interestCoverage: 9.47, fcf: 11.0, fcfMargin: 6.4, totalDebt: 32.0, cash: 26.0, netDebtEbitda: 0.33, shortTermDebt: 6.5, cashToDebt: 4.00, altmanZ: 2.85, dueNearTermPct: 22.0, debtMaturities: [{yr:"2026",amt:4.2},{yr:"2027",amt:5.0},{yr:"2028",amt:5.5},{yr:"2029",amt:6.0},{yr:"2030",amt:4.5},{yr:"2031+",amt:6.8}] },
-      { symbol: "TOYOTA", name: "豐田汽車", sector: "汽車製造", rating: "A1 / A+", ebitda: 42.0, interest: 2.1, interestCoverage: 20.0, fcf: 22.0, fcfMargin: 8.2, totalDebt: 180.0, cash: 120.0, netDebtEbitda: 1.43, shortTermDebt: 25.0, cashToDebt: 4.80, altmanZ: 3.65, dueNearTermPct: 22.0, debtMaturities: [{yr:"2026",amt:18.0},{yr:"2027",amt:22.0},{yr:"2028",amt:25.0},{yr:"2029",amt:24.0},{yr:"2030",amt:28.0},{yr:"2031+",amt:63.0}] },
-      { symbol: "BMW", name: "寶馬集團 (BMW)", sector: "汽車製造", rating: "A2 / A", ebitda: 24.0, interest: 1.4, interestCoverage: 17.1, fcf: 12.5, fcfMargin: 8.5, totalDebt: 95.0, cash: 32.0, netDebtEbitda: 2.62, shortTermDebt: 16.0, cashToDebt: 2.00, altmanZ: 3.10, dueNearTermPct: 26.0, debtMaturities: [{yr:"2026",amt:12.0},{yr:"2027",amt:13.5},{yr:"2028",amt:15.0},{yr:"2029",amt:14.0},{yr:"2030",amt:16.0},{yr:"2031+",amt:24.5}] },
-      { symbol: "MBGGR", name: "梅賽德斯-賓士", sector: "汽車製造", rating: "A2 / A", ebitda: 22.0, interest: 1.2, interestCoverage: 18.3, fcf: 13.0, fcfMargin: 8.9, totalDebt: 98.0, cash: 36.0, netDebtEbitda: 2.82, shortTermDebt: 18.0, cashToDebt: 2.00, altmanZ: 3.20, dueNearTermPct: 28.0, debtMaturities: [{yr:"2026",amt:13.0},{yr:"2027",amt:14.5},{yr:"2028",amt:16.0},{yr:"2029",amt:15.0},{yr:"2030",amt:16.5},{yr:"2031+",amt:23.0}] },
-      { symbol: "VW", name: "福斯集團 (VW)", sector: "汽車製造", rating: "Baa1 / BBB+", ebitda: 32.0, interest: 2.6, interestCoverage: 12.3, fcf: 11.5, fcfMargin: 3.8, totalDebt: 210.0, cash: 48.0, netDebtEbitda: 5.06, shortTermDebt: 32.0, cashToDebt: 1.50, altmanZ: 2.20, dueNearTermPct: 24.0, debtMaturities: [{yr:"2026",amt:24.0},{yr:"2027",amt:26.5},{yr:"2028",amt:30.0},{yr:"2029",amt:28.0},{yr:"2030",amt:32.0},{yr:"2031+",amt:69.5}] },
-      { symbol: "XOM", name: "埃克森美孚", sector: "綜合能源", rating: "Aa2 / AA-", ebitda: 68.0, interest: 1.1, interestCoverage: 61.8, fcf: 36.0, fcfMargin: 10.5, totalDebt: 41.0, cash: 31.0, netDebtEbitda: 0.15, shortTermDebt: 6.5, cashToDebt: 4.77, altmanZ: 5.80, dueNearTermPct: 15.8, debtMaturities: [{yr:"2026",amt:4.0},{yr:"2027",amt:5.0},{yr:"2028",amt:6.5},{yr:"2029",amt:6.0},{yr:"2030",amt:7.5},{yr:"2031+",amt:12.0}] },
-      { symbol: "ARAMCO", name: "沙烏地阿美", sector: "石油天然氣", rating: "Aa3 / A+", ebitda: 210.0, interest: 2.5, interestCoverage: 84.0, fcf: 102.0, fcfMargin: 22.0, totalDebt: 62.0, cash: 75.0, netDebtEbitda: -0.06, shortTermDebt: 8.5, cashToDebt: 8.82, altmanZ: 6.50, dueNearTermPct: 14.5, debtMaturities: [{yr:"2026",amt:5.0},{yr:"2027",amt:6.0},{yr:"2028",amt:8.0},{yr:"2029",amt:8.5},{yr:"2030",amt:10.0},{yr:"2031+",amt:24.5}] },
-      { symbol: "BPLN", name: "英國石油 (BP)", sector: "石油天然氣", rating: "A1 / A-", ebitda: 35.0, interest: 2.1, interestCoverage: 16.7, fcf: 16.0, fcfMargin: 7.8, totalDebt: 55.0, cash: 30.0, netDebtEbitda: 0.71, shortTermDebt: 7.5, cashToDebt: 4.00, altmanZ: 3.40, dueNearTermPct: 17.0, debtMaturities: [{yr:"2026",amt:4.5},{yr:"2027",amt:5.5},{yr:"2028",amt:7.0},{yr:"2029",amt:7.5},{yr:"2030",amt:8.5},{yr:"2031+",amt:22.0}] },
-      { symbol: "CEG", name: "星座能源", sector: "核能公用事業", rating: "Baa1 / BBB+", ebitda: 4.5, interest: 0.45, interestCoverage: 10.0, fcf: 2.8, fcfMargin: 11.5, totalDebt: 8.2, cash: 3.1, netDebtEbitda: 1.13, shortTermDebt: 0.9, cashToDebt: 3.44, altmanZ: 3.20, dueNearTermPct: 15.0, debtMaturities: [{yr:"2026",amt:0.8},{yr:"2027",amt:0.9},{yr:"2028",amt:1.2},{yr:"2029",amt:1.1},{yr:"2030",amt:1.4},{yr:"2031+",amt:2.8}] },
-      { symbol: "EDF", name: "法國電力 (EDF)", sector: "公用電力", rating: "Baa1 / BBB+", ebitda: 28.0, interest: 4.2, interestCoverage: 6.67, fcf: 6.5, fcfMargin: 4.8, totalDebt: 65.0, cash: 18.0, netDebtEbitda: 1.68, shortTermDebt: 8.5, cashToDebt: 2.12, altmanZ: 2.05, dueNearTermPct: 20.0, debtMaturities: [{yr:"2026",amt:6.0},{yr:"2027",amt:7.2},{yr:"2028",amt:8.5},{yr:"2029",amt:9.0},{yr:"2030",amt:10.5},{yr:"2031+",amt:23.8}] }
-    ];
-
-    // ==========================================
-    // 3. STATE & FILTERING
-    // ==========================================
-    let currentBondSector = "ALL";
-    let currentCorpFilter = "ALL";
-    let selectedSimSymbol = "AAPL";
-
-    // Initialize UI
-    window.addEventListener("DOMContentLoaded", () => {
-      initSimSelect();
-      renderBondTable();
-      renderCorpTable();
-      loadCompanyToSim("AAPL");
-    });
-
-    function initSimSelect() {
-      const select = document.getElementById("sim-company-select");
-      select.innerHTML = "";
-      CORPS_DATA.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c.symbol;
-        opt.textContent = `${c.symbol} - ${c.name} (${c.rating})`;
-        select.appendChild(opt);
-      });
-    }
-
-    // ==========================================
-    // 4. RENDER FEATURED BONDS TABLE
-    // ==========================================
-    function filterBonds(sector) {
-      currentBondSector = sector;
-      const pills = document.querySelectorAll("#bond-sector-filters .pill");
-      pills.forEach(p => p.classList.remove("active"));
-      event.target.classList.add("active");
-      renderBondTable();
-    }
-
-    function renderBondTable() {
-      const tbody = document.getElementById("bonds-tbody");
-      const search = document.getElementById("search-bond").value.toUpperCase();
-      const minYield = parseFloat(document.getElementById("filter-ytm").value) || 0;
-
-      const filtered = BONDS_DATA.filter(b => {
-        const matchSector = (currentBondSector === "ALL" || b.sector === currentBondSector);
-        const matchSearch = (b.symbol.includes(search) || b.name.includes(search) || b.bond.toUpperCase().includes(search));
-        const matchYield = b.ytm >= minYield;
-        return matchSector && matchSearch && matchYield;
-      });
-
-      tbody.innerHTML = "";
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 20px;">無符合條件的債券標的</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(b => {
-        const tr = document.createElement("tr");
-        
-        let senClass = "sen-senior";
-        if (b.sen.includes("次順位")) senClass = "sen-sub";
-        else if (b.sen.includes("主順位非優先")) senClass = "sen-nonpref";
-
-        let riskClass = "risk-safe";
-        if (b.risk === "積極型") riskClass = "risk-agg";
-        else if (b.risk === "穩健型") riskClass = "risk-mod";
-
-        tr.innerHTML = `
-          <td>
-            <div style="font-weight: 700; color: #132a18;">${b.name}</div>
-            <div class="mono" style="font-size: 11px; color: var(--accent);">${b.bond}</div>
-          </td>
-          <td class="mono font-bold">${b.coupon.toFixed(2)}%</td>
-          <td class="mono">${b.mat}</td>
-          <td class="mono font-bold" style="color: #244129;">$${b.price.toFixed(2)}</td>
-          <td class="mono font-bold" style="color: ${b.ytm >= 5.5 ? '#b91c1c' : (b.ytm >= 5.0 ? '#059669' : '#132a18')}; font-size: 13px;">
-            ${b.ytm.toFixed(2)}%
-            <span style="font-size: 9.5px; color: var(--text-muted); font-weight: normal;">(+${b.spread}bp)</span>
-          </td>
-          <td><span class="mono" style="font-size: 11px; font-weight: 600;">${b.rating}</span></td>
-          <td><span class="seniority-tag ${senClass}">${b.sen}</span></td>
-          <td><span class="risk-badge ${riskClass}">${b.risk}</span></td>
-          <td style="text-align: center;">
-            <button class="btn-act" onclick="selectBondForSim('${b.symbol}')">測試發行人</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function selectBondForSim(sym) {
-      const match = CORPS_DATA.find(c => c.symbol === sym);
-      if (match) {
-        document.getElementById("sim-company-select").value = sym;
-        loadCompanyToSim(sym);
-        document.getElementById("debt-wall-section").scrollIntoView({ behavior: 'smooth' });
-      } else {
-        document.getElementById("sim-company-select").value = "JPM";
-        loadCompanyToSim("JPM");
-        document.getElementById("debt-wall-section").scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // ==========================================
-    // 5. RENDER CORPORATE HEALTH TABLE
-    // ==========================================
-    function filterCorps(type) {
-      currentCorpFilter = type;
-      const pills = document.querySelectorAll("#corp-sector-filters .pill");
-      pills.forEach(p => p.classList.remove("active"));
-      event.target.classList.add("active");
-      renderCorpTable();
-    }
-
-    function renderCorpTable() {
-      const tbody = document.getElementById("corps-tbody");
-      const search = document.getElementById("search-corp").value.toUpperCase();
-
-      const filtered = CORPS_DATA.filter(c => {
-        const matchSearch = (c.symbol.includes(search) || c.name.includes(search) || c.sector.includes(search));
-        if (!matchSearch) return false;
-
-        if (currentCorpFilter === "NET_CASH") return c.netDebtEbitda <= 0;
-        if (currentCorpFilter === "HIGH_FCF") return c.fcf >= 15.0;
-        if (currentCorpFilter === "HIGH_COV") return c.interestCoverage >= 20.0;
-        if (currentCorpFilter === "ALERT") return (c.interestCoverage < 7.0 || c.netDebtEbitda > 2.5);
-        return true;
-      });
-
-      tbody.innerHTML = "";
-      filtered.forEach(c => {
-        const tr = document.createElement("tr");
-
-        // Coverage color
-        let covColor = "#059669";
-        if (c.interestCoverage < 4.0) covColor = "#dc2626";
-        else if (c.interestCoverage < 8.0) covColor = "#ca8a04";
-
-        // Leverage color
-        let levColor = "#059669";
-        let levLabel = "淨現金";
-        if (c.netDebtEbitda > 0) {
-          levLabel = `${c.netDebtEbitda.toFixed(2)}x`;
-          if (c.netDebtEbitda > 3.0) levColor = "#dc2626";
-          else if (c.netDebtEbitda > 1.5) levColor = "#ca8a04";
+    // 在頁面開啟時嘗試連線抓取最新 10 年期美債殖利率 (^TNX)
+    (async function fetchLiveTreasuryYield() {
+      try {
+        const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d') + '&t=' + Date.now();
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(3000) });
+        if (!res.ok) return;
+        const wrapper = await res.json();
+        if (!wrapper.contents) return;
+        const json = JSON.parse(wrapper.contents);
+        const r = json.chart && json.chart.result && json.chart.result[0];
+        if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
+          const liveYield = (r.meta.regularMarketPrice).toFixed(2);
+          const el = document.getElementById('header-us10y');
+          const pill = document.getElementById('macro-latest-pill');
+          if (el) el.innerHTML = `US10Y: ${liveYield}% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(即時連線)</span>`;
+          if (pill) pill.textContent = `最新即時: ${liveYield}%`;
         }
-
-        // FCF color
-        const fcfColor = c.fcf >= 0 ? "#059669" : "#dc2626";
-
-        tr.innerHTML = `
-          <td>
-            <div style="font-weight: 800; color: #065f46; display: flex; align-items: center; gap: 6px;">
-              <span class="mono" style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 5px; border-radius: 4px;">${c.symbol}</span>
-              ${c.name}
-            </div>
-          </td>
-          <td><span style="font-size: 11px; color: var(--text-muted);">${c.sector}</span></td>
-          <td><span class="mono font-bold" style="font-size: 11px;">${c.rating}</span></td>
-          <td class="mono font-bold" style="color: ${covColor}; font-size: 12.5px;">${c.interestCoverage.toFixed(1)}x</td>
-          <td class="mono font-bold" style="color: ${fcfColor};">$${c.fcf.toFixed(1)}B</td>
-          <td class="mono font-bold" style="color: ${fcfColor};">${c.fcfMargin.toFixed(1)}%</td>
-          <td class="mono font-bold" style="color: ${levColor};">${levLabel}</td>
-          <td class="mono font-bold" style="color: ${c.cashToDebt >= 2.0 ? '#059669' : (c.cashToDebt >= 1.0 ? '#2563eb' : '#dc2626')};">${c.cashToDebt.toFixed(2)}x</td>
-          <td class="mono font-bold" style="color: ${c.altmanZ >= 2.99 ? '#059669' : (c.altmanZ >= 1.81 ? '#ca8a04' : '#dc2626')};">${c.altmanZ.toFixed(2)}</td>
-          <td style="text-align: center;">
-            <button class="btn-act" onclick="selectBondForSim('${c.symbol}')">試算壓力</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ==========================================
-    // 6. DEBT WALL & STRESS TEST SIMULATOR
-    // ==========================================
-    function loadCompanyToSim(sym) {
-      selectedSimSymbol = sym;
-      const comp = CORPS_DATA.find(c => c.symbol === sym) || CORPS_DATA[0];
-      
-      document.getElementById("debt-wall-title").textContent = `${comp.name} 債務到期階梯分佈 (Debt Wall)`;
-      document.getElementById("total-debt-tag").textContent = `總債務: $${comp.totalDebt.toFixed(1)}B ｜ 現金儲備: $${comp.cash.toFixed(1)}B`;
-      document.getElementById("near-term-risk").innerHTML = `<strong>近 2 年到期本金：</strong> $${(comp.debtMaturities[0].amt + comp.debtMaturities[1].amt).toFixed(1)}B (佔 ${comp.dueNearTermPct}%)`;
-      document.getElementById("cash-buffer-tag").innerHTML = `<strong>現金對短期債務覆蓋：</strong> ${comp.cashToDebt.toFixed(1)}x (${comp.cashToDebt >= 1.0 ? '流動性極充裕' : '需留意展期'})`;
-
-      renderDebtWallChart(comp);
-      updateStressSim();
-    }
-
-    function renderDebtWallChart(comp) {
-      const svg = document.getElementById("debt-wall-svg");
-      svg.innerHTML = "";
-
-      const data = comp.debtMaturities;
-      const maxAmt = Math.max(...data.map(d => d.amt), 15);
-      const chartH = 95;
-      const startX = 40;
-      const slotW = (460 - startX) / data.length;
-      const barW = Math.min(slotW * 0.58, 36);
-
-      // Grid line
-      const baseline = 105;
-      const baseLineEl = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      baseLineEl.setAttribute("x1", startX - 10);
-      baseLineEl.setAttribute("y1", baseline);
-      baseLineEl.setAttribute("x2", 480);
-      baseLineEl.setAttribute("y2", baseline);
-      baseLineEl.setAttribute("stroke", "#dce7d5");
-      baseLineEl.setAttribute("stroke-width", "1");
-      svg.appendChild(baseLineEl);
-
-      data.forEach((d, i) => {
-        const x = startX + i * slotW + (slotW - barW) / 2;
-        const barH = (d.amt / maxAmt) * chartH;
-        const y = baseline - barH;
-
-        // Is near-term refinancing risk? (2026-2027)
-        const isNear = (i <= 1);
-        const barFill = isNear ? "#f59e0b" : "#10b981";
-
-        // Rect
-        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttribute("x", x);
-        rect.setAttribute("y", y);
-        rect.setAttribute("width", barW);
-        rect.setAttribute("height", Math.max(barH, 3));
-        rect.setAttribute("rx", "4");
-        rect.setAttribute("fill", barFill);
-        rect.setAttribute("opacity", "0.85");
-        svg.appendChild(rect);
-
-        // Value on top
-        const textVal = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        textVal.setAttribute("x", x + barW / 2);
-        textVal.setAttribute("y", y - 4);
-        textVal.setAttribute("text-anchor", "middle");
-        textVal.setAttribute("fill", "#132a18");
-        textVal.setAttribute("font-size", "10");
-        textVal.setAttribute("font-family", "JetBrains Mono");
-        textVal.setAttribute("font-weight", "700");
-        textVal.textContent = `$${d.amt}B`;
-        svg.appendChild(textVal);
-
-        // Year label bottom
-        const textYr = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        textYr.setAttribute("x", x + barW / 2);
-        textYr.setAttribute("y", baseline + 16);
-        textYr.setAttribute("text-anchor", "middle");
-        textYr.setAttribute("fill", isNear ? "#b45309" : "#556d59");
-        textYr.setAttribute("font-size", "10.5");
-        textYr.setAttribute("font-family", "JetBrains Mono");
-        textYr.setAttribute("font-weight", isNear ? "800" : "600");
-        textYr.textContent = d.yr;
-        svg.appendChild(textYr);
-      });
-    }
-
-    function resetStressSliders() {
-      document.getElementById("range-ebitda-shock").value = 0;
-      document.getElementById("range-rate-hike").value = 0;
-      document.getElementById("range-capex-change").value = 0;
-      updateStressSim();
-    }
-
-    function updateStressSim() {
-      const shockPct = parseInt(document.getElementById("range-ebitda-shock").value);
-      const rateHikeBps = parseInt(document.getElementById("range-rate-hike").value);
-      const capexPct = parseInt(document.getElementById("range-capex-change").value);
-
-      document.getElementById("val-ebitda-shock").textContent = `${shockPct}%`;
-      document.getElementById("val-rate-hike").textContent = `+${rateHikeBps} bps`;
-      document.getElementById("val-capex-change").textContent = `${capexPct > 0 ? '+' : ''}${capexPct}%`;
-
-      const comp = CORPS_DATA.find(c => c.symbol === selectedSimSymbol) || CORPS_DATA[0];
-
-      // Stressed calculations
-      const stressedEbitda = comp.ebitda * (1 + shockPct / 100);
-      
-      // Near term refinancing debt gets hit by higher coupon rate
-      const nearTermDebt = (comp.debtMaturities[0].amt + comp.debtMaturities[1].amt);
-      const additionalInterest = nearTermDebt * (rateHikeBps / 10000);
-      const stressedInterest = comp.interest + additionalInterest;
-
-      // Stressed Coverage
-      const stressedCov = stressedEbitda / Math.max(stressedInterest, 0.1);
-
-      // Stressed FCF
-      const baseCapex = Math.max(comp.ebitda - comp.fcf - comp.interest, 3.0);
-      const newCapex = baseCapex * (1 + capexPct / 100);
-      const stressedFcf = stressedEbitda - stressedInterest - newCapex;
-
-      // Stressed Leverage
-      const netDebt = Math.max(comp.totalDebt - comp.cash, 0);
-      const stressedLeverage = netDebt / Math.max(stressedEbitda, 1.0);
-
-      // Stressed Altman Z
-      const stressedZ = Math.max(comp.altmanZ * (1 + (shockPct / 100) * 0.4), 0.5);
-
-      // DOM Updates
-      document.getElementById("res-stressed-coverage").textContent = `${stressedCov.toFixed(1)}x`;
-      document.getElementById("res-delta-coverage").textContent = `基準: ${comp.interestCoverage.toFixed(1)}x (${(stressedCov - comp.interestCoverage).toFixed(1)}x)`;
-      
-      document.getElementById("res-stressed-fcf").textContent = `$${stressedFcf.toFixed(1)}B`;
-      document.getElementById("res-delta-fcf").textContent = `基準: $${comp.fcf.toFixed(1)}B`;
-
-      document.getElementById("res-stressed-leverage").textContent = (comp.totalDebt < comp.cash) ? "淨現金" : `${stressedLeverage.toFixed(2)}x`;
-      document.getElementById("res-stressed-z").textContent = stressedZ.toFixed(2);
-
-      // Update Diagnostics Banner
-      const banner = document.getElementById("solvency-banner");
-      if (stressedCov >= 10.0 && stressedFcf > 5.0) {
-        banner.className = "diag-banner diag-safe";
-        banner.innerHTML = `<strong>🟢 體質極度穩健：</strong> 在營收/EBITDA 下滑 ${Math.abs(shockPct)}% 與新發債借款利率上升 ${rateHikeBps} bps 的極端壓力下，利息保障倍數仍高達 ${stressedCov.toFixed(1)}x，自由現金流保持充裕 ($${stressedFcf.toFixed(1)}B)，償債安全邊界高，具備最高等級信用防禦力。`;
-      } else if (stressedCov >= 4.0 && stressedFcf >= 0) {
-        banner.className = "diag-banner diag-warn";
-        banner.innerHTML = `<strong>🟡 穩健度適中 (需關注展期)：</strong> 在此壓力情境下，利息保障倍數降至 ${stressedCov.toFixed(1)}x，自由現金流受壓至 $${stressedFcf.toFixed(1)}B。建議優先布局 3~5 年以內中短期優先無擔保債券，規避長天期再融資不確定性。`;
-      } else {
-        banner.className = "diag-banner diag-alert";
-        banner.innerHTML = `<strong>🔴 警示等級 (償債承壓)：</strong> 利息保障倍數滑落至 ${stressedCov.toFixed(1)}x（警戒線 3.5x 以下），自由現金流可能面臨轉負或再融資成本激增風險，建議嚴控部位或要求更高的信用風險溢酬 (Spread > 180 bps)。`;
+      } catch(e) {
+        // 離線或逾時維持基準值 5.28%
       }
-    }
-
-    // ==========================================
-    // 7. SORTING FUNCTIONS
-    // ==========================================
-    let bondSortKey = "ytm";
-    let bondSortAsc = false;
-    function sortBonds(key) {
-      if (bondSortKey === key) {
-        bondSortAsc = !bondSortAsc;
-      } else {
-        bondSortKey = key;
-        bondSortAsc = false;
-      }
-      BONDS_DATA.sort((a, b) => {
-        let valA = a[key];
-        let valB = b[key];
-        if (typeof valA === "string") return bondSortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        return bondSortAsc ? valA - valB : valB - valA;
-      });
-      renderBondTable();
-    }
-
-    let corpSortKey = "interestCoverage";
-    let corpSortAsc = false;
-    function sortCorps(key) {
-      if (corpSortKey === key) {
-        corpSortAsc = !corpSortAsc;
-      } else {
-        corpSortKey = key;
-        corpSortAsc = false;
-      }
-      CORPS_DATA.sort((a, b) => {
-        let valA = a[key];
-        let valB = b[key];
-        if (typeof valA === "string") return corpSortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        return corpSortAsc ? valA - valB : valB - valA;
-      });
-      renderCorpTable();
-    }
+    })();
   </script>
 </body>
 </html>
