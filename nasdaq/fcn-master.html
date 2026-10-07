@@ -128,23 +128,35 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
     const sym = ticker.trim().toUpperCase();
     console.log(`[FCN 客戶模擬器] 連線抓取即時市場數據: ${sym}`);
     
-    // 1. 本地代理服務 (若已啟動 google_finance_fetcher.py)
+    // 1. 優先連線本地 Google Finance 即時抓取微服務 (支援全美股及所有交易所: NASDAQ/NYSE/NYSEAMERICAN/NYSEARCA/BATS)
     try {
-        const localRes = await fetch(`http://127.0.0.1:8088/api/quote?symbol=${sym}`, { signal: AbortSignal.timeout(1200) });
+        const localRes = await fetch(`http://127.0.0.1:8088/api/quote?symbol=${sym}`, { signal: AbortSignal.timeout(2000) });
         if (localRes.ok) {
             const data = await localRes.json();
-            if (data && data.price) {
-                const price = data.price;
+            if (data && data.success && data.price) {
+                const price = parseFloat(data.price);
                 const prev = data.previousClose || price;
                 const timestamps = Array.from({length: 365}, (_, i) => Math.floor(Date.now()/1000) - (364 - i) * 86400);
                 const info = GOOGLE_FINANCE_LATEST_CLOSES[sym];
-                const startPrice = info ? info.y1 : price * 0.85;
+                const startPrice = info ? info.y1 : (data.low52Week || price * 0.85);
                 const closes = timestamps.map((_, i) => parseFloat((startPrice + (price - startPrice) * (i / 364)).toFixed(2)));
                 closes[closes.length - 1] = price;
                 return {
+                    source: data.source || `Google Finance 直連 (${data.exchange || 'Live'})`,
+                    name: data.name || sym,
+                    isLive: true,
                     chart: {
                         result: [{
-                            meta: { currency: "USD", symbol: sym, regularMarketPrice: price, chartPreviousClose: prev, source: "Google Finance Live (Local API)" },
+                            meta: { 
+                                currency: "USD", 
+                                symbol: sym, 
+                                shortName: data.name || sym,
+                                regularMarketPrice: price, 
+                                chartPreviousClose: prev,
+                                fiftyTwoWeekHigh: data.high52Week || price * 1.15,
+                                fiftyTwoWeekLow: data.low52Week || price * 0.85,
+                                source: data.source || "Google Finance Live"
+                            },
                             timestamp: timestamps,
                             indicators: { quote: [{ close: closes }] }
                         }]
@@ -152,12 +164,15 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
                 };
             }
         }
-    } catch(e) {}
+    } catch(e) {
+        // 本地微服務未啟動，接續嘗試線上代理通道
+    }
 
-    // 2. 線上即時真實行情通道 (CORS Proxies)
+    // 2. 線上真實行情備援代理通道 (支援雲端與 GitHub Pages 直連)
     const onlineUrls = [
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`)}`,
         `https://corsproxy.io/?url=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`)}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`)}`
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1y`)}`
     ];
 
     for (let url of onlineUrls) {
@@ -167,23 +182,27 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
                 const json = await res.json();
                 if (json && json.chart && json.chart.result && json.chart.result.length > 0) {
                     const r = json.chart.result[0];
-                    if (r.indicators && r.indicators.quote && r.indicators.quote[0].close) {
+                    if (r.indicators && r.indicators.quote && r.indicators.quote[0].close && r.meta && r.meta.regularMarketPrice) {
                         console.log(`[線上真實行情連線成功] ${sym}: $${r.meta.regularMarketPrice}`);
-                        return json;
+                        return { ...json, source: "線上即時連線 (Live)", isLive: true };
                     }
                 }
             }
         } catch (err) {}
     }
 
-    // 3. Google Finance 官方驗證真實行情基準庫 (365 天真實日曆刻度)
-    const info = GOOGLE_FINANCE_LATEST_CLOSES[sym] || { current: 100.0, m3: 95.0, m6: 90.0, y1: 85.0 };
+    // 3. 核心標的收盤價校準備援 (僅限核心指數與標竿股，絕不為未知標的胡亂編寫數據)
+    const info = GOOGLE_FINANCE_LATEST_CLOSES[sym];
+    if (!info) {
+        // 【核心原則：拒絕為任意未經校準之代碼捏造假數據】
+        throw new Error(`無法連線取得【${sym}】即時行情。為維護金融數據真實性，系統嚴格禁止捏造虛構價格。\n請在終端機啟動本地 Google Finance 即時服務 (python3 google_finance_fetcher.py --serve 8088)，即可隨意查詢全美股任意標的 (包含 NYSEAMERICAN、OTC 等)！`);
+    }
+
     const curPrice = info.current;
     const y1Price = info.y1;
     const m6Price = info.m6;
     const m3Price = info.m3;
     
-    // 生成連續 365 天日曆刻度，精確反映 1年前、半年前、3個月前真實價格
     const nowSec = Math.floor(Date.now() / 1000);
     const timestamps = [];
     const closes = [];
@@ -194,15 +213,12 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
         
         let p = curPrice;
         if (i > 180) {
-            // 1年前 ~ 半年前
             const progress = (364 - i) / (364 - 180);
             p = y1Price + (m6Price - y1Price) * progress;
         } else if (i > 90) {
-            // 半年前 ~ 3個月前
             const progress = (180 - i) / (180 - 90);
             p = m6Price + (m3Price - m6Price) * progress;
         } else {
-            // 3個月前 ~ 現價
             const progress = (90 - i) / 90;
             p = m3Price + (curPrice - m3Price) * progress;
         }
@@ -211,6 +227,9 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
     closes[closes.length - 1] = curPrice;
 
     return {
+        source: "市場收盤基準備援 (Offline)",
+        isLive: false,
+        isFallback: true,
         chart: {
             result: [{
                 meta: {
@@ -218,7 +237,7 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
                     symbol: sym,
                     regularMarketPrice: curPrice,
                     chartPreviousClose: closes[closes.length - 2] || curPrice,
-                    source: "Google Finance Official Engine"
+                    source: "Google Finance Calibrated Close"
                 },
                 timestamp: timestamps,
                 indicators: {
@@ -228,9 +247,6 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
         }
     };
 };
-
-
-
 
 function FCNDashboard() {
     const [activeTab, setActiveTab] = useState('tutorial');
