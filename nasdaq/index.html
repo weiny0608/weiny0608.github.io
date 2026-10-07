@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>美股儀表板：標普 500、道瓊、納斯達克巨頭估值、總經指標與 FCN 結構型商品模擬器</title>
+  <title>美股儀表板：標普 500、道瓊、納斯達克巨頭估值、自由現金流與投資組合風險評估系統</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -517,33 +517,34 @@
     .return-positive { color: #059669; font-weight: 700; }
     .return-negative { color: #dc2626; font-weight: 700; }
 
-    /* =========================================
-       SECTION 4: FCN SIMULATOR STYLES
+        /* =========================================
+       SECTION 4: PORTFOLIO RISK ASSESSMENT STYLES
        ========================================= */
-    .fcn-card {
+    .risk-card {
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 20px;
+      padding: 22px;
       margin-bottom: 24px;
       box-shadow: 0 6px 24px rgba(22, 60, 30, 0.06);
     }
-    .fcn-header {
+    .risk-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
     }
-    .fcn-presets {
+    .risk-presets {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      align-items: center;
     }
-    .fcn-preset-btn {
+    .risk-preset-btn {
       background: #f4f8f1;
       border: 1px solid #d8e5d3;
       color: #344f39;
@@ -554,344 +555,339 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-    .fcn-preset-btn:hover {
+    .risk-preset-btn:hover {
       background: #eaf3e5;
       color: #132a18;
     }
-    .fcn-preset-btn.active {
-      background: #fef9c3;
-      border-color: #eab308;
-      color: #854d0e;
+    .risk-preset-btn.active {
+      background: #ecfdf5;
+      border-color: var(--accent);
+      color: var(--accent);
       font-weight: 700;
+      box-shadow: 0 1px 4px rgba(5, 150, 105, 0.15);
     }
 
-    /* FCN Grid: 2 Columns */
-    .fcn-grid {
+    /* Risk Layout Grid */
+    .risk-grid {
       display: grid;
       grid-template-columns: 1.05fr 1fr;
       gap: 20px;
+      margin-bottom: 20px;
     }
     @media (max-width: 1080px) {
-      .fcn-grid { grid-template-columns: 1fr; }
+      .risk-grid { grid-template-columns: 1fr; }
     }
 
-    /* FCN Config Form */
-    .fcn-form-section {
+    /* Risk Builder Box */
+    .risk-section-box {
       background: #f9fbf8;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 15px;
+      padding: 16px;
       margin-bottom: 14px;
     }
-    .fcn-form-title {
-      font-size: 12px;
+    .risk-box-title {
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .asset-row {
+    .asset-risk-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 7px;
+      grid-template-columns: 75px 1fr 110px 28px;
+      gap: 10px;
       margin-bottom: 8px;
       align-items: center;
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      padding: 8px 12px;
+      border-radius: 8px;
     }
-    .btn-remove {
+    .asset-weight-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .asset-weight-wrap input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .asset-weight-val {
+      font-size: 11.5px;
+      font-weight: 700;
+      width: 36px;
+      text-align: right;
+      color: #132a18;
+    }
+    .btn-remove-asset {
       background: #fee2e2;
       border: 1px solid #fca5a5;
       color: #b91c1c;
       border-radius: 6px;
-      width: 30px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       font-weight: 800;
+      font-size: 14px;
+      transition: background 0.15s;
     }
-    .btn-add {
+    .btn-remove-asset:hover {
+      background: #fecaca;
+    }
+    .risk-builder-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .btn-add-stock {
       background: #ecfdf5;
       border: 1px solid #a7f3d0;
       color: #065f46;
       font-size: 11.5px;
       font-weight: 700;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 6px;
       cursor: pointer;
-      margin-top: 5px;
-    }
-    .params-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 columns x 2 rows, strictly bounded */
-      gap: 10px 12px;
-    }
-    @media (max-width: 768px) {
-      .params-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-    .param-item {
-      min-width: 0; /* Prevents flex/grid blowout */
-      display: flex;
-      flex-direction: column;
-    }
-    .param-item label {
-      display: block;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .param-item input {
-      width: 100% !important;
-      min-width: 0 !important;
-      box-sizing: border-box !important;
-    }
-    .toggle-group {
-      display: flex;
-      background: #f0f6ec;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 2px;
-    }
-    .toggle-opt {
-      flex: 1;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 3px;
-      border-radius: 5px;
-      cursor: pointer;
-      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       transition: all 0.15s;
     }
-    .toggle-opt.active {
-      background: #ffffff;
-      color: var(--accent);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    .btn-add-stock:hover {
+      background: #d1fae5;
+    }
+    .btn-equal-weight {
+      background: #f4f8f1;
+      border: 1px solid #d8e5d3;
+      color: #344f39;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-equal-weight:hover {
+      background: #eaf3e5;
+      color: #132a18;
     }
 
-    /* FCN Status Banner & Gauge */
-    .status-banner {
+    /* Diagnosis Banner & Gauge */
+    .risk-banner {
       border-radius: 10px;
-      padding: 14px 18px;
+      padding: 16px 18px;
       margin-bottom: 16px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid var(--border);
+    }
+    .risk-banner-header {
+      display: flex;
       justify-content: space-between;
-      gap: 14px;
+      align-items: center;
     }
-    .status-banner.status-safe {
-      background: #ecfdf5;
-      border: 1px solid #86efac;
-      color: #065f46;
+    .risk-level-tag {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
-    .status-banner.status-ko {
-      background: #fefce8;
-      border: 1px solid #fde047;
-      color: #854d0e;
+    .risk-score-badge {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
-    .status-banner.status-ki {
-      background: #fff1f2;
-      border: 1px solid #fecdd3;
-      color: #9f1239;
-    }
-    .status-banner.status-ki-watch {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      color: #92400e;
+    .risk-desc-text {
+      font-size: 12px;
+      line-height: 1.6;
     }
 
-    /* Asset Performance Table */
-    .fcn-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11.5px;
-      margin-bottom: 16px;
-    }
-    .fcn-table th {
-      background: #f4f8f1;
-      color: var(--text-muted);
-      padding: 7px 8px;
-      text-align: left;
-      font-size: 10.5px;
-    }
-    .fcn-table td {
-      padding: 8px 8px;
-      border-bottom: 1px solid var(--border-light);
-    }
+    /* Status themes */
+    .banner-low { background: #ecfdf5; border-color: #86efac; color: #065f46; }
+    .banner-medium { background: #fefce8; border-color: #fde047; color: #854d0e; }
+    .banner-elevated { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+    .banner-high { background: #fff1f2; border-color: #fecdd3; color: #9f1239; }
 
-    /* Level Gauge Bar */
-    .gauge-wrap {
+    /* Gauge Bar */
+    .risk-gauge-box {
       background: #f9fbf8;
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px 18px;
       margin-bottom: 16px;
-      overflow: hidden; /* 確保整體卡片不被任何子元素溢出 */
-      box-sizing: border-box;
     }
-    .gauge-bar-container {
+    .risk-gauge-track {
       position: relative;
-      height: 16px;
-      margin: 24px 0 10px 0;
-      box-sizing: border-box;
+      height: 14px;
+      background: linear-gradient(90deg, #10b981 0%, #34d399 30%, #facc15 55%, #fb923c 75%, #f43f5e 100%);
+      border-radius: 7px;
+      margin: 20px 0 8px 0;
     }
-    .gauge-bar-track {
+    .risk-gauge-needle {
       position: absolute;
-      inset: 0;
-      background: #e6efe2;
-      border-radius: 8px;
-      overflow: hidden; /* 嚴格鎖定內部彩色條，絕對不溢出圓角外框 */
-    }
-    .gauge-zone-ki {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      background: #fecdd3;
-    }
-    .gauge-zone-safe {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      background: #bbf7d0;
-    }
-    .gauge-zone-ko {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      background: #fef08a;
-    }
-    .gauge-marker {
-      position: absolute;
-      top: -22px;
+      top: -6px;
+      width: 4px;
+      height: 26px;
+      background: #111827;
+      border: 1.5px solid #ffffff;
+      border-radius: 2px;
       transform: translateX(-50%);
-      font-size: 9.5px;
-      font-weight: 700;
-      color: #435b47;
-      white-space: nowrap;
-      pointer-events: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .gauge-pin {
+    .risk-gauge-needle::after {
+      content: attr(data-score);
       position: absolute;
-      top: -4px;
-      width: 12px;
-      height: 24px;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 800;
+      color: #111827;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      padding: 1px 5px;
       border-radius: 4px;
-      transform: translateX(-50%);
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-      z-index: 10;
-      cursor: pointer;
+      white-space: nowrap;
+    }
+    .risk-gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
-    /* Payout Calculator */
-    .payout-card {
-      background: #f9fbf8;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-    }
-    .payout-grid {
+    /* 4 Key Portfolio Metrics */
+    .risk-metrics-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      margin-top: 8px;
+      margin-bottom: 16px;
     }
-    .payout-item {
+    @media (max-width: 768px) {
+      .risk-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .risk-metric-box {
       background: #ffffff;
       border: 1px solid var(--border);
-      padding: 8px 12px;
+      padding: 10px 12px;
       border-radius: 8px;
     }
-    .payout-item .lbl {
+    .risk-metric-lbl {
       font-size: 10.5px;
       color: var(--text-muted);
+      font-weight: 600;
     }
-    .payout-item .val {
-      font-size: 15px;
+    .risk-metric-val {
+      font-size: 16px;
       font-weight: 800;
       color: #132a18;
       margin-top: 2px;
     }
 
-  
-    /* FCN Auto-Fetch Price Badge & Button */
-    .price-badge-box {
-      background: #f4f8f1;
-      border: 1px solid #dce8d5;
-      border-radius: 7px;
-      padding: 6px 10px;
+    /* Risk Dimensions Breakdown */
+    .dimensions-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .dim-row {
+      margin-bottom: 9px;
+    }
+    .dim-row:last-child {
+      margin-bottom: 0;
+    }
+    .dim-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      height: 33px;
-      box-sizing: border-box;
-    }
-    .price-badge-box .price-val {
-      font-weight: 700;
-      color: #132a18;
-      font-size: 13px;
-    }
-    .price-badge-box .price-tag {
-      font-size: 9.5px;
-      color: #065f46;
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      padding: 1px 5px;
-      border-radius: 4px;
+      font-size: 11px;
       font-weight: 600;
-      white-space: nowrap;
+      color: #344f39;
+      margin-bottom: 3px;
     }
-    .btn-fetch-calc {
+    .dim-bar-wrap {
+      height: 6px;
+      background: #f0f6ec;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .dim-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Portfolio Breakdown Table */
+    .risk-table {
       width: 100%;
-      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-      color: #ffffff;
-      border: 1px solid #059669;
-      border-radius: 9px;
-      padding: 12px 18px;
-      font-size: 13.5px;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      margin-top: 10px;
+    }
+    .risk-table th {
+      background: #f4f8f1;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 10.5px;
+      border-bottom: 1px solid var(--border);
+    }
+    .risk-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* Badges & Buttons in Main Table */
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .risk-low { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .risk-mid { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .risk-elev { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+    .risk-high { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+    .btn-add-portfolio {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #166534;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
-      transition: all 0.2s;
+      transition: all 0.15s;
     }
-    .btn-fetch-calc:hover {
-      background: linear-gradient(135deg, #047857 0%, #059669 100%);
-      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
-      transform: translateY(-1px);
+    .btn-add-portfolio:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
     }
-    .btn-fetch-calc:active {
-      transform: translateY(1px);
-    }
-    .fetch-status-feedback {
-      margin-top: 8px;
-      padding: 8px 12px;
-      border-radius: 7px;
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      font-size: 11.5px;
-      color: #065f46;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.3s;
-    }
-    
-  
-    /* Index Switcher Tabs */
+
+  /* Index Switcher Tabs */
     .index-switcher-wrap {
       display: flex;
       gap: 8px;
@@ -948,7 +944,7 @@
     <div>
       <div class="badge-live">系統自動排程連線中 ｜ Google Fast Data 引擎</div>
       <h1>美股儀表板：標普 500、道瓊與納斯達克巨頭三年估值動態</h1>
-      <p>基準日：2026 年 10 月 5 日 ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援標普 500、納斯達克與道瓊三大指數切換 ｜ 1~4 標的 Worst-Of FCN 即時模擬</p>
+      <p>基準日：2026 年 10 月 5 日 ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援標普 500、納斯達克與道瓊三大指數切換 ｜ 自由現金流、本益比與多標的投資組合總體風險評估模型</p>
     </div>
     <div style="text-align: right;">
       <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
@@ -961,7 +957,7 @@
     <a href="#macro-section" class="nav-btn active">📊 宏觀利率與 FedWatch</a>
     <a href="#valuation-section" class="nav-btn">📈 美股三大指數估值總覽</a>
     <a href="../FCN_Lab.html" class="nav-btn" target="_blank" style="border-color: #059669; background: #ecfdf5; color: #065f46; font-weight: 800;">🧪 FCN Lab (四標的雲端模擬器)</a>
-    <a href="#fcn-section" class="nav-btn" style="border-color: var(--accent); color: var(--accent);">⚡ FCN 結構型商品模擬器 (1~4 標的)</a>
+    <a href="#risk-section" class="nav-btn" style="border-color: var(--accent); color: var(--accent);">🛡️ 投資組合總體風險評估系統</a>
   </div>
 
   <!-- SECTION 1: Macro Charts & FedWatch -->
@@ -1303,6 +1299,11 @@
             <th>所屬指數</th>
             <th>分類領域</th>
             <th onclick="sortTable('p')">現價</th>
+            <th onclick="sortTable('eps')">當前 EPS</th>
+            <th onclick="sortTable('peCurrent')">當前 P/E</th>
+            <th onclick="sortTable('peForward')">預估 P/E</th>
+            <th onclick="sortTable('fcf')">自由現金流 (FCF)</th>
+            <th onclick="sortTable('riskScore')">風險係數</th>
             <th onclick="sortTable('ed')">下次財報日</th>
             <th onclick="sortTable('days')">倒數天數</th>
             <th>FY27 估值</th>
@@ -1310,6 +1311,7 @@
             <th>FY29 估值</th>
             <th onclick="sortTable('totalRet')">3年累積回報</th>
             <th onclick="sortTable('cagr')">3年年化 (CAGR)</th>
+            <th style="text-align: center;">投組加入</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -1318,206 +1320,188 @@
   </div>
 
   <!-- ==========================================================
-       SECTION 4: FCN (FIXED COUPON NOTE) WORST-OF SIMULATOR
+       SECTION 4: PORTFOLIO RISK ASSESSMENT & VALUATION ENGINE
        ========================================================== -->
-  <div id="fcn-section" class="section-title">⚡ FCN 結構型商品 (Fixed Coupon Note) 最差標的 (Worst-Of) 模擬器</div>
-  
-  <div class="fcn-card">
-    <div class="fcn-header">
+  <div id="risk-section" class="section-title">🛡️ 標的風險係數與多資產投資組合總體風險評估系統</div>
+
+  <div class="risk-card">
+    <div class="risk-header">
       <div>
-        <h2 style="font-size: 18px; font-weight: 800; color: #fff;">1~4 標的 FCN 損益與即時水位模擬系統</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">支援自訂 1~4 檔標的、KO/KI/Strike 水位、起算日期、記憶式 KO 與 EKI/AKI 敲入機制模擬</p>
+        <h2 style="font-size: 18px; font-weight: 800; color: #132a18;">多標的投資組合風險評估與估值安全邊際診斷</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+          綜合「當前本益比、預估本益比壓縮度、自由現金流 (FCF) 印鈔規模、3年 CAGR 安全邊際與無風險利率折現壓力」建立動態風險係數 (0~100)
+        </p>
       </div>
-      <div class="fcn-presets">
-        <button class="fcn-preset-btn active" onclick="loadPreset('p1', this)">巴克萊 0095I050 (NVDA/TSM/ARM)</button>
-        <button class="fcn-preset-btn" onclick="loadPreset('p2', this)">0095H842 (TSM/GOOG/AMD)</button>
-        <button class="fcn-preset-btn" onclick="loadPreset('p3', this)">AI 四巨頭 (NVDA/MSFT/AMZN/AAPL)</button>
-        <button class="fcn-preset-btn" onclick="loadPreset('custom', this)">自由自訂</button>
+      <div class="risk-presets">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 2px;">快捷組合：</span>
+        <button class="risk-preset-btn active" onclick="loadRiskPreset('p1', this)">AI 核心進攻組 (NVDA/TSM/MSFT/AVGO)</button>
+        <button class="risk-preset-btn" onclick="loadRiskPreset('p2', this)">科技巨頭防禦組 (AAPL/GOOGL/MSFT/META)</button>
+        <button class="risk-preset-btn" onclick="loadRiskPreset('p3', this)">現金流印鈔機 (AAPL/MSFT/GOOGL/AMZN)</button>
+        <button class="risk-preset-btn" onclick="loadRiskPreset('p4', this)">多元全天候平衡 (NVDA/AAPL/JPM/XOM)</button>
+        <button class="risk-preset-btn" onclick="loadRiskPreset('custom', this)">自由自訂</button>
       </div>
     </div>
 
-    <!-- FCN Two Column Grid -->
-    <div class="fcn-grid">
-      
-      <!-- Left Column: Config Panel -->
+    <!-- Risk Layout Grid -->
+    <div class="risk-grid">
+      <!-- Left Column: Portfolio Asset Selection & Weight Allocation -->
       <div>
-        <!-- Underlyings Panel -->
-        <div class="fcn-form-section">
-          <div class="fcn-form-title">
-            <span>連結標的設定 (可設定 1 ~ 4 檔)</span>
-            <span style="font-size: 11px; color: var(--text-muted);" id="assetCountText">目前 3 檔標的</span>
-          </div>
-          <div id="assetsContainer"></div>
-          <button class="btn-add" id="btnAddAsset" onclick="addAssetRow()">+ 新增標的 (最多 4 檔)</button>
-        </div>
-
-        <!-- Contract Parameters Panel -->
-        <div class="fcn-form-section">
-          <div class="fcn-form-title">合約條件與機制設定</div>
-          <div class="params-grid">
-            <!-- Row 1: 起算日期 / 存續天期 / 年化票息 -->
-            <div class="param-item">
-              <label>發行起算日期</label>
-              <input type="date" id="fcnStartDate" value="2026-06-01" onchange="calcFCN()">
-            </div>
-            <div class="param-item">
-              <label>存續天期 (月數)</label>
-              <input type="number" id="fcnTenorMonths" value="6" min="1" max="24" oninput="calcFCN()">
-            </div>
-            <div class="param-item">
-              <label>年化票息率 (Coupon %)</label>
-              <input type="number" id="fcnCoupon" value="16.20" step="0.1" oninput="calcFCN()">
-            </div>
-            <!-- Row 2: 障礙水平 Strike / KO / KI -->
-            <div class="param-item">
-              <label>Strike 執行價 (%)</label>
-              <input type="number" id="fcnStrikePct" value="85" step="1" oninput="calcFCN()">
-            </div>
-            <div class="param-item">
-              <label>KO 出場價 (%)</label>
-              <input type="number" id="fcnKoPct" value="100" step="1" oninput="calcFCN()">
-            </div>
-            <div class="param-item">
-              <label>KI 保護價 (%)</label>
-              <input type="number" id="fcnKiPct" value="70" step="1" oninput="calcFCN()">
-            </div>
+        <div class="risk-section-box">
+          <div class="risk-box-title">
+            <span>標的配置與權重調整</span>
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);" id="portfolioCountText">目前 4 檔標的 (上限 8 檔)</span>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
-            <div>
-              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">KO 觀察方式 (是否記憶式)</label>
-              <div class="toggle-group">
-                <div class="toggle-opt active" id="koMemoryTrue" onclick="setKoMemory(true)">記憶日 KO (Memory)</div>
-                <div class="toggle-opt" id="koMemoryFalse" onclick="setKoMemory(false)">非記憶式 (定期觀察)</div>
-              </div>
-            </div>
-            <div>
-              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">KI 觀察型態 (EKI vs AKI)</label>
-              <div class="toggle-group">
-                <div class="toggle-opt active" id="kiTypeEKI" onclick="setKiType('EKI')">EKI (歐式期末觀察)</div>
-                <div class="toggle-opt" id="kiTypeAKI" onclick="setKiType('AKI')">AKI (美式每日觀察)</div>
-              </div>
-            </div>
+          <div id="portfolioAssetsContainer">
+            <!-- Dynamic Asset Rows injected here -->
           </div>
-        </div>
 
-        <!-- Investment Simulation -->
-        <div class="fcn-form-section" style="margin-bottom: 0;">
-          <div class="fcn-form-title">名目本金設定</div>
-          <div style="display: flex; gap: 12px; align-items: center;">
-            <label style="font-size: 12px; color: var(--text-muted);">投資金額 (USD):</label>
-            <input type="number" id="fcnNotional" value="100000" step="5000" style="width: 140px;" class="mono" oninput="calcFCN()">
-            <span style="font-size: 12px; color: var(--text-muted);">約合 NT$ 320 萬元</span>
+          <div class="risk-builder-controls">
+            <select id="stockSelectorDropdown" style="flex: 1; min-width: 160px; font-size: 12px;">
+              <!-- Options populated by JS -->
+            </select>
+            <button class="btn-add-stock" onclick="addSelectedStockFromDropdown()">＋ 加入組合</button>
+            <button class="btn-equal-weight" onclick="setEqualWeights()">⚖️ 一鍵等權重</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">
+            💡 提示：您也可以在上方「美股三大指數估值總覽」表格中點擊任意股票右側的「＋投組」按鈕直接納入試算！
           </div>
         </div>
-
-        <!-- Action Button: Fetch from Database & Calculate -->
-        <div style="margin-top: 14px;">
-          <button id="btnFetchAndCalc" class="btn-fetch-calc" onclick="executeFCNFetchAndCalc()">
-            <span style="font-size: 15px;">⚡</span> 確認所有條件並自動抓取市價試算
-          </button>
-          <div id="fetchStatusFeedback" class="fetch-status-feedback">
-            <span id="fetchStatusIcon" style="font-size: 13px;">✓</span>
-            <span id="fetchStatusText">點擊確認按鈕，系統將自動從資料庫載入設定日基準價與今日市價</span>
-          </div>
-        </div>
-    
       </div>
 
-      <!-- Right Column: Status Banner, Gauge, Table & Payout -->
+      <!-- Right Column: Risk Diagnosis, Gauge & Key Metrics -->
       <div>
-        
-        <!-- Live Status Banner -->
-        <div id="fcnStatusBanner" class="status-banner status-safe">
-          <div>
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;" id="fcnStatusSubtitle">FCN 合約當前判定狀態</div>
-            <div style="font-size: 20px; font-weight: 800; margin-top: 2px;" id="fcnStatusTitle">安全區間 (Safe) ｜ 持續領息中</div>
-            <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;" id="fcnStatusDesc">尚未跌破 KI 保護價，且最差標的尚未觸發 KO，每月照常領取票息。</div>
-          </div>
-          <div style="text-align: right; min-width: 110px;">
-            <div style="font-size: 11px; opacity: 0.8;">最差標的 (Worst)</div>
-            <div class="mono" style="font-size: 18px; font-weight: 800;" id="fcnWorstSymbol">TSM</div>
-            <div class="mono" style="font-size: 13px; font-weight: 700;" id="fcnWorstLevel">92.4%</div>
-          </div>
-        </div>
-
-        <!-- Level Gauge -->
-        <div class="gauge-wrap">
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700;">
-            <span style="color: #1a3821;">標的水位圖 (Level Gauge)</span>
-            <span style="font-size: 11px; color: var(--text-muted);">以發行價 100% 為基準</span>
-          </div>
-
-          <div class="gauge-bar-container">
-            <!-- 內部軌道嚴格使用 overflow: hidden 鎖定長條 -->
-            <div class="gauge-bar-track">
-              <div class="gauge-zone-ki" id="gaugeZoneKi"></div>
-              <div class="gauge-zone-safe" id="gaugeZoneSafe"></div>
-              <div class="gauge-zone-ko" id="gaugeZoneKo"></div>
+        <!-- Overall Status Banner -->
+        <div id="portfolioRiskBanner" class="risk-banner banner-low">
+          <div class="risk-banner-header">
+            <div>
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">投資組合總體風險評級</div>
+              <div id="portfolioRiskTitle" style="font-size: 17px; font-weight: 800; margin-top: 2px;">🟢 穩健防禦等級 (估值安全邊際充足)</div>
             </div>
-
-            <!-- 標示文字與指針 (位於外層容器上，不被截斷且嚴格限制於卡片內) -->
-            <div class="gauge-marker" id="markKi" style="color: var(--red);">KI: 70%</div>
-            <div class="gauge-marker" id="markStrike" style="color: #64748b;">Strike: 85%</div>
-            <div class="gauge-marker" id="markKo" style="color: var(--green);">KO: 100%</div>
-
-            <!-- Dynamic Pins for Assets -->
-            <div id="gaugePinsContainer"></div>
+            <div style="text-align: right;">
+              <div style="font-size: 10px; opacity: 0.8;">加權綜合風險分數</div>
+              <div id="portfolioRiskScore" class="risk-score-badge mono">42.5</div>
+            </div>
           </div>
-
-          <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            <span>0% (跌深承接區)</span>
-            <span>50%</span>
-            <span>100% (發行基準價)</span>
-            <span>125%+ (強勢出場區)</span>
+          <div id="portfolioRiskDesc" class="risk-desc-text">
+            投組整體估值與預估成長性處於合理區間，自由現金流充沛，具備較佳的抗利率波動防禦能力。
           </div>
         </div>
 
-        <!-- Basket Assets Breakdown Table -->
-        <table class="fcn-table">
+        <!-- Visual Risk Meter Gauge -->
+        <div class="risk-gauge-box">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 11.5px; font-weight: 700; color: #244129;">組合風險指針儀表盤 (0 ~ 100)</span>
+            <span id="riskGaugeStatusText" style="font-size: 11px; font-weight: 700; color: var(--accent);">低~中度風險區</span>
+          </div>
+          <div class="risk-gauge-track">
+            <div id="riskGaugeNeedle" class="risk-gauge-needle" style="left: 42.5%;" data-score="42.5"></div>
+          </div>
+          <div class="risk-gauge-labels">
+            <span>🟢 穩健防禦 (0~35)</span>
+            <span>🟡 均衡成長 (36~60)</span>
+            <span>🟠 溢價警戒 (61~78)</span>
+            <span>🔴 極度透支 (79~100)</span>
+          </div>
+        </div>
+
+        <!-- 4 Key Portfolio Metrics -->
+        <div class="risk-metrics-grid">
+          <div class="risk-metric-box">
+            <div class="risk-metric-lbl">加權當前 P/E</div>
+            <div class="risk-metric-val mono" id="metricWeightedCurrentPE">32.4x</div>
+          </div>
+          <div class="risk-metric-box">
+            <div class="risk-metric-lbl">加權預估 P/E</div>
+            <div class="risk-metric-val mono" id="metricWeightedForwardPE">26.8x</div>
+          </div>
+          <div class="risk-metric-box">
+            <div class="risk-metric-lbl">投組年 FCF 總額</div>
+            <div class="risk-metric-val mono" style="color: var(--green);" id="metricTotalFCF">$175.3B</div>
+          </div>
+          <div class="risk-metric-box">
+            <div class="risk-metric-lbl">3年預估年化 (CAGR)</div>
+            <div class="risk-metric-val mono" id="metricWeightedCAGR">+14.2%</div>
+          </div>
+        </div>
+
+        <!-- 4 Risk Dimensions Bar Breakdown -->
+        <div class="dimensions-card">
+          <div style="font-size: 11.5px; font-weight: 700; color: #1e3a24; margin-bottom: 8px;">組合多維風險因子拆解</div>
+          
+          <div class="dim-row">
+            <div class="dim-header">
+              <span>估值擴張溢價壓力 (Valuation Stretch)</span>
+              <span id="dimValuationScore" class="mono">58 / 100</span>
+            </div>
+            <div class="dim-bar-wrap">
+              <div id="dimValuationBar" class="dim-bar-fill" style="width: 58%; background: #f59e0b;"></div>
+            </div>
+          </div>
+
+          <div class="dim-row">
+            <div class="dim-header">
+              <span>未來 3 年安全邊際風險 (Margin of Safety)</span>
+              <span id="dimSafetyScore" class="mono">35 / 100</span>
+            </div>
+            <div class="dim-bar-wrap">
+              <div id="dimSafetyBar" class="dim-bar-fill" style="width: 35%; background: #10b981;"></div>
+            </div>
+          </div>
+
+          <div class="dim-row">
+            <div class="dim-header">
+              <span>自由現金流保護墊 (Cash Cushion Risk)</span>
+              <span id="dimFcfScore" class="mono">20 / 100</span>
+            </div>
+            <div class="dim-bar-wrap">
+              <div id="dimFcfBar" class="dim-bar-fill" style="width: 20%; background: #10b981;"></div>
+            </div>
+          </div>
+
+          <div class="dim-row">
+            <div class="dim-header">
+              <span>產業集中度風險 (Sector Concentration)</span>
+              <span id="dimSectorScore" class="mono">52 / 100</span>
+            </div>
+            <div class="dim-bar-wrap">
+              <div id="dimSectorBar" class="dim-bar-fill" style="width: 52%; background: #f59e0b;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Selected Holdings & Risk Breakdown Table -->
+    <div style="margin-top: 14px; border-top: 1px solid var(--border); padding-top: 16px;">
+      <div style="font-size: 13px; font-weight: 700; color: #132a18; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <span>組合持股明細與個別風險貢獻 (Holdings & Risk Contribution)</span>
+        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">風險貢獻度 = 權重 (%) × 個別風險係數</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="risk-table">
           <thead>
             <tr>
               <th>代號</th>
-              <th>發行基準價</th>
+              <th>公司名稱</th>
+              <th>板塊領域</th>
               <th>當前現價</th>
-              <th>相對表現 (%)</th>
-              <th>距 KO 價</th>
-              <th>距 KI 保護</th>
-              <th>狀態</th>
+              <th>配置權重</th>
+              <th>當前 P/E</th>
+              <th>預估 P/E</th>
+              <th>自由現金流 (FCF)</th>
+              <th>3年年化 (CAGR)</th>
+              <th>個別風險係數</th>
+              <th>風險評級</th>
+              <th>風險貢獻</th>
+              <th style="text-align: center;">操作</th>
             </tr>
           </thead>
-          <tbody id="fcnAssetsTableBody"></tbody>
+          <tbody id="portfolioTableBody">
+            <!-- Injected by JS -->
+          </tbody>
         </table>
-
-        <!-- Payout Calculation Box -->
-        <div class="payout-card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 13px; font-weight: 700; color: #fff;">期末結算與收益試算</span>
-            <span class="mono" style="font-size: 11px; color: var(--accent);">年化票息：<span id="payoutCouponRate">16.2%</span></span>
-          </div>
-
-          <div class="payout-grid">
-            <div class="payout-item">
-              <div class="lbl">每期 (月) 預估配息</div>
-              <div class="val mono" style="color: var(--green);" id="payoutMonthlyAmt">$1,350 USD</div>
-            </div>
-            <div class="payout-item">
-              <div class="lbl">合約滿期累積最高票息</div>
-              <div class="val mono" style="color: var(--green);" id="payoutTotalAmt">$8,100 USD</div>
-            </div>
-            <div class="payout-item">
-              <div class="lbl">期末本金返還形式</div>
-              <div class="val" id="payoutPrincipalType" style="font-size: 14px;">100% 現金全額拿回</div>
-            </div>
-            <div class="payout-item">
-              <div class="lbl">若承接股票 (最差標的)</div>
-              <div class="val mono" id="payoutStockDelivery" style="font-size: 13px;">無須承接 (安全)</div>
-            </div>
-          </div>
-        </div>
-
       </div>
-
     </div>
   </div>
 
@@ -1620,25 +1604,16 @@
     }
 
     function renderTable() {
-
-      // Update count indicators
-      const elAll = document.getElementById("countAll");
-      if (elAll) {
-        elAll.innerText = stocks.length;
-        document.getElementById("countSP500").innerText = stocks.filter(s => s.sp500).length;
-        document.getElementById("countNasdaq").innerText = stocks.filter(s => s.nasdaq).length;
-        document.getElementById("countDow").innerText = stocks.filter(s => s.dow).length;
-      }      const scenario = document.getElementById("scenarioSelect").value;
+      const scenario = document.getElementById("scenarioSelect").value;
       const query = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
 
       let epsMult = 1.0;
       let peScenarioMult = 1.0;
-      if (scenario === "bear") { epsMult = 0.88; peScenarioMult = 0.88; }
-      else if (scenario === "bull") { epsMult = 1.15; peScenarioMult = 1.12; }
+      if (scenario === "BULL") { epsMult = 1.15; peScenarioMult = 1.15; }
+      else if (scenario === "BEAR") { epsMult = 0.85; peScenarioMult = 0.85; }
 
-      const yieldDiff = currentYield - 5.28;
       let processed = [];
 
       stocks.forEach((s, idx) => {
@@ -1646,26 +1621,39 @@
         if (selectedIndexFilter === 'NASDAQ' && !s.nasdaq) return;
         if (selectedIndexFilter === 'DOW' && !s.dow) return;
         if (selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
-        if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query) && !s.s.toLowerCase().includes(query)) return;
+        if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query)) return;
 
         const days = getDaysDiff(s.ed);
-        const adjPE = Math.max(8, s.pe * peScenarioMult * Math.pow(s.mult, yieldDiff / 0.5));
-        const val27 = s.eps27 * epsMult * (adjPE * 1.08);
-        const val28 = s.eps28 * epsMult * adjPE;
+        const adjPE = s.pe * peScenarioMult;
+        const val27 = s.eps27 * epsMult * (adjPE * s.mult);
+        const val28 = s.eps28 * epsMult * (adjPE * (s.mult * 0.98));
         const val29 = s.eps29 * epsMult * (adjPE * 0.94);
 
         const totalRet = ((val29 / s.p - 1) * 100);
         const cagr = ((Math.pow(val29 / s.p, 1/3) - 1) * 100);
+
+        const fin = STOCK_FINANCIALS[s.t] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
+        const eps = fin.eps;
+        const curPE = fin.peCurrent || +(s.p / eps).toFixed(1);
+        const fwdPE = +(s.p / (s.eps27 * epsMult)).toFixed(1);
+        const fcf = fin.fcf;
+        const riskScore = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
 
         processed.push({
           idx: idx + 1,
           t: s.t,
           n: s.n,
           s: s.s,
+          cat: s.cat,
           sp500: s.sp500,
           nasdaq: s.nasdaq,
           dow: s.dow,
           p: s.p,
+          eps: eps,
+          peCurrent: curPE,
+          peForward: fwdPE,
+          fcf: fcf,
+          riskScore: riskScore,
           ed: s.ed,
           days: days,
           val27: val27,
@@ -1691,6 +1679,13 @@
         const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
         const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
 
+        let riskBadgeClass = "risk-mid";
+        let riskBadgeText = "均衡";
+        if (item.riskScore <= 35) { riskBadgeClass = "risk-low"; riskBadgeText = "穩健"; }
+        else if (item.riskScore <= 60) { riskBadgeClass = "risk-mid"; riskBadgeText = "均衡"; }
+        else if (item.riskScore <= 78) { riskBadgeClass = "risk-elev"; riskBadgeText = "溢價"; }
+        else { riskBadgeClass = "risk-high"; riskBadgeText = "高壓"; }
+
         const spxBadge = item.sp500 ? '<span class="idx-badge active-idx spx">S&P</span>' : '<span class="idx-badge">S&P</span>';
         const ndxBadge = item.nasdaq ? '<span class="idx-badge active-idx ndx">NDX</span>' : '<span class="idx-badge">NDX</span>';
         const dowBadge = item.dow ? '<span class="idx-badge active-idx dow">DOW</span>' : '<span class="idx-badge">DOW</span>';
@@ -1703,6 +1698,11 @@
           <td style="white-space:nowrap;">${spxBadge}${ndxBadge}${dowBadge}</td>
           <td><span class="sector-tag">${item.s}</span></td>
           <td class="mono">$${item.p.toFixed(2)}</td>
+          <td class="mono font-bold">$${item.eps.toFixed(2)}</td>
+          <td class="mono">${item.peCurrent.toFixed(1)}x</td>
+          <td class="mono" style="font-weight:700; color:var(--accent);">${item.peForward.toFixed(1)}x</td>
+          <td class="mono" style="color:var(--green); font-weight:700;">$${item.fcf.toFixed(1)}B</td>
+          <td><span class="risk-badge ${riskBadgeClass}">${item.riskScore} ${riskBadgeText}</span></td>
           <td class="mono">${item.ed}</td>
           <td><span class="countdown-badge ${badgeClass} mono">${item.days} 天</span></td>
           <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
@@ -1710,6 +1710,7 @@
           <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
           <td class="mono ${retClass}">${item.totalRet >= 0 ? "+" : ""}${item.totalRet.toFixed(1)}%</td>
           <td class="mono ${cagrClass}">${item.cagr >= 0 ? "+" : ""}${item.cagr.toFixed(1)}%</td>
+          <td style="text-align: center;"><button class="btn-add-portfolio" onclick="addStockToPortfolio('${item.t}')">＋ 投組</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -1717,157 +1718,386 @@
 
     renderTable();
 
-    /* ==========================================================
-       SECTION 4: FCN SIMULATOR JAVASCRIPT ENGINE
-       ========================================================== */
-    let fcnAssets = [
-      { sym: "NVDA", initial: 140.0, current: 142.5 },
-      { sym: "TSM", initial: 185.0, current: 188.5 },
-      { sym: "ARM", initial: 135.0, current: 138.0 }
-    ];
-    let isMemoryKO = true;
-    let kiType = 'EKI'; // 'EKI' or 'AKI'
-
-    const PRESETS = {
-      p1: {
-        assets: [
-          { sym: "NVDA", initial: 140.0, current: 142.5 },
-          { sym: "TSM", initial: 185.0, current: 188.5 },
-          { sym: "ARM", initial: 135.0, current: 138.0 }
-        ],
-        strike: 80, ko: 90, ki: 70, coupon: 16.23, tenor: 2, memory: true, kiType: 'EKI', start: '2026-09-22'
-      },
-      p2: {
-        assets: [
-          { sym: "TSM", initial: 185.0, current: 188.5 },
-          { sym: "GOOG", initial: 172.0, current: 175.0 },
-          { sym: "AMD", initial: 155.0, current: 158.0 }
-        ],
-        strike: 85, ko: 100, ki: 85, coupon: 12.00, tenor: 3, memory: true, kiType: 'EKI', start: '2026-09-11'
-      },
-      p3: {
-        assets: [
-          { sym: "NVDA", initial: 140.0, current: 142.5 },
-          { sym: "MSFT", initial: 430.0, current: 435.0 },
-          { sym: "AMZN", initial: 195.0, current: 198.0 },
-          { sym: "AAPL", initial: 225.0, current: 228.0 }
-        ],
-        strike: 80, ko: 105, ki: 65, coupon: 18.50, tenor: 6, memory: false, kiType: 'AKI', start: '2026-06-01'
-      },
-      custom: {
-        assets: [
-          { sym: "NVDA", initial: 140.0, current: 142.5 },
-          { sym: "TSM", initial: 185.0, current: 188.5 }
-        ],
-        strike: 85, ko: 100, ki: 70, coupon: 15.00, tenor: 6, memory: true, kiType: 'EKI', start: '2026-08-01'
-      }
-    };
-
-    
-    /* ==========================================================
-       HISTORICAL PRICE DATABASE FOR FCN AUTO-FETCH
-       ========================================================== */
-    const FCN_PRICE_DB = {
-      "NVDA": { "2026-06-01": 115.0, "2026-07-01": 122.5, "2026-08-01": 109.0, "2026-09-01": 119.0, "2026-09-11": 116.5, "2026-09-22": 140.0, "2026-10-01": 142.0, "2026-10-05": 142.5 },
-      "TSM":  { "2026-06-01": 155.0, "2026-07-01": 173.0, "2026-08-01": 158.0, "2026-09-01": 171.0, "2026-09-11": 185.0, "2026-09-22": 185.0, "2026-10-01": 187.0, "2026-10-05": 188.5 },
-      "ARM":  { "2026-06-01": 120.0, "2026-07-01": 165.0, "2026-08-01": 125.0, "2026-09-01": 128.0, "2026-09-11": 132.0, "2026-09-22": 135.0, "2026-10-01": 136.5, "2026-10-05": 138.0 },
-      "MSFT": { "2026-06-01": 415.0, "2026-07-01": 445.0, "2026-08-01": 418.0, "2026-09-01": 415.0, "2026-09-11": 422.0, "2026-09-22": 430.0, "2026-10-01": 432.0, "2026-10-05": 435.0 },
-      "AAPL": { "2026-06-01": 194.0, "2026-07-01": 220.0, "2026-08-01": 218.0, "2026-09-01": 224.0, "2026-09-11": 222.0, "2026-09-22": 225.0, "2026-10-01": 226.5, "2026-10-05": 228.0 },
-      "AMZN": { "2026-06-01": 182.0, "2026-07-01": 198.0, "2026-08-01": 185.0, "2026-09-01": 178.0, "2026-09-11": 186.0, "2026-09-22": 195.0, "2026-10-01": 196.5, "2026-10-05": 198.0 },
-      "GOOG": { "2026-06-01": 170.0, "2026-07-01": 182.0, "2026-08-01": 168.0, "2026-09-01": 163.0, "2026-09-11": 172.0, "2026-09-22": 172.0, "2026-10-01": 174.0, "2026-10-05": 175.0 },
-      "GOOGL":{ "2026-06-01": 170.0, "2026-07-01": 182.0, "2026-08-01": 168.0, "2026-09-01": 163.0, "2026-09-11": 172.0, "2026-09-22": 172.0, "2026-10-01": 174.0, "2026-10-05": 175.0 },
-      "META": { "2026-06-01": 480.0, "2026-07-01": 505.0, "2026-08-01": 490.0, "2026-09-01": 515.0, "2026-09-11": 525.0, "2026-09-22": 580.0, "2026-10-01": 590.0, "2026-10-05": 595.0 },
-      "AVGO": { "2026-06-01": 135.0, "2026-07-01": 165.0, "2026-08-01": 150.0, "2026-09-01": 158.0, "2026-09-11": 162.0, "2026-09-22": 172.0, "2026-10-01": 176.0, "2026-10-05": 178.0 },
-      "TSLA": { "2026-06-01": 175.0, "2026-07-01": 245.0, "2026-08-01": 210.0, "2026-09-01": 215.0, "2026-09-11": 228.0, "2026-09-22": 240.0, "2026-10-01": 242.0, "2026-10-05": 245.0 },
-      "ASML": { "2026-06-01": 950.0, "2026-07-01": 1020.0,"2026-08-01": 890.0, "2026-09-01": 810.0, "2026-09-11": 825.0, "2026-09-22": 840.0, "2026-10-01": 855.0, "2026-10-05": 860.0 },
-      "AMD":  { "2026-06-01": 160.0, "2026-07-01": 175.0, "2026-08-01": 145.0, "2026-09-01": 148.0, "2026-09-11": 155.0, "2026-09-22": 155.0, "2026-10-01": 156.5, "2026-10-05": 158.0 },
-      "QCOM": { "2026-06-01": 205.0, "2026-07-01": 200.0, "2026-08-01": 170.0, "2026-09-01": 165.0, "2026-09-11": 162.0, "2026-09-22": 162.0, "2026-10-01": 164.0, "2026-10-05": 165.0 },
-      "MU":   { "2026-06-01": 1300.0,"2026-07-01": 1250.0,"2026-08-01": 980.0, "2026-09-01": 920.0, "2026-09-11": 950.0, "2026-09-22": 1050.0,"2026-10-01": 1060.0,"2026-10-05": 1075.0 },
-      "NFLX": { "2026-06-01": 640.0, "2026-07-01": 670.0, "2026-08-01": 630.0, "2026-09-01": 680.0, "2026-09-11": 685.0, "2026-09-22": 690.0, "2026-10-01": 682.0, "2026-10-05": 685.0 }
-    };
-
-        // ==========================================================
-    // REAL-TIME GOOGLE FINANCE & FINANCIAL DATABASE ENGINE
     // ==========================================================
-    const GOOGLE_FINANCE_LATEST_CLOSES = {
-            "QQQ": 756.20, "SPY": 774.83, "SMH": 633.90, "SOXX": 589.51,
-      "IWM": 283.38, "DIA": 520.00, "XLK": 285.00, "XLF": 54.50, "TLT": 98.50, "ARKK": 62.00,
-      "NVDA": 238.90, "TSM": 485.80, "AAPL": 332.89, "MSFT": 525.18,
-      "AMZN": 251.40, "GOOGL": 346.47, "GOOG": 346.47, "META": 741.90,
-      "TSLA": 378.73, "AMD": 631.75, "ARM": 302.90, "AVGO": 362.51,
-      "QCOM": 182.50, "TXN": 208.40, "INTC": 22.80, "ASML": 845.00,
-      "MU": 112.50, "NFLX": 718.00, "ADBE": 522.00, "CRM": 286.00,
-      "ORCL": 178.50, "IBM": 224.00, "JPM": 218.50, "BAC": 41.20,
-      "WFC": 62.40, "C": 64.80, "GS": 498.00, "MS": 108.50,
-      "AXP": 258.00, "WMT": 81.50, "COST": 912.00, "JNJ": 164.20,
-      "UNH": 585.00, "LLY": 925.00, "PFE": 29.10, "MRK": 118.00,
-      "ABBV": 192.50, "CVS": 61.20, "DIS": 96.50, "MCD": 302.00,
-      "PEP": 175.00, "KO": 72.50, "XOM": 124.00, "CVX": 152.00,
-      "T": 22.10, "VZ": 44.50, "GM": 47.80, "TM": 215.00
+    // SECTION 4: PORTFOLIO RISK ASSESSMENT JAVASCRIPT ENGINE
+    // ==========================================================
+    const STOCK_FINANCIALS = {
+      "NVDA": { eps: 3.15, fcf: 60.8, peCurrent: 45.2 },
+      "MSFT": { eps: 12.30, fcf: 74.1, peCurrent: 35.4 },
+      "AAPL": { eps: 6.65, fcf: 108.8, peCurrent: 34.3 },
+      "AMZN": { eps: 4.70, fcf: 53.0, peCurrent: 42.1 },
+      "GOOGL": { eps: 7.55, fcf: 69.1, peCurrent: 23.2 },
+      "GOOG": { eps: 7.55, fcf: 69.1, peCurrent: 23.2 },
+      "META": { eps: 22.10, fcf: 51.2, peCurrent: 26.9 },
+      "TSLA": { eps: 3.40, fcf: 7.5, peCurrent: 72.1 },
+      "AVGO": { eps: 5.40, fcf: 21.9, peCurrent: 33.0 },
+      "TSM": { eps: 6.80, fcf: 28.5, peCurrent: 27.7 },
+      "ASML": { eps: 21.50, fcf: 7.2, peCurrent: 40.0 },
+      "AMD": { eps: 3.80, fcf: 4.5, peCurrent: 41.6 },
+      "QCOM": { eps: 10.20, fcf: 11.2, peCurrent: 16.2 },
+      "TXN": { eps: 5.80, fcf: 3.8, peCurrent: 33.1 },
+      "AMAT": { eps: 8.80, fcf: 7.6, peCurrent: 23.3 },
+      "LRCX": { eps: 33.50, fcf: 4.8, peCurrent: 23.4 },
+      "KLAC": { eps: 28.40, fcf: 3.5, peCurrent: 25.4 },
+      "MU": { eps: 7.55, fcf: 4.2, peCurrent: 14.2 },
+      "ARM": { eps: 1.55, fcf: 1.4, peCurrent: 89.0 },
+      "ADI": { eps: 6.40, fcf: 3.2, peCurrent: 34.4 },
+      "MRVL": { eps: 1.50, fcf: 1.8, peCurrent: 52.0 },
+      "NXPI": { eps: 13.50, fcf: 3.1, peCurrent: 17.8 },
+      "INTC": { eps: 1.20, fcf: 2.1, peCurrent: 19.6 },
+      "ORCL": { eps: 7.20, fcf: 12.3, peCurrent: 23.3 },
+      "CRM": { eps: 11.50, fcf: 12.4, peCurrent: 24.8 },
+      "ADBE": { eps: 18.50, fcf: 8.2, peCurrent: 27.6 },
+      "NOW": { eps: 17.50, fcf: 3.6, peCurrent: 50.9 },
+      "INTU": { eps: 18.90, fcf: 5.2, peCurrent: 33.9 },
+      "PANW": { eps: 6.30, fcf: 3.2, peCurrent: 54.8 },
+      "CRWD": { eps: 4.10, fcf: 1.2, peCurrent: 69.5 },
+      "PLTR": { eps: 0.55, fcf: 1.1, peCurrent: 76.4 },
+      "IBM": { eps: 11.20, fcf: 12.5, peCurrent: 19.2 },
+      "CSCO": { eps: 3.75, fcf: 10.2, peCurrent: 14.7 },
+      "SNPS": { eps: 13.80, fcf: 1.9, peCurrent: 40.6 },
+      "CDNS": { eps: 6.50, fcf: 1.4, peCurrent: 42.3 },
+      "FTNT": { eps: 2.10, fcf: 2.1, peCurrent: 36.2 },
+      "WDAY": { eps: 7.20, fcf: 2.4, peCurrent: 34.7 },
+      "UBER": { eps: 2.80, fcf: 6.2, peCurrent: 27.9 },
+      "NFLX": { eps: 19.80, fcf: 7.1, peCurrent: 34.6 },
+      "BRK.B": { eps: 22.00, fcf: 38.5, peCurrent: 20.5 },
+      "JPM": { eps: 18.50, fcf: 35.0, peCurrent: 11.8 },
+      "BAC": { eps: 3.40, fcf: 22.0, peCurrent: 12.1 },
+      "WFC": { eps: 5.15, fcf: 18.0, peCurrent: 12.1 },
+      "C": { eps: 5.40, fcf: 14.5, peCurrent: 12.0 },
+      "GS": { eps: 38.50, fcf: 15.2, peCurrent: 12.9 },
+      "MS": { eps: 7.20, fcf: 11.8, peCurrent: 15.1 },
+      "AXP": { eps: 13.50, fcf: 12.5, peCurrent: 19.1 },
+      "V": { eps: 12.00, fcf: 20.5, peCurrent: 22.9 },
+      "MA": { eps: 14.80, fcf: 14.2, peCurrent: 28.5 },
+      "WMT": { eps: 2.45, fcf: 15.5, peCurrent: 33.3 },
+      "COST": { eps: 16.20, fcf: 8.5, peCurrent: 56.3 },
+      "JNJ": { eps: 9.80, fcf: 19.5, peCurrent: 16.8 },
+      "UNH": { eps: 27.50, fcf: 28.0, peCurrent: 21.3 },
+      "LLY": { eps: 18.50, fcf: 6.8, peCurrent: 50.0 },
+      "PFE": { eps: 2.30, fcf: 9.5, peCurrent: 12.7 },
+      "MRK": { eps: 7.80, fcf: 14.0, peCurrent: 15.1 },
+      "ABBV": { eps: 11.20, fcf: 18.5, peCurrent: 17.2 },
+      "CVS": { eps: 6.50, fcf: 8.2, peCurrent: 9.4 },
+      "DIS": { eps: 4.85, fcf: 8.5, peCurrent: 19.9 },
+      "MCD": { eps: 11.80, fcf: 7.2, peCurrent: 25.6 },
+      "PEP": { eps: 8.10, fcf: 9.2, peCurrent: 21.6 },
+      "KO": { eps: 2.85, fcf: 11.0, peCurrent: 25.4 },
+      "XOM": { eps: 9.20, fcf: 35.0, peCurrent: 13.5 },
+      "CVX": { eps: 12.50, fcf: 19.8, peCurrent: 12.2 },
+      "T": { eps: 2.25, fcf: 17.5, peCurrent: 9.8 },
+      "VZ": { eps: 4.60, fcf: 18.2, peCurrent: 9.7 },
+      "GM": { eps: 9.80, fcf: 11.5, peCurrent: 4.9 },
+      "TM": { eps: 22.00, fcf: 24.0, peCurrent: 9.8 }
     };
 
-    function getStockPricesFromDB(sym, dateStr) {
-      const sObj = stocks.find(x => x.t === sym) || 
-                   dowStocks.find(x => x.t === sym) || 
-                   sp500Stocks.find(x => x.t === sym);
-      
-      const realClose = GOOGLE_FINANCE_LATEST_CLOSES[sym] || (sObj ? sObj.p : 100.0);
-      const currentPrice = realClose;
-      
-      const history = HISTORICAL_PRICES[sym];
-      if (!history) {
-        return { initial: Math.round(currentPrice * 0.96 * 10) / 10, current: currentPrice };
-      }
-      
-      if (history[dateStr]) {
-        return { initial: history[dateStr], current: currentPrice };
-      }
-      
-      const availDates = Object.keys(history).sort();
-      let closestDate = availDates[0];
-      let minDiff = Infinity;
-      const targetTime = new Date(dateStr).getTime();
-      
-      for (const d of availDates) {
-        const diff = Math.abs(new Date(d).getTime() - targetTime);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestDate = d;
-        }
-      }
-      return { initial: history[closestDate], current: currentPrice };
+    function calcStockRiskScore(s, fwdPE, cagr, fcf, curPE) {
+      let valScore = fwdPE <= 15 ? 15 : (fwdPE <= 25 ? 35 : (fwdPE <= 35 ? 60 : (fwdPE <= 50 ? 80 : 95)));
+      let cagrScore = cagr >= 18 ? 15 : (cagr >= 10 ? 35 : (cagr >= 5 ? 55 : (cagr >= 0 ? 75 : 95)));
+      let fcfScore = fcf >= 50 ? 10 : (fcf >= 20 ? 25 : (fcf >= 8 ? 45 : (fcf >= 2 ? 65 : 85)));
+      let rateScore = (curPE > 40 || s.cat === 'SEMIS') ? 75 : ((s.cat === 'FINANCE' || s.cat === 'ENERGY') ? 25 : 50);
+      const score = Math.round(valScore * 0.30 + cagrScore * 0.30 + fcfScore * 0.25 + rateScore * 0.15);
+      return Math.min(99, Math.max(10, score));
     }
 
-
-    const ALL_UNDERLYINGS = [
-      { sym: "NVDA", name: "NVDA - 輝達" },
-      { sym: "TSM",  name: "TSM - 台積電 ADR" },
-      { sym: "ARM",  name: "ARM - 安謀" },
-      { sym: "MSFT", name: "MSFT - 微軟" },
-      { sym: "AAPL", name: "AAPL - 蘋果" },
-      { sym: "AMZN", name: "AMZN - 亞馬遜" },
-      { sym: "GOOGL",name: "GOOGL - Alphabet" },
-      { sym: "META", name: "META - Meta" },
-      { sym: "AVGO", name: "AVGO - 博通" },
-      { sym: "TSLA", name: "TSLA - 特斯拉" },
-      { sym: "ASML", name: "ASML - 艾斯摩爾" },
-      { sym: "AMD",  name: "AMD - 超微半導體" },
-      { sym: "QCOM", name: "QCOM - 高通" },
-      { sym: "MU",   name: "MU - 美光科技" },
-      { sym: "ADBE", name: "ADBE - Adobe" },
-      { sym: "NFLX", name: "NFLX - 網飛" },
-      { sym: "CRWD", name: "CRWD - CrowdStrike" },
-      { sym: "PANW", name: "PANW - 派拓網路" }
+    // Portfolio Risk State
+    let portfolioAssets = [
+      { sym: "NVDA", weight: 30 },
+      { sym: "TSM", weight: 30 },
+      { sym: "MSFT", weight: 20 },
+      { sym: "AVGO", weight: 20 }
     ];
 
-    function onAssetSelectChange(idx, newSym) {
-      fcnAssets[idx].sym = newSym;
-      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
-      const p = getStockPricesFromDB(newSym, startDate);
-      fcnAssets[idx].initial = p.initial;
-      fcnAssets[idx].current = p.current;
-      renderAssetsList();
-      calcFCN();
+    const riskPresets = {
+      p1: [ { sym: "NVDA", weight: 30 }, { sym: "TSM", weight: 30 }, { sym: "MSFT", weight: 20 }, { sym: "AVGO", weight: 20 } ],
+      p2: [ { sym: "AAPL", weight: 25 }, { sym: "GOOGL", weight: 25 }, { sym: "MSFT", weight: 25 }, { sym: "META", weight: 25 } ],
+      p3: [ { sym: "AAPL", weight: 30 }, { sym: "MSFT", weight: 30 }, { sym: "GOOGL", weight: 20 }, { sym: "AMZN", weight: 20 } ],
+      p4: [ { sym: "NVDA", weight: 25 }, { sym: "AAPL", weight: 25 }, { sym: "JPM", weight: 25 }, { sym: "XOM", weight: 25 } ]
+    };
+
+    function initPortfolioRisk() {
+      populateStockDropdown();
+      renderPortfolioAssets();
+      calcPortfolioRisk();
+    }
+
+    function populateStockDropdown() {
+      const dropdown = document.getElementById("stockSelectorDropdown");
+      if (!dropdown) return;
+      dropdown.innerHTML = "";
+      stocks.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.t;
+        opt.text = `${s.t} - ${s.n} (${s.s})`;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    function loadRiskPreset(key, el) {
+      document.querySelectorAll(".risk-preset-btn").forEach(b => b.classList.remove("active"));
+      if (el) el.classList.add("active");
+      if (key !== 'custom' && riskPresets[key]) {
+        portfolioAssets = JSON.parse(JSON.stringify(riskPresets[key]));
+      }
+      renderPortfolioAssets();
+      calcPortfolioRisk();
+    }
+
+    function addSelectedStockFromDropdown() {
+      const dropdown = document.getElementById("stockSelectorDropdown");
+      if (!dropdown) return;
+      addStockToPortfolio(dropdown.value);
+    }
+
+    function addStockToPortfolio(sym) {
+      if (portfolioAssets.some(a => a.sym === sym)) {
+        alert(`${sym} 已存在於當前投資組合中！`);
+        return;
+      }
+      if (portfolioAssets.length >= 8) {
+        alert("投資組合最多支援 8 檔標的！");
+        return;
+      }
+      portfolioAssets.push({ sym: sym, weight: 10 });
+      setEqualWeights();
+      // Scroll to risk section smoothly
+      const el = document.getElementById("risk-section");
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function removePortfolioAsset(idx) {
+      if (portfolioAssets.length <= 1) {
+        alert("投資組合至少需保留 1 檔標的！");
+        return;
+      }
+      portfolioAssets.splice(idx, 1);
+      setEqualWeights();
+    }
+
+    function setEqualWeights() {
+      const count = portfolioAssets.length;
+      if (count === 0) return;
+      const base = Math.floor(100 / count);
+      const rem = 100 - base * count;
+      portfolioAssets.forEach((a, i) => {
+        a.weight = base + (i === 0 ? rem : 0);
+      });
+      renderPortfolioAssets();
+      calcPortfolioRisk();
+    }
+
+    function updatePortfolioWeight(idx, val) {
+      portfolioAssets[idx].weight = parseInt(val) || 0;
+      const valEl = document.getElementById(`weightVal_${idx}`);
+      if (valEl) valEl.innerText = `${portfolioAssets[idx].weight}%`;
+      calcPortfolioRisk();
+    }
+
+    function renderPortfolioAssets() {
+      const container = document.getElementById("portfolioAssetsContainer");
+      if (!container) return;
+      container.innerHTML = "";
+      
+      const countText = document.getElementById("portfolioCountText");
+      if (countText) countText.innerText = `目前 ${portfolioAssets.length} 檔標的 (上限 8 檔)`;
+
+      portfolioAssets.forEach((a, idx) => {
+        const sObj = stocks.find(x => x.t === a.sym) || { t: a.sym, n: a.sym, s: "標的", p: 100 };
+        const row = document.createElement("div");
+        row.className = "asset-risk-row";
+        row.innerHTML = `
+          <div><span class="ticker-symbol mono">${a.sym}</span></div>
+          <div style="font-size: 12px; font-weight: 600; color: #1f3523;">${sObj.n} <span style="font-size:10px; color:var(--text-muted);">($${sObj.p.toFixed(1)})</span></div>
+          <div class="asset-weight-wrap">
+            <input type="range" min="1" max="100" value="${a.weight}" oninput="updatePortfolioWeight(${idx}, this.value)">
+            <span class="asset-weight-val mono" id="weightVal_${idx}">${a.weight}%</span>
+          </div>
+          <div>
+            <button class="btn-remove-asset" onclick="removePortfolioAsset(${idx})" title="刪除標的">✕</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function calcPortfolioRisk() {
+      let totalWeight = portfolioAssets.reduce((sum, a) => sum + a.weight, 0);
+      if (totalWeight <= 0) totalWeight = 100;
+
+      let weightedCurrentPE = 0;
+      let weightedForwardPE = 0;
+      let totalFCF = 0;
+      let weightedCAGR = 0;
+      let weightedScore = 0;
+
+      let valStretchSum = 0;
+      let marginSafetySum = 0;
+      let cashCushionSum = 0;
+      let sectorsMap = {};
+
+      const tbody = document.getElementById("portfolioTableBody");
+      if (tbody) tbody.innerHTML = "";
+
+      portfolioAssets.forEach(a => {
+        const s = stocks.find(x => x.t === a.sym) || { t: a.sym, n: a.sym, s: "一般", cat: "OTHER", p: 100, eps27: 5, eps28: 6, eps29: 7, pe: 20, mult: 0.95 };
+        const fin = STOCK_FINANCIALS[a.sym] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
+        
+        const epsMult = 1.0;
+        const peScenarioMult = 1.0;
+        const adjPE = s.pe * peScenarioMult;
+        const val29 = s.eps29 * epsMult * (adjPE * 0.94);
+        const cagr = ((Math.pow(val29 / s.p, 1/3) - 1) * 100);
+        const fwdPE = s.eps27 ? +(s.p / s.eps27).toFixed(1) : +(s.p / (fin.eps * 1.15)).toFixed(1);
+        const curPE = fin.peCurrent || +(s.p / fin.eps).toFixed(1);
+        const fcf = fin.fcf;
+
+        const normW = a.weight / totalWeight;
+        const indRisk = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
+        const riskContrib = indRisk * normW;
+
+        weightedCurrentPE += curPE * normW;
+        weightedForwardPE += fwdPE * normW;
+        totalFCF += fcf;
+        weightedCAGR += cagr * normW;
+        weightedScore += riskContrib;
+
+        let vStr = fwdPE <= 15 ? 15 : (fwdPE <= 25 ? 35 : (fwdPE <= 35 ? 60 : (fwdPE <= 50 ? 80 : 95)));
+        let mSaf = cagr >= 18 ? 15 : (cagr >= 10 ? 35 : (cagr >= 5 ? 55 : (cagr >= 0 ? 75 : 95)));
+        let cCsh = fcf >= 50 ? 10 : (fcf >= 20 ? 25 : (fcf >= 8 ? 45 : (fcf >= 2 ? 65 : 85)));
+
+        valStretchSum += vStr * normW;
+        marginSafetySum += mSaf * normW;
+        cashCushionSum += cCsh * normW;
+        sectorsMap[s.cat || "OTHER"] = (sectorsMap[s.cat || "OTHER"] || 0) + normW;
+
+        let badgeClass = "risk-mid";
+        let lvlText = "🟡 均衡成長";
+        if (indRisk <= 35) { badgeClass = "risk-low"; lvlText = "🟢 穩健防禦"; }
+        else if (indRisk <= 60) { badgeClass = "risk-mid"; lvlText = "🟡 均衡成長"; }
+        else if (indRisk <= 78) { badgeClass = "risk-elev"; lvlText = "🟠 溢價警戒"; }
+        else { badgeClass = "risk-high"; lvlText = "🔴 極度透支"; }
+
+        if (tbody) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><span class="ticker-symbol mono">${s.t}</span></td>
+            <td><span class="company-name">${s.n}</span></td>
+            <td><span class="sector-tag">${s.s}</span></td>
+            <td class="mono">$${s.p.toFixed(1)}</td>
+            <td class="mono font-bold">${a.weight}%</td>
+            <td class="mono">${curPE.toFixed(1)}x</td>
+            <td class="mono">${fwdPE.toFixed(1)}x</td>
+            <td class="mono" style="color:var(--green); font-weight:700;">$${fcf.toFixed(1)}B</td>
+            <td class="mono ${cagr >= 0 ? 'return-positive' : 'return-negative'}">${cagr >= 0 ? '+' : ''}${cagr.toFixed(1)}%</td>
+            <td class="mono font-bold">${indRisk}</td>
+            <td><span class="risk-badge ${badgeClass}">${lvlText}</span></td>
+            <td class="mono" style="font-weight:700;">${riskContrib.toFixed(1)}</td>
+            <td style="text-align: center;"><button class="btn-remove-asset" style="width:24px;height:24px;display:inline-flex;" onclick="removePortfolioAsset(${portfolioAssets.indexOf(a)})">✕</button></td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+
+      // Sector concentration penalty: Herfindahl Index
+      let hhi = 0;
+      Object.values(sectorsMap).forEach(w => { hhi += w * w; });
+      let sectorConcScore = Math.min(100, Math.round(hhi * 85 + (portfolioAssets.length <= 2 ? 20 : 0)));
+
+      let finalScore = Math.round(weightedScore * 0.85 + sectorConcScore * 0.15);
+      finalScore = Math.min(99, Math.max(12, finalScore));
+
+      // Update Key Metric Cards
+      const curPEEl = document.getElementById("metricWeightedCurrentPE");
+      if (curPEEl) curPEEl.innerText = `${weightedCurrentPE.toFixed(1)}x`;
+
+      const fwdPEEl = document.getElementById("metricWeightedForwardPE");
+      if (fwdPEEl) fwdPEEl.innerText = `${weightedForwardPE.toFixed(1)}x`;
+
+      const fcfEl = document.getElementById("metricTotalFCF");
+      if (fcfEl) fcfEl.innerText = `$${totalFCF.toFixed(1)}B`;
+
+      const cagrEl = document.getElementById("metricWeightedCAGR");
+      if (cagrEl) {
+        cagrEl.innerText = `${weightedCAGR >= 0 ? '+' : ''}${weightedCAGR.toFixed(1)}%`;
+        cagrEl.style.color = weightedCAGR >= 0 ? "var(--green)" : "var(--red)";
+      }
+
+      // Update Gauge
+      const needle = document.getElementById("riskGaugeNeedle");
+      if (needle) {
+        needle.style.left = `${finalScore}%`;
+        needle.setAttribute("data-score", finalScore.toFixed(1));
+      }
+
+      // Update Dimension Bars
+      const vBar = document.getElementById("dimValuationBar");
+      const vScore = document.getElementById("dimValuationScore");
+      if (vBar && vScore) {
+        const sc = Math.round(valStretchSum);
+        vBar.style.width = `${sc}%`;
+        vBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
+        vScore.innerText = `${sc} / 100`;
+      }
+
+      const sBar = document.getElementById("dimSafetyBar");
+      const sScore = document.getElementById("dimSafetyScore");
+      if (sBar && sScore) {
+        const sc = Math.round(marginSafetySum);
+        sBar.style.width = `${sc}%`;
+        sBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
+        sScore.innerText = `${sc} / 100`;
+      }
+
+      const fBar = document.getElementById("dimFcfBar");
+      const fScore = document.getElementById("dimFcfScore");
+      if (fBar && fScore) {
+        const sc = Math.round(cashCushionSum);
+        fBar.style.width = `${sc}%`;
+        fBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
+        fScore.innerText = `${sc} / 100`;
+      }
+
+      const secBar = document.getElementById("dimSectorBar");
+      const secScore = document.getElementById("dimSectorScore");
+      if (secBar && secScore) {
+        secBar.style.width = `${sectorConcScore}%`;
+        secBar.style.background = sectorConcScore > 70 ? "#f43f5e" : (sectorConcScore > 50 ? "#f59e0b" : "#10b981");
+        secScore.innerText = `${sectorConcScore} / 100`;
+      }
+
+      // Update Banner
+      const banner = document.getElementById("portfolioRiskBanner");
+      const titleEl = document.getElementById("portfolioRiskTitle");
+      const scoreEl = document.getElementById("portfolioRiskScore");
+      const descEl = document.getElementById("portfolioRiskDesc");
+      const gaugeTxt = document.getElementById("riskGaugeStatusText");
+
+      if (scoreEl) scoreEl.innerText = finalScore.toFixed(1);
+
+      if (finalScore <= 35) {
+        if (banner) banner.className = "risk-banner banner-low";
+        if (titleEl) titleEl.innerText = "🟢 穩健防禦等級 (估值安全邊際充足)";
+        if (gaugeTxt) { gaugeTxt.innerText = "🟢 低風險穩健區"; gaugeTxt.style.color = "var(--green)"; }
+        if (descEl) descEl.innerText = `投組加權自由現金流充沛 ($${totalFCF.toFixed(1)}B)，預估本益比 (${weightedForwardPE.toFixed(1)}x) 處於合理估值下緣，3年預估年化報酬 (+${weightedCAGR.toFixed(1)}%) 顯著高於 10年美債殖利率 5.28%，抗震防禦力強。`;
+      } else if (finalScore <= 60) {
+        if (banner) banner.className = "risk-banner banner-medium";
+        if (titleEl) titleEl.innerText = "🟡 均衡成長等級 (風險與回報結構平衡)";
+        if (gaugeTxt) { gaugeTxt.innerText = "🟡 均衡中度風險區"; gaugeTxt.style.color = "var(--yellow)"; }
+        if (descEl) descEl.innerText = `投組具備強勁成長動能，加權 P/E (${weightedForwardPE.toFixed(1)}x) 反映產業龍頭溢價。3年年化回報 (+${weightedCAGR.toFixed(1)}%) 提供合理的風險補償，建議定期檢視季度盈餘兌現度。`;
+      } else if (finalScore <= 78) {
+        if (banner) banner.className = "risk-banner banner-elevated";
+        if (titleEl) titleEl.innerText = "🟠 估值溢價警戒 (對高利率折現敏感)";
+        if (gaugeTxt) { gaugeTxt.innerText = "🟠 偏高風險溢價區"; gaugeTxt.style.color = "#ea580c"; }
+        if (descEl) descEl.innerText = `投組預估本益比偏高 (${weightedForwardPE.toFixed(1)}x) 且產業集中度較高 (${sectorConcScore}/100)，在美債殖利率 5.28% 高利率定錨下，若未來獲利增速降溫易面臨估值壓縮回撤風險。`;
+      } else {
+        if (banner) banner.className = "risk-banner banner-high";
+        if (titleEl) titleEl.innerText = "🔴 高估值透支警示 (安全邊際薄弱)";
+        if (gaugeTxt) { gaugeTxt.innerText = "🔴 高度風險警戒區"; gaugeTxt.style.color = "var(--red)"; }
+        if (descEl) descEl.innerText = `投組股價多已超前反映未來數年成長預期，盈餘安全邊際偏低或 3年年化回報低於無風險利率，容錯空間小，建議納入防禦性現金流標的分散波動。`;
+      }
+    }
+      initPortfolioRisk();
     }
 
     function executeFCNFetchAndCalc() {
@@ -1880,7 +2110,7 @@
       });
 
       renderAssetsList();
-      calcFCN();
+      initPortfolioRisk();
 
       const fb = document.getElementById("fetchStatusFeedback");
       const icon = document.getElementById("fetchStatusIcon");
@@ -1957,33 +2187,33 @@
       const p = getStockPricesFromDB(unused, startDate);
       fcnAssets.push({ sym: unused, initial: p.initial, current: p.current });
       renderAssetsList();
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function removeAsset(idx) {
       if (fcnAssets.length <= 1) return;
       fcnAssets.splice(idx, 1);
       renderAssetsList();
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function updateAsset(idx, field, val) {
       fcnAssets[idx][field] = val;
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function setKoMemory(val) {
       isMemoryKO = val;
       document.getElementById("koMemoryTrue").className = "toggle-opt " + (val ? "active" : "");
       document.getElementById("koMemoryFalse").className = "toggle-opt " + (!val ? "active" : "");
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function setKiType(val) {
       kiType = val;
       document.getElementById("kiTypeEKI").className = "toggle-opt " + (val === 'EKI' ? "active" : "");
       document.getElementById("kiTypeAKI").className = "toggle-opt " + (val === 'AKI' ? "active" : "");
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function loadPreset(key, el) {
@@ -2000,7 +2230,7 @@
       setKoMemory(p.memory);
       setKiType(p.kiType);
       renderAssetsList();
-      calcFCN();
+      initPortfolioRisk();
     }
 
     function calcFCN() {
@@ -2180,7 +2410,7 @@
 
     // Initialize FCN
     renderAssetsList();
-    calcFCN();
+    initPortfolioRisk();
   </script>
 </body>
 </html>
