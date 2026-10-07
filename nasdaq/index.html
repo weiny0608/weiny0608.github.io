@@ -1603,125 +1603,16 @@
       renderTable();
     }
 
-    function renderTable() {
-      const scenario = document.getElementById("scenarioSelect").value;
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
-
-      let epsMult = 1.0;
-      let peScenarioMult = 1.0;
-      if (scenario === "BULL") { epsMult = 1.15; peScenarioMult = 1.15; }
-      else if (scenario === "BEAR") { epsMult = 0.85; peScenarioMult = 0.85; }
-
-      let processed = [];
-
-      stocks.forEach((s, idx) => {
-        if (selectedIndexFilter === 'SP500' && !s.sp500) return;
-        if (selectedIndexFilter === 'NASDAQ' && !s.nasdaq) return;
-        if (selectedIndexFilter === 'DOW' && !s.dow) return;
-        if (selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
-        if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query)) return;
-
-        const days = getDaysDiff(s.ed);
-        const adjPE = s.pe * peScenarioMult;
-        const val27 = s.eps27 * epsMult * (adjPE * s.mult);
-        const val28 = s.eps28 * epsMult * (adjPE * (s.mult * 0.98));
-        const val29 = s.eps29 * epsMult * (adjPE * 0.94);
-
-        const totalRet = ((val29 / s.p - 1) * 100);
-        const cagr = ((Math.pow(val29 / s.p, 1/3) - 1) * 100);
-
-        const fin = STOCK_FINANCIALS[s.t] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
-        const eps = fin.eps;
-        const curPE = fin.peCurrent || +(s.p / eps).toFixed(1);
-        const fwdPE = +(s.p / (s.eps27 * epsMult)).toFixed(1);
-        const fcf = fin.fcf;
-        const riskScore = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
-
-        processed.push({
-          idx: idx + 1,
-          t: s.t,
-          n: s.n,
-          s: s.s,
-          cat: s.cat,
-          sp500: s.sp500,
-          nasdaq: s.nasdaq,
-          dow: s.dow,
-          p: s.p,
-          eps: eps,
-          peCurrent: curPE,
-          peForward: fwdPE,
-          fcf: fcf,
-          riskScore: riskScore,
-          ed: s.ed,
-          days: days,
-          val27: val27,
-          val28: val28,
-          val29: val29,
-          totalRet: totalRet,
-          cagr: cagr
-        });
-      });
-
-      processed.sort((a, b) => {
-        let v1 = a[sortCol];
-        let v2 = b[sortCol];
-        if (typeof v1 === 'string') return sortAsc ? v1.localeCompare(v2) : v2.localeCompare(v1);
-        return sortAsc ? v1 - v2 : v2 - v1;
-      });
-
-      processed.forEach(item => {
-        let badgeClass = "badge-normal";
-        if (item.days <= 14) badgeClass = "badge-urgent";
-        else if (item.days <= 30) badgeClass = "badge-soon";
-
-        const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
-        const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
-
-        let riskBadgeClass = "risk-mid";
-        let riskBadgeText = "均衡";
-        if (item.riskScore <= 35) { riskBadgeClass = "risk-low"; riskBadgeText = "穩健"; }
-        else if (item.riskScore <= 60) { riskBadgeClass = "risk-mid"; riskBadgeText = "均衡"; }
-        else if (item.riskScore <= 78) { riskBadgeClass = "risk-elev"; riskBadgeText = "溢價"; }
-        else { riskBadgeClass = "risk-high"; riskBadgeText = "高壓"; }
-
-        const spxBadge = item.sp500 ? '<span class="idx-badge active-idx spx">S&P</span>' : '<span class="idx-badge">S&P</span>';
-        const ndxBadge = item.nasdaq ? '<span class="idx-badge active-idx ndx">NDX</span>' : '<span class="idx-badge">NDX</span>';
-        const dowBadge = item.dow ? '<span class="idx-badge active-idx dow">DOW</span>' : '<span class="idx-badge">DOW</span>';
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="mono" style="color: var(--text-muted);">${item.idx}</td>
-          <td><span class="ticker-symbol mono">${item.t}</span></td>
-          <td><span class="company-name">${item.n}</span></td>
-          <td style="white-space:nowrap;">${spxBadge}${ndxBadge}${dowBadge}</td>
-          <td><span class="sector-tag">${item.s}</span></td>
-          <td class="mono">$${item.p.toFixed(2)}</td>
-          <td class="mono font-bold">$${item.eps.toFixed(2)}</td>
-          <td class="mono">${item.peCurrent.toFixed(1)}x</td>
-          <td class="mono" style="font-weight:700; color:var(--accent);">${item.peForward.toFixed(1)}x</td>
-          <td class="mono" style="color:var(--green); font-weight:700;">$${item.fcf.toFixed(1)}B</td>
-          <td><span class="risk-badge ${riskBadgeClass}">${item.riskScore} ${riskBadgeText}</span></td>
-          <td class="mono">${item.ed}</td>
-          <td><span class="countdown-badge ${badgeClass} mono">${item.days} 天</span></td>
-          <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
-          <td class="mono val-cell">$${item.val28.toFixed(1)}</td>
-          <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
-          <td class="mono ${retClass}">${item.totalRet >= 0 ? "+" : ""}${item.totalRet.toFixed(1)}%</td>
-          <td class="mono ${cagrClass}">${item.cagr >= 0 ? "+" : ""}${item.cagr.toFixed(1)}%</td>
-          <td style="text-align: center;"><button class="btn-add-portfolio" onclick="addStockToPortfolio('${item.t}')">＋ 投組</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    renderTable();
-
     // ==========================================================
-    // SECTION 4: PORTFOLIO RISK ASSESSMENT JAVASCRIPT ENGINE
+    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
     // ==========================================================
-    const STOCK_FINANCIALS = {
+// ==========================================================
+    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
+    // ==========================================================
+            // ==========================================================
+    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
+    // ==========================================================
+const STOCK_FINANCIALS = {
       "NVDA": { eps: 3.15, fcf: 60.8, peCurrent: 45.2 },
       "MSFT": { eps: 12.30, fcf: 74.1, peCurrent: 35.4 },
       "AAPL": { eps: 6.65, fcf: 108.8, peCurrent: 34.3 },
@@ -1796,12 +1687,137 @@
       let valScore = fwdPE <= 15 ? 15 : (fwdPE <= 25 ? 35 : (fwdPE <= 35 ? 60 : (fwdPE <= 50 ? 80 : 95)));
       let cagrScore = cagr >= 18 ? 15 : (cagr >= 10 ? 35 : (cagr >= 5 ? 55 : (cagr >= 0 ? 75 : 95)));
       let fcfScore = fcf >= 50 ? 10 : (fcf >= 20 ? 25 : (fcf >= 8 ? 45 : (fcf >= 2 ? 65 : 85)));
-      let rateScore = (curPE > 40 || s.cat === 'SEMIS') ? 75 : ((s.cat === 'FINANCE' || s.cat === 'ENERGY') ? 25 : 50);
+      let rateScore = (curPE > 40 || (s && s.cat === 'SEMIS')) ? 75 : (((s && (s.cat === 'FINANCE' || s.cat === 'ENERGY'))) ? 25 : 50);
       const score = Math.round(valScore * 0.30 + cagrScore * 0.30 + fcfScore * 0.25 + rateScore * 0.15);
       return Math.min(99, Math.max(10, score));
     }
 
-    // Portfolio Risk State
+    function renderTable() {
+      const scenario = document.getElementById("scenarioSelect").value;
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const tbody = document.getElementById("tableBody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      let epsMult = 1.0;
+      let peScenarioMult = 1.0;
+      if (scenario === "BULL") { epsMult = 1.15; peScenarioMult = 1.15; }
+      else if (scenario === "BEAR") { epsMult = 0.85; peScenarioMult = 0.85; }
+
+      let processed = [];
+
+      stocks.forEach((s, idx) => {
+        if (typeof selectedIndexFilter !== 'undefined' && selectedIndexFilter === 'SP500' && !s.sp500) return;
+        if (typeof selectedIndexFilter !== 'undefined' && selectedIndexFilter === 'NASDAQ' && !s.nasdaq) return;
+        if (typeof selectedIndexFilter !== 'undefined' && selectedIndexFilter === 'DOW' && !s.dow) return;
+        if (typeof selectedCategory !== 'undefined' && selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
+        if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query)) return;
+
+        const days = typeof getDaysDiff === 'function' ? getDaysDiff(s.ed) : 30;
+        const adjPE = (s.pe || 20) * peScenarioMult;
+        const eps27 = s.eps27 || 5.0;
+        const eps28 = s.eps28 || 6.0;
+        const eps29 = s.eps29 || 7.0;
+        const mult = s.mult || 0.95;
+
+        const val27 = eps27 * epsMult * (adjPE * mult);
+        const val28 = eps28 * epsMult * (adjPE * (mult * 0.98));
+        const val29 = eps29 * epsMult * (adjPE * 0.94);
+
+        const totalRet = ((val29 / s.p - 1) * 100);
+        const cagr = ((Math.pow(Math.max(0.1, val29 / s.p), 1/3) - 1) * 100);
+
+        const fin = STOCK_FINANCIALS[s.t] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
+        const eps = fin.eps || +(s.p / 25).toFixed(2);
+        const curPE = fin.peCurrent || +(s.p / eps).toFixed(1);
+        const forwardEPS = (s.eps27 || (eps * 1.15)) * epsMult;
+        const fwdPE = forwardEPS > 0 ? +(s.p / forwardEPS).toFixed(1) : 20.0;
+        const fcf = fin.fcf || 5.0;
+        const riskScore = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
+
+        processed.push({
+          idx: idx + 1,
+          t: s.t,
+          n: s.n,
+          s: s.s,
+          cat: s.cat,
+          sp500: s.sp500,
+          nasdaq: s.nasdaq,
+          dow: s.dow,
+          p: s.p,
+          eps: eps,
+          peCurrent: curPE,
+          peForward: fwdPE,
+          fcf: fcf,
+          riskScore: riskScore,
+          ed: s.ed,
+          days: days,
+          val27: val27,
+          val28: val28,
+          val29: val29,
+          totalRet: totalRet,
+          cagr: cagr
+        });
+      });
+
+      processed.sort((a, b) => {
+        let v1 = a[sortCol];
+        let v2 = b[sortCol];
+        if (typeof v1 === 'string') return sortAsc ? v1.localeCompare(v2) : v2.localeCompare(v1);
+        return sortAsc ? (v1 - v2) : (v2 - v1);
+      });
+
+      processed.forEach(item => {
+        let badgeClass = "badge-normal";
+        if (item.days <= 14) badgeClass = "badge-urgent";
+        else if (item.days <= 30) badgeClass = "badge-soon";
+
+        const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
+        const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
+
+        let riskBadgeClass = "risk-mid";
+        let riskBadgeText = "均衡";
+        if (item.riskScore <= 35) { riskBadgeClass = "risk-low"; riskBadgeText = "穩健"; }
+        else if (item.riskScore <= 60) { riskBadgeClass = "risk-mid"; riskBadgeText = "均衡"; }
+        else if (item.riskScore <= 78) { riskBadgeClass = "risk-elev"; riskBadgeText = "溢價"; }
+        else { riskBadgeClass = "risk-high"; riskBadgeText = "高壓"; }
+
+        const spxBadge = item.sp500 ? '<span class="idx-badge active-idx spx">S&P</span>' : '<span class="idx-badge">S&P</span>';
+        const ndxBadge = item.nasdaq ? '<span class="idx-badge active-idx ndx">NDX</span>' : '<span class="idx-badge">NDX</span>';
+        const dowBadge = item.dow ? '<span class="idx-badge active-idx dow">DOW</span>' : '<span class="idx-badge">DOW</span>';
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="mono" style="color: var(--text-muted);">${item.idx}</td>
+          <td><span class="ticker-symbol mono">${item.t}</span></td>
+          <td><span class="company-name">${item.n}</span></td>
+          <td style="white-space:nowrap;">${spxBadge}${ndxBadge}${dowBadge}</td>
+          <td><span class="sector-tag">${item.s}</span></td>
+          <td class="mono">$${item.p.toFixed(2)}</td>
+          <td class="mono font-bold">$${item.eps.toFixed(2)}</td>
+          <td class="mono">${item.peCurrent.toFixed(1)}x</td>
+          <td class="mono" style="font-weight:700; color:var(--accent);">${item.peForward.toFixed(1)}x</td>
+          <td class="mono" style="color:var(--green); font-weight:700;">$${item.fcf.toFixed(1)}B</td>
+          <td><span class="risk-badge ${riskBadgeClass}">${item.riskScore} ${riskBadgeText}</span></td>
+          <td class="mono">${item.ed}</td>
+          <td><span class="countdown-badge ${badgeClass} mono">${item.days} 天</span></td>
+          <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
+          <td class="mono val-cell">$${item.val28.toFixed(1)}</td>
+          <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
+          <td class="mono ${retClass}">${item.totalRet >= 0 ? "+" : ""}${item.totalRet.toFixed(1)}%</td>
+          <td class="mono ${cagrClass}">${item.cagr >= 0 ? "+" : ""}${item.cagr.toFixed(1)}%</td>
+          <td style="text-align: center;"><button class="btn-add-portfolio" onclick="addStockToPortfolio('${item.t}')">＋ 投組</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    renderTable();
+
+    // ==========================================================
+    // SECTION 4: PORTFOLIO RISK ASSESSMENT JAVASCRIPT ENGINE
+    // ==========================================================
+            // Portfolio Risk State
     let portfolioAssets = [
       { sym: "NVDA", weight: 30 },
       { sym: "TSM", weight: 30 },
@@ -2100,317 +2116,9 @@
       initPortfolioRisk();
     }
 
-    function executeFCNFetchAndCalc() {
-      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
-      
-      fcnAssets.forEach(a => {
-        const p = getStockPricesFromDB(a.sym, startDate);
-        a.initial = p.initial;
-        a.current = p.current;
-      });
-
-      renderAssetsList();
-      initPortfolioRisk();
-
-      const fb = document.getElementById("fetchStatusFeedback");
-      const icon = document.getElementById("fetchStatusIcon");
-      const text = document.getElementById("fetchStatusText");
-      if (fb && text) {
-        fb.style.background = "#ecfdf5";
-        fb.style.borderColor = "#a7f3d0";
-        fb.style.color = "#065f46";
-        icon.innerText = "✓";
-        text.innerText = "資料庫同步完成：已精確載入【設定日: " + startDate + "】發行基準價與【今日: 2026-10-05】收盤價，損益計算已即時更新！";
-        
-        const btn = document.getElementById("btnFetchAndCalc");
-        if (btn) {
-          btn.style.transform = "scale(0.98)";
-          setTimeout(() => { btn.style.transform = "scale(1)"; }, 150);
-        }
-      }
-    }
-
-    function renderAssetsList() {
-      const container = document.getElementById("assetsContainer");
-      container.innerHTML = "";
-      const startDate = document.getElementById("fcnStartDate") ? document.getElementById("fcnStartDate").value : "2026-06-01";
-      
-      fcnAssets.forEach((a, idx) => {
-        const div = document.createElement("div");
-        div.className = "asset-row";
-
-        let optionsHtml = "";
-        ALL_UNDERLYINGS.forEach(u => {
-          const sel = (u.sym === a.sym) ? "selected" : "";
-          optionsHtml += `<option value="${u.sym}" ${sel}>${u.name}</option>`;
-        });
-        if (!ALL_UNDERLYINGS.some(u => u.sym === a.sym)) {
-          optionsHtml += `<option value="${a.sym}" selected>${a.sym}</option>`;
-        }
-
-        const disStyle = (fcnAssets.length <= 1) ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : '';
-        div.innerHTML = `
-          <div>
-            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">標的 ${idx + 1} 選擇</label>
-            <select class="mono" style="width:100%; font-weight:700; padding:6px 8px; border-radius:7px; background:#ffffff; border:1px solid #cddcc6; color:#132a18; font-size:12px;" onchange="onAssetSelectChange(${idx}, this.value)">
-              ${optionsHtml}
-            </select>
-          </div>
-          <div>
-            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">發行基準價 (設定日市價)</label>
-            <div class="price-badge-box mono">
-              <span class="price-val">$${a.initial.toFixed(2)}</span>
-              <span class="price-tag">自動抓取</span>
-            </div>
-          </div>
-          <div>
-            <label style="display:block; font-size:10.5px; color: var(--text-muted); margin-bottom:2px; font-weight:600;">當前現價 (今日市價)</label>
-            <div class="price-badge-box mono">
-              <span class="price-val">$${a.current.toFixed(2)}</span>
-              <span class="price-tag">最新收盤</span>
-            </div>
-          </div>
-          <button class="btn-remove" onclick="removeAsset(${idx})" title="刪除此標的" ${disStyle}>✕</button>
-        `;
-        container.appendChild(div);
-      });
-
-      document.getElementById("assetCountText").innerText = `目前 ${fcnAssets.length} 檔標的 (上限 4 檔)`;
-      document.getElementById("btnAddAsset").style.display = fcnAssets.length >= 4 ? "none" : "inline-block";
-    }
-
-    function addAssetRow() {
-      if (fcnAssets.length >= 4) return;
-      const candidates = ["MSFT", "AAPL", "GOOGL", "META", "AMD", "QCOM", "AVGO"];
-      const unused = candidates.find(c => !fcnAssets.some(a => a.sym === c)) || "MSFT";
-      const startDate = document.getElementById("fcnStartDate").value || "2026-06-01";
-      const p = getStockPricesFromDB(unused, startDate);
-      fcnAssets.push({ sym: unused, initial: p.initial, current: p.current });
-      renderAssetsList();
-      initPortfolioRisk();
-    }
-
-    function removeAsset(idx) {
-      if (fcnAssets.length <= 1) return;
-      fcnAssets.splice(idx, 1);
-      renderAssetsList();
-      initPortfolioRisk();
-    }
-
-    function updateAsset(idx, field, val) {
-      fcnAssets[idx][field] = val;
-      initPortfolioRisk();
-    }
-
-    function setKoMemory(val) {
-      isMemoryKO = val;
-      document.getElementById("koMemoryTrue").className = "toggle-opt " + (val ? "active" : "");
-      document.getElementById("koMemoryFalse").className = "toggle-opt " + (!val ? "active" : "");
-      initPortfolioRisk();
-    }
-
-    function setKiType(val) {
-      kiType = val;
-      document.getElementById("kiTypeEKI").className = "toggle-opt " + (val === 'EKI' ? "active" : "");
-      document.getElementById("kiTypeAKI").className = "toggle-opt " + (val === 'AKI' ? "active" : "");
-      initPortfolioRisk();
-    }
-
-    function loadPreset(key, el) {
-      document.querySelectorAll('.fcn-preset-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      const p = PRESETS[key];
-      fcnAssets = JSON.parse(JSON.stringify(p.assets));
-      document.getElementById("fcnStrikePct").value = p.strike;
-      document.getElementById("fcnKoPct").value = p.ko;
-      document.getElementById("fcnKiPct").value = p.ki;
-      document.getElementById("fcnCoupon").value = p.coupon;
-      document.getElementById("fcnTenorMonths").value = p.tenor;
-      document.getElementById("fcnStartDate").value = p.start;
-      setKoMemory(p.memory);
-      setKiType(p.kiType);
-      renderAssetsList();
-      initPortfolioRisk();
-    }
-
-    function calcFCN() {
-      const koPct = parseFloat(document.getElementById("fcnKoPct").value) || 100;
-      const kiPct = parseFloat(document.getElementById("fcnKiPct").value) || 70;
-      const strikePct = parseFloat(document.getElementById("fcnStrikePct").value) || 85;
-      const couponRate = parseFloat(document.getElementById("fcnCoupon").value) || 15.0;
-      const tenorMonths = parseInt(document.getElementById("fcnTenorMonths").value) || 6;
-      const notional = parseFloat(document.getElementById("fcnNotional").value) || 100000;
-
-      // Calculate each asset's performance
-      let worst = null;
-      let allAboveKO = true;
-      let anyBelowKI = false;
-
-      const processedAssets = fcnAssets.map(a => {
-        const level = a.initial > 0 ? (a.current / a.initial) * 100 : 100;
-        if (level < koPct) allAboveKO = false;
-        if (level <= kiPct) anyBelowKI = true;
-
-        const assetData = {
-          sym: a.sym,
-          initial: a.initial,
-          current: a.current,
-          level: level,
-          koDist: level - koPct,
-          kiDist: level - kiPct
-        };
-
-        if (!worst || level < worst.level) {
-          worst = assetData;
-        }
-        return assetData;
-      });
-
-      // Update Worst-Of in Banner
-      document.getElementById("fcnWorstSymbol").innerText = worst.sym;
-      document.getElementById("fcnWorstLevel").innerText = worst.level.toFixed(1) + "%";
-
-      // Status Decision
-      const banner = document.getElementById("fcnStatusBanner");
-      const title = document.getElementById("fcnStatusTitle");
-      const desc = document.getElementById("fcnStatusDesc");
-
-      if (allAboveKO) {
-        banner.className = "status-banner status-ko";
-        title.innerHTML = "觸發出場 (Knock-Out) 提前獲利！";
-        title.style.color = "var(--green)";
-        desc.innerText = `所有標的皆達標高於 KO 價 (${koPct}%)，合約提早結束，投資人取回 100% 本金並領滿前置約定利息。${isMemoryKO ? '（記憶式：補發先前未領票息）' : ''}`;
-      } else if (anyBelowKI && worst.level < strikePct) {
-        banner.className = "status-banner status-ki";
-        title.innerHTML = "觸發承接風險 (Knock-In)";
-        title.style.color = "var(--red)";
-        desc.innerText = kiType === 'AKI'
-          ? `最差標的 ${worst.sym} 在觀察期間跌破保護價 (KI ${kiPct}%)，且現價低於 Strike (${strikePct}%)，到期若未漲回需承接股票。`
-          : `最差標的 ${worst.sym} 現價低於期末保護價 (EKI ${kiPct}%)，若到期維持此價位將以 Strike 價格承接該股票。`;
-      } else if (anyBelowKI) {
-        banner.className = "status-banner status-ki-watch";
-        title.innerHTML = "跌破保護價但高於執行價 (安全警戒)";
-        title.style.color = "var(--yellow)";
-        desc.innerText = `標的 ${worst.sym} 曾跌破 KI (${kiPct}%)，但目前最差標的高於 Strike (${strikePct}%)，若到期維持在此水準以上仍可拿回 100% 現金。`;
-      } else {
-        banner.className = "status-banner status-safe";
-        title.innerHTML = "安全區間 (Safe) ｜ 穩定領息中";
-        title.style.color = "var(--accent)";
-        desc.innerText = `所有標的均在 KI (${kiPct}%) 保護價之上，且尚未全部敲出，合約穩定存續，每月按期領息。`;
-      }
-
-      // Update Gauge Bar
-      // Map 0%~125% to pixel %
-      // 0% -> 0, 70% -> (70/125)*100 = 56%, 100% -> (100/125)*100 = 80%
-      const maxScale = 125;
-      const kiPos = Math.min(100, Math.max(0, (kiPct / maxScale) * 100));
-      const strikePos = Math.min(100, Math.max(0, (strikePct / maxScale) * 100));
-      const koPos = Math.min(100, Math.max(0, (koPct / maxScale) * 100));
-
-      const zoneKi = document.getElementById("gaugeZoneKi");
-      if (zoneKi) {
-        zoneKi.style.left = "0%";
-        zoneKi.style.width = kiPos + "%";
-      }
-
-      const zoneSafe = document.getElementById("gaugeZoneSafe");
-      if (zoneSafe) {
-        zoneSafe.style.left = kiPos + "%";
-        zoneSafe.style.width = Math.max(0, koPos - kiPos) + "%";
-      }
-
-      const zoneKo = document.getElementById("gaugeZoneKo");
-      if (zoneKo) {
-        zoneKo.style.left = koPos + "%";
-        zoneKo.style.width = Math.max(0, 100 - koPos) + "%";
-      }
-
-      const markKi = document.getElementById("markKi");
-      if (markKi) {
-        markKi.style.left = Math.min(95, Math.max(5, kiPos)) + "%";
-        markKi.innerText = `KI: ${kiPct}%`;
-      }
-
-      const markStrike = document.getElementById("markStrike");
-      if (markStrike) {
-        markStrike.style.left = Math.min(95, Math.max(5, strikePos)) + "%";
-        markStrike.innerText = `Strike: ${strikePct}%`;
-      }
-
-      const markKo = document.getElementById("markKo");
-      if (markKo) {
-        markKo.style.left = Math.min(95, Math.max(5, koPos)) + "%";
-        markKo.innerText = `KO: ${koPct}%`;
-      }
-
-      // Render Pins on Gauge (Clamped between 2% and 98% to avoid overhang)
-      const pinsContainer = document.getElementById("gaugePinsContainer");
-      if (pinsContainer) {
-        pinsContainer.innerHTML = "";
-        const colors = ["#059669", "#d97706", "#0284c7", "#7c3aed"];
-
-        processedAssets.forEach((a, i) => {
-          const rawPinPos = (a.level / maxScale) * 100;
-          const pinPos = Math.min(98, Math.max(2, rawPinPos));
-          const pin = document.createElement("div");
-          pin.className = "gauge-pin";
-          pin.style.left = pinPos + "%";
-          pin.style.background = colors[i % colors.length];
-          pin.title = `${a.sym}: ${a.level.toFixed(1)}%`;
-          pinsContainer.appendChild(pin);
-        });
-      }
-
-      // Update Table
-      const tbody = document.getElementById("fcnAssetsTableBody");
-      tbody.innerHTML = "";
-      processedAssets.forEach(a => {
-        const tr = document.createElement("tr");
-        const isWorst = a.sym === worst.sym;
-        const levelClass = a.level >= koPct ? "return-positive" : (a.level <= kiPct ? "return-negative" : "");
-        const statusText = a.level >= koPct ? "達標 KO" : (a.level <= kiPct ? "跌破 KI" : "區間存續");
-
-        tr.innerHTML = `
-          <td><strong>${a.sym}</strong> ${isWorst ? '<span style="color:#fb7185; font-size:10px; font-weight:700;">(Worst)</span>' : ''}</td>
-          <td class="mono">$${a.initial.toFixed(2)}</td>
-          <td class="mono">$${a.current.toFixed(2)}</td>
-          <td class="mono ${levelClass}"><strong>${a.level.toFixed(1)}%</strong></td>
-          <td class="mono" style="color:${a.koDist >= 0 ? 'var(--green)' : 'var(--text-muted)'}">${a.koDist >= 0 ? '+' : ''}${a.koDist.toFixed(1)}%</td>
-          <td class="mono" style="color:${a.kiDist <= 0 ? 'var(--red)' : 'var(--green)'}">${a.kiDist >= 0 ? '+' : ''}${a.kiDist.toFixed(1)}%</td>
-          <td><span class="badge ${a.level >= koPct ? 'badge-normal' : (a.level <= kiPct ? 'badge-urgent' : 'badge-soon')}">${statusText}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // Payout Box Calculation
-      document.getElementById("payoutCouponRate").innerText = couponRate.toFixed(2) + "%";
-      const monthlyCoupon = notional * (couponRate / 100) / 12;
-      const totalCoupon = monthlyCoupon * tenorMonths;
-      document.getElementById("payoutMonthlyAmt").innerText = `$${Math.round(monthlyCoupon).toLocaleString()} USD`;
-      document.getElementById("payoutTotalAmt").innerText = `$${Math.round(totalCoupon).toLocaleString()} USD`;
-
-      const typeEl = document.getElementById("payoutPrincipalType");
-      const deliveryEl = document.getElementById("payoutStockDelivery");
-
-      if (allAboveKO) {
-        typeEl.innerHTML = `<span style="color:var(--green); font-weight:700;">提前 KO 全額返還 $${notional.toLocaleString()} USD</span>`;
-        deliveryEl.innerText = "無須承接股票 (提前出場)";
-      } else if (anyBelowKI && worst.level < strikePct) {
-        const strikePrice = worst.initial * (strikePct / 100);
-        const shares = Math.floor(notional / strikePrice);
-        const stockMv = shares * worst.current;
-        const loss = notional - stockMv;
-        typeEl.innerHTML = `<span style="color:var(--red); font-weight:700;">到期實體交割 (以 Strike $${strikePrice.toFixed(2)} 買入)</span>`;
-        deliveryEl.innerHTML = `<span style="color:#fb7185;">承接 ${shares} 股 ${worst.sym} (市值約 $${Math.round(stockMv).toLocaleString()}，帳損約 -$${Math.round(loss).toLocaleString()})</span>`;
-      } else {
-        typeEl.innerHTML = `<span style="color:var(--accent); font-weight:700;">100% 本金全額現金返還 ($${notional.toLocaleString()})</span>`;
-        deliveryEl.innerText = "無須承接股票 (領滿利息)";
-      }
-    }
-
-    // Initialize FCN
-    renderAssetsList();
+    // Initialize Portfolio Risk System on load
     initPortfolioRisk();
+
   </script>
 </body>
 </html>
