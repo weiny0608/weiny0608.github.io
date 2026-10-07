@@ -129,132 +129,68 @@ const GOOGLE_FINANCE_LATEST_CLOSES = {
 
 const fetchGoogleStockChart = async (ticker, range = "1y") => {
     const sym = ticker.trim().toUpperCase();
-    console.log(`[FCN 網頁即時資料庫引擎] 連線雲端資料庫: ${sym}`);
+    console.log(`[FCN 網頁即時資料庫] 啟動即時行情查詢: ${sym}`);
 
-    // 通道 1: AllOrigins JSON Envelope (從 Yahoo Finance 雲端資料庫提取全美股 250 天真實日收盤走勢)
-    const tryAllOrigins = async (targetUrl) => {
+    // 定義各個雲端代理讀取函式
+    const fetchViaAllOrigins = async (targetUrl, timeoutMs = 3000) => {
         const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(targetUrl) + '&t=' + Date.now();
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(timeoutMs) });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const wrapper = await res.json();
         if (!wrapper.contents) throw new Error('Empty');
         const json = JSON.parse(wrapper.contents);
         const r = json.chart && json.chart.result && json.chart.result[0];
         if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-            return { json: json, price: r.meta.regularMarketPrice, source: 'Yahoo 財經雲端資料庫' };
+            return Object.assign({}, json, { source: 'Yahoo 財經即時資料庫', isLive: true });
         }
-        throw new Error('Invalid data');
+        throw new Error('Invalid');
     };
 
-    // 通道 2: CodeTabs 即時代理通道
-    const tryCodeTabs = async (targetUrl) => {
+    const fetchViaCodeTabs = async (targetUrl, timeoutMs = 3000) => {
         const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(timeoutMs) });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const json = await res.json();
         const r = json.chart && json.chart.result && json.chart.result[0];
         if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-            return { json: json, price: r.meta.regularMarketPrice, source: 'Yahoo 財經資料庫 (CodeTabs)' };
+            return Object.assign({}, json, { source: 'Yahoo 財經即時 (CodeTabs)', isLive: true });
         }
-        throw new Error('Invalid data');
+        throw new Error('Invalid');
     };
 
-    // 通道 3: CorsProxy.io 即時代理通道
-    const tryCorsProxy = async (targetUrl) => {
+    const fetchViaCorsProxy = async (targetUrl, timeoutMs = 3000) => {
         const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent(targetUrl);
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(4500) });
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(timeoutMs) });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const json = await res.json();
         const r = json.chart && json.chart.result && json.chart.result[0];
         if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-            return { json: json, price: r.meta.regularMarketPrice, source: 'Yahoo 財經資料庫 (CorsProxy)' };
+            return Object.assign({}, json, { source: 'Yahoo 財經即時 (CorsProxy)', isLive: true });
         }
-        throw new Error('Invalid data');
+        throw new Error('Invalid');
     };
 
-    // 通道 0: 快速偵測本機微服務
-    try {
-        const localRes = await fetch('http://127.0.0.1:8088/api/quote?symbol=' + sym, { signal: AbortSignal.timeout(500) });
-        if (localRes.ok) {
-            const data = await localRes.json();
-            if (data && data.success && data.price) {
-                const price = parseFloat(data.price);
-                const prev = data.previousClose || price;
-                const timestamps = Array.from({length: 250}, (_, i) => Math.floor(Date.now() / 1000) - (249 - i) * 86400);
-                
-                // 優先使用真實歷史走勢序列
-                let closes = [];
-                const realSeries = GOOGLE_US_SERIES[sym];
-                if (realSeries && realSeries.length > 0) {
-                    const sample = realSeries.slice(-250);
-                    const lastRaw = sample[sample.length - 1];
-                    const scale = price / lastRaw;
-                    closes = sample.map(p => parseFloat((p * scale).toFixed(2)));
-                } else {
-                    const startPrice = data.low52Week || price * 0.85;
-                    let p = startPrice;
-                    const drift = Math.log(price / startPrice) / 250;
-                    for (let i = 0; i < 250; i++) {
-                        const z = (Math.sin(i * 0.4) * 0.5 + Math.cos(i * 0.8) * 0.5);
-                        p = p * Math.exp(drift + 0.015 * z);
-                        closes.push(parseFloat(p.toFixed(2)));
-                    }
-                }
-                closes[closes.length - 1] = price;
-
-                return {
-                    source: data.source || 'Google 財經本地直連 (' + (data.exchange || 'Live') + ')',
-                    name: data.name || sym,
-                    isLive: true,
-                    chart: {
-                        result: [{
-                            meta: {
-                                currency: 'USD',
-                                symbol: sym,
-                                shortName: data.name || sym,
-                                regularMarketPrice: price,
-                                chartPreviousClose: prev,
-                                fiftyTwoWeekHigh: data.high52Week || price * 1.15,
-                                fiftyTwoWeekLow: data.low52Week || price * 0.85,
-                                source: data.source || 'Google Finance Live'
-                            },
-                            timestamp: timestamps,
-                            indicators: { quote: [{ close: closes }] }
-                        }]
-                    }
-                };
-            }
-        }
-    } catch(e) {}
-
-    // 依序執行純網頁雲端通道 (向 Yahoo Finance 伺服器發送請求)
-    const targets = [
+    // 依序嘗試 Yahoo query1 與 query2，透過 Promise.any 讓多個代理通道同時競速，誰最快就用誰！
+    const targetUrls = [
         'https://query1.finance.yahoo.com/v8/finance/chart/' + sym + '?interval=1d&range=1y',
         'https://query2.finance.yahoo.com/v8/finance/chart/' + sym + '?interval=1d&range=1y'
     ];
 
-    for (let i = 0; i < targets.length; i++) {
-        const targetUrl = targets[i];
+    for (let i = 0; i < targetUrls.length; i++) {
+        const tUrl = targetUrls[i];
         try {
-            const res = await tryAllOrigins(targetUrl);
-            console.log('[雲端金融資料庫連線成功] ' + sym + ': $' + res.price);
-            return Object.assign({}, res.json, { source: res.source, isLive: true });
-        } catch(e) {}
-
-        try {
-            const res = await tryCodeTabs(targetUrl);
-            console.log('[雲端金融資料庫連線成功] ' + sym + ': $' + res.price);
-            return Object.assign({}, res.json, { source: res.source, isLive: true });
-        } catch(e) {}
-
-        try {
-            const res = await tryCorsProxy(targetUrl);
-            console.log('[雲端金融資料庫連線成功] ' + sym + ': $' + res.price);
-            return Object.assign({}, res.json, { source: res.source, isLive: true });
+            // 同時向三個獨立代理發送競速請求 (誰先返回正確行情就立刻使用，2.5s 快速逾時防止卡頓)
+            const result = await Promise.any([
+                fetchViaAllOrigins(tUrl, 2800),
+                fetchViaCodeTabs(tUrl, 2800),
+                fetchViaCorsProxy(tUrl, 2800)
+            ]);
+            console.log('[雲端金融資料庫競速成功] ' + sym + ': $' + result.chart.result[0].meta.regularMarketPrice);
+            return result;
         } catch(e) {}
     }
 
-    // 若網路離線，但該標的在核心基準庫中，優先使用真實歷史走勢序列 (絕非直線！)
+    // 若線上代理因網路或限流短暫無法返回，但該標的在內建真實歷史資料庫中 (涵蓋 UUUU, GLD, QQQ, SPY, NVDA, TSM 等 23 檔核心標的)
     const info = GOOGLE_FINANCE_LATEST_CLOSES[sym];
     if (info) {
         const curPrice = info.current;
@@ -266,7 +202,7 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
             const sample = realSeries.slice(-250);
             const lastRaw = sample[sample.length - 1];
             const scale = curPrice / lastRaw;
-            // 依據真實歷史日收盤價依比例等比縮放，完整保留每日真實市場波動曲線，絕不呈現直線
+            // 完整保留每日真實市場波動，絕非直線
             closes = sample.map(p => parseFloat((p * scale).toFixed(2)));
         } else {
             const startPrice = info.y1 || curPrice * 0.85;
@@ -281,7 +217,7 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
         closes[closes.length - 1] = curPrice;
 
         return {
-            source: '真實歷史行情庫 (市場波動特徵)',
+            source: '真實歷史行情資料庫 (市場波動)',
             isLive: false,
             isFallback: true,
             chart: {
@@ -302,7 +238,7 @@ const fetchGoogleStockChart = async (ticker, range = "1y") => {
         };
     }
 
-    throw new Error('無法從雲端資料庫（Yahoo 財經 / Google 財經）取得【' + sym + '】即時行情，請檢查代碼或網路連線。');
+    throw new Error('無法從雲端資料庫取得【' + sym + '】即時行情，請確認代碼是否正確。');
 };
 
 function FCNDashboard() {
@@ -419,17 +355,6 @@ function FCNDashboard() {
                 const level = (currentPrice / initialPrice) * 100;
                 const perf = ((currentPrice - initialPrice) / initialPrice) * 100;
                 
-                return {
-                    sym,
-                    data: r,
-                    initialPrice: parseFloat(initialPrice.toFixed(2)),
-                    currentPrice: parseFloat(currentPrice.toFixed(2)),
-                    strikePrice: parseFloat(((initialPrice * basketStrikePct) / 100).toFixed(2)),
-                    level: parseFloat(level.toFixed(2)),
-                    performance: parseFloat(perf.toFixed(2)),
-                    timestamps,
-                    closePrices
-                };
                 fetchedAssets.push({
                     sym,
                     data: r,
