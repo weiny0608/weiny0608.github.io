@@ -1108,7 +1108,7 @@
       </div>
     </div>
 
-    <!-- CME FedWatch Probabilities Card (Option B) -->
+    <!-- CME FedWatch Probabilities Card (Option A) -->
     <div class="macro-card">
       <div class="card-header">
         <div>
@@ -1129,7 +1129,7 @@
           <tr>
             <th>目標政策動作</th>
             <th>目標利率區間</th>
-            <th>即時機率 (方案B)</th>
+            <th>即時機率 (方案A)</th>
             <th>1天前</th>
             <th>1週前</th>
           </tr>
@@ -2112,8 +2112,6 @@ const STOCK_FINANCIALS = {
         if (gaugeTxt) { gaugeTxt.innerText = "🔴 高度風險警戒區"; gaugeTxt.style.color = "var(--red)"; }
         if (descEl) descEl.innerText = `投組股價多已超前反映未來數年成長預期，盈餘安全邊際偏低或 3年年化回報低於無風險利率，容錯空間小，建議納入防禦性現金流標的分散波動。`;
       }
-    }
-      initPortfolioRisk();
     }
 
     // Initialize Portfolio Risk System on load
