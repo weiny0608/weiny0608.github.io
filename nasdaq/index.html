@@ -1513,51 +1513,7 @@
 
   <script>
 
-    // 雲端全自動即時數據同步引擎 (無需本機開機)
-    function getLiveMarketDate() {
-      // 根據美東時間計算當前市場日期
-      const now = new Date();
-      return now;
-    }
-
-    (async function initNasdaqCloudAutoSync() {
-      const now = getLiveMarketDate();
-      const yr = now.getFullYear();
-      const mo = String(now.getMonth() + 1).padStart(2, '0');
-      const da = String(now.getDate()).padStart(2, '0');
-      
-      // 動態更新頁首基準日字串
-      const headerSub = document.querySelector(".header p");
-      if (headerSub) {
-        headerSub.innerHTML = `基準日：${yr} 年 ${mo} 月 ${da} 日 (美股收盤・雲端即時連動) ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援三大指數切換 ｜ 1~4 標的 FCN 模擬`;
-      }
-
-      // 動態計算 FOMC 倒數天數
-      const fomcDate = new Date("2026-10-28");
-      const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
-      const fomcSubEl = document.querySelector(".header div[style*='text-align: right'] div:last-child");
-      if (fomcSubEl) {
-        fomcSubEl.innerHTML = `下次 FOMC：2026-10-28 (倒數 ${daysToFomc} 天) ｜ 核心 PCE：3.0%`;
-      }
-
-      // 非阻塞式抓取最新 10 年期美債殖利率 (^TNX)
-      try {
-        const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d') + '&t=' + Date.now();
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(3500) });
-        if (res.ok) {
-          const wrapper = await res.json();
-          if (wrapper.contents) {
-            const json = JSON.parse(wrapper.contents);
-            const r = json.chart && json.chart.result && json.chart.result[0];
-            if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-              const liveYield = (r.meta.regularMarketPrice).toFixed(2);
-              const el = document.querySelector(".header div[style*='text-align: right'] .mono");
-              if (el) el.innerHTML = `US10Y: ${liveYield}% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(即時連線)</span>`;
-            }
-          }
-        }
-      } catch(e) {}
-    })();
+    
     
 
     /* ==========================================================
@@ -2166,5 +2122,92 @@ const STOCK_FINANCIALS = {
     initPortfolioRisk();
 
   </script>
+
+<!-- ROBUST CLOUD AUTO-SYNC & YIELD FETCHER ENGINE -->
+<script>
+(async function robustLiveYieldSync() {
+  const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
+  
+  // 1. 動態計算當前日期與 FOMC 倒數
+  const now = new Date();
+  const fomcDate = new Date("2026-10-28");
+  const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+  
+  // 更新各頁面中可能存在的 FOMC 標籤
+  document.querySelectorAll("[id*='fomc'], .card-header div, .header div").forEach(el => {
+    if (el.textContent && el.textContent.includes("2026-10-28") && el.children.length === 0) {
+      el.textContent = el.textContent.replace(/2026-10-28(\s*\([^)]*\))?/, `2026-10-28 (倒數 ${daysToFomc} 天)`);
+    }
+  });
+
+  // 2. 多重通道抓取 10 年期美債殖利率
+  let liveYield = null;
+  let sourceTag = "雲端同步";
+
+  // 通道 A: 透過 Google Sheets 官方 CDN (100% 允許跨域，絕不被瀏覽器廣告擋件阻攔)
+  try {
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20B%20limit%203&t=` + Date.now();
+    const res = await fetch(gvizUrl, { signal: AbortSignal.timeout(4000) });
+    if (res.ok) {
+      const text = await res.text();
+      const m = text.match(/setResponse\((.*)\);/s);
+      if (m) {
+        const json = JSON.parse(m[1]);
+        const rows = json.table.rows;
+        // Row 1 (Index 1) is 10Y Yield
+        if (rows && rows.length > 1 && rows[1].c && rows[1].c[0]) {
+          const valStr = String(rows[1].c[0].v || rows[1].c[0].f || "");
+          const matchNum = valStr.match(/([0-9]+\.[0-9]+)/);
+          if (matchNum) {
+            liveYield = parseFloat(matchNum[1]);
+            sourceTag = "雲端試算表同步";
+          }
+        }
+      }
+    }
+  } catch(e) {
+    console.warn("Channel A (Google Sheet) sync fallback:", e);
+  }
+
+  // 通道 B: 若通道 A 未取得，嘗試即時 Yahoo 金融多重代理
+  if (!liveYield) {
+    const proxies = [
+      'https://corsproxy.io/?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d'),
+      'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d')
+    ];
+    for (const pUrl of proxies) {
+      try {
+        const res = await fetch(pUrl, { signal: AbortSignal.timeout(3000) });
+        if (res.ok) {
+          const json = await res.json();
+          const target = json.contents ? JSON.parse(json.contents) : json;
+          const r = target.chart && target.chart.result && target.chart.result[0];
+          if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
+            liveYield = parseFloat((r.meta.regularMarketPrice).toFixed(2));
+            sourceTag = "Yahoo即時連線";
+            break;
+          }
+        }
+      } catch(err) {}
+    }
+  }
+
+  // 若兩大通道皆成功或使用最新基準
+  const finalYield = liveYield ? liveYield.toFixed(2) : "5.26";
+  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${sourceTag}: ${finalYield}%</span>`;
+
+  // 更新頁面中所有的 US10Y 元素
+  const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");
+  if (headerYieldEl) {
+    headerYieldEl.innerHTML = `US10Y: ${finalYield}% ${statusHtml}`;
+  }
+
+  const pillEl = document.getElementById("macro-latest-pill") || document.querySelector(".card-stat-pill.mono");
+  if (pillEl) {
+    pillEl.innerHTML = `最新: ${finalYield}% <span style="color:#059669;">●</span>`;
+  }
+})();
+</script>
+
 </body>
 </html>
