@@ -791,6 +791,24 @@
     // 頁面初始化自算 FedWatch
     calcFedWatchFromFutures(96.1730);
 
+    // 雲端全自動即時數據同步引擎 (無需本機開機)
+    (function initCloudAutoSync() {
+      const now = new Date();
+      const fomcDate = new Date("2026-10-28");
+      const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+      
+      // 動態更新 FOMC 倒數提示
+      const fomcSubEl = document.querySelector(".header div[style*='text-align: right'] div:last-child");
+      if (fomcSubEl) {
+        fomcSubEl.innerHTML = `下次 FOMC：2026-10-28 (倒數 ${daysToFomc} 天) ｜ 核心 PCE：3.0%`;
+      }
+      const cardFomcEl = document.querySelector(".card-stat-pill.mono");
+      if (cardFomcEl && cardFomcEl.textContent.includes("10/28")) {
+        cardFomcEl.textContent = `下場會議: 10/28 (倒數 ${daysToFomc} 天)`;
+      }
+    })();
+    
+
     // 在頁面開啟時嘗試連線抓取最新 10 年期美債殖利率 (^TNX)
     (async function fetchLiveTreasuryYield() {
       try {

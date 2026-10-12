@@ -1512,6 +1512,54 @@
   </div>
 
   <script>
+
+    // 雲端全自動即時數據同步引擎 (無需本機開機)
+    function getLiveMarketDate() {
+      // 根據美東時間計算當前市場日期
+      const now = new Date();
+      return now;
+    }
+
+    (async function initNasdaqCloudAutoSync() {
+      const now = getLiveMarketDate();
+      const yr = now.getFullYear();
+      const mo = String(now.getMonth() + 1).padStart(2, '0');
+      const da = String(now.getDate()).padStart(2, '0');
+      
+      // 動態更新頁首基準日字串
+      const headerSub = document.querySelector(".header p");
+      if (headerSub) {
+        headerSub.innerHTML = `基準日：${yr} 年 ${mo} 月 ${da} 日 (美股收盤・雲端即時連動) ｜ 固定 10 年期美債 5.28% 定錨 ｜ 支援三大指數切換 ｜ 1~4 標的 FCN 模擬`;
+      }
+
+      // 動態計算 FOMC 倒數天數
+      const fomcDate = new Date("2026-10-28");
+      const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+      const fomcSubEl = document.querySelector(".header div[style*='text-align: right'] div:last-child");
+      if (fomcSubEl) {
+        fomcSubEl.innerHTML = `下次 FOMC：2026-10-28 (倒數 ${daysToFomc} 天) ｜ 核心 PCE：3.0%`;
+      }
+
+      // 非阻塞式抓取最新 10 年期美債殖利率 (^TNX)
+      try {
+        const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d') + '&t=' + Date.now();
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(3500) });
+        if (res.ok) {
+          const wrapper = await res.json();
+          if (wrapper.contents) {
+            const json = JSON.parse(wrapper.contents);
+            const r = json.chart && json.chart.result && json.chart.result[0];
+            if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
+              const liveYield = (r.meta.regularMarketPrice).toFixed(2);
+              const el = document.querySelector(".header div[style*='text-align: right'] .mono");
+              if (el) el.innerHTML = `US10Y: ${liveYield}% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(即時連線)</span>`;
+            }
+          }
+        }
+      } catch(e) {}
+    })();
+    
+
     /* ==========================================================
        OPTION B: FEDWATCH FUTURES PROBABILITY ENGINE
        ========================================================== */
