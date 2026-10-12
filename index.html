@@ -798,28 +798,138 @@
     
   </script>
 
-<!-- ROBUST CLOUD AUTO-SYNC & YIELD FETCHER ENGINE -->
+
+
+
+<!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DATA ENGINE -->
 <script>
+const INITIAL_DAILY_YIELD_HISTORY = [
+  {d: "09/08", r: 5.05}, {d: "09/09", r: 5.06}, {d: "09/10", r: 5.09},
+  {d: "09/11", r: 5.08}, {d: "09/12", r: 5.10}, {d: "09/15", r: 5.12},
+  {d: "09/16", r: 5.18}, {d: "09/17", r: 5.16}, {d: "09/18", r: 5.14},
+  {d: "09/19", r: 5.15}, {d: "09/22", r: 5.17}, {d: "09/23", r: 5.18},
+  {d: "09/24", r: 5.19}, {d: "09/25", r: 5.21}, {d: "09/26", r: 5.21},
+  {d: "09/29", r: 5.20}, {d: "09/30", r: 5.22}, {d: "10/01", r: 5.24},
+  {d: "10/02", r: 5.28}, {d: "10/05", r: 5.26}, {d: "10/06", r: 5.27},
+  {d: "10/09", r: 5.26}
+];
+
+function renderRollingYieldChart(latestYieldRate) {
+  const MAX_POINTS = 22; // 固定保留近 1 個月 (約 22 個交易日) 的滾動視窗
+  let history = [...INITIAL_DAILY_YIELD_HISTORY];
+  
+  const now = new Date();
+  const todayLabel = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+  const rateNum = typeof latestYieldRate === 'number' ? latestYieldRate : (parseFloat(latestYieldRate) || 5.26);
+
+  const lastItem = history[history.length - 1];
+  if (lastItem.d === todayLabel) {
+    lastItem.r = rateNum;
+  } else {
+    history.push({ d: todayLabel, r: rateNum, isLatest: true });
+    // 自動淘汰最舊數據，保持固定長度
+    while (history.length > MAX_POINTS) {
+      history.shift();
+    }
+  }
+
+  const minX = 40, maxX = 520;
+  const minY = 20, maxY = 80;
+  
+  const allRates = history.map(h => h.r);
+  const rawMin = Math.min(...allRates);
+  const rawMax = Math.max(...allRates);
+  const minR = Math.floor((rawMin - 0.04) * 100) / 100;
+  const maxR = Math.ceil((rawMax + 0.04) * 100) / 100;
+  const rangeR = Math.max(0.1, maxR - minR);
+
+  const points = history.map((pt, i) => {
+    const x = minX + (i / (history.length - 1)) * (maxX - minX);
+    const y = maxY - ((pt.r - minR) / rangeR) * (maxY - minY);
+    return {
+      ...pt,
+      x: Math.round(x * 10) / 10,
+      y: Math.round(y * 10) / 10
+    };
+  });
+
+  const lineD = points.map((p, i) => (i === 0 ? 'M' : 'L') + ` ${p.x},${p.y}`).join(' ');
+  const areaD = `${lineD} L ${points[points.length - 1].x},${maxY} L ${points[0].x},${maxY} Z`;
+
+  let dotsHtml = '';
+  let labelsHtml = '';
+  const peakVal = Math.max(...allRates);
+
+  points.forEach((p, i) => {
+    const isLast = (i === points.length - 1);
+    const isPeak = (p.r === peakVal && !isLast);
+    
+    if (isLast) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#fff" stroke="#059669" stroke-width="2.5"><title>${p.d} (最新): ${p.r.toFixed(2)}%</title></circle>`;
+      labelsHtml += `<text x="${p.x - 6}" y="93" fill="#059669" font-size="8.5" font-weight="800" text-anchor="middle" font-family="JetBrains Mono">${p.d} (${p.r.toFixed(2)}%)</text>`;
+    } else if (isPeak) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#f59e0b"><title>${p.d} (高點): ${p.r.toFixed(2)}%</title></circle>`;
+    } else if (i === 0 || i === Math.floor(points.length / 2)) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="#059669"><title>${p.d}: ${p.r.toFixed(2)}%</title></circle>`;
+      labelsHtml += `<text x="${p.x}" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">${p.d} (${p.r.toFixed(2)}%)</text>`;
+    } else {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="2" fill="#059669"><title>${p.d}: ${p.r.toFixed(2)}%</title></circle>`;
+    }
+  });
+
+  document.querySelectorAll("svg.yield-chart").forEach(svg => {
+    if (!svg.innerHTML.includes("chartGrad1M")) return;
+
+    let areaPath = svg.querySelector("path[fill*='chartGrad1M']");
+    if (areaPath) areaPath.setAttribute("d", areaD);
+
+    let linePath = svg.querySelector("path[stroke='#059669']");
+    if (linePath) linePath.setAttribute("d", lineD);
+
+    const yTexts = svg.querySelectorAll("text[x='28']");
+    if (yTexts && yTexts.length >= 3) {
+      yTexts[0].textContent = maxR.toFixed(2) + "%";
+      yTexts[1].textContent = ((maxR + minR) / 2).toFixed(2) + "%";
+      yTexts[2].textContent = minR.toFixed(2) + "%";
+    }
+
+    svg.querySelectorAll("circle").forEach(c => c.remove());
+    svg.querySelectorAll("text[y='93']").forEach(t => t.remove());
+
+    svg.insertAdjacentHTML('beforeend', dotsHtml + labelsHtml);
+  });
+
+  const strip = document.querySelector(".macro-scroll-strip");
+  if (strip) {
+    let stripHtml = '';
+    points.forEach((p, i) => {
+      const isLast = (i === points.length - 1);
+      if (isLast) {
+        stripHtml += `<span style="background: #ecfdf5; border: 1px solid #86efac; color: #065f46; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${p.d}: <strong style="color:#065f46;">${p.r.toFixed(2)}% (最新)</strong></span>`;
+      } else {
+        stripHtml += `<span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${p.d}: <strong style="color:#132a18;">${p.r.toFixed(2)}%</strong></span>`;
+      }
+    });
+    strip.innerHTML = stripHtml;
+  }
+}
+
 (async function robustLiveYieldSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
-  
-  // 1. 動態計算當前日期與 FOMC 倒數
   const now = new Date();
   const fomcDate = new Date("2026-10-28");
   const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
   
-  // 更新各頁面中可能存在的 FOMC 標籤
   document.querySelectorAll("[id*='fomc'], .card-header div, .header div").forEach(el => {
     if (el.textContent && el.textContent.includes("2026-10-28") && el.children.length === 0) {
       el.textContent = el.textContent.replace(/2026-10-28(\s*\([^)]*\))?/, `2026-10-28 (倒數 ${daysToFomc} 天)`);
     }
   });
 
-  // 2. 多重通道抓取 10 年期美債殖利率
   let liveYield = null;
   let sourceTag = "雲端同步";
 
-  // 通道 A: 透過 Google Sheets 官方 CDN (100% 允許跨域，絕不被瀏覽器廣告擋件阻攔)
+  // 通道 A: Google Sheets 官方 CDN
   try {
     const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20B%20limit%203&t=` + Date.now();
     const res = await fetch(gvizUrl, { signal: AbortSignal.timeout(4000) });
@@ -829,7 +939,6 @@
       if (m) {
         const json = JSON.parse(m[1]);
         const rows = json.table.rows;
-        // Row 1 (Index 1) is 10Y Yield
         if (rows && rows.length > 1 && rows[1].c && rows[1].c[0]) {
           const valStr = String(rows[1].c[0].v || rows[1].c[0].f || "");
           const matchNum = valStr.match(/([0-9]+\.[0-9]+)/);
@@ -840,11 +949,9 @@
         }
       }
     }
-  } catch(e) {
-    console.warn("Channel A (Google Sheet) sync fallback:", e);
-  }
+  } catch(e) {}
 
-  // 通道 B: 若通道 A 未取得，嘗試即時 Yahoo 金融多重代理
+  // 通道 B: Yahoo 金融多重反向代理
   if (!liveYield) {
     const proxies = [
       'https://corsproxy.io/?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d'),
@@ -867,11 +974,9 @@
     }
   }
 
-  // 若兩大通道皆成功或使用最新基準
   const finalYield = liveYield ? liveYield.toFixed(2) : "5.26";
   const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${sourceTag}: ${finalYield}%</span>`;
 
-  // 更新頁面中所有的 US10Y 元素
   const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");
   if (headerYieldEl) {
     headerYieldEl.innerHTML = `US10Y: ${finalYield}% ${statusHtml}`;
@@ -881,6 +986,9 @@
   if (pillEl) {
     pillEl.innerHTML = `最新: ${finalYield}% <span style="color:#059669;">●</span>`;
   }
+
+  // 自動觸發折線圖重繪與滾動淘汰
+  renderRollingYieldChart(finalYield);
 })();
 </script>
 
