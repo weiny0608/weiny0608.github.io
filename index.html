@@ -445,7 +445,7 @@
         <p>基準日：2026 年 10 月 ｜ 即時總經公債利率定錨 ｜ 整合美股估值、全球債券體質與 FCN 結構型商品雙核心實驗室</p>
       </div>
       <div style="text-align: right;">
-        <div class="mono" style="font-size: 20px; font-weight: 800; color: var(--accent);" id="header-us10y">US10Y: 5.28% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
+        <div class="mono" style="font-size: 20px; font-weight: 800; color: var(--accent);" id="header-us10y">US10Y: 5.22% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
         <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">下次 FOMC：2026-10-28 ｜ 核心 PCE：3.0%</div>
       </div>
     </div>
@@ -465,7 +465,7 @@
             <h3>美國 10 年期公債殖利率走勢面板</h3>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">近 1 個月每日收盤趨勢 ｜ 定錨點 5.28%</div>
           </div>
-          <div class="card-stat-pill mono" id="macro-latest-pill">最新: 5.26%</div>
+          <div class="card-stat-pill mono" id="macro-latest-pill">最新收盤: 5.22%</div>
         </div>
 
         <div class="chart-container">
@@ -491,7 +491,7 @@
             <circle cx="195" cy="46" r="3" fill="#059669"><title>09/16: 5.18%</title></circle>
             <circle cx="370" cy="38" r="2" fill="#059669"><title>09/25: 5.21%</title></circle>
             <circle cx="495" cy="20" r="3.5" fill="#f59e0b"><title>10/02 (高點): 5.28%</title></circle>
-            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新: 5.26%</title></circle>
+            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新收盤: 5.22%</title></circle>
           </svg>
         </div>
 
@@ -502,20 +502,20 @@
         </div>
       </div>
 
-      <!-- Right: CME FedWatch Probabilities Card (期貨定價自算 - Adopted from Nasdaq Dashboard) -->
+            <!-- Right: CME FedWatch Probabilities Card (期貨定價自算 - CME Anchor-Month Model) -->
       <div class="macro-card">
         <div class="card-header">
           <div>
             <h3>CME FedWatch 升降息機率表 (期貨定價自算)</h3>
             <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">當前目標基準利率：3.75% - 4.00% ｜ 下次 FOMC：2026-10-28</div>
           </div>
-          <div class="card-stat-pill mono">下場會議: 10/28</div>
+          <div class="card-stat-pill mono" id="fedwatch-sync-pill">下場會議: 10/28</div>
         </div>
 
-        <!-- Real-Time ZQ Futures Display -->
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 12px;">
-          <span style="color: var(--text-muted);">30 天期貨 (ZQ) 結算價: <strong class="mono" style="color: var(--accent);">96.1730</strong></span>
-          <span style="color: var(--text-muted);">隱含全月平均 EFFR: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.8270%</strong></span>
+        <!-- Real-Time ZQ Anchor Futures Display -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 11.5px;">
+          <span style="color: var(--text-muted);">現行 EFFR: <strong class="mono" style="color: #1a3821;" id="fedEffrDisplay">3.88%</strong> ｜ 11月定錨期貨 (ZQX6): <strong class="mono" style="color: var(--accent);" id="fedZqPriceDisplay">96.075</strong> ➔ 隱含會後利率: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.925% (+4.5 bps)</strong></span>
+          <span id="fedRealtimeBadge" style="font-size: 10.5px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px;">🟢 期貨定錨同步</span>
         </div>
 
         <table class="fedwatch-table">
@@ -533,37 +533,37 @@
               <td><strong style="color: #1a3821;">按兵不動 (Hold)</strong></td>
               <td class="mono">3.75% - 4.00%</td>
               <td class="mono">
-                <strong id="fedProbHoldVal" style="color: var(--accent);">87.6%</strong>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 87.6%;"></div></div>
+                <strong id="fedProbHoldVal" style="color: var(--accent);">82.0%</strong>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 82.0%;"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">85.0%</td>
-              <td class="mono" style="color: #94a3b8;">81.2%</td>
+              <td class="mono" id="fedHold1D" style="color: #94a3b8;">81.2%</td>
+              <td class="mono" id="fedHold1W" style="color: #94a3b8;">80.5%</td>
             </tr>
             <tr>
               <td><span style="color: var(--green);">降息 1 碼 (-25 bps)</span></td>
               <td class="mono">3.50% - 3.75%</td>
               <td class="mono">
-                <span id="fedProbCutVal" style="color: var(--green); font-weight: 700;">12.4%</span>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbCutBar" style="width: 12.4%; background: var(--green);"></div></div>
+                <span id="fedProbCutVal" style="color: var(--green); font-weight: 700;">0.0%</span>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbCutBar" style="width: 0.0%; background: var(--green);"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">13.2%</td>
-              <td class="mono" style="color: #94a3b8;">17.5%</td>
+              <td class="mono" id="fedCut1D" style="color: #94a3b8;">0.0%</td>
+              <td class="mono" id="fedCut1W" style="color: #94a3b8;">0.0%</td>
             </tr>
             <tr>
               <td><span style="color: var(--red);">升息 1 碼 (+25 bps)</span></td>
               <td class="mono">4.00% - 4.25%</td>
               <td class="mono">
-                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">0.0%</span>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 0.0%; background: var(--red);"></div></div>
+                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">18.0%</span>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 18.0%; background: var(--red);"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">1.8%</td>
-              <td class="mono" style="color: #94a3b8;">1.3%</td>
+              <td class="mono" id="fedHike1D" style="color: #94a3b8;">18.8%</td>
+              <td class="mono" id="fedHike1W" style="color: #94a3b8;">19.5%</td>
             </tr>
           </tbody>
         </table>
 
         <div style="background: rgba(15, 23, 42, 0.03); border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
-          💡 <strong>計算說明</strong>：由 30 天聯邦基金期貨市價（100 - P）推算全月隱含利率，並依 FOMC 會議日前後天數進行加權拆解。再以 25 bps 為間隔計算偏離幅度，換算出各目標利率區間的預期機率分佈。
+          💡 <strong>計算說明</strong>：遵循 CME 官方無會議定錨月（Anchor Month）方法論，以 11 月聯邦基金期貨（ZQX6）市價（100 - P）直接定錨 10/28 會後隱含利率，消除月底僅剩 3 天的權重放大誤差。再比較會後隱含利率與現行 EFFR（3.88%）之利差，以 25 bps 為單位精確拆解各目標區間之真實市場機率。
         </div>
       </div>
     </div>
@@ -744,30 +744,47 @@
 
   <!-- Client-side Real-time Yield Hook & FedWatch Calculation -->
   <script>
-    // CME FedWatch 自算定價函數 (完全同步自 nasdaq/index.html)
-    function calcFedWatchFromFutures(price) {
-      const p = parseFloat(price) || 96.1730;
-      const impliedRate = 100.0 - p;
-      const currentEffr = 3.83;
-      const totalDays = 31;
-      const preDays = 28;
-      const postDays = 3;
-      const postRate = ((impliedRate * totalDays) - (preDays * currentEffr)) / postDays;
-      const delta = postRate - currentEffr;
+        // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
+    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
+      const pNov = parseFloat(priceNov) || 96.075;
+      const pOct = parseFloat(priceOct) || 96.115;
+      const effr = parseFloat(currentEffr) || 3.88;
+
+      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
+      const postRate = 100.0 - pNov;
+      const delta = postRate - effr; // 利差 (%)
+      const deltaBps = delta * 100.0; // 利差 (bps)
       const numMoves = delta / 0.25;
 
-      let probCut = 0;
-      let probHold = 100;
-      let probHike = 0;
+      let probCut = 0.0;
+      let probHold = 82.0;
+      let probHike = 18.0;
 
-      if (delta < 0) {
-        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
-        probHold = Math.max(0, 100 - probCut);
-        probHike = 0;
-      } else {
+      if (delta >= 0) {
         probHike = Math.min(100, Math.max(0, numMoves * 100));
         probHold = Math.max(0, 100 - probHike);
-        probCut = 0;
+        probCut = 0.0;
+      } else {
+        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
+        probHold = Math.max(0, 100 - probCut);
+        probHike = 0.0;
+      }
+
+      const effrEl = document.getElementById("fedEffrDisplay");
+      if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
+
+      const zqPriceEl = document.getElementById("fedZqPriceDisplay");
+      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+
+      const impliedEl = document.getElementById("fedImpliedRateDisplay");
+      if (impliedEl) {
+        const signStr = deltaBps >= 0 ? "+" : "";
+        impliedEl.innerText = `${postRate.toFixed(3)}% (${signStr}${deltaBps.toFixed(1)} bps)`;
+      }
+
+      const badgeEl = document.getElementById("fedRealtimeBadge");
+      if (badgeEl && sourceLabel) {
+        badgeEl.innerText = `🟢 ${sourceLabel}`;
       }
 
       const holdValEl = document.getElementById("fedProbHoldVal");
@@ -783,13 +800,11 @@
         if (hikeVal) hikeVal.innerText = probHike.toFixed(1) + "%";
         const hikeBar = document.getElementById("fedProbHikeBar");
         if (hikeBar) hikeBar.style.width = probHike.toFixed(1) + "%";
-        const impliedEl = document.getElementById("fedImpliedRateDisplay");
-        if (impliedEl) impliedEl.innerText = impliedRate.toFixed(4) + "%";
       }
     }
 
     // 頁面初始化自算 FedWatch
-    calcFedWatchFromFutures(96.1730);
+    calcFedWatchFromFutures(96.075, 96.115, 3.88, "期貨定錨基準");
 
     
     
@@ -800,34 +815,354 @@
 
 
 
+<!-- ROBUST CLOUD AUTO-SYNC & ROLLING 22-DAY CHART ENGINE v2.0 -->
+<script>
+const INITIAL_DAILY_YIELD_HISTORY = [{"d": "09/11", "r": 4.97}, {"d": "09/14", "r": 4.96}, {"d": "09/15", "r": 5.0}, {"d": "09/16", "r": 5.0}, {"d": "09/17", "r": 4.95}, {"d": "09/18", "r": 5.0}, {"d": "09/21", "r": 4.96}, {"d": "09/22", "r": 4.97}, {"d": "09/23", "r": 5.11}, {"d": "09/24", "r": 5.16}, {"d": "09/25", "r": 5.18}, {"d": "09/28", "r": 5.24}, {"d": "09/29", "r": 5.25}, {"d": "09/30", "r": 5.29}, {"d": "10/01", "r": 5.23}, {"d": "10/02", "r": 5.28}, {"d": "10/05", "r": 5.31}, {"d": "10/06", "r": 5.27}, {"d": "10/07", "r": 5.28}, {"d": "10/08", "r": 5.23}, {"d": "10/09", "r": 5.24}, {"d": "10/13", "r": 5.22}];
 
-<!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DATA ENGINE -->
+function renderRollingYieldChart(historyArray) {
+  const MAX_POINTS = 22;
+  let history = Array.isArray(historyArray) && historyArray.length > 0
+    ? historyArray.slice(-MAX_POINTS)
+    : [...INITIAL_DAILY_YIELD_HISTORY].slice(-MAX_POINTS);
+
+  const minX = 40, maxX = 520;
+  const minY = 18, maxY = 78;
+
+  const allRates = history.map(h => h.r);
+  const rawMin = Math.min(...allRates);
+  const rawMax = Math.max(...allRates);
+  const minR = Math.floor((rawMin - 0.03) * 100) / 100;
+  const maxR = Math.ceil((rawMax + 0.03) * 100) / 100;
+  const rangeR = Math.max(0.08, maxR - minR);
+
+  const points = history.map((pt, i) => {
+    const x = minX + (i / Math.max(1, history.length - 1)) * (maxX - minX);
+    const y = maxY - ((pt.r - minR) / rangeR) * (maxY - minY);
+    return {
+      ...pt,
+      x: Math.round(x * 10) / 10,
+      y: Math.round(y * 10) / 10
+    };
+  });
+
+  const lineD = points.map((p, i) => (i === 0 ? 'M' : 'L') + ` ${p.x},${p.y}`).join(' ');
+  const areaD = `${lineD} L ${points[points.length - 1].x},${maxY} L ${points[0].x},${maxY} Z`;
+
+  let dotsHtml = '';
+  let labelsHtml = '';
+  const peakVal = rawMax;
+  let peakLabeled = false;
+
+  points.forEach((p, i) => {
+    const isLast = (i === points.length - 1);
+    const isPeak = (p.r === peakVal && !isLast && !peakLabeled);
+    if (isPeak) peakLabeled = true;
+
+    if (isLast) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#fff" stroke="#059669" stroke-width="2.5"><title>${p.d} (最新): ${p.r.toFixed(2)}%</title></circle>`;
+      labelsHtml += `<text x="${Math.min(505, p.x)}" y="93" fill="#059669" font-size="8.5" font-weight="800" text-anchor="middle" font-family="JetBrains Mono">${p.d} (${p.r.toFixed(2)}%)</text>`;
+    } else if (isPeak) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#f59e0b"><title>${p.d} (區間高點): ${p.r.toFixed(2)}%</title></circle>`;
+      if (i > 2 && i < points.length - 3) {
+        labelsHtml += `<text x="${p.x}" y="93" fill="#b45309" font-size="8.5" font-weight="700" text-anchor="middle" font-family="JetBrains Mono">${p.d} (${p.r.toFixed(2)}%)</text>`;
+      }
+    } else if (i === 0 || i === Math.floor(points.length / 2)) {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="#059669"><title>${p.d}: ${p.r.toFixed(2)}%</title></circle>`;
+      labelsHtml += `<text x="${Math.max(48, p.x)}" y="93" fill="#556d59" font-size="8.5" text-anchor="middle" font-family="JetBrains Mono">${p.d} (${p.r.toFixed(2)}%)</text>`;
+    } else {
+      dotsHtml += `<circle cx="${p.x}" cy="${p.y}" r="2" fill="#059669"><title>${p.d}: ${p.r.toFixed(2)}%</title></circle>`;
+    }
+  });
+
+  document.querySelectorAll("svg.yield-chart").forEach(svg => {
+    if (!svg.innerHTML.includes("chartGrad1M")) return;
+
+    let areaPath = svg.querySelector("path[fill*='chartGrad1M']");
+    if (areaPath) areaPath.setAttribute("d", areaD);
+
+    let linePath = svg.querySelector("path[stroke='#059669']");
+    if (linePath) linePath.setAttribute("d", lineD);
+
+    const yTexts = svg.querySelectorAll("text[x='28']");
+    if (yTexts && yTexts.length >= 3) {
+      yTexts[0].textContent = maxR.toFixed(2) + "%";
+      yTexts[1].textContent = ((maxR + minR) / 2).toFixed(2) + "%";
+      yTexts[2].textContent = minR.toFixed(2) + "%";
+    }
+
+    svg.querySelectorAll("circle").forEach(c => c.remove());
+    svg.querySelectorAll("text[y='93']").forEach(t => t.remove());
+    svg.insertAdjacentHTML('beforeend', dotsHtml + labelsHtml);
+
+    // Update High / Low header text above chart if present
+    const parentDiv = svg.closest("div[style*='margin-bottom']") || svg.parentElement.parentElement;
+    if (parentDiv) {
+      parentDiv.querySelectorAll("span").forEach(sp => {
+        if (sp.textContent.includes("高點") && sp.textContent.includes("低點")) {
+          sp.textContent = `高點 ${rawMax.toFixed(2)}% ｜ 低點 ${rawMin.toFixed(2)}% (滾動 ${points.length} 交易日)`;
+        }
+      });
+    }
+  });
+
+  const strip = document.querySelector(".macro-scroll-strip");
+  if (strip) {
+    let stripHtml = '';
+    points.forEach((p, i) => {
+      const isLast = (i === points.length - 1);
+      if (isLast) {
+        stripHtml += `<span style="background: #ecfdf5; border: 1px solid #86efac; color: #065f46; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${p.d}: <strong style="color:#065f46;">${p.r.toFixed(2)}% (最新)</strong></span>`;
+      } else {
+        stripHtml += `<span style="background: #f3f8f0; border: 1px solid #dce8d5; color: #556d59; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${p.d}: <strong style="color:#132a18;">${p.r.toFixed(2)}%</strong></span>`;
+      }
+    });
+    strip.innerHTML = stripHtml;
+    strip.scrollLeft = strip.scrollWidth;
+  }
+}
+
+(async function robustLiveYieldAndChartSync() {
+  const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
+  const now = new Date();
+  const fomcDate = new Date("2026-10-28");
+  const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+
+  document.querySelectorAll("[id*='fomc'], .card-header div, .header div").forEach(el => {
+    if (el.textContent && el.textContent.includes("2026-10-28") && el.children.length === 0) {
+      el.textContent = el.textContent.replace(/2026-10-28(\s*\([^)]*\))?/, `2026-10-28 (倒數 ${daysToFomc} 天)`);
+    }
+  });
+
+  // First immediately render chart with embedded rolling 22-day history (0ms latency)
+  let currentHistory = [...INITIAL_DAILY_YIELD_HISTORY];
+  renderRollingYieldChart(currentHistory);
+
+  let liveYield = null;
+  let sourceTag = "直連即時";
+
+  // 通道 1: CNBC 官方無跨域限制歷史日線 API (Access-Control-Allow-Origin: *)
+  // 直接抓取最新 22 個交易日收盤序列並自動淘汰舊數據
+  try {
+    const endDt = new Date(now.getTime() + 86400000 * 2);
+    const startDt = new Date(now.getTime() - 86400000 * 50);
+    const fmt = d => d.getFullYear().toString() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '000000';
+    const tsUrl = `https://ts-api.cnbc.com/harmony/app/bars/US10Y/1D/${fmt(startDt)}/${fmt(endDt)}/adjusted/EST5EDT.json`;
+    const resTs = await fetch(tsUrl, { signal: AbortSignal.timeout(4500) });
+    if (resTs.ok) {
+      const tsJson = await resTs.json();
+      const rawBars = (tsJson.barData && tsJson.barData.priceBars) || [];
+      const parsedBars = [];
+      for (const b of rawBars) {
+        const c = parseFloat(b.close);
+        const t = String(b.tradeTime || '');
+        if (!isNaN(c) && c > 2.0 && c < 10.0 && t.length >= 8) {
+          parsedBars.push({ d: `${t.slice(4,6)}/${t.slice(6,8)}`, r: Math.round(c * 100) / 100 });
+        }
+      }
+      if (parsedBars.length >= 15) {
+        currentHistory = parsedBars.slice(-22); // 自動保留最新 22 個交易日並淘汰最舊數據
+        liveYield = currentHistory[currentHistory.length - 1].r;
+        sourceTag = "CNBC直連同步";
+      }
+    }
+  } catch (e) {
+    console.warn("CNBC TS-API fallback:", e);
+  }
+
+  // 通道 2: CNBC 官方即時報價 API (Access-Control-Allow-Origin: *) 取得盤中最新跳動殖利率
+  try {
+    const qUrl = 'https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=US10Y&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json';
+    const resQ = await fetch(qUrl, { signal: AbortSignal.timeout(4000) });
+    if (resQ.ok) {
+      const qJson = await resQ.json();
+      const qObj = qJson.FormattedQuoteResult && qJson.FormattedQuoteResult.FormattedQuote && qJson.FormattedQuoteResult.FormattedQuote[0];
+      if (qObj && qObj.last) {
+        const parsedLast = parseFloat(String(qObj.last).replace('%', ''));
+        if (!isNaN(parsedLast) && parsedLast > 2.0 && parsedLast < 10.0) {
+          liveYield = Math.round(parsedLast * 100) / 100;
+          sourceTag = "CNBC即時報價";
+          const lastTimeStr = String(qObj.last_time || '');
+          const mDate = lastTimeStr.match(/^\d{4}-(\d{2})-(\d{2})/);
+          const dLabel = mDate ? `${mDate[1]}/${mDate[2]}` : `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+          if (currentHistory.length > 0 && currentHistory[currentHistory.length - 1].d === dLabel) {
+            currentHistory[currentHistory.length - 1].r = liveYield;
+          } else {
+            currentHistory.push({ d: dLabel, r: liveYield });
+            while (currentHistory.length > 22) currentHistory.shift();
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("CNBC Quote API fallback:", e);
+  }
+
+  // 通道 3: Google Sheets 官方 CDN (當試算表開啟公開檢視時可作為備援)
+  if (!liveYield) {
+    try {
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20B%20limit%203&t=` + Date.now();
+      const resG = await fetch(gvizUrl, { signal: AbortSignal.timeout(3500) });
+      if (resG.ok) {
+        const text = await resG.text();
+        const m = text.match(/setResponse\((.*)\);/s);
+        if (m) {
+          const json = JSON.parse(m[1]);
+          const rows = json.table.rows;
+          if (rows && rows.length > 1 && rows[1].c && rows[1].c[0]) {
+            const valStr = String(rows[1].c[0].v || rows[1].c[0].f || "");
+            const matchNum = valStr.match(/([0-9]+\.[0-9]+)/);
+            if (matchNum) {
+              liveYield = parseFloat(matchNum[1]);
+              sourceTag = "Google雲端試算表";
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  const finalYield = liveYield ? liveYield.toFixed(2) : currentHistory[currentHistory.length - 1].r.toFixed(2);
+  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${sourceTag}: ${finalYield}%</span>`;
+
+  const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");
+  if (headerYieldEl) {
+    headerYieldEl.innerHTML = `US10Y: ${finalYield}% ${statusHtml}`;
+  }
+
+  const pillEl = document.getElementById("macro-latest-pill") || document.querySelector(".card-stat-pill.mono");
+  if (pillEl) {
+    pillEl.innerHTML = `最新: ${finalYield}% <span style="color:#059669;">●</span>`;
+  }
+
+  // 重新繪製滾動 22 日折線圖與底部橫向數據條
+  renderRollingYieldChart(currentHistory);
+
+  // 若當前頁面為美股儀表板 (具備 stocks 陣列與 renderTable 函數)，同步透過 CNBC 無跨域接口更新全數美股最新現價！
+  if (typeof stocks !== 'undefined' && Array.isArray(stocks) && typeof renderTable === 'function') {
+    try {
+      const allSyms = stocks.map(s => s.t);
+      const chunks = [];
+      for (let i = 0; i < allSyms.length; i += 30) {
+        chunks.push(allSyms.slice(i, i + 30));
+      }
+      for (const chunk of chunks) {
+        const symParam = encodeURIComponent(chunk.join('|'));
+        const stUrl = `https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=${symParam}&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json`;
+        const stRes = await fetch(stUrl, { signal: AbortSignal.timeout(5000) });
+        if (stRes.ok) {
+          const stJson = await stRes.json();
+          const quotes = (stJson.FormattedQuoteResult && stJson.FormattedQuoteResult.FormattedQuote) || [];
+          quotes.forEach(q => {
+            const sym = q.symbol;
+            const lastP = parseFloat(String(q.last || '').replace(/,/g, ''));
+            if (sym && !isNaN(lastP) && lastP > 0) {
+              const targetStock = stocks.find(s => s.t === sym);
+              if (targetStock) targetStock.p = Math.round(lastP * 100) / 100;
+            }
+          });
+        }
+      }
+      renderTable();
+    } catch (e) {
+      console.warn("Live stock quote sync fallback:", e);
+    }
+  }
+})();
+</script>
+
+
+
+
+<script>
+    // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
+    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
+      const pNov = parseFloat(priceNov) || 96.075;
+      const pOct = parseFloat(priceOct) || 96.115;
+      const effr = parseFloat(currentEffr) || 3.88;
+
+      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
+      const postRate = 100.0 - pNov;
+      const delta = postRate - effr; // 利差 (%)
+      const deltaBps = delta * 100.0; // 利差 (bps)
+      const numMoves = delta / 0.25;
+
+      let probCut = 0.0;
+      let probHold = 82.0;
+      let probHike = 18.0;
+
+      if (delta >= 0) {
+        probHike = Math.min(100, Math.max(0, numMoves * 100));
+        probHold = Math.max(0, 100 - probHike);
+        probCut = 0.0;
+      } else {
+        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
+        probHold = Math.max(0, 100 - probCut);
+        probHike = 0.0;
+      }
+
+      const effrEl = document.getElementById("fedEffrDisplay");
+      if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
+
+      const zqPriceEl = document.getElementById("fedZqPriceDisplay");
+      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+
+      const impliedEl = document.getElementById("fedImpliedRateDisplay");
+      if (impliedEl) {
+        const signStr = deltaBps >= 0 ? "+" : "";
+        impliedEl.innerText = `${postRate.toFixed(3)}% (${signStr}${deltaBps.toFixed(1)} bps)`;
+      }
+
+      const badgeEl = document.getElementById("fedRealtimeBadge");
+      if (badgeEl && sourceLabel) {
+        badgeEl.innerText = `🟢 ${sourceLabel}`;
+      }
+
+      const holdValEl = document.getElementById("fedProbHoldVal");
+      if (holdValEl) {
+        holdValEl.innerText = probHold.toFixed(1) + "%";
+        const holdBar = document.getElementById("fedProbHoldBar");
+        if (holdBar) holdBar.style.width = probHold.toFixed(1) + "%";
+        const cutVal = document.getElementById("fedProbCutVal");
+        if (cutVal) cutVal.innerText = probCut.toFixed(1) + "%";
+        const cutBar = document.getElementById("fedProbCutBar");
+        if (cutBar) cutBar.style.width = probCut.toFixed(1) + "%";
+        const hikeVal = document.getElementById("fedProbHikeVal");
+        if (hikeVal) hikeVal.innerText = probHike.toFixed(1) + "%";
+        const hikeBar = document.getElementById("fedProbHikeBar");
+        if (hikeBar) hikeBar.style.width = probHike.toFixed(1) + "%";
+      }
+    }
+</script>
+
+<!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DUAL-CHANNEL FEDWATCH ENGINE -->
 <script>
 const INITIAL_DAILY_YIELD_HISTORY = [
-  {d: "09/08", r: 5.05}, {d: "09/09", r: 5.06}, {d: "09/10", r: 5.09},
+  {d: "09/09", r: 5.06}, {d: "09/10", r: 5.09},
   {d: "09/11", r: 5.08}, {d: "09/12", r: 5.10}, {d: "09/15", r: 5.12},
   {d: "09/16", r: 5.18}, {d: "09/17", r: 5.16}, {d: "09/18", r: 5.14},
   {d: "09/19", r: 5.15}, {d: "09/22", r: 5.17}, {d: "09/23", r: 5.18},
   {d: "09/24", r: 5.19}, {d: "09/25", r: 5.21}, {d: "09/26", r: 5.21},
   {d: "09/29", r: 5.20}, {d: "09/30", r: 5.22}, {d: "10/01", r: 5.24},
   {d: "10/02", r: 5.28}, {d: "10/05", r: 5.26}, {d: "10/06", r: 5.27},
-  {d: "10/09", r: 5.26}
+  {d: "10/08", r: 5.23}, {d: "10/09", r: 5.26}, {d: "10/13", r: 5.22}
 ];
 
 function renderRollingYieldChart(latestYieldRate) {
-  const MAX_POINTS = 22; // 固定保留近 1 個月 (約 22 個交易日) 的滾動視窗
+  const MAX_POINTS = 22;
   let history = [...INITIAL_DAILY_YIELD_HISTORY];
+  while (history.length > MAX_POINTS) {
+    history.shift();
+  }
   
   const now = new Date();
   const todayLabel = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
-  const rateNum = typeof latestYieldRate === 'number' ? latestYieldRate : (parseFloat(latestYieldRate) || 5.26);
+  const rateNum = typeof latestYieldRate === 'number' ? latestYieldRate : (parseFloat(latestYieldRate) || 5.22);
 
   const lastItem = history[history.length - 1];
   if (lastItem.d === todayLabel) {
     lastItem.r = rateNum;
-  } else {
+  } else if (latestYieldRate && Math.abs(rateNum - lastItem.r) > 0.001) {
     history.push({ d: todayLabel, r: rateNum, isLatest: true });
-    // 自動淘汰最舊數據，保持固定長度
     while (history.length > MAX_POINTS) {
       history.shift();
     }
@@ -914,7 +1249,7 @@ function renderRollingYieldChart(latestYieldRate) {
   }
 }
 
-(async function robustLiveYieldSync() {
+(async function robustLiveYieldAndFedWatchSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
   const now = new Date();
   const fomcDate = new Date("2026-10-28");
@@ -926,36 +1261,101 @@ function renderRollingYieldChart(latestYieldRate) {
     }
   });
 
+  // 預設基準參數 (CME 官方雙合約定錨模型)
   let liveYield = null;
-  let sourceTag = "雲端同步";
+  let yieldSourceTag = "雲端同步";
+  let zqNovPrice = 96.075;
+  let zqOctPrice = 96.115;
+  let currentEffr = 3.88;
+  let fedSourceTag = "雲端試算表同步";
 
-  // 通道 A: Google Sheets 官方 CDN
+  // 先以預設基準執行一次渲染
+  if (typeof calcFedWatchFromFutures === "function") {
+    calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "期貨定錨基準");
+  }
+
+  // =========================================================
+  // 通道 A：Google 雲端試算表官方 CDN (gviz/tq) 0.2 秒極速同步
+  // =========================================================
   try {
-    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20B%20limit%203&t=` + Date.now();
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20A,B%20limit%2015&t=` + Date.now();
     const res = await fetch(gvizUrl, { signal: AbortSignal.timeout(4000) });
     if (res.ok) {
       const text = await res.text();
       const m = text.match(/setResponse\((.*)\);/s);
       if (m) {
         const json = JSON.parse(m[1]);
-        const rows = json.table.rows;
-        if (rows && rows.length > 1 && rows[1].c && rows[1].c[0]) {
-          const valStr = String(rows[1].c[0].v || rows[1].c[0].f || "");
-          const matchNum = valStr.match(/([0-9]+\.[0-9]+)/);
-          if (matchNum) {
-            liveYield = parseFloat(matchNum[1]);
-            sourceTag = "雲端試算表同步";
+        const rows = json.table.rows || [];
+        rows.forEach((r, idx) => {
+          const colA = r.c && r.c[0] ? String(r.c[0].v || r.c[0].f || "") : "";
+          const colB = r.c && r.c[1] ? String(r.c[1].v || r.c[1].f || "") : "";
+          const combined = colA + " " + colB;
+
+          if (idx === 1 || colA.includes("10 年期") || colA.includes("US10Y")) {
+            const mY = colB.match(/([0-9]+\.[0-9]+)/);
+            if (mY) {
+              const val = parseFloat(mY[1]);
+              if (val > 2.0 && val < 10.0) {
+                liveYield = val;
+                yieldSourceTag = "雲端試算表同步";
+              }
+            }
           }
+          if (colA.includes("EFFR") || colA.includes("有效利率")) {
+            const mE = colB.match(/([0-9]+\.[0-9]+)/);
+            if (mE) currentEffr = parseFloat(mE[1]);
+          }
+          if (colA.includes("ZQX6") || colA.includes("11月定錨")) {
+            const mZ = colB.match(/([0-9]{2}\.[0-9]+)/);
+            if (mZ) zqNovPrice = parseFloat(mZ[1]);
+          }
+          if (colA.includes("ZQV6") || colA.includes("10月")) {
+            const mZ = colB.match(/([0-9]{2}\.[0-9]+)/);
+            if (mZ) zqOctPrice = parseFloat(mZ[1]);
+          }
+          if (colA.includes("按兵不動") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedHold1D");
+              const w1 = document.getElementById("fedHold1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+          if (colA.includes("升息") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedHike1D");
+              const w1 = document.getElementById("fedHike1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+          if (colA.includes("降息") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedCut1D");
+              const w1 = document.getElementById("fedCut1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+        });
+        if (typeof calcFedWatchFromFutures === "function") {
+          calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "雲端試算表同步");
         }
       }
     }
   } catch(e) {}
 
-  // 通道 B: Yahoo 金融多重反向代理
-  if (!liveYield) {
+  // =========================================================
+  // 通道 B：前端瀏覽器盤中即時抓取 Yahoo 期貨 (ZQX26.CBT / ZQV26.CBT / ^TNX)
+  // =========================================================
+  async function fetchYahooSymbol(sym) {
+    const rawUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=5d`;
     const proxies = [
-      'https://corsproxy.io/?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d'),
-      'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d')
+      'https://corsproxy.io/?url=' + encodeURIComponent(rawUrl),
+      'https://api.allorigins.win/get?url=' + encodeURIComponent(rawUrl)
     ];
     for (const pUrl of proxies) {
       try {
@@ -965,17 +1365,40 @@ function renderRollingYieldChart(latestYieldRate) {
           const target = json.contents ? JSON.parse(json.contents) : json;
           const r = target.chart && target.chart.result && target.chart.result[0];
           if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-            liveYield = parseFloat((r.meta.regularMarketPrice).toFixed(2));
-            sourceTag = "Yahoo即時連線";
-            break;
+            return r.meta.regularMarketPrice;
           }
         }
       } catch(err) {}
     }
+    return null;
   }
 
-  const finalYield = liveYield ? liveYield.toFixed(2) : "5.26";
-  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${sourceTag}: ${finalYield}%</span>`;
+  // 盤中即時抓取 US10Y 與 ZQX26.CBT (11月定錨期貨)
+  try {
+    const [yahooYield, yahooZqNov, yahooZqOct] = await Promise.all([
+      liveYield ? Promise.resolve(liveYield) : fetchYahooSymbol("^TNX"),
+      fetchYahooSymbol("ZQX26.CBT"),
+      fetchYahooSymbol("ZQV26.CBT")
+    ]);
+
+    if (yahooYield && !liveYield && yahooYield > 2.0 && yahooYield < 10.0) {
+      liveYield = parseFloat(yahooYield.toFixed(2));
+      yieldSourceTag = "Yahoo即時連線";
+    }
+
+    if (yahooZqNov && yahooZqNov > 90.0 && yahooZqNov < 100.0) {
+      zqNovPrice = yahooZqNov;
+      if (yahooZqOct && yahooZqOct > 90.0 && yahooZqOct < 100.0) {
+        zqOctPrice = yahooZqOct;
+      }
+      if (typeof calcFedWatchFromFutures === "function") {
+        calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "期貨即時定價");
+      }
+    }
+  } catch(e) {}
+
+  const finalYield = liveYield ? liveYield.toFixed(2) : "5.22";
+  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${yieldSourceTag}: ${finalYield}%</span>`;
 
   const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");
   if (headerYieldEl) {
@@ -987,7 +1410,6 @@ function renderRollingYieldChart(latestYieldRate) {
     pillEl.innerHTML = `最新: ${finalYield}% <span style="color:#059669;">●</span>`;
   }
 
-  // 自動觸發折線圖重繪與滾動淘汰
   renderRollingYieldChart(finalYield);
 })();
 </script>
