@@ -522,6 +522,125 @@
       background: #059669;
       color: #ffffff;
     }
+  
+    /* =========================================
+       INFO ICON & FLOATING POPOVER STYLES
+       ========================================= */
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #e2f1e8;
+      color: #059669;
+      font-size: 10.5px;
+      font-weight: 800;
+      margin-left: 4px;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: all 0.15s ease;
+      border: 1px solid #a7f3d0;
+      user-select: none;
+      line-height: 1;
+    }
+    .info-icon:hover {
+      background: #059669;
+      color: #ffffff;
+      border-color: #059669;
+      transform: scale(1.12);
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.28);
+    }
+    .info-icon.active {
+      background: #059669;
+      color: #ffffff;
+      border-color: #047857;
+    }
+
+    .metric-popover {
+      position: fixed;
+      z-index: 99999;
+      width: 340px;
+      max-width: calc(100vw - 24px);
+      background: #ffffff;
+      border: 1.5px solid #a7f3d0;
+      border-radius: 12px;
+      box-shadow: 0 14px 34px -4px rgba(19, 42, 24, 0.18), 0 4px 12px rgba(5, 150, 105, 0.1);
+      padding: 14px 16px;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #132a18;
+      display: none;
+      animation: popFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      text-transform: none;
+      letter-spacing: normal;
+      white-space: normal;
+      line-height: 1.5;
+    }
+    @keyframes popFadeIn {
+      from { opacity: 0; transform: translateY(4px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .popover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e8f1e3;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .popover-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .popover-close {
+      background: #f3f8f0;
+      border: 1px solid #dce7d5;
+      color: #556d59;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .popover-close:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+    .popover-section {
+      margin-bottom: 9px;
+      font-size: 12px;
+    }
+    .popover-section:last-child {
+      margin-bottom: 0;
+    }
+    .popover-tag {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-bottom: 3px;
+    }
+    .tag-def { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .tag-calc { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .tag-crit { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .popover-text {
+      color: #233d28;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
   </style>
 </head>
 <body>
@@ -609,11 +728,11 @@
       <table class="rating-matrix-table">
         <thead>
           <tr>
-            <th>信評級別</th>
+            <th>信評級別 <span class="info-icon" onclick="openMetricPopover(event, 'rating_level')" title="點擊查看說明">ⓘ</span></th>
             <th>代表性企業</th>
-            <th>平均殖利率</th>
-            <th>美債利差</th>
-            <th>5年累積違約率</th>
+            <th>平均殖利率 <span class="info-icon" onclick="openMetricPopover(event, 'avg_yield')" title="點擊查看說明">ⓘ</span></th>
+            <th>美債利差 <span class="info-icon" onclick="openMetricPopover(event, 'treasury_spread')" title="點擊查看說明">ⓘ</span></th>
+            <th>5年累積違約率 <span class="info-icon" onclick="openMetricPopover(event, 'default_rate_5y')" title="點擊查看說明">ⓘ</span></th>
           </tr>
         </thead>
         <tbody>
@@ -696,14 +815,14 @@
       <table id="bonds-table">
         <thead>
           <tr>
-            <th onclick="sortBonds('issuer')">發行人 / 債券簡稱 ⬍</th>
-            <th onclick="sortBonds('coupon')">票面利率 ⬍</th>
-            <th onclick="sortBonds('maturity')">到期日 ⬍</th>
-            <th onclick="sortBonds('price')">參考買價 ⬍</th>
-            <th onclick="sortBonds('ytm')">到期殖利率 (YTM) ⬍</th>
-            <th>信評 (穆迪/標普/惠譽)</th>
-            <th>償還順位</th>
-            <th>客戶屬性</th>
+            <th onclick="sortBonds('issuer')">發行人 / 債券簡稱 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'bond_issuer')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortBonds('coupon')">票面利率 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'bond_coupon')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortBonds('maturity')">到期日 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'bond_maturity')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortBonds('price')">參考買價 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'bond_price')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortBonds('ytm')">到期殖利率 (YTM) ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'bond_ytm')" title="點擊查看說明">ⓘ</span></th>
+            <th>信評 (穆迪/標普/惠譽) <span class="info-icon" onclick="openMetricPopover(event, 'bond_rating')" title="點擊查看說明">ⓘ</span></th>
+            <th>償還順位 <span class="info-icon" onclick="openMetricPopover(event, 'bond_seniority')" title="點擊查看說明">ⓘ</span></th>
+            <th>客戶屬性 <span class="info-icon" onclick="openMetricPopover(event, 'bond_client_type')" title="點擊查看說明">ⓘ</span></th>
             <th style="text-align: center;">壓力測試聯動</th>
           </tr>
         </thead>
@@ -738,13 +857,13 @@
           <tr>
             <th onclick="sortCorps('symbol')">公司代碼 / 名稱 ⬍</th>
             <th>所屬產業</th>
-            <th>信評等級</th>
-            <th onclick="sortCorps('interestCoverage')">利息保障倍數 (Coverage) ⬍</th>
-            <th onclick="sortCorps('fcf')">自由現金流 (FCF) ⬍</th>
-            <th onclick="sortCorps('fcfMargin')">FCF 利潤率 ⬍</th>
-            <th onclick="sortCorps('netDebtEbitda')">淨負債 / EBITDA ⬍</th>
-            <th onclick="sortCorps('cashToDebt')">現金儲備 / 短期債務 ⬍</th>
-            <th onclick="sortCorps('altmanZ')">Altman Z 破產預警指數 ⬍</th>
+            <th>信評等級 <span class="info-icon" onclick="openMetricPopover(event, 'rating_level')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('interestCoverage')">利息保障倍數 (Coverage) ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_coverage')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('fcf')">自由現金流 (FCF) ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_fcf')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('fcfMargin')">FCF 利潤率 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_fcf_margin')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('netDebtEbitda')">淨負債 / EBITDA ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_net_debt_ebitda')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('cashToDebt')">現金儲備 / 短期債務 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_cash_short_debt')" title="點擊查看說明">ⓘ</span></th>
+            <th onclick="sortCorps('altmanZ')">Altman Z 破產預警指數 ⬍ <span class="info-icon" onclick="openMetricPopover(event, 'corp_altman_z')" title="點擊查看說明">ⓘ</span></th>
             <th style="text-align: center;">操作</th>
           </tr>
         </thead>
@@ -778,7 +897,7 @@
       <!-- Left: Debt Wall by Year (SVG Bar Chart) -->
       <div class="sim-panel">
         <div class="sim-title">
-          <span id="debt-wall-title">債務到期階梯分佈 (Debt Wall & Maturity Ladder)</span>
+          <span id="debt-wall-title">債務到期階梯分佈 (Debt Wall & Maturity Ladder) <span class="info-icon" onclick="openMetricPopover(event, 'sim_debt_wall')" title="點擊查看說明">ⓘ</span></span>
           <span class="mono" id="total-debt-tag" style="font-size: 11px; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 7px; border-radius: 4px; color: #065f46;">總債務: $101.0B</span>
         </div>
 
@@ -808,7 +927,7 @@
         <!-- Slider 1: EBITDA / Revenue Shock -->
         <div class="slider-row">
           <div class="slider-label">
-            <span>營收 / EBITDA 衝擊幅度 (EBITDA Shock)</span>
+            <span>營收 / EBITDA 衝擊幅度 (EBITDA Shock) <span class="info-icon" onclick="openMetricPopover(event, 'sim_ebitda_shock')" title="點擊查看說明">ⓘ</span></span>
             <span class="val-display" id="val-ebitda-shock">0%</span>
           </div>
           <input type="range" id="range-ebitda-shock" min="-35" max="0" value="0" step="5" oninput="updateStressSim()">
@@ -817,7 +936,7 @@
         <!-- Slider 2: Refinancing Spread / Interest Rate Surge -->
         <div class="slider-row">
           <div class="slider-label">
-            <span>新發債與再融資利率升息幅度 (Refinancing Rate)</span>
+            <span>新發債與再融資利率升息幅度 (Refinancing Rate) <span class="info-icon" onclick="openMetricPopover(event, 'sim_rate_hike')" title="點擊查看說明">ⓘ</span></span>
             <span class="val-display" id="val-rate-hike">+0 bps</span>
           </div>
           <input type="range" id="range-rate-hike" min="0" max="300" value="0" step="25" oninput="updateStressSim()">
@@ -835,22 +954,22 @@
         <!-- Dynamic Results Grid -->
         <div class="metric-grid">
           <div class="metric-box">
-            <div class="label">壓力後利息保障倍數</div>
+            <div class="label">壓力後利息保障倍數 <span class="info-icon" onclick="openMetricPopover(event, 'corp_coverage')" title="點擊查看說明">ⓘ</span></div>
             <div class="num" id="res-stressed-coverage">42.2x</div>
             <div class="delta" id="res-delta-coverage" style="color: #059669;">基準: 42.2x</div>
           </div>
           <div class="metric-box">
-            <div class="label">壓力後自由現金流 (FCF)</div>
+            <div class="label">壓力後自由現金流 (FCF) <span class="info-icon" onclick="openMetricPopover(event, 'corp_fcf')" title="點擊查看說明">ⓘ</span></div>
             <div class="num" id="res-stressed-fcf">$108.0B</div>
             <div class="delta" id="res-delta-fcf" style="color: #059669;">基準: $108.0B</div>
           </div>
           <div class="metric-box">
-            <div class="label">壓力後淨負債 / EBITDA</div>
+            <div class="label">壓力後淨負債 / EBITDA <span class="info-icon" onclick="openMetricPopover(event, 'corp_net_debt_ebitda')" title="點擊查看說明">ⓘ</span></div>
             <div class="num" id="res-stressed-leverage">0.26x</div>
             <div class="delta" id="res-delta-leverage">健康水位</div>
           </div>
           <div class="metric-box">
-            <div class="label">破產風險評級 (Altman Z)</div>
+            <div class="label">破產風險評級 (Altman Z) <span class="info-icon" onclick="openMetricPopover(event, 'corp_altman_z')" title="點擊查看說明">ⓘ</span></div>
             <div class="num" id="res-stressed-z">8.20</div>
             <div class="delta" style="color: #059669;">綠色極安全區</div>
           </div>
@@ -1627,6 +1746,235 @@ function renderRollingYieldChart(latestYieldRate) {
   // 自動觸發折線圖重繪與滾動淘汰
   renderRollingYieldChart(finalYield);
 })();
+</script>
+
+
+<!-- FLOATING METRIC POPOVER CONTAINER & DICTIONARY -->
+<div id="metric-popover" class="metric-popover" onclick="event.stopPropagation()">
+  <div class="popover-header">
+    <div class="popover-title" id="popover-title">指標說明</div>
+    <button class="popover-close" onclick="closeMetricPopover()">✕</button>
+  </div>
+  <div class="popover-section">
+    <span class="popover-tag tag-def">📘 財務定義</span>
+    <div class="popover-text" id="popover-def"></div>
+  </div>
+  <div class="popover-section">
+    <span class="popover-tag tag-calc">🧮 計算邏輯</span>
+    <div class="popover-text mono" style="font-size: 11.5px;" id="popover-calc"></div>
+  </div>
+  <div class="popover-section">
+    <span class="popover-tag tag-crit">🎯 判讀標準</span>
+    <div class="popover-text" id="popover-crit"></div>
+  </div>
+</div>
+
+<script>
+const METRIC_EXPLANATIONS = {
+  // Table 1: 信評矩陣
+  "rating_level": {
+    title: "信評級別 (Credit Rating)",
+    def: "國際三大信評機構對企業「準時還本付息能力」的信用風險分級。",
+    calc: "綜合穆迪 (Moody's)、標普 (S&P) 與惠譽 (Fitch) 之長期發行人信用評等。",
+    crit: "• AAA ~ AA：極高安全邊際，違約風險趨近於零<br>• A ~ BBB：投資等級 (IG)，機構法人核心配置<br>• BB 以下：非投資等級 (高收益債)，具景氣循環違約風險"
+  },
+  "avg_yield": {
+    title: "平均殖利率 (Average Yield)",
+    def: "該信評等級公司債在次級市場上的平均到期年化報酬率。",
+    calc: "基準 10 年期美國公債殖利率 (5.28%) + 該信評等級平均信用利差 (Credit Spread)。",
+    crit: "• 殖利率越高代表市場要求的風險貼水越高<br>• 投資級 (AAA~BBB) 落在 4.2% ~ 6.1% 屬歷史高檔鎖利區間"
+  },
+  "treasury_spread": {
+    title: "美債利差 (Credit Spread / OAS)",
+    def: "投資公司債相較於無風險美國公債，額外獲得的信用風險補償利差。",
+    calc: "公司債到期殖利率 (YTM) − 同天期美國公債殖利率（1 bps = 0.01%）。",
+    crit: "• IG 投資級利差 < 120 bps：市場信用環境穩健<br>• BBB 級利差 > 200 bps 或 HY > 450 bps：市場出現信用緊縮警訊"
+  },
+  "default_rate_5y": {
+    title: "5年累積違約率 (5Y Cumulative Default Rate)",
+    def: "歷史上該信評等級企業在未來 5 年內發生無法按時償付本息的統計機率。",
+    calc: "依據 S&P 與 Moody's 跨景氣循環歷史違約資料庫統計之 5 年期累積違約比率。",
+    crit: "• AAA ~ A 級：< 0.7%（極度安全）<br>• BBB 級：約 1.85%（安全可控）<br>• BB 非投資級：跳升至 7.9% 以上，需嚴格分散持倉"
+  },
+
+  // Table 2: 精選公司債行情
+  "bond_issuer": {
+    title: "發行人 / 債券簡稱 (Issuer & Bond Ticker)",
+    def: "發債籌資的企業主體與該檔債券的票息、到期日識別代碼。",
+    calc: "代碼格式：[股票代號] + [票面利率] + [到期月/日/年]。",
+    crit: "• 優先選擇現金流充沛、護城河深厚的藍籌巨頭（如 AAPL、MSFT、JPM）作為核心持倉"
+  },
+  "bond_coupon": {
+    title: "票面利率 (Coupon Rate)",
+    def: "發行人承諾每年按債券面額（100 元）支付給投資人的固定現金利息比率。",
+    calc: "每年每張面額 $100 支付之固定配息金額（美元公司債通常每半年配息一次）。",
+    crit: "• 票面利率 > 5.0%：提供優渥的當期現金流（高票息保護）<br>• 票面利率低於殖利率時，債券會呈現「折價 (< $100)」交易"
+  },
+  "bond_maturity": {
+    title: "到期日 (Maturity Date)",
+    def: "發行人必須按面額（100 元）全數歸還本金給債券持有人的契約終止日。",
+    calc: "剩餘存續年期 = 到期日 − 當前基準日（天期越長，對利率升降的價格波動越敏感）。",
+    crit: "• 短天期 (1~3年)：價格波動極低，適合停泊資金<br>• 中長天期 (7~12年)：鎖定高息時間長，未來若降息具備資本利得空間"
+  },
+  "bond_price": {
+    title: "參考買價 (Clean Price)",
+    def: "目前在次級市場買進每 $100 面額債券所需的報價（不含應計利息）。",
+    calc: "未來各期票息與到期本金 ($100)，以當前市場要求殖利率 (YTM) 折現之總和。",
+    crit: "• 買價 < $100（折價債）：到期除了領息，還享有回歸 $100 面額的資本利得<br>• 買價 > $100（溢價債）：因為票面利率高於市場當前利率"
+  },
+  "bond_ytm": {
+    title: "到期殖利率 (Yield to Maturity, YTM)",
+    def: "以目前買價買進並持有至到期日、且不發生違約下，投資人實際獲得的年化總報酬率。",
+    calc: "同時涵蓋「每年票面利息收入」與「買價至到期面額 $100 之折溢價攤銷」的內部報酬率 (IRR)。",
+    crit: "• YTM 是比較不同債券真實回報的核心標準<br>• 優先挑選信評 A 級以上且 YTM > 4.5% ~ 5.0% 之高性價比標的"
+  },
+  "bond_rating": {
+    title: "信評 (穆迪 / 標普 / 惠譽)",
+    def: "三大國際信評機構針對該特定債券或發行人給出的信用評級對照。",
+    calc: "依序顯示 Moody's / S&P / Fitch 評級（例如 Aaa/AA+ 代表頂級信評）。",
+    crit: "• Baa3 / BBB- (含) 以上為「投資等級債」<br>• Ba1 / BB+ (含) 以下為「非投資等級債 (垃圾債)」"
+  },
+  "bond_seniority": {
+    title: "償還順位 (Seniority)",
+    def: "當企業發生清算或破產重組時，債權人求償資產的先後優先順序。",
+    calc: "依發行契約分為：優先無擔保 (Senior Unsecured)、優先次順位 (Senior Non-Preferred)、次順位 (Subordinated)。",
+    crit: "• 優先無擔保：求償順位最高、保障最強<br>• 次順位債：求償排在一般債權之後，通常由大型銀行發行並提供較高票息補償"
+  },
+  "bond_client_type": {
+    title: "客戶屬性與風險適配 (Suitability)",
+    def: "綜合考量發行人信評、償還順位與波動度後，建議適合配置的投資人風險屬性。",
+    calc: "依據信評等級 (AA/A/BBB) 與順位結構進行三級風險分類。",
+    crit: "• 保守型：AA ~ AAA 級優先債，本金安全第一<br>• 穩健型：A ~ BBB+ 級大型藍籌債，兼顧收益與安全<br>• 積極型：BBB 級或次順位高息債，追求較高現金流"
+  },
+
+  // Table 3: 企業財務體質與償債安全矩陣
+  "corp_coverage": {
+    title: "利息保障倍數 (Interest Coverage Ratio)",
+    def: "衡量企業每年本業賺取的營業利益，足夠支付全年債務利息費用的倍數。",
+    calc: "稅前息前獲利 (EBIT) ÷ 全年總利息費用 (Interest Expense)。",
+    crit: "• > 20x：👑 極度安全，付息毫無壓力（許多淨利息收入巨頭甚至 > 40x）<br>• 5x ~ 20x：🟢 財務穩健，償息能力充裕<br>• < 3x：⚠️ 警戒門檻，若遇景氣逆風恐壓縮獲利與派息"
+  },
+  "corp_fcf": {
+    title: "自由現金流 (Free Cash Flow, FCF)",
+    def: "企業本業營運收進來的現金，扣除維持競爭力所需的資本支出（蓋廠房、買設備）後，真正能自由支配拿來還債、配息或買回庫藏股的純現金。",
+    calc: "營業活動現金流入 (Operating Cash Flow) − 資本支出 (CapEx)，單位：十億美元 ($B)。",
+    crit: "• > $15B/年：💰 超級現金流印鈔機，具備極強的內生還債能力<br>• > $0：正向造血，無須靠借新還舊維持營運<br>• < $0：現金淨流出，需檢視是否處於巨額資本支出擴張期"
+  },
+  "corp_fcf_margin": {
+    title: "FCF 利潤率 (FCF Margin)",
+    def: "企業每做 100 元生意（營收），最終能轉化為多少元「自由現金流」的含金量指標。",
+    calc: "自由現金流 (FCF) ÷ 全年總營收 (Total Revenue) × 100%。",
+    crit: "• > 20%：🌟 頂級商業模式與定價權（如軟體、晶片設計與支付巨頭）<br>• 10% ~ 20%：🟢 現金轉換效率良好<br>• < 5%：屬重資本或低毛利產業，抗景氣波動緩衝較薄"
+  },
+  "corp_net_debt_ebitda": {
+    title: "淨負債 / EBITDA (Net Leverage Ratio)",
+    def: "假設企業把帳上現金全部拿去還債後，剩下的「淨債務」需要靠本業賺幾年（EBITDA）才能全部還清。",
+    calc: "(總計息負債 Total Debt − 現金及短期投資 Cash) ÷ 稅前息前折舊攤銷前獲利 (EBITDA)。",
+    crit: "• 負值 (< 0x) 或 0.0x：👑 零淨負債／淨現金公司（帳上現金比總負債還多！）<br>• 0.1x ~ 2.0x：🟢 槓桿極低，體質強健<br>• 2.0x ~ 3.5x：🟡 中度槓桿（電信或重工業常態）<br>• > 4.0x：🔴 高槓桿警戒，面臨信評調降與再融資壓力"
+  },
+  "corp_cash_short_debt": {
+    title: "現金儲備 / 短期債務 (Liquidity Coverage)",
+    def: "衡量企業手頭上的即期現金，夠不夠直接償還未來 12 個月內即將到期的短期債務（流動性防線）。",
+    calc: "現金及約當現金與短期投資總額 ÷ 一年內到期之短期債務與長債當期部份。",
+    crit: "• > 2.0x：🛡️ 流動性固若金湯，完全無短期周轉壓力<br>• 1.0x ~ 2.0x：🟢 現金足以 100% 覆蓋短債<br>• < 1.0x：⚠️ 帳上現金小於一年內到期債務，需依賴銀行授信額度或發新債借新還舊"
+  },
+  "corp_altman_z": {
+    title: "Altman Z 破產預警指數 (Altman Z-Score)",
+    def: "由紐約大學教授 Edward Altman 提出的經典多變數財務模型，綜合評估企業未來 2 年內發生破產危機的量化分數。",
+    calc: "Z = 1.2×(營運資金/總資產) + 1.4×(保留盈餘/總資產) + 3.3×(EBIT/總資產) + 0.6×(市值/總負債) + 1.0×(營收/總資產)。",
+    crit: "• Z > 2.99：🟢 安全綠區（財務結構極為健康，無破產疑慮）<br>• 1.81 ~ 2.99：🟡 灰色觀察區（需留意槓桿與獲利變化）<br>• Z < 1.81：🔴 財務危機紅區（高違約與破產風險預警）"
+  },
+
+  // Section 4: 壓力測試與 Debt Wall
+  "sim_debt_wall": {
+    title: "債務到期階梯分佈 (Debt Wall & Maturity Ladder)",
+    def: "將企業未來各年度必須償還或重新發債展延（Refinance）的本金規模視覺化，檢視是否有單一年度「到期牆」過高的問題。",
+    calc: "彙整發行人各期流通在外公司債與定期貸款於 2026 ~ 2031+ 各年度之到期本金總額 ($B)。",
+    crit: "• 近 2 年到期佔比 < 25% 且低於帳上現金：極度安全，無須被迫在高利率環境下發債<br>• 若近 2 年到期柱狀圖高聳且超過現金儲備：面臨沉重的「高息借新還舊」成本"
+  },
+  "sim_ebitda_shock": {
+    title: "營收 / EBITDA 衝擊幅度 (EBITDA Shock)",
+    def: "模擬當全球經濟衰退或產業逆風導致企業營業獲利（EBITDA）大幅縮水時，對償債能力的衝擊。",
+    calc: "壓力後 EBITDA = 基準 EBITDA × (1 + 衝擊百分比%)。",
+    crit: "• 測試在獲利衰退 -15% ~ -30% 的極端完美風暴下，企業的利息保障倍數是否仍能維持在 5x 以上的安全線"
+  },
+  "sim_rate_hike": {
+    title: "新發債與再融資利率升息幅度 (Refinancing Rate Surge)",
+    def: "模擬當公債殖利率飆升或信用利差擴大時，企業為「近 2 年到期債務」借新還舊所需承擔的額外利息成本。",
+    calc: "新增年利息支出 = 近 2 年到期債務本金 × 再融資利率調升幅度 (+bps)。",
+    crit: "• 若近 2 年到期債務龐大，升息 +200 bps 將顯著侵蝕自由現金流並拉低利息保障倍數"
+  }
+};
+
+let currentActiveIcon = null;
+
+function openMetricPopover(event, key) {
+  event.stopPropagation();
+  event.preventDefault();
+
+  const popover = document.getElementById("metric-popover");
+  const data = METRIC_EXPLANATIONS[key];
+  if (!popover || !data) return;
+
+  // Toggle off if clicking the same icon
+  if (currentActiveIcon === event.currentTarget && popover.style.display === "block") {
+    closeMetricPopover();
+    return;
+  }
+
+  if (currentActiveIcon) {
+    currentActiveIcon.classList.remove("active");
+  }
+  currentActiveIcon = event.currentTarget;
+  currentActiveIcon.classList.add("active");
+
+  document.getElementById("popover-title").innerHTML = `<span>ℹ️</span> ${data.title}`;
+  document.getElementById("popover-def").innerHTML = data.def;
+  document.getElementById("popover-calc").innerHTML = data.calc;
+  document.getElementById("popover-crit").innerHTML = data.crit;
+
+  popover.style.display = "block";
+
+  // Position smartly near the icon
+  const rect = currentActiveIcon.getBoundingClientRect();
+  const popWidth = 340;
+  const popHeight = popover.offsetHeight || 220;
+
+  let left = rect.left + rect.width / 2 - popWidth / 2;
+  let top = rect.bottom + 8;
+
+  // Keep inside horizontal viewport bounds
+  if (left < 12) left = 12;
+  if (left + popWidth > window.innerWidth - 12) {
+    left = window.innerWidth - popWidth - 12;
+  }
+
+  // Flip above if near bottom of viewport
+  if (top + popHeight > window.innerHeight - 12 && rect.top > popHeight + 16) {
+    top = rect.top - popHeight - 8;
+  }
+
+  popover.style.left = left + "px";
+  popover.style.top = top + "px";
+}
+
+function closeMetricPopover() {
+  const popover = document.getElementById("metric-popover");
+  if (popover) popover.style.display = "none";
+  if (currentActiveIcon) {
+    currentActiveIcon.classList.remove("active");
+    currentActiveIcon = null;
+  }
+}
+
+document.addEventListener("click", closeMetricPopover);
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeMetricPopover();
+});
+window.addEventListener("scroll", function() {
+  const popover = document.getElementById("metric-popover");
+  if (popover && popover.style.display === "block") closeMetricPopover();
+}, true);
 </script>
 
 </body>
