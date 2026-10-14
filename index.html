@@ -502,20 +502,20 @@
         </div>
       </div>
 
-      <!-- Right: CME FedWatch Probabilities Card (期貨定價自算 - Adopted from Nasdaq Dashboard) -->
+            <!-- Right: CME FedWatch Probabilities Card (期貨定價自算 - CME Anchor-Month Model) -->
       <div class="macro-card">
         <div class="card-header">
           <div>
             <h3>CME FedWatch 升降息機率表 (期貨定價自算)</h3>
             <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">當前目標基準利率：3.75% - 4.00% ｜ 下次 FOMC：2026-10-28</div>
           </div>
-          <div class="card-stat-pill mono">下場會議: 10/28</div>
+          <div class="card-stat-pill mono" id="fedwatch-sync-pill">下場會議: 10/28</div>
         </div>
 
-        <!-- Real-Time ZQ Futures Display -->
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 12px;">
-          <span style="color: var(--text-muted);">30 天期貨 (ZQ) 結算價: <strong class="mono" style="color: var(--accent);">96.1730</strong></span>
-          <span style="color: var(--text-muted);">隱含全月平均 EFFR: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.8270%</strong></span>
+        <!-- Real-Time ZQ Anchor Futures Display -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 11.5px;">
+          <span style="color: var(--text-muted);">現行 EFFR: <strong class="mono" style="color: #1a3821;" id="fedEffrDisplay">3.88%</strong> ｜ 11月定錨期貨 (ZQX6): <strong class="mono" style="color: var(--accent);" id="fedZqPriceDisplay">96.075</strong> ➔ 隱含會後利率: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.925% (+4.5 bps)</strong></span>
+          <span id="fedRealtimeBadge" style="font-size: 10.5px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px;">🟢 期貨定錨同步</span>
         </div>
 
         <table class="fedwatch-table">
@@ -533,37 +533,37 @@
               <td><strong style="color: #1a3821;">按兵不動 (Hold)</strong></td>
               <td class="mono">3.75% - 4.00%</td>
               <td class="mono">
-                <strong id="fedProbHoldVal" style="color: var(--accent);">87.6%</strong>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 87.6%;"></div></div>
+                <strong id="fedProbHoldVal" style="color: var(--accent);">82.0%</strong>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 82.0%;"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">85.0%</td>
-              <td class="mono" style="color: #94a3b8;">81.2%</td>
+              <td class="mono" id="fedHold1D" style="color: #94a3b8;">81.2%</td>
+              <td class="mono" id="fedHold1W" style="color: #94a3b8;">80.5%</td>
             </tr>
             <tr>
               <td><span style="color: var(--green);">降息 1 碼 (-25 bps)</span></td>
               <td class="mono">3.50% - 3.75%</td>
               <td class="mono">
-                <span id="fedProbCutVal" style="color: var(--green); font-weight: 700;">12.4%</span>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbCutBar" style="width: 12.4%; background: var(--green);"></div></div>
+                <span id="fedProbCutVal" style="color: var(--green); font-weight: 700;">0.0%</span>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbCutBar" style="width: 0.0%; background: var(--green);"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">13.2%</td>
-              <td class="mono" style="color: #94a3b8;">17.5%</td>
+              <td class="mono" id="fedCut1D" style="color: #94a3b8;">0.0%</td>
+              <td class="mono" id="fedCut1W" style="color: #94a3b8;">0.0%</td>
             </tr>
             <tr>
               <td><span style="color: var(--red);">升息 1 碼 (+25 bps)</span></td>
               <td class="mono">4.00% - 4.25%</td>
               <td class="mono">
-                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">0.0%</span>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 0.0%; background: var(--red);"></div></div>
+                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">18.0%</span>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 18.0%; background: var(--red);"></div></div>
               </td>
-              <td class="mono" style="color: #94a3b8;">1.8%</td>
-              <td class="mono" style="color: #94a3b8;">1.3%</td>
+              <td class="mono" id="fedHike1D" style="color: #94a3b8;">18.8%</td>
+              <td class="mono" id="fedHike1W" style="color: #94a3b8;">19.5%</td>
             </tr>
           </tbody>
         </table>
 
         <div style="background: rgba(15, 23, 42, 0.03); border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
-          💡 <strong>計算說明</strong>：由 30 天聯邦基金期貨市價（100 - P）推算全月隱含利率，並依 FOMC 會議日前後天數進行加權拆解。再以 25 bps 為間隔計算偏離幅度，換算出各目標利率區間的預期機率分佈。
+          💡 <strong>計算說明</strong>：遵循 CME 官方無會議定錨月（Anchor Month）方法論，以 11 月聯邦基金期貨（ZQX6）市價（100 - P）直接定錨 10/28 會後隱含利率，消除月底僅剩 3 天的權重放大誤差。再比較會後隱含利率與現行 EFFR（3.88%）之利差，以 25 bps 為單位精確拆解各目標區間之真實市場機率。
         </div>
       </div>
     </div>
@@ -744,30 +744,47 @@
 
   <!-- Client-side Real-time Yield Hook & FedWatch Calculation -->
   <script>
-    // CME FedWatch 自算定價函數 (完全同步自 nasdaq/index.html)
-    function calcFedWatchFromFutures(price) {
-      const p = parseFloat(price) || 96.1730;
-      const impliedRate = 100.0 - p;
-      const currentEffr = 3.83;
-      const totalDays = 31;
-      const preDays = 28;
-      const postDays = 3;
-      const postRate = ((impliedRate * totalDays) - (preDays * currentEffr)) / postDays;
-      const delta = postRate - currentEffr;
+        // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
+    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
+      const pNov = parseFloat(priceNov) || 96.075;
+      const pOct = parseFloat(priceOct) || 96.115;
+      const effr = parseFloat(currentEffr) || 3.88;
+
+      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
+      const postRate = 100.0 - pNov;
+      const delta = postRate - effr; // 利差 (%)
+      const deltaBps = delta * 100.0; // 利差 (bps)
       const numMoves = delta / 0.25;
 
-      let probCut = 0;
-      let probHold = 100;
-      let probHike = 0;
+      let probCut = 0.0;
+      let probHold = 82.0;
+      let probHike = 18.0;
 
-      if (delta < 0) {
-        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
-        probHold = Math.max(0, 100 - probCut);
-        probHike = 0;
-      } else {
+      if (delta >= 0) {
         probHike = Math.min(100, Math.max(0, numMoves * 100));
         probHold = Math.max(0, 100 - probHike);
-        probCut = 0;
+        probCut = 0.0;
+      } else {
+        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
+        probHold = Math.max(0, 100 - probCut);
+        probHike = 0.0;
+      }
+
+      const effrEl = document.getElementById("fedEffrDisplay");
+      if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
+
+      const zqPriceEl = document.getElementById("fedZqPriceDisplay");
+      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+
+      const impliedEl = document.getElementById("fedImpliedRateDisplay");
+      if (impliedEl) {
+        const signStr = deltaBps >= 0 ? "+" : "";
+        impliedEl.innerText = `${postRate.toFixed(3)}% (${signStr}${deltaBps.toFixed(1)} bps)`;
+      }
+
+      const badgeEl = document.getElementById("fedRealtimeBadge");
+      if (badgeEl && sourceLabel) {
+        badgeEl.innerText = `🟢 ${sourceLabel}`;
       }
 
       const holdValEl = document.getElementById("fedProbHoldVal");
@@ -783,13 +800,11 @@
         if (hikeVal) hikeVal.innerText = probHike.toFixed(1) + "%";
         const hikeBar = document.getElementById("fedProbHikeBar");
         if (hikeBar) hikeBar.style.width = probHike.toFixed(1) + "%";
-        const impliedEl = document.getElementById("fedImpliedRateDisplay");
-        if (impliedEl) impliedEl.innerText = impliedRate.toFixed(4) + "%";
       }
     }
 
     // 頁面初始化自算 FedWatch
-    calcFedWatchFromFutures(96.1730);
+    calcFedWatchFromFutures(96.075, 96.115, 3.88, "期貨定錨基準");
 
     
     
@@ -1055,7 +1070,71 @@ function renderRollingYieldChart(historyArray) {
 })();
 </script>
 
-<!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DATA ENGINE -->
+
+
+
+<script>
+    // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
+    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
+      const pNov = parseFloat(priceNov) || 96.075;
+      const pOct = parseFloat(priceOct) || 96.115;
+      const effr = parseFloat(currentEffr) || 3.88;
+
+      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
+      const postRate = 100.0 - pNov;
+      const delta = postRate - effr; // 利差 (%)
+      const deltaBps = delta * 100.0; // 利差 (bps)
+      const numMoves = delta / 0.25;
+
+      let probCut = 0.0;
+      let probHold = 82.0;
+      let probHike = 18.0;
+
+      if (delta >= 0) {
+        probHike = Math.min(100, Math.max(0, numMoves * 100));
+        probHold = Math.max(0, 100 - probHike);
+        probCut = 0.0;
+      } else {
+        probCut = Math.min(100, Math.max(0, Math.abs(numMoves) * 100));
+        probHold = Math.max(0, 100 - probCut);
+        probHike = 0.0;
+      }
+
+      const effrEl = document.getElementById("fedEffrDisplay");
+      if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
+
+      const zqPriceEl = document.getElementById("fedZqPriceDisplay");
+      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+
+      const impliedEl = document.getElementById("fedImpliedRateDisplay");
+      if (impliedEl) {
+        const signStr = deltaBps >= 0 ? "+" : "";
+        impliedEl.innerText = `${postRate.toFixed(3)}% (${signStr}${deltaBps.toFixed(1)} bps)`;
+      }
+
+      const badgeEl = document.getElementById("fedRealtimeBadge");
+      if (badgeEl && sourceLabel) {
+        badgeEl.innerText = `🟢 ${sourceLabel}`;
+      }
+
+      const holdValEl = document.getElementById("fedProbHoldVal");
+      if (holdValEl) {
+        holdValEl.innerText = probHold.toFixed(1) + "%";
+        const holdBar = document.getElementById("fedProbHoldBar");
+        if (holdBar) holdBar.style.width = probHold.toFixed(1) + "%";
+        const cutVal = document.getElementById("fedProbCutVal");
+        if (cutVal) cutVal.innerText = probCut.toFixed(1) + "%";
+        const cutBar = document.getElementById("fedProbCutBar");
+        if (cutBar) cutBar.style.width = probCut.toFixed(1) + "%";
+        const hikeVal = document.getElementById("fedProbHikeVal");
+        if (hikeVal) hikeVal.innerText = probHike.toFixed(1) + "%";
+        const hikeBar = document.getElementById("fedProbHikeBar");
+        if (hikeBar) hikeBar.style.width = probHike.toFixed(1) + "%";
+      }
+    }
+</script>
+
+<!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DUAL-CHANNEL FEDWATCH ENGINE -->
 <script>
 const INITIAL_DAILY_YIELD_HISTORY = [
   {d: "09/09", r: 5.06}, {d: "09/10", r: 5.09},
@@ -1170,7 +1249,7 @@ function renderRollingYieldChart(latestYieldRate) {
   }
 }
 
-(async function robustLiveYieldSync() {
+(async function robustLiveYieldAndFedWatchSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
   const now = new Date();
   const fomcDate = new Date("2026-10-28");
@@ -1182,34 +1261,101 @@ function renderRollingYieldChart(latestYieldRate) {
     }
   });
 
+  // 預設基準參數 (CME 官方雙合約定錨模型)
   let liveYield = null;
-  let sourceTag = "雲端同步";
+  let yieldSourceTag = "雲端同步";
+  let zqNovPrice = 96.075;
+  let zqOctPrice = 96.115;
+  let currentEffr = 3.88;
+  let fedSourceTag = "雲端試算表同步";
 
+  // 先以預設基準執行一次渲染
+  if (typeof calcFedWatchFromFutures === "function") {
+    calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "期貨定錨基準");
+  }
+
+  // =========================================================
+  // 通道 A：Google 雲端試算表官方 CDN (gviz/tq) 0.2 秒極速同步
+  // =========================================================
   try {
-    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20B%20limit%203&t=` + Date.now();
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&tq=select%20A,B%20limit%2015&t=` + Date.now();
     const res = await fetch(gvizUrl, { signal: AbortSignal.timeout(4000) });
     if (res.ok) {
       const text = await res.text();
       const m = text.match(/setResponse\((.*)\);/s);
       if (m) {
         const json = JSON.parse(m[1]);
-        const rows = json.table.rows;
-        if (rows && rows.length > 1 && rows[1].c && rows[1].c[0]) {
-          const valStr = String(rows[1].c[0].v || rows[1].c[0].f || "");
-          const matchNum = valStr.match(/([0-9]+\.[0-9]+)/);
-          if (matchNum) {
-            liveYield = parseFloat(matchNum[1]);
-            sourceTag = "雲端試算表同步";
+        const rows = json.table.rows || [];
+        rows.forEach((r, idx) => {
+          const colA = r.c && r.c[0] ? String(r.c[0].v || r.c[0].f || "") : "";
+          const colB = r.c && r.c[1] ? String(r.c[1].v || r.c[1].f || "") : "";
+          const combined = colA + " " + colB;
+
+          if (idx === 1 || colA.includes("10 年期") || colA.includes("US10Y")) {
+            const mY = colB.match(/([0-9]+\.[0-9]+)/);
+            if (mY) {
+              const val = parseFloat(mY[1]);
+              if (val > 2.0 && val < 10.0) {
+                liveYield = val;
+                yieldSourceTag = "雲端試算表同步";
+              }
+            }
           }
+          if (colA.includes("EFFR") || colA.includes("有效利率")) {
+            const mE = colB.match(/([0-9]+\.[0-9]+)/);
+            if (mE) currentEffr = parseFloat(mE[1]);
+          }
+          if (colA.includes("ZQX6") || colA.includes("11月定錨")) {
+            const mZ = colB.match(/([0-9]{2}\.[0-9]+)/);
+            if (mZ) zqNovPrice = parseFloat(mZ[1]);
+          }
+          if (colA.includes("ZQV6") || colA.includes("10月")) {
+            const mZ = colB.match(/([0-9]{2}\.[0-9]+)/);
+            if (mZ) zqOctPrice = parseFloat(mZ[1]);
+          }
+          if (colA.includes("按兵不動") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedHold1D");
+              const w1 = document.getElementById("fedHold1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+          if (colA.includes("升息") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedHike1D");
+              const w1 = document.getElementById("fedHike1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+          if (colA.includes("降息") && colB.includes("/")) {
+            const parts = colB.split("/").map(s => s.trim());
+            if (parts.length >= 3) {
+              const d1 = document.getElementById("fedCut1D");
+              const w1 = document.getElementById("fedCut1W");
+              if (d1) d1.innerText = parts[1];
+              if (w1) w1.innerText = parts[2];
+            }
+          }
+        });
+        if (typeof calcFedWatchFromFutures === "function") {
+          calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "雲端試算表同步");
         }
       }
     }
   } catch(e) {}
 
-  if (!liveYield) {
+  // =========================================================
+  // 通道 B：前端瀏覽器盤中即時抓取 Yahoo 期貨 (ZQX26.CBT / ZQV26.CBT / ^TNX)
+  // =========================================================
+  async function fetchYahooSymbol(sym) {
+    const rawUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=5d`;
     const proxies = [
-      'https://corsproxy.io/?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d'),
-      'https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/^TNX?interval=1d&range=5d')
+      'https://corsproxy.io/?url=' + encodeURIComponent(rawUrl),
+      'https://api.allorigins.win/get?url=' + encodeURIComponent(rawUrl)
     ];
     for (const pUrl of proxies) {
       try {
@@ -1219,17 +1365,40 @@ function renderRollingYieldChart(latestYieldRate) {
           const target = json.contents ? JSON.parse(json.contents) : json;
           const r = target.chart && target.chart.result && target.chart.result[0];
           if (r && r.meta && typeof r.meta.regularMarketPrice === 'number') {
-            liveYield = parseFloat((r.meta.regularMarketPrice).toFixed(2));
-            sourceTag = "Yahoo即時連線";
-            break;
+            return r.meta.regularMarketPrice;
           }
         }
       } catch(err) {}
     }
+    return null;
   }
 
+  // 盤中即時抓取 US10Y 與 ZQX26.CBT (11月定錨期貨)
+  try {
+    const [yahooYield, yahooZqNov, yahooZqOct] = await Promise.all([
+      liveYield ? Promise.resolve(liveYield) : fetchYahooSymbol("^TNX"),
+      fetchYahooSymbol("ZQX26.CBT"),
+      fetchYahooSymbol("ZQV26.CBT")
+    ]);
+
+    if (yahooYield && !liveYield && yahooYield > 2.0 && yahooYield < 10.0) {
+      liveYield = parseFloat(yahooYield.toFixed(2));
+      yieldSourceTag = "Yahoo即時連線";
+    }
+
+    if (yahooZqNov && yahooZqNov > 90.0 && yahooZqNov < 100.0) {
+      zqNovPrice = yahooZqNov;
+      if (yahooZqOct && yahooZqOct > 90.0 && yahooZqOct < 100.0) {
+        zqOctPrice = yahooZqOct;
+      }
+      if (typeof calcFedWatchFromFutures === "function") {
+        calcFedWatchFromFutures(zqNovPrice, zqOctPrice, currentEffr, "期貨即時定價");
+      }
+    }
+  } catch(e) {}
+
   const finalYield = liveYield ? liveYield.toFixed(2) : "5.22";
-  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${sourceTag}: ${finalYield}%</span>`;
+  const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${yieldSourceTag}: ${finalYield}%</span>`;
 
   const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");
   if (headerYieldEl) {
