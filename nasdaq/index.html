@@ -1586,12 +1586,49 @@
     let selectedCategory = "ALL";
     let sortCol = "idx";
     let sortAsc = true;
-    const baseDate = new Date("2026-10-05");
+
+    // 方向二：財報開獎自動偵測、Q3 結算徽章與 +90 天自動換季引擎
+    function resolveEarningsStatus(targetDateStr) {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const parts = String(targetDateStr || "2026-11-01").split("-").map(Number);
+      let target = new Date(parts[0] || 2026, (parts[1] || 1) - 1, parts[2] || 1);
+      let rawDiff = Math.round((target - today) / 86400000);
+
+      // 若當前日期 >= 財報發佈日，且在開獎後 0~3 天內：轉為 🔔 財報已開獎 (Q3 結算中)
+      if (rawDiff <= 0 && rawDiff >= -3) {
+        return {
+          days: 0,
+          displayDate: targetDateStr,
+          isSettling: true,
+          isRolled: false,
+          badgeText: "🔔 財報已開獎 (Q3 結算中)",
+          badgeStyle: "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd; font-weight:800;"
+        };
+      }
+
+      // 超過 3 天後自動將下次財報日推進一季 (+90 天)
+      let rolled = false;
+      while (rawDiff < -3) {
+        target = new Date(target.getTime() + 90 * 86400000);
+        rawDiff = Math.round((target - today) / 86400000);
+        rolled = true;
+      }
+      const y = target.getFullYear();
+      const m = String(target.getMonth() + 1).padStart(2, "0");
+      const d = String(target.getDate()).padStart(2, "0");
+      return {
+        days: rawDiff,
+        displayDate: `${y}-${m}-${d}`,
+        isSettling: false,
+        isRolled: rolled,
+        badgeText: `${rawDiff} 天`,
+        badgeStyle: ""
+      };
+    }
 
     function getDaysDiff(targetDateStr) {
-      const target = new Date(targetDateStr);
-      const diffTime = target - baseDate;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return resolveEarningsStatus(targetDateStr).days;
     }
 
     function updateYield(val) {
@@ -2744,5 +2781,6 @@ function renderRollingYieldChart(latestYieldRate) {
 })();
 </script>
 
+<script src="../livequotes_hub.js"></script>
 </body>
 </html>
