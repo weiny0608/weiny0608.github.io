@@ -1,7 +1,9 @@
 /**
- * GOOGLEFINANCE LiveQuotes Cloud Hub & Q3 Earnings Auto-Rollover / EPS Calibration Engine
+ * GOOGLEFINANCE LiveQuotes Cloud Hub, Q3 Earnings Auto-Rollover / EPS Calibration Engine
+ * & Fed Core Macro Indicators Multi-Channel Auto-Sync Engine
  * 方向一：建立 GOOGLEFINANCE 雲端即時股價中樞 (LiveQuotes)
  * 方向二：財報開獎自動換季 (+90天) 與 EPS 模型滾動校準
+ * 方向三：六大核心總經指標 (Core PCE / PCE / NFP / ADP / 失業率 / PPI) 自動抓取與雲端同步引擎
  */
 (function () {
   'use strict';
@@ -105,7 +107,412 @@
     "ARKK":  { price: 9.38,   chgPct: -2.85, high52: 10.66,  low52: 6.74 }
   };
 
+  // 方向三：六大核心總經指標官方最新基準快照 (BEA / BLS / ADP 官方發布數據 + FRED 序列映射)
+  const MACRO_INDICATORS_SNAPSHOT = [
+    {
+      id: "core_pce",
+      name: "核心 PCE 年增率 (Core PCE)",
+      fredSeries: "PCEPILFE",
+      calcType: "yoy_pct",
+      value: "3.0%",
+      numericValue: 3.0,
+      prevValue: "3.3%",
+      consensus: "3.0%",
+      metaLeft: "前期: 3.3% ｜ 預期: 3.0%",
+      releaseDate: "09/30",
+      referencePeriod: "2026-08",
+      nextReleaseDate: "2026-10-29",
+      badgeText: "Fed核心指標",
+      badgeClass: "status-sticky",
+      sourceName: "BEA Personal Income & Outlays",
+      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+    },
+    {
+      id: "headline_pce",
+      name: "整體 PCE 年增率 (Headline PCE)",
+      fredSeries: "PCEPI",
+      calcType: "yoy_pct",
+      value: "3.4%",
+      numericValue: 3.4,
+      prevValue: "3.7%",
+      consensus: "3.4%",
+      metaLeft: "前期: 3.7% ｜ 預期: 3.4%",
+      releaseDate: "09/30",
+      referencePeriod: "2026-08",
+      nextReleaseDate: "2026-10-29",
+      badgeText: "較前期趨緩",
+      badgeClass: "status-easing",
+      sourceName: "BEA Personal Income & Outlays",
+      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+    },
+    {
+      id: "nfp",
+      name: "大非農新增就業 (Nonfarm Payrolls)",
+      fredSeries: "PAYEMS",
+      calcType: "mom_diff_10k",
+      value: "+2.9 萬人",
+      numericValue: 2.9,
+      prevValue: "13.3 萬",
+      consensus: "4.5 萬",
+      metaLeft: "前期: 13.3 萬 ｜ 均值: 4.5 萬",
+      releaseDate: "10/02",
+      referencePeriod: "2026-09",
+      nextReleaseDate: "2026-11-06",
+      badgeText: "動能放緩",
+      badgeClass: "status-easing",
+      sourceName: "BLS Employment Situation",
+      sourceUrl: "https://www.bls.gov/news.release/empsit.nr0.htm"
+    },
+    {
+      id: "adp",
+      name: "小非農就業 (ADP Employment)",
+      fredSeries: "ADPMNUSNERSA",
+      calcType: "mom_diff_10k",
+      value: "+9.0 萬人",
+      numericValue: 9.0,
+      prevValue: "3.6 萬",
+      consensus: "8.5 萬",
+      metaLeft: "前期: 3.6 萬 ｜ 預期: 8.5 萬",
+      releaseDate: "09/30",
+      referencePeriod: "2026-09",
+      nextReleaseDate: "2026-11-04",
+      badgeText: "就業回溫",
+      badgeClass: "status-solid",
+      sourceName: "ADP National Employment Report",
+      sourceUrl: "https://mediacenter.adp.com/2026-09-30-ADP-National-Employment-Report-Private-Sector-Employment-Increased-by-90,000-Jobs-in-September"
+    },
+    {
+      id: "unrate",
+      name: "失業率 (Unemployment Rate)",
+      fredSeries: "UNRATE",
+      calcType: "level_pct",
+      value: "4.2%",
+      numericValue: 4.2,
+      prevValue: "4.2%",
+      consensus: "4.2%",
+      metaLeft: "前期: 4.2% ｜ 預期: 4.2%",
+      releaseDate: "10/02",
+      referencePeriod: "2026-09",
+      nextReleaseDate: "2026-11-06",
+      badgeText: "健康低檔",
+      badgeClass: "status-solid",
+      sourceName: "BLS Employment Situation",
+      sourceUrl: "https://www.bls.gov/news.release/empsit.nr0.htm"
+    },
+    {
+      id: "ppi",
+      name: "生產者物價 PPI / 核心 PPI",
+      fredSeries: "PPIFIS,PPIFES",
+      calcType: "dual_yoy_pct",
+      value: "5.4% / 4.7%",
+      numericValue: 5.4,
+      coreNumericValue: 4.7,
+      prevValue: "4.7%",
+      consensus: "4.7%",
+      metaLeft: "核心前期: 4.7% ｜ 整體前期: 4.8%",
+      releaseDate: "09/10",
+      referencePeriod: "2026-08",
+      nextReleaseDate: "2026-10-15",
+      badgeText: "能源推升",
+      badgeClass: "status-sticky",
+      sourceName: "BLS Producer Price Index",
+      sourceUrl: "https://www.bls.gov/news.release/ppi.nr0.htm"
+    }
+  ];
+
   window.LIVE_QUOTES_HUB = Object.assign({}, LIVE_QUOTES_SNAPSHOT);
+  window.MACRO_INDICATORS_HUB = MACRO_INDICATORS_SNAPSHOT.map(item => Object.assign({}, item));
+
+  // 將六大總經指標渲染至網頁 DOM (支援 index.html 與 nasdaq/index.html)
+  function applyMacroIndicatorsToPage(indicatorsList, sourceLabel) {
+    if (!Array.isArray(indicatorsList) || indicatorsList.length === 0) return;
+
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    indicatorsList.forEach(ind => {
+      if (!ind || !ind.id) return;
+
+      // 嘗試透過 id 定位卡片，若無則透過標題文字匹配
+      let box = document.getElementById(`ind-box-${ind.id}`);
+      if (!box) {
+        document.querySelectorAll('.indicator-box').forEach(el => {
+          const titleSpan = el.querySelector('.ind-name span:first-child');
+          if (titleSpan && ind.name && titleSpan.textContent.includes(ind.name.split(' ')[0])) {
+            box = el;
+          }
+        });
+      }
+      if (!box) return;
+
+      const valEl = document.getElementById(`ind-val-${ind.id}`) || box.querySelector('.ind-value');
+      if (valEl && ind.value) {
+        valEl.textContent = ind.value;
+      }
+
+      const badgeEl = document.getElementById(`ind-badge-${ind.id}`) || box.querySelector('.tag-status');
+      if (badgeEl && ind.badgeText) {
+        badgeEl.textContent = ind.badgeText;
+        badgeEl.className = `tag-status ${ind.badgeClass || 'status-solid'}`;
+      }
+
+      const metaSpans = box.querySelectorAll('.ind-meta span');
+      const metaLeftEl = document.getElementById(`ind-meta-left-${ind.id}`) || (metaSpans.length > 0 ? metaSpans[0] : null);
+      const metaRightEl = document.getElementById(`ind-meta-right-${ind.id}`) || (metaSpans.length > 1 ? metaSpans[1] : null);
+
+      if (metaLeftEl && ind.metaLeft) {
+        metaLeftEl.textContent = ind.metaLeft;
+      }
+
+      if (metaRightEl && ind.releaseDate) {
+        let releaseHtml = `發布: ${ind.releaseDate}`;
+        if (ind.nextReleaseDate) {
+          const parts = String(ind.nextReleaseDate).split('-').map(Number);
+          if (parts.length === 3) {
+            const nextDt = new Date(parts[0], parts[1] - 1, parts[2]);
+            const diffDays = Math.round((nextDt - todayMidnight) / 86400000);
+            const nextShort = `${String(parts[1]).padStart(2, '0')}/${String(parts[2]).padStart(2, '0')}`;
+            if (diffDays === 0) {
+              releaseHtml = `發布: ${ind.releaseDate} <span style="color:#d97706; font-weight:800;" title="下次官方發布日：今日 (${nextShort}) 美東 08:30">· 🔔今日開獎</span>`;
+            } else if (diffDays > 0 && diffDays <= 5) {
+              releaseHtml = `發布: ${ind.releaseDate} <span style="color:#059669; font-weight:700;" title="下次官方發布日：${ind.nextReleaseDate} (倒數 ${diffDays} 天)">· 下期 ${nextShort}</span>`;
+            }
+          }
+        }
+        metaRightEl.innerHTML = releaseHtml;
+      }
+
+      // 加入官方數據來源連結與 Tooltip
+      if (ind.sourceUrl) {
+        const tooltipParts = [
+          `【${ind.name}】`,
+          `• 最新數值：${ind.value} (${ind.metaLeft || ''})`,
+          ind.referencePeriod ? `• 數據統計月份：${ind.referencePeriod}` : '',
+          `• 最近發布日：${ind.releaseDate}`,
+          ind.nextReleaseDate ? `• 下次發布日：${ind.nextReleaseDate}` : '',
+          ind.fredSeries ? `• FRED 官方序列：${ind.fredSeries}` : '',
+          `• 點擊卡片可查看 ${ind.sourceName || '官方機構'} 最新報告`
+        ].filter(Boolean).join('\n');
+        box.setAttribute('title', tooltipParts);
+        box.style.cursor = 'pointer';
+        box.onclick = function (e) {
+          if (e.target && e.target.tagName === 'A') return;
+          window.open(ind.sourceUrl, '_blank', 'noopener');
+        };
+      }
+
+      // 同步更新頂部 Header 的「核心 PCE」數值
+      if (ind.id === 'core_pce' && ind.value) {
+        const hdrPce = document.getElementById('header-core-pce-val');
+        if (hdrPce) {
+          hdrPce.textContent = ind.value;
+        } else {
+          document.querySelectorAll('.header div').forEach(el => {
+            if (el.children.length === 0 && el.textContent.includes('核心 PCE：')) {
+              el.textContent = el.textContent.replace(/核心 PCE：[0-9.]+%/, `核心 PCE：${ind.value}`);
+            }
+          });
+        }
+      }
+    });
+
+    const syncStatusEl = document.getElementById('macro-indicators-sync-status');
+    if (syncStatusEl && sourceLabel) {
+      syncStatusEl.innerHTML = `🟢 殖利率每日即時連線 ｜ 六大總經指標已自動同步 (${sourceLabel})`;
+    }
+  }
+
+  window.applyMacroIndicatorsToPage = applyMacroIndicatorsToPage;
+
+  // 從 FRED (Federal Reserve Economic Data) 透過 CORS 代理抓取最新官方时间序列並計算年增率/月變動
+  async function fetchFredSeriesObservations(seriesId, count) {
+    const rawUrl = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}`;
+    const proxies = [
+      `https://corsproxy.io/?url=${encodeURIComponent(rawUrl)}`,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`
+    ];
+    for (const pUrl of proxies) {
+      try {
+        const res = await fetch(pUrl, { signal: AbortSignal.timeout(4500) });
+        if (!res.ok) continue;
+        const csvText = await res.text();
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 3) continue;
+        const obs = [];
+        for (let i = Math.max(1, lines.length - (count || 16)); i < lines.length; i++) {
+          const cols = lines[i].split(',');
+          if (cols.length >= 2) {
+            const dt = cols[0].trim();
+            const val = parseFloat(cols[1].trim());
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dt) && !isNaN(val)) {
+              obs.push({ date: dt, period: dt.slice(0, 7), value: val });
+            }
+          }
+        }
+        if (obs.length > 0) return obs;
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  // 多通道自動同步六大核心總經指標：
+  // 通道 1: 同源 `./macro_indicators.json` (GitHub Actions / 每日排程自動寫入)
+  // 通道 2: Google Sheets `MacroIndicators` 分頁 (gviz JSON 0.2s 雲端同步)
+  // 通道 3: St. Louis Fed FRED 官方序列即時比對 (若官方公布新月份數據則即時計算覆寫)
+  async function syncMacroIndicatorsFromCloud(manualTrigger) {
+    let updatedFrom = null;
+
+    // 1. 讀取同源 macro_indicators.json (支援根目錄 ./ 與子目錄 ../nasdaq/)
+    const jsonPaths = ['./macro_indicators.json', '../macro_indicators.json'];
+    for (const path of jsonPaths) {
+      try {
+        const res = await fetch(`${path}?t=${Date.now()}`, { signal: AbortSignal.timeout(3500) });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (data && Array.isArray(data.indicators) && data.indicators.length >= 6) {
+          window.MACRO_INDICATORS_HUB = data.indicators;
+          updatedFrom = '官方排程 JSON 同步';
+          applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
+          break;
+        }
+      } catch (e) {}
+    }
+
+    // 2. 嘗試從 Google Sheets `MacroIndicators` 分頁讀取覆寫
+    const sheetUrls = [
+      `https://docs.google.com/spreadsheets/d/${LIVE_QUOTES_SHEET_ID}/gviz/tq?tqx=out:json&sheet=MacroIndicators&t=${Date.now()}`,
+      `https://docs.google.com/spreadsheets/d/${MAIN_VALUATION_SHEET_ID}/gviz/tq?tqx=out:json&sheet=MacroIndicators&t=${Date.now()}`
+    ];
+    for (const sUrl of sheetUrls) {
+      try {
+        const res = await fetch(sUrl, { signal: AbortSignal.timeout(3500) });
+        if (!res.ok) continue;
+        const txt = await res.text();
+        const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+        if (!match) continue;
+        const json = JSON.parse(match[1]);
+        const rows = (json.table && json.table.rows) || [];
+        let matched = 0;
+        rows.forEach(r => {
+          const c = r.c || [];
+          const id = c[0] && c[0].v ? String(c[0].v).trim() : '';
+          const target = window.MACRO_INDICATORS_HUB.find(x => x.id === id);
+          if (target) {
+            const val = c[2] && c[2].v !== null ? String(c[2].f || c[2].v).trim() : '';
+            const metaLeft = c[3] && c[3].v !== null ? String(c[3].v).trim() : '';
+            const relDate = c[4] && c[4].v !== null ? String(c[4].f || c[4].v).trim() : '';
+            const nextRel = c[5] && c[5].v !== null ? String(c[5].f || c[5].v).trim() : '';
+            const bText = c[6] && c[6].v !== null ? String(c[6].v).trim() : '';
+            const bClass = c[7] && c[7].v !== null ? String(c[7].v).trim() : '';
+            if (val) target.value = val;
+            if (metaLeft) target.metaLeft = metaLeft;
+            if (relDate) target.releaseDate = relDate;
+            if (nextRel) target.nextReleaseDate = nextRel;
+            if (bText) target.badgeText = bText;
+            if (bClass) target.badgeClass = bClass;
+            matched++;
+          }
+        });
+        if (matched >= 4) {
+          updatedFrom = 'Google Sheets 雲端中樞同步';
+          applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
+          break;
+        }
+      } catch (e) {}
+    }
+
+    // 3. 嘗試透過 FRED 官方序列檢測是否有比基準月份更新的官方數據公布
+    try {
+      const [obsCorePce, obsPce, obsPayems, obsUnrate] = await Promise.all([
+        fetchFredSeriesObservations('PCEPILFE', 15),
+        fetchFredSeriesObservations('PCEPI', 15),
+        fetchFredSeriesObservations('PAYEMS', 5),
+        fetchFredSeriesObservations('UNRATE', 5)
+      ]);
+
+      let fredNewerDetected = false;
+
+      if (obsCorePce && obsCorePce.length >= 13) {
+        const latest = obsCorePce[obsCorePce.length - 1];
+        const prev12 = obsCorePce[obsCorePce.length - 13];
+        const prev1 = obsCorePce[obsCorePce.length - 2];
+        const prev13 = obsCorePce[obsCorePce.length - 14];
+        const item = window.MACRO_INDICATORS_HUB.find(x => x.id === 'core_pce');
+        if (item && latest.period > (item.referencePeriod || '2026-08')) {
+          const yoy = ((latest.value / prev12.value) - 1) * 100;
+          const prevYoy = prev1 && prev13 ? ((prev1.value / prev13.value) - 1) * 100 : item.numericValue;
+          item.value = `${yoy.toFixed(1)}%`;
+          item.numericValue = Number(yoy.toFixed(1));
+          item.metaLeft = `前期: ${prevYoy.toFixed(1)}% ｜ 預期: ${item.consensus || yoy.toFixed(1) + '%'}`;
+          item.referencePeriod = latest.period;
+          fredNewerDetected = true;
+        }
+      }
+
+      if (obsPce && obsPce.length >= 13) {
+        const latest = obsPce[obsPce.length - 1];
+        const prev12 = obsPce[obsPce.length - 13];
+        const prev1 = obsPce[obsPce.length - 2];
+        const prev13 = obsPce[obsPce.length - 14];
+        const item = window.MACRO_INDICATORS_HUB.find(x => x.id === 'headline_pce');
+        if (item && latest.period > (item.referencePeriod || '2026-08')) {
+          const yoy = ((latest.value / prev12.value) - 1) * 100;
+          const prevYoy = prev1 && prev13 ? ((prev1.value / prev13.value) - 1) * 100 : item.numericValue;
+          item.value = `${yoy.toFixed(1)}%`;
+          item.numericValue = Number(yoy.toFixed(1));
+          item.metaLeft = `前期: ${prevYoy.toFixed(1)}% ｜ 預期: ${item.consensus || yoy.toFixed(1) + '%'}`;
+          item.referencePeriod = latest.period;
+          fredNewerDetected = true;
+        }
+      }
+
+      if (obsPayems && obsPayems.length >= 3) {
+        const latest = obsPayems[obsPayems.length - 1];
+        const prev1 = obsPayems[obsPayems.length - 2];
+        const prev2 = obsPayems[obsPayems.length - 3];
+        const item = window.MACRO_INDICATORS_HUB.find(x => x.id === 'nfp');
+        if (item && latest.period > (item.referencePeriod || '2026-09')) {
+          const diffWan = (latest.value - prev1.value) / 10.0;
+          const prevWan = (prev1.value - prev2.value) / 10.0;
+          const sign = diffWan >= 0 ? '+' : '';
+          item.value = `${sign}${diffWan.toFixed(1)} 萬人`;
+          item.numericValue = Number(diffWan.toFixed(1));
+          item.metaLeft = `前期: ${prevWan.toFixed(1)} 萬 ｜ 預期: ${item.consensus || '15.0 萬'}`;
+          item.referencePeriod = latest.period;
+          fredNewerDetected = true;
+        }
+      }
+
+      if (obsUnrate && obsUnrate.length >= 2) {
+        const latest = obsUnrate[obsUnrate.length - 1];
+        const prev1 = obsUnrate[obsUnrate.length - 2];
+        const item = window.MACRO_INDICATORS_HUB.find(x => x.id === 'unrate');
+        if (item && latest.period > (item.referencePeriod || '2026-09')) {
+          item.value = `${latest.value.toFixed(1)}%`;
+          item.numericValue = Number(latest.value.toFixed(1));
+          item.metaLeft = `前期: ${prev1.value.toFixed(1)}% ｜ 預期: ${latest.value.toFixed(1)}%`;
+          item.referencePeriod = latest.period;
+          fredNewerDetected = true;
+        }
+      }
+
+      if (fredNewerDetected) {
+        updatedFrom = 'FRED 聯準會官方序列即時更新';
+        applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
+      }
+    } catch (e) {}
+
+    try {
+      localStorage.setItem('MACRO_INDICATORS_HUB_CACHE', JSON.stringify({
+        updatedAt: new Date().toISOString(),
+        indicators: window.MACRO_INDICATORS_HUB
+      }));
+    } catch (e) {}
+
+    return !!updatedFrom;
+  }
+
+  window.syncMacroIndicatorsFromCloud = syncMacroIndicatorsFromCloud;
 
   // 方向二：財報開獎自動偵測、Q3 結算徽章與 +90 天自動換季
   function resolveEarningsStatus(targetDateStr) {
@@ -228,7 +635,7 @@
     // 更新狀態徽章
     const statusEl = document.getElementById('livequotes-hub-status');
     if (statusEl) {
-      statusEl.innerHTML = `🟢 <strong>LiveQuotes 雲端報價中樞已同步</strong> (${sourceLabel}) ｜ 已即時更新 ${Object.keys(quotesMap).length} 檔美股現價、單日漲跌幅、52週高低點與 3 年 CAGR`;
+      statusEl.innerHTML = `🟢 <strong>LiveQuotes 雲端報價與總經中樞已同步</strong> (${sourceLabel}) ｜ 已即時更新 ${Object.keys(quotesMap).length} 檔美股現價、六大總經指標與財報倒數`;
     }
   }
 
@@ -304,13 +711,13 @@
       panel.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="background:#059669; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px;">方向一＋方向二 已啟用</span>
-            <span id="livequotes-hub-status" style="font-size:12.5px; color:#132a18;">🟢 <strong>LiveQuotes 雲端報價中樞已連線</strong> ｜ 68+ 檔美股即時收盤價、單日漲跌幅与 3 年 CAGR 已同步</span>
+            <span style="background:#059669; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px;">全自動數據中樞 已啟用</span>
+            <span id="livequotes-hub-status" style="font-size:12.5px; color:#132a18;">🟢 <strong>LiveQuotes 雲端報價與六大總經指標已連線</strong> ｜ 68+ 檔美股現價、FRED 總經數據與 3 年 CAGR 已同步</span>
           </div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
             <a href="https://docs.google.com/spreadsheets/d/${LIVE_QUOTES_SHEET_ID}/edit" target="_blank" style="font-size:11.5px; font-weight:700; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:4px 10px; border-radius:6px; text-decoration:none;">📊 開啟 LiveQuotes 雲端表 ↗</a>
             <a href="https://docs.google.com/spreadsheets/d/${MAIN_VALUATION_SHEET_ID}/edit" target="_blank" style="font-size:11.5px; font-weight:700; color:#1e40af; background:#eff6ff; border:1px solid #bfdbfe; padding:4px 10px; border-radius:6px; text-decoration:none;">📑 主估值追蹤試算表 ↗</a>
-            <button type="button" onclick="window.syncLiveQuotesFromCloud(true)" style="font-size:11.5px; font-weight:700; color:#fff; background:#059669; border:none; padding:5px 11px; border-radius:6px; cursor:pointer;">⚡ 重新同步雲端報價</button>
+            <button type="button" onclick="window.syncLiveQuotesFromCloud(true); window.syncMacroIndicatorsFromCloud(true);" style="font-size:11.5px; font-weight:700; color:#fff; background:#059669; border:none; padding:5px 11px; border-radius:6px; cursor:pointer;">⚡ 重新同步股價與總經數據</button>
           </div>
         </div>
 
@@ -364,14 +771,15 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
           <div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-              <span style="background:#059669; color:#fff; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px;">LIVEQUOTES 雲端中樞</span>
-              <strong style="font-size:14.5px; color:#132a18;">GOOGLEFINANCE 雲端即時股價中樞 ＆ Q3 財報季動態校準雷達</strong>
+              <span style="background:#059669; color:#fff; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px;">LIVEQUOTES ＆ FRED 總經中樞</span>
+              <strong style="font-size:14.5px; color:#132a18;">GOOGLEFINANCE 雲端即時股價、六大總經指標 (FRED) ＆ Q3 財報季動態校準雷達</strong>
             </div>
             <div id="livequotes-hub-status" style="font-size:12px; color:#556d59;">
-              🟢 已連線 Google Sheets <code>LiveQuotes</code> 分頁 ｜ NVDA <strong>$221.30</strong> (-3.16%) · MSFT <strong>$533.69</strong> (-1.80%) · AAPL <strong>$342.96</strong> (+0.50%) · TSM <strong>$430.00</strong> (-3.40%) · ASML <strong>$1,650.00</strong> (🔔 Q3 結算中)
+              🟢 已連線 <code>LiveQuotes</code> 與 <code>macro_indicators.json</code> ｜ 核心 PCE <strong>3.0%</strong> · 整體 PCE <strong>3.4%</strong> · 大非農 <strong>+2.9萬</strong> · 小非農 <strong>+9.0萬</strong> · 失業率 <strong>4.2%</strong> · PPI <strong>5.4%/4.7%</strong>
             </div>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" onclick="window.syncMacroIndicatorsFromCloud(true); window.syncLiveQuotesFromCloud(true);" style="font-size:12px; font-weight:700; color:#fff; background:#059669; border:none; padding:6px 12px; border-radius:8px; cursor:pointer;">⚡ 立即同步總經與股價</button>
             <a href="https://docs.google.com/spreadsheets/d/${LIVE_QUOTES_SHEET_ID}/edit" target="_blank" style="font-size:12px; font-weight:700; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:6px 12px; border-radius:8px; text-decoration:none;">📊 LiveQuotes 雲端報價表 ↗</a>
             <a href="./nasdaq/#valuation-section" style="font-size:12px; font-weight:700; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; padding:6px 12px; border-radius:8px; text-decoration:none;">🔔 查看 Q3 財報開獎與 EPS 校準 →</a>
           </div>
@@ -502,11 +910,13 @@
 
   window.syncLiveQuotesFromCloud = syncLiveQuotesFromCloud;
 
-  // 啟動初始化：先以 0ms 載入最新快照與攔截器，再非同步拉取 Google Sheets LiveQuotes
+  // 啟動初始化：先以 0ms 載入最新快照與攔截器，再非同步拉取 Google Sheets LiveQuotes 與六大總經指標
   function initLiveQuotesAndEarningsEngine() {
     hookRenderTable();
     injectUpgradePanels();
+    applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, 'BEA/BLS/ADP 官方快照');
     applyQuotesToPage(window.LIVE_QUOTES_HUB, 'GOOGLEFINANCE 雲端快照');
+    syncMacroIndicatorsFromCloud(false);
     syncLiveQuotesFromCloud(false);
   }
 

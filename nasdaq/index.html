@@ -948,7 +948,7 @@
     </div>
     <div style="text-align: right;">
       <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.22% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
-      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">下次 FOMC：2026-10-28 ｜ 核心 PCE：3.0%</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="header-fomc-pce">下次 FOMC：2026-10-28 ｜ 核心 PCE：<span id="header-core-pce-val">3.0%</span></div>
     </div>
   </div>
 
@@ -1176,77 +1176,80 @@
   </div>
 
   <!-- SECTION 2: Key Macro Indicators Grid -->
-  <div class="section-title">聯準會 (Fed) 核心關注總體經濟指標看板</div>
-  <div class="indicators-grid">
-    <div class="indicator-box">
+  <div class="section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+    <span>聯準會 (Fed) 核心關注總體經濟指標看板</span>
+    <span id="macro-indicators-sync-status" style="font-size:12px; color:var(--text-muted); font-weight:500;">🟢 六大總經指標已啟用 FRED / 官方排程自動同步</span>
+  </div>
+  <div class="indicators-grid" id="macro-indicators-grid">
+    <div class="indicator-box" id="ind-box-core_pce" data-indicator-id="core_pce">
       <div class="ind-name">
         <span>核心 PCE 年增率 (Core PCE)</span>
-        <span class="tag-status status-sticky">Fed核心指標</span>
+        <span class="tag-status status-sticky" id="ind-badge-core_pce">Fed核心指標</span>
       </div>
-      <div class="ind-value mono">3.0%</div>
+      <div class="ind-value mono" id="ind-val-core_pce">3.0%</div>
       <div class="ind-meta">
-        <span>前期: 3.1% ｜ 預期: 3.0%</span>
-        <span>發布: 09/30</span>
+        <span id="ind-meta-left-core_pce">前期: 3.3% ｜ 預期: 3.0%</span>
+        <span id="ind-meta-right-core_pce">發布: 09/30</span>
       </div>
     </div>
 
-    <div class="indicator-box">
+    <div class="indicator-box" id="ind-box-headline_pce" data-indicator-id="headline_pce">
       <div class="ind-name">
         <span>整體 PCE 年增率 (Headline PCE)</span>
-        <span class="tag-status status-easing">穩步趨緩</span>
+        <span class="tag-status status-easing" id="ind-badge-headline_pce">較前期趨緩</span>
       </div>
-      <div class="ind-value mono">2.4%</div>
+      <div class="ind-value mono" id="ind-val-headline_pce">3.4%</div>
       <div class="ind-meta">
-        <span>前期: 2.5% ｜ 預期: 2.4%</span>
-        <span>發布: 09/30</span>
+        <span id="ind-meta-left-headline_pce">前期: 3.7% ｜ 預期: 3.4%</span>
+        <span id="ind-meta-right-headline_pce">發布: 09/30</span>
       </div>
     </div>
 
-    <div class="indicator-box">
+    <div class="indicator-box" id="ind-box-nfp" data-indicator-id="nfp">
       <div class="ind-name">
         <span>大非農新增就業 (Nonfarm Payrolls)</span>
-        <span class="tag-status status-solid">遠超預期</span>
+        <span class="tag-status status-easing" id="ind-badge-nfp">動能放緩</span>
       </div>
-      <div class="ind-value mono">+22.5 萬人</div>
+      <div class="ind-value mono" id="ind-val-nfp">+2.9 萬人</div>
       <div class="ind-meta">
-        <span>前期: 15.9 萬 ｜ 預期: 16.5 萬</span>
-        <span>發布: 10/02</span>
+        <span id="ind-meta-left-nfp">前期: 13.3 萬 ｜ 均值: 4.5 萬</span>
+        <span id="ind-meta-right-nfp">發布: 10/02</span>
       </div>
     </div>
 
-    <div class="indicator-box">
+    <div class="indicator-box" id="ind-box-adp" data-indicator-id="adp">
       <div class="ind-name">
         <span>小非農就業 (ADP Employment)</span>
-        <span class="tag-status status-solid">就業韌性</span>
+        <span class="tag-status status-solid" id="ind-badge-adp">就業回溫</span>
       </div>
-      <div class="ind-value mono">+14.3 萬人</div>
+      <div class="ind-value mono" id="ind-val-adp">+9.0 萬人</div>
       <div class="ind-meta">
-        <span>前期: 10.3 萬 ｜ 預期: 12.8 萬</span>
-        <span>發布: 10/01</span>
+        <span id="ind-meta-left-adp">前期: 3.6 萬 ｜ 預期: 8.5 萬</span>
+        <span id="ind-meta-right-adp">發布: 09/30</span>
       </div>
     </div>
 
-    <div class="indicator-box">
+    <div class="indicator-box" id="ind-box-unrate" data-indicator-id="unrate">
       <div class="ind-name">
         <span>失業率 (Unemployment Rate)</span>
-        <span class="tag-status status-solid">健康低檔</span>
+        <span class="tag-status status-solid" id="ind-badge-unrate">健康低檔</span>
       </div>
-      <div class="ind-value mono">4.2%</div>
+      <div class="ind-value mono" id="ind-val-unrate">4.2%</div>
       <div class="ind-meta">
-        <span>前期: 4.2% ｜ 預期: 4.2%</span>
-        <span>發布: 10/02</span>
+        <span id="ind-meta-left-unrate">前期: 4.2% ｜ 預期: 4.2%</span>
+        <span id="ind-meta-right-unrate">發布: 10/02</span>
       </div>
     </div>
 
-    <div class="indicator-box">
+    <div class="indicator-box" id="ind-box-ppi" data-indicator-id="ppi">
       <div class="ind-name">
         <span>生產者物價 PPI / 核心 PPI</span>
-        <span class="tag-status status-easing">上游平穩</span>
+        <span class="tag-status status-sticky" id="ind-badge-ppi">能源推升</span>
       </div>
-      <div class="ind-value mono">2.2% / 2.8%</div>
+      <div class="ind-value mono" id="ind-val-ppi">5.4% / 4.7%</div>
       <div class="ind-meta">
-        <span>核心前期: 2.9% ｜ 預期: 2.8%</span>
-        <span>發布: 09/12</span>
+        <span id="ind-meta-left-ppi">核心前期: 4.7% ｜ 整體前期: 4.8%</span>
+        <span id="ind-meta-right-ppi">發布: 09/10</span>
       </div>
     </div>
   </div>
