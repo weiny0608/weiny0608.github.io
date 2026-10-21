@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T13:25:00+08:00",
+  "updatedAt": "2026-10-21T10:25:00+08:00",
   "source": "BEA / BLS / ADP Official Releases & FRED Auto-Sync Engine",
   "indicators": [
     {
@@ -97,16 +97,16 @@
       "name": "生產者物價 PPI / 核心 PPI",
       "fredSeries": "PPIFIS,PPIFES",
       "calcType": "dual_yoy_pct",
-      "value": "5.4% / 4.7%",
-      "numericValue": 5.4,
-      "coreNumericValue": 4.7,
-      "prevValue": "4.7%",
-      "consensus": "4.7%",
-      "metaLeft": "核心前期: 4.7% ｜ 整體前期: 4.8%",
-      "releaseDate": "09/10",
-      "referencePeriod": "2026-08",
-      "nextReleaseDate": "2026-10-15",
-      "badgeText": "能源推升",
+      "value": "6.4% / 5.0%",
+      "numericValue": 6.4,
+      "coreNumericValue": 5.0,
+      "prevValue": "5.4%",
+      "consensus": "4.4%",
+      "metaLeft": "核心預期: 4.4% ｜ 整體前期: 5.4%",
+      "releaseDate": "10/15",
+      "referencePeriod": "2026-09",
+      "nextReleaseDate": "2026-11-13",
+      "badgeText": "通膨升溫",
       "badgeClass": "status-sticky",
       "sourceName": "BLS Producer Price Index",
       "sourceUrl": "https://www.bls.gov/news.release/ppi.nr0.htm"
