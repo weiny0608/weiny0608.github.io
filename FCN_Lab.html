@@ -6,6 +6,9 @@
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="本機運算的四標的 FCN 歷史回測與條件情境模擬器。">
 <title>FCN Lab · 四標的結構型商品模擬器</title>
+<script>
+if(location.hostname==='weiny0608.github.io')location.replace('https://fcn-lab-private.weiny0608.workers.dev/');
+</script>
 <style>
 :root{--bg:#0b1019;--panel:#121a26;--panel2:#182333;--line:#263448;--text:#edf3fc;--muted:#94a4ba;--teal:#69e0c1;--blue:#8baaff;--orange:#efbc77;--red:#f08e99;--purple:#c3a0f6;--radius:16px;--font:Inter,"Segoe UI","Microsoft JhengHei","PingFang TC",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 var(--font)}button,input,select{font:inherit}button,a,input,select,summary{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--teal)}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.42}a{color:var(--teal);text-underline-offset:3px}h1,h2,h3,p{margin:0}h1{font-size:30px;letter-spacing:-.8px;font-weight:650;line-height:1.4}h2{font-size:17px;font-weight:650}h3{font-size:14px;font-weight:650}small{font-size:11px}.muted{color:var(--muted)}.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-variant-numeric:tabular-nums}.positive{color:var(--teal)}.negative{color:var(--red)}.warntext{color:var(--orange)}.hidden{display:none!important}
@@ -25,7 +28,7 @@
 <div class="wrap">
 <header>
  <div class="brand"><div class="brandmark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="brandname">FCN <span>Lab</span></div><div class="brand-sub">STRUCTURED NOTES PLAYGROUND</div></div></div>
- <div class="head-right"><a href="./index.html" class="btn ghost" style="min-height:28px;padding:3px 10px;font-size:11px;text-decoration:none;border-color:var(--line);color:var(--text)">← 返回主儀表板</a><span class="pill">本機運算 · 不上傳持倉</span><span class="pill" id="sourcePill"><i class="dot"></i>尚未載入行情</span></div>
+ <div class="head-right"><a href="https://weiny0608.github.io/" class="btn ghost" style="min-height:28px;padding:3px 10px;font-size:11px;text-decoration:none;border-color:var(--line);color:var(--text)">← 返回主儀表板</a><span class="pill">私人版 · 不上傳持倉</span><span class="pill" id="sourcePill"><i class="dot"></i>尚未載入行情</span></div>
 </header>
 <section class="hero">
  <div><div class="eyebrow">FOUR ASSETS. ONE CONTRACT.</div><h1>FCN 結構型商品模擬器</h1><p>自訂條款、追蹤四檔美股，掌握最差標的與 KO / KI 狀態。</p></div>
@@ -33,12 +36,13 @@
 </section>
 <section class="source-panel" aria-label="行情來源設定">
  <div class="source-row">
-  <div class="source-title"><h3>安全行情來源</h3><small>Twelve Data · 美股 / USD</small></div>
+  <div class="source-title"><h3>私人行情來源</h3><small>Alpaca SIP · 每日收盤 / USD</small></div>
   <span class="pill good"><i class="dot"></i>API Key 由安全後端保管</span>
   <button type="button" class="btn" id="demoBtn">試跑離線示範</button>
+  <div class="field"><label for="autoRefresh">自動更新</label><select id="autoRefresh"><option value="0">關閉</option><option value="15" selected>每 15 分鐘</option><option value="30">每 30 分鐘</option><option value="60">每 60 分鐘</option></select></div>
   <div class="source-help">行情請求經安全代理轉送；API Key 不會傳到瀏覽器或放在公開網頁中。</div>
  </div>
- <div class="source-foot"><span id="keyPrivacy">完整更新最多 8 次資料請求；使用資格與額度依行情服務帳戶方案而定。</span></div>
+ <div class="source-foot"><span id="keyPrivacy">登入後限本人使用；重複查詢優先讀取雲端快取。僅傳送股票代碼與日期，不傳送合約金額。</span><span id="autoRefreshStatus">尚未開始自動更新</span></div>
 </section>
 <div class="layout">
  <aside class="panel settings">
@@ -74,6 +78,7 @@
     <div class="fields">
      <div class="field"><label for="startDate">期初定價日</label><input type="date" id="startDate"></div>
      <div class="field"><label for="asOfDate">合約回測截至日</label><input type="date" id="asOfDate"></div>
+     <label class="check field full"><input type="checkbox" id="followToday" checked>截至日跟隨紐約今天</label>
      <div class="field"><label for="tenor">存續期間</label><div class="input-wrap"><input type="number" id="tenor" value="6" min="1" max="36" step="1"><span class="suffix">月</span></div></div>
      <div class="field"><label for="guarantee">保證領息期間</label><div class="input-wrap"><input type="number" id="guarantee" value="2" min="0" max="36" step="1"><span class="suffix">月</span></div></div>
      <div class="field"><label for="coupon">年化票息（自行輸入）</label><div class="input-wrap"><input type="number" id="coupon" value="12" min="0" max="100" step="0.1"><span class="suffix">%</span></div></div>
@@ -87,7 +92,7 @@
       <div class="field full"><label for="akiPrice">AKI 觀察價格（僅 AKI 適用）</label><select id="akiPrice"><option value="close">每日收盤價</option><option value="low">每日最低價 · 盤中觸價近似</option></select></div>
       <div class="field"><label for="kiInclusive">KI 等號規則</label><select id="kiInclusive"><option value="true">≤ KI 即觸發</option><option value="false">&lt; KI 才觸發</option></select></div>
       <div class="field"><label for="basis">票息計息基礎</label><select id="basis"><option value="365">ACT / 365F</option><option value="360">ACT / 360</option></select></div>
-      <div class="field full"><label for="snapshotMode">最差標的比較基準</label><select id="snapshotMode"><option value="latest">最新報價快照（非回測日）</option><option value="asof">合約回測截至日的共同收盤價</option></select></div>
+      <div class="field full"><label for="snapshotMode">最差標的比較基準</label><select id="snapshotMode"><option value="latest">最新已完成交易日共同收盤價</option><option value="asof">合約回測截至日的共同收盤價</option></select></div>
      </div>
      <p class="tiny" style="margin:12px 0 8px">手動期初價（留白＝定價日收盤價）<br>須與載入日線使用相同拆股調整口徑。</p>
      <div class="fields">
@@ -100,7 +105,7 @@
    </div>
    <div class="full-width">
     <div class="actions"><button type="submit" class="btn primary" id="runBtn">取得行情並模擬 <span aria-hidden="true">→</span></button><button type="button" class="btn ghost" id="recalcBtn" disabled>使用既有行情重算 · 不耗 API</button></div>
-    <div class="fetch-info" id="fetchInfo">完整更新：每檔日線 1 點 ＋ 最新報價 1 點</div>
+    <div class="fetch-info" id="fetchInfo">每日收盤行情 · 雲端快取</div>
    </div>
   </div>
   </form>
@@ -119,9 +124,9 @@
   <section class="panel">
    <div class="chart-top"><div class="chart-title"><h2>標的走勢與障礙價</h2><p id="chartSubtitle">所有標的期初價標準化為 100%，比較相對表現。</p></div><div class="chart-controls"><label class="sr-only" for="chartAsset">圖表標的</label><select id="chartAsset" disabled><option value="all">全部標的 · %</option></select><label class="sr-only" for="chartRange">圖表期間</label><select id="chartRange"><option value="contract">合約有效期間</option><option value="all">回測截至日全區間</option></select></div></div>
    <div id="chartLegend" class="legend"><span class="legend-item muted">行情載入後顯示比較線</span></div>
-   <div id="chartEmpty" class="empty-chart"><svg class="empty-glyph" viewBox="0 0 52 38" fill="none" aria-hidden="true"><path d="M2 33L14 21L23 26L36 9L49 4" stroke="currentColor" stroke-width="2"/><path d="M2 11L17 15L29 8L49 28" stroke="#8BAAFF" stroke-width="1.5" opacity=".7"/></svg><h3>讓條款變成可觀察的路徑</h3><p>輸入 API Key 取得真實行情，或點「試跑離線示範」立即檢視功能。</p></div>
+   <div id="chartEmpty" class="empty-chart"><svg class="empty-glyph" viewBox="0 0 52 38" fill="none" aria-hidden="true"><path d="M2 33L14 21L23 26L36 9L49 4" stroke="currentColor" stroke-width="2"/><path d="M2 11L17 15L29 8L49 28" stroke="#8BAAFF" stroke-width="1.5" opacity=".7"/></svg><h3>讓條款變成可觀察的路徑</h3><p>尚未載入每日行情。</p></div>
    <div id="chartHolder" class="chart-holder hidden"><svg id="chart" role="img" aria-label="標的歷史股價與 STRIKE、KO、KI 障礙價走勢圖"></svg><div id="chartTooltip" class="chart-tooltip hidden"></div></div>
-   <div class="chart-bottom"><div class="chart-boundaries"><span style="color:var(--teal)"><i class="dash"></i>KO</span><span style="color:var(--orange)"><i class="dash"></i>STRIKE</span><span style="color:var(--red)"><i class="dash"></i>KI</span><span>移動滑鼠 / 觸控查看每日價格</span></div><span id="chartDataNote">日線與盤中快照分開，不拼接盤中假收盤。</span></div>
+   <div class="chart-bottom"><div class="chart-boundaries"><span style="color:var(--teal)"><i class="dash"></i>KO</span><span style="color:var(--orange)"><i class="dash"></i>STRIKE</span><span style="color:var(--red)"><i class="dash"></i>KI</span></div><span id="chartDataNote">僅採已完成日線，不拼接盤中價格。</span></div>
    <div class="summaryline"><div><div class="label">實際期初定價日</div><div class="value" id="actualStart">—</div></div><div><div class="label">最早 KO 觀察日（* 為待確認）</div><div class="value" id="firstKO">—</div></div><div><div class="label">名目最終觀察日</div><div class="value" id="maturityDate">—</div></div></div>
   </section>
   <section class="panel">
@@ -145,12 +150,12 @@
   <div class="rules-grid">
    <div class="rule"><h3>01 / 本工具採用的 KO 與 KI 定義</h3><p>普通 KO：同一有效觀察日，全部標的的收盤價均 ≥ 各自 KO 價。記憶式 KO：各標的在有效觀察日曾達 KO 的紀錄累積，不須同日；全部累積完成即贖回。不是「記憶票息」。</p><p>EKI 僅在最終觀察日以收盤價判定。AKI 從定價日後的首個交易日起至合約終止，逐日觀察；可選收盤或日低價。日低價僅近似盤中觸價，並非逐筆連續監控。KI 的 ≤ / &lt; 可自行設定。</p><p>KO 觀察包含最終觀察日；若同日滿足 KO 與 KI，模型以 KO 贖回優先。各發行人的實際條款可能不同。</p></div>
    <div class="rule"><h3>02 / 保證領息、到期損益與計息</h3><p>保證 g 個月，最早在第 g 個月屆滿當日 KO（g=0 的每日 KO 則從次一交易日起；月 KO 至少從第 1 月期末）。保證期內不累積 KO 記憶，但 AKI 照常；並非發行人違約下仍保證給付。</p><p>未 KO 到期時：若籃子任一標的曾按所選規則觸發 KI，且最差標的低於 STRIKE，使用最差標的計算本金價值。否則本金按面額計算。</p><div class="formula">r = min(到期價 / 期初價)<br>受損本金價值 = 本金 × r / (STRIKE / 100)<br>應計票息 = 本金 × 年票息 × 實際天數 / 365 或 360</div><p style="margin-top:8px">股數為理論小數股；未處理整股交割、畸零現金與結算落差。起日算入、終日不算入；計息日直接視同定價／終止日，未模擬發行及支付交割日落差。</p></div>
-   <div class="rule"><h3>03 / 日線、最新報價與資料品質</h3><p>所有標的採同一基準日。假日與觀察日依四檔共同有日線的下一日順延；部分標的缺少同一天資料時，停止計算，不以前值補齊。若所有標的同時漏日，工具無法僅靠該來源偵測；不是交易所正式日曆。</p><p>紐約當日的日線須到當地 18:00 後才納入，以避開未完成日 K；仍非銀行正式定盤。最新 quote 只供快照比較，不觸發合約事件。時間不同步或部分 quote 缺失，整籃統一退回共同日收盤價。</p><p>日線要求 splits 調整、不做股息總報酬調整。手動 S₀ 必須採同一口徑；拆股、合併、下市、停牌、分拆與特殊現金股利仍應核對發行人調整條款。歷史資料不是未來預測。</p></div>
+   <div class="rule"><h3>03 / 每日收盤與資料品質</h3><p>所有標的採同一基準日。假日與觀察日依四檔共同有日線的下一日順延；部分標的缺少同一天資料時，停止計算，不以前值補齊。若所有標的同時漏日，工具無法僅靠該來源偵測；不是交易所正式日曆。</p><p>使用 Alpaca SIP 的 1Day 日線；不使用 IEX 單一交易所價格，也不取得即時盤中報價。紐約當日日線於當地 18:00 後才納入。快取最長保留 6 小時，資料更正可能延後反映；仍非銀行正式定盤。</p><p>日線採 split 調整、不做股息總報酬調整。手動 S₀ 必須採同一口徑；拆股、合併、下市、停牌、分拆與特殊現金股利仍應核對發行人調整條款。歷史資料不是未來預測。</p></div>
   </div>
-  <div class="sources"><strong>官方資料與條款參考（查核：2026-10-07）</strong><br><a href="https://twelvedata.com/docs" target="_blank" rel="noopener noreferrer">Twelve Data API 文件 ↗</a><a href="https://twelvedata.com/pricing.md" target="_blank" rel="noopener noreferrer">免費方案 / 額度 / 授權 ↗</a><a href="https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted" target="_blank" rel="noopener noreferrer">價格調整口徑 ↗</a><a href="https://www.dbs.com.hk/private-banking/investments/product-suite/structured-investments/fixed-coupon-notes" target="_blank" rel="noopener noreferrer">DBS FCN 機制與風險 ↗</a><br>Basic 官方列示每分鐘 8 點、每日 800 點；每個 symbol 的 time_series 與 quote 各 1 點，費率及權限以服務商最新說明為準。Individual 用途限個人、內部、非商業；公司使用、對客展示與資料再散布須另核對商業方案及交易所授權。<br>此檔可直接以瀏覽器開啟。若公司政策限制 file:// 聯網，可在檔案所在目錄執行 <code>python -m http.server 8000</code>，再開啟 <code>http://localhost:8000/FCN_Simulator.html</code>；這不會繞過資料商的 CORS 或存取限制。連線錯誤不會自動改用合成行情。API Key 只送到資料商，不包含在匯出檔案中。</div>
+  <div class="sources"><strong>官方資料與條款參考（查核：2026-10-27）</strong><br><a href="https://docs.alpaca.markets/us/docs/market-data-faq" target="_blank" rel="noopener noreferrer">Alpaca 行情與 SIP 權限 ↗</a><a href="https://docs.alpaca.markets/us/reference/stockbars" target="_blank" rel="noopener noreferrer">歷史日線與調整口徑 ↗</a><a href="https://alpaca.markets/support/redistribute-alpaca-api" target="_blank" rel="noopener noreferrer">資料使用限制 ↗</a><a href="https://www.dbs.com.hk/private-banking/investments/product-suite/structured-investments/fixed-coupon-notes" target="_blank" rel="noopener noreferrer">DBS FCN 機制與風險 ↗</a><br>此服務限帳戶擁有者個人使用，不轉供他人行情。免費 SIP 歷史查詢的結束時間必須早於最近 15 分鐘；帳戶資格、額度及權限以 Alpaca 最新規定及實際回應為準。行情缺漏或連線錯誤不會自動改用 IEX 或合成行情。密鑰僅存放 Cloudflare Secrets，不傳到瀏覽器或匯出檔案。</div>
  </details>
 </section>
-<footer class="footer"><p>風險提醒：FCN 非保本商品，可能損失全部本金，並承擔發行人信用及流動性風險。此工具用於條款理解與情境比較，未納入全部真實契約細節，不構成投資建議、成交依據或銀行贖回報價。請以正式 term sheet 為準。</p><span class="mono">FCN LAB / v1.0.0<br>SELF-CONTAINED HTML</span></footer>
+<footer class="footer"><p>風險提醒：FCN 非保本商品，可能損失全部本金，並承擔發行人信用及流動性風險。此工具用於條款理解與情境比較，未納入全部真實契約細節，不構成投資建議、成交依據或銀行贖回報價。請以正式 term sheet 為準。</p><span class="mono">FCN LAB / v1.1.0<br>PRIVATE DAILY DATA</span></footer>
 </div>
 <script>
 /* FCN Lab v1.0.0 - deterministic contract engine. Dates are ISO civil dates. */
@@ -381,68 +386,57 @@ function updateRuleHint(){
  const g=Number($('guarantee').value),f=$('koFrequency').value;
  $('scheduleHint').textContent=`最早 KO：${f==='monthly'?`第 ${Math.max(1,g)} 月期末`:g===0?'定價日後首個交易日':`滿 ${g} 個月當日`}（無共同日線則順延）。此前不累積 KO 記憶，AKI 仍觀察。保證領息不是保本。`;
 }
-function markDirty(){updateRuleHint();if(state.view){state.dirty=true;$('dirtyBanner').classList.remove('hidden');}}
+function markDirty(){updateRuleHint();if(state.view){state.dirty=true;$('dirtyBanner').classList.remove('hidden');}updateAutoStatus();}
 function resetDefaults(){
  const now=nyClock().date;$('configForm').reset();
  $('startDate').value=C.addMonths(now,-3);$('asOfDate').value=now;
  $('startDate').max=now;$('asOfDate').max=now;
  $('memory').setAttribute('aria-checked','false');updateRuleHint();markDirty();
 }
-const API_PROXY_URL='https://fcn-market-proxy.weiny0608.workers.dev';
-async function requestAPI(endpoint,params){
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+const API_PROXY_URL='/api/daily';
+let lastRefreshAttempt=0;
+async function requestDaily(c){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90000);
  try{
-  const response=await fetch(API_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint,params}),signal:controller.signal,mode:'cors',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store'});
+  const response=await fetch(API_PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbols:c.assets.map(a=>a.symbol),startDate:C.plusDays(c.start,-7),endDate:nyClock().date}),signal:controller.signal,credentials:'same-origin',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store'});
   let json;try{json=await response.json();}catch{throw new Error('資料商回傳非 JSON 內容，請稍後重試。');}
-  if(response.status===429||json.code===429)throw new Error('資料服務回報請求過於頻繁或方案額度已用盡（HTTP 429）。請稍候再試，或查看 Twelve Data 帳戶額度。');
-  if(!response.ok||json.status==='error'||json.code>=400)throw new Error('行情服務：'+String(json.message??`HTTP ${response.status}`));
+  if(!response.ok||json.status==='error')throw new Error('行情服務：'+String(json.message??`HTTP ${response.status}`));
+  if(json.feed!=='sip'||json.adjustment!=='split'||json.currency!=='USD'||!json.series||!Number.isFinite(Date.parse(json.fetchedAt)))throw new Error('行情來源、調整口徑或時間驗證失敗，未更新結果。');
+  for(const a of c.assets){
+   const s=json.series[a.symbol];
+   if(s?.meta?.symbol!==a.symbol||s.meta.currency!=='USD'||!Array.isArray(s.bars)||!s.bars.length)throw new Error(`${a.symbol} 缺少有效日線，未更新整籃結果。`);
+  }
   return json;
  }catch(e){
   if(e.name==='AbortError')throw new Error('行情請求逾時。請確認網路，再重新取得資料。');
-  if(e instanceof TypeError)throw new Error('無法連上安全行情服務。請檢查網路或稍後再試；也可明確選擇離線示範。');
+  if(e instanceof TypeError)throw new Error('無法連上私人行情服務，或登入已過期。請重新整理並登入，再取得行情。');
   throw e;
  }finally{clearTimeout(timer);}
-}
-function parseSeries(json,symbol){
- if(!json.meta||!Array.isArray(json.values)||!json.values.length)throw new Error(`${symbol} 沒有可用日線，請核對代碼、日期與帳戶權限。`);
- if(json.meta.currency!=='USD')throw new Error(`${symbol} 的資料幣別不是 USD；此版本只接受美元美股。`);
- const bars=json.values.map(v=>{
-  if(typeof v.datetime!=='string'||v.close==null||String(v.close).trim()==='')throw new Error(`${symbol} 日線缺少日期或收盤價。`);
-  return {date:v.datetime.slice(0,10),close:Number(v.close),low:v.low==null||v.low===''?null:Number(v.low),open:v.open==null?null:Number(v.open),high:v.high==null?null:Number(v.high),volume:v.volume==null?null:Number(v.volume)};
- }).sort((a,b)=>a.date.localeCompare(b.date));
- return {meta:json.meta,bars};
-}
-function parseQuote(q,symbol){
- const price=Number(q.close),ts=Number(q.last_quote_at);
- if(q.currency&&q.currency!=='USD')throw new Error(`${symbol} 報價幣別不是 USD。`);
- if(q.close==null||q.close===''||!Number.isFinite(price)||price<0)throw new Error(`${symbol} 無有效最新報價。`);
- if(!Number.isFinite(ts)||ts<=0)throw new Error(`${symbol} 最新報價缺少有效 last_quote_at（最新分鐘時間），改採共同日收盤價。`);
- const timestamp=ts>1e12?ts:ts*1000;
- if(timestamp>Date.now()+300000)throw new Error(`${symbol} 報價時間在未來，已排除。`);
- const n=nyClock(new Date(timestamp));
- return {symbol,price,timestamp,date:n.date,time:n.time,isMarketOpen:q.is_market_open===true,previousClose:Number(q.previous_close),name:q.name??'',exchange:q.exchange??''};
 }
 async function runOnline(event){
  event?.preventDefault();if(state.busy)return;
  try{
+  if($('followToday').checked){const today=nyClock().date;$('asOfDate').max=today;$('startDate').max=today;$('asOfDate').value=today;}
   const c=getConfig();
-  if(API_PROXY_URL.includes('<YOUR-CLOUDFLARE-SUBDOMAIN>'))throw new Error('安全行情服務尚未完成部署；你仍可先使用「試跑離線示範」。');
-  setBusy(true);status('正在取得日線與最新報價。只有整籃日線驗證通過後，才會更新結果。');
-  const today=nyClock().date,seriesParams={interval:'1day',start_date:C.plusDays(c.start,-7),end_date:today,outputsize:5000,order:'ASC',adjust:'splits',country:'United States',timezone:'America/New_York'};
-  const seriesJobs=c.assets.map(a=>requestAPI('time_series',{...seriesParams,symbol:a.symbol}).then(j=>parseSeries(j,a.symbol)));
-  const quoteJobs=c.assets.map(a=>requestAPI('quote',{symbol:a.symbol,country:'United States'}).then(j=>parseQuote(j,a.symbol)));
-  const [histories,quotes]=await Promise.all([Promise.allSettled(seriesJobs),Promise.allSettled(quoteJobs)]);
-  const failures=histories.map((r,i)=>r.status==='rejected'?`${c.assets[i].symbol}：${errorText(r.reason)}`:null).filter(Boolean);
-  if(failures.length)throw new Error('整籃行情載入失敗，沒有生成新結果。\n'+failures.join('\n'));
-  const bundle={mode:'LIVE',source:'Twelve Data',fetchedAt:new Date().toISOString(),requestedStart:c.start,series:{},quotes:{},quoteErrors:[]};
-  c.assets.forEach((a,i)=>{bundle.series[a.symbol]=histories[i].value;if(quotes[i].status==='fulfilled')bundle.quotes[a.symbol]=quotes[i].value;else bundle.quoteErrors.push(a.symbol+'：'+errorText(quotes[i].reason));});
+  lastRefreshAttempt=Date.now();setBusy(true);status('正在取得私人每日行情。只有整籃日線驗證通過後，才會更新結果。');
+  const data=await requestDaily(c);
+  const bundle={...data,mode:'LIVE',requestedStart:c.start};
   const view=prepareView(c,bundle);
   state.bundle=bundle;commitView(view);
-  status(`已載入 ${c.assets.length} 檔真實行情；合約計算使用截至 ${view.result.lastRow.date} 的有效日線。最新報價快照不作為 KO / KI 定盤。`,'success');
+  status(`已載入 ${c.assets.length} 檔 SIP 日線；合約計算使用截至 ${view.result.lastRow.date} 的有效日線。${data.cache==='MISS'?'已向 Alpaca 取得並存入雲端快取。':'本次使用雲端快取，沒有重複向 Alpaca 抓價。'}`,'success');
  }catch(e){status(errorText(e),'error');}
- finally{setBusy(false);refreshQuotaInfo();}
+ finally{setBusy(false);refreshQuotaInfo();updateAutoStatus();}
 }
-function refreshQuotaInfo(){ $('fetchInfo').textContent='完整更新：每檔日線 1 點 ＋ 最新報價 1 點；實際頻率仍受資料商方案限制。'; }
+function refreshQuotaInfo(){ $('fetchInfo').textContent='雲端快取 6 小時 · 新交易日使用新快取'; }
+function updateAutoStatus(){
+ const minutes=Number($('autoRefresh').value);
+ $('autoRefreshStatus').textContent=!minutes?'自動更新已關閉':!state.bundle||state.bundle.mode!=='LIVE'?'取得真實行情後啟用自動更新':state.dirty?'設定尚未套用，自動更新暫停':document.hidden?'背景分頁暫停更新':`自動更新：每 ${minutes} 分鐘`;
+}
+function maybeRefresh(){
+ updateAutoStatus();const minutes=Number($('autoRefresh').value);
+ if(!minutes||document.hidden||state.busy||state.dirty||state.bundle?.mode!=='LIVE')return;
+ if(Date.now()-lastRefreshAttempt>=minutes*60000)runOnline();
+}
 function prepareView(c,bundle){
  if(c.start<bundle.requestedStart)throw new Error('新的期初日早於已載入範圍，請重新取得行情。');
  const cutoff=closedCutoff(),aligned=C.align(c,bundle.series,cutoff);
@@ -460,10 +454,6 @@ function prepareView(c,bundle){
  let row=c.snapshotMode==='asof'?asOfRow:latestRow;
  let snapshot={prices:[...row.prices],times:c.assets.map(()=>row.date+' 收盤'),date:row.date,label:c.snapshotMode==='asof'?'回測截至日共同收盤價':'最新共同日線收盤價',kind:'DAILY'};
  if(c.snapshotMode==='latest'&&bundle.mode==='LIVE'){
-  const quotes=c.assets.map(a=>bundle.quotes[a.symbol]),complete=quotes.every(Boolean);
-  const coherent=complete&&quotes.every(q=>q.date===quotes[0].date&&q.date>=latestRow.date)&&Math.max(...quotes.map(q=>q.timestamp))-Math.min(...quotes.map(q=>q.timestamp))<=15*60000;
-  if(coherent)snapshot={prices:quotes.map(q=>q.price),times:quotes.map(q=>q.time),date:quotes[0].date,label:'最新報價快照（來源分鐘時點非完全同步）',kind:'QUOTE'};
-  else warnings.push('最新報價不完整、跨交易日或相差超過 15 分鐘；整籃比較已統一改用同一共同收盤日，未混用盤中價與舊價。'+(bundle.quoteErrors?.length?' '+bundle.quoteErrors.join('；'):''));
   if(C.days(snapshot.date,nyClock().date)>5)warnings.push(`最新比較價停在 ${snapshot.date}，距紐約今天超過 5 日，請核對資料是否過期。`);
  }
  if(bundle.mode==='DEMO')snapshot.label='合成示範日線（非市場行情）';
@@ -478,7 +468,7 @@ function commitView(view){
 }
 function recalc(){
  if(!state.bundle||state.busy)return;
- try{const c=getConfig();commitView(prepareView(c,state.bundle));status('已使用原有行情重新計算，未發出 API 請求。資料時間維持原載入時間。','success');}
+ try{const c=getConfig();commitView(prepareView(c,state.bundle));updateAutoStatus();status('已使用原有行情重新計算，未發出 API 請求。資料時間維持原載入時間。','success');}
  catch(e){status(errorText(e),'error');}
 }
 function interpolate(anchors,t){
@@ -511,12 +501,13 @@ function runDemo(){
  try{
   const c=getConfig();const bundle=makeDemo(c);commitView(prepareView(c,bundle));state.bundle=bundle;
   $('recalcBtn').disabled=false;
+  updateAutoStatus();
   status('已載入離線合成行情。價格不是美股歷史資料；可以修改記憶 KO、AKI / EKI、期間與障礙價後重算。','info');
  }catch(e){status(errorText(e),'error');}
 }
 function render(){
  const v=state.view,{config:c,bundle:b,result:r,snapshot:s}=v;
- $('sourcePill').className='pill '+(b.mode==='DEMO'?'demo':'good');$('sourcePill').innerHTML='<i class="dot"></i>'+ (b.mode==='DEMO'?'DEMO · 合成行情':'Twelve Data · 已載入');
+ $('sourcePill').className='pill '+(b.mode==='DEMO'?'demo':'good');$('sourcePill').innerHTML='<i class="dot"></i>'+ (b.mode==='DEMO'?'DEMO · 合成行情':'Alpaca SIP · 日收盤');
  $('demoBanner').classList.toggle('hidden',b.mode!=='DEMO');
  $('warnList').innerHTML=v.warnings.map(w=>'<div class="banner">'+esc(w)+'</div>').join('');
  $('worstLabel').textContent=c.snapshotMode==='asof'?'回測日比較最差標的':'最新比較最差標的';
@@ -533,7 +524,7 @@ function render(){
  $('couponValue').textContent=money(r.coupon);$('couponSub').innerHTML=`年票息 ${numFmt(c.coupon,2)}% · ACT/${c.basis}<br>累計 ${r.days} 天；非已支付金額`;
  $('actualStart').textContent=r.start;$('firstKO').textContent=r.firstKO??(c.koFrequency==='monthly'?C.addMonths(r.start,Math.max(1,c.guarantee))+'*':(c.guarantee===0?C.plusDays(r.start,1):r.lockEnd)+'*');
  $('maturityDate').textContent=r.maturity;
- $('snapshotCaption').textContent=`${s.label} · ${s.date} ｜ 資料載入 ${new Date(b.fetchedAt).toLocaleString('zh-TW',{hour12:false})}`;
+ $('snapshotCaption').textContent=`${s.label} · ${s.date} ｜ 來源擷取 ${new Date(b.fetchedAt).toLocaleString('zh-TW',{hour12:false})}`+(b.mode==='LIVE'?` ｜ ${b.cache==='MISS'?'新抓取':'雲端快取'}`:'');
  $('assetRows').innerHTML=c.assets.map((a,i)=>{
   const initial=r.initials[i],ratio=s.ratios[i],isWorst=s.worst.ties.includes(i),koRecord=c.memory?(r.memory[i]?'已記憶':'未記憶'):(s.prices[i]>=initial*c.ko/100?'快照達標*':'快照未達*');
   const kiRecord=r.kiFirst[i]?'已觸發':c.kiType==='EKI'&&!r.ended?'待到期':r.kind==='KO'&&c.kiType==='EKI'?'未到期已 KO':'未觸發';
@@ -590,7 +581,7 @@ function drawChart(){
  const t0=+C.parse(rows[0].date),t1=+C.parse(rows.at(-1).date),ts=Math.max(t1-t0,86400000);
  const x=date=>pad.left+(+C.parse(date)-t0)/ts*pw,y=v=>pad.top+(hi-v)/span*ph;
  const clipId='chartClip';
- let s=`<title>${esc(normalized?'相對期初表現':c.assets[inds[0]].symbol+' 股價')}；${rows[0].date} 至 ${rows.at(-1).date}；${v.bundle.mode==='DEMO'?'合成示範':'Twelve Data'}</title><defs><clipPath id="${clipId}"><rect x="${pad.left}" y="${pad.top}" width="${pw}" height="${ph}"/></clipPath></defs>`;
+ let s=`<title>${esc(normalized?'相對期初表現':c.assets[inds[0]].symbol+' 股價')}；${rows[0].date} 至 ${rows.at(-1).date}；${v.bundle.mode==='DEMO'?'合成示範':'Alpaca SIP'}</title><defs><clipPath id="${clipId}"><rect x="${pad.left}" y="${pad.top}" width="${pw}" height="${ph}"/></clipPath></defs>`;
  const kiY=y(c.ki/100*basis);
  s+=`<rect x="${pad.left}" y="${Math.max(pad.top,kiY)}" width="${pw}" height="${Math.max(0,H-pad.bottom-Math.max(pad.top,kiY))}" fill="#f08e99" opacity=".045"/>`;
  if(r.lockEnd>rows[0].date){const lx=Math.min(pad.left+pw,x(r.lockEnd));if(lx>pad.left)s+=`<rect x="${pad.left}" y="${pad.top}" width="${lx-pad.left}" height="${ph}" fill="#9aacc9" opacity=".035"/><text x="${pad.left+6}" y="${pad.top+11}" fill="#8393aa" font-size="9">KO 鎖定期</text>`;}
@@ -648,10 +639,12 @@ function exportCSV(){
 }
 function exportJSON(){
  if(!state.view)return;const v=state.view;
- const data={application:'FCN Lab',version:'1.0.0',exportedAt:new Date().toISOString(),disclaimer:'Research model; not a bank quote. DEMO data are synthetic.',dataMode:v.bundle.mode,source:v.bundle.source,fetchedAt:v.bundle.fetchedAt,config:v.config,snapshot:v.snapshot,result:v.result,warnings:v.warnings,assumptions:{dayCount:'ACT/'+v.config.basis,KO:'Memory is per asset on eligible observations only; no memory during lockout; KO takes priority at final date.',KI:'Basket-any trigger, worst-of terminal delivery; AKI excludes initial fixing.',calendar:'Following common data date, not an official exchange calendar.',settlement:'Fractional-share cash-equivalent; no credit risk, tax, fees, settlement lag, or fair value.'}};
+ const data={application:'FCN Lab',version:'1.1.0',exportedAt:new Date().toISOString(),disclaimer:'Private research model; not a bank quote. DEMO data are synthetic.',dataMode:v.bundle.mode,source:v.bundle.source,fetchedAt:v.bundle.fetchedAt,cache:v.bundle.cache??null,feed:v.bundle.feed??null,adjustment:v.bundle.adjustment??null,config:v.config,snapshot:v.snapshot,result:v.result,warnings:v.warnings,assumptions:{dayCount:'ACT/'+v.config.basis,KO:'Memory is per asset on eligible observations only; no memory during lockout; KO takes priority at final date.',KI:'Basket-any trigger, worst-of terminal delivery; AKI excludes initial fixing.',calendar:'Following common data date, not an official exchange calendar.',settlement:'Fractional-share cash-equivalent; no credit risk, tax, fees, settlement lag, or fair value.'}};
  saveFile(`FCN_${v.bundle.mode}_${v.config.asOf}_report.json`,JSON.stringify(data,null,2),'application/json;charset=utf-8');
 }
 $('configForm').addEventListener('submit',runOnline);
+$('asOfDate').addEventListener('input',()=>{$('followToday').checked=false;});
+$('followToday').addEventListener('change',()=>{if($('followToday').checked)$('asOfDate').value=nyClock().date;});
 $('configForm').addEventListener('input',markDirty);
 $('configForm').addEventListener('change',markDirty);
 $('memory').addEventListener('click',()=>{$('memory').setAttribute('aria-checked',$('memory').getAttribute('aria-checked')==='true'?'false':'true');markDirty();});
@@ -663,9 +656,14 @@ $('stressBtn').addEventListener('click',renderStress);$('stressInputs').addEvent
 $('exportCsv').addEventListener('click',exportCSV);$('exportJson').addEventListener('click',exportJSON);
 new ResizeObserver(()=>{if(state.view)drawChart();}).observe($('chartHolder'));
 resetDefaults();
-window.FCNLab={version:'1.0.0',core:C,getConfig,prepareView,makeDemo,parseSeries,parseQuote,getState:()=>state};
+refreshQuotaInfo();updateAutoStatus();
+$('autoRefresh').addEventListener('change',updateAutoStatus);
+$('configForm').addEventListener('input',updateAutoStatus);
+$('configForm').addEventListener('change',updateAutoStatus);
+document.addEventListener('visibilitychange',maybeRefresh);
+setInterval(maybeRefresh,30000);
+window.FCNLab={version:'1.1.0',core:C,getConfig,prepareView,makeDemo,getState:()=>state};
 
 </script>
-<script src="./livequotes_hub.js"></script>
 </body>
 </html>
