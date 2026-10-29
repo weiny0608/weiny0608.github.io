@@ -445,8 +445,8 @@
         <p>基準日：2026 年 10 月 ｜ 即時總經公債利率定錨 ｜ 整合美股估值、全球債券體質與 FCN 結構型商品雙核心實驗室</p>
       </div>
       <div style="text-align: right;">
-        <div class="mono" style="font-size: 20px; font-weight: 800; color: var(--accent);" id="header-us10y">US10Y: 5.22% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
-        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="header-fomc-pce">下次 FOMC：2026-10-28 ｜ 核心 PCE：<span id="header-core-pce-val">3.0%</span></div>
+        <div class="mono" style="font-size: 20px; font-weight: 800; color: var(--accent);" id="header-us10y">US10Y: 5.05% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="header-fomc-pce">下次 FOMC：2026-12-09 (倒數 41 天) ｜ 核心 PCE：<span id="header-core-pce-val">3.0%</span></div>
       </div>
     </div>
 
@@ -465,7 +465,7 @@
             <h3>美國 10 年期公債殖利率走勢面板</h3>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">近 1 個月每日收盤趨勢 ｜ 定錨點 5.28%</div>
           </div>
-          <div class="card-stat-pill mono" id="macro-latest-pill">最新收盤: 5.22%</div>
+          <div class="card-stat-pill mono" id="macro-latest-pill">最新收盤: 5.05%</div>
         </div>
 
         <div class="chart-container">
@@ -491,7 +491,7 @@
             <circle cx="195" cy="46" r="3" fill="#059669"><title>09/16: 5.18%</title></circle>
             <circle cx="370" cy="38" r="2" fill="#059669"><title>09/25: 5.21%</title></circle>
             <circle cx="495" cy="20" r="3.5" fill="#f59e0b"><title>10/02 (高點): 5.28%</title></circle>
-            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新收盤: 5.22%</title></circle>
+            <circle cx="520" cy="25" r="4.5" fill="#fff" stroke="#059669" stroke-width="2"><title>最新收盤: 5.05%</title></circle>
           </svg>
         </div>
 
@@ -507,14 +507,14 @@
         <div class="card-header">
           <div>
             <h3>CME FedWatch 升降息機率表 (期貨定價自算)</h3>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">當前目標基準利率：3.75% - 4.00% ｜ 下次 FOMC：2026-10-28</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">當前目標基準利率：3.75% - 4.00% ｜ 下次 FOMC：2026-12-09 (倒數 41 天)</div>
           </div>
-          <div class="card-stat-pill mono" id="fedwatch-sync-pill">下場會議: 10/28</div>
+          <div class="card-stat-pill mono" id="fedwatch-sync-pill">下場會議: 12/09 (倒數 41 天)</div>
         </div>
 
         <!-- Real-Time ZQ Anchor Futures Display -->
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; background: #f9fbf8; border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 11.5px;">
-          <span style="color: var(--text-muted);">現行 EFFR: <strong class="mono" style="color: #1a3821;" id="fedEffrDisplay">3.88%</strong> ｜ 11月定錨期貨 (ZQX6): <strong class="mono" style="color: var(--accent);" id="fedZqPriceDisplay">96.075</strong> ➔ 隱含會後利率: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.925% (+4.5 bps)</strong></span>
+          <span style="color: var(--text-muted);">現行 EFFR: <strong class="mono" style="color: #1a3821;" id="fedEffrDisplay">3.88%</strong> ｜ <span id="fedZqContractLabel">1月定錨期貨 (ZQF7)</span>: <strong class="mono" style="color: var(--accent);" id="fedZqPriceDisplay">96.050</strong> ➔ 隱含會後利率: <strong class="mono" style="color: #1a3821;" id="fedImpliedRateDisplay">3.950% (+7.0 bps)</strong></span>
           <span id="fedRealtimeBadge" style="font-size: 10.5px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px;">🟢 期貨定錨同步</span>
         </div>
 
@@ -533,8 +533,8 @@
               <td><strong style="color: #1a3821;">按兵不動 (Hold)</strong></td>
               <td class="mono">3.75% - 4.00%</td>
               <td class="mono">
-                <strong id="fedProbHoldVal" style="color: var(--accent);">82.0%</strong>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 82.0%;"></div></div>
+                <strong id="fedProbHoldVal" style="color: var(--accent);">72.0%</strong>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHoldBar" style="width: 72.0%;"></div></div>
               </td>
               <td class="mono" id="fedHold1D" style="color: #94a3b8;">81.2%</td>
               <td class="mono" id="fedHold1W" style="color: #94a3b8;">80.5%</td>
@@ -553,8 +553,8 @@
               <td><span style="color: var(--red);">升息 1 碼 (+25 bps)</span></td>
               <td class="mono">4.00% - 4.25%</td>
               <td class="mono">
-                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">18.0%</span>
-                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 18.0%; background: var(--red);"></div></div>
+                <span id="fedProbHikeVal" style="color: var(--red); font-weight: 700;">28.0%</span>
+                <div class="prob-bar-wrap"><div class="prob-bar" id="fedProbHikeBar" style="width: 28.0%; background: var(--red);"></div></div>
               </td>
               <td class="mono" id="fedHike1D" style="color: #94a3b8;">18.8%</td>
               <td class="mono" id="fedHike1W" style="color: #94a3b8;">19.5%</td>
@@ -563,7 +563,7 @@
         </table>
 
         <div style="background: rgba(15, 23, 42, 0.03); border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
-          💡 <strong>計算說明</strong>：遵循 CME 官方無會議定錨月（Anchor Month）方法論，以 11 月聯邦基金期貨（ZQX6）市價（100 - P）直接定錨 10/28 會後隱含利率，消除月底僅剩 3 天的權重放大誤差。再比較會後隱含利率與現行 EFFR（3.88%）之利差，以 25 bps 為單位精確拆解各目標區間之真實市場機率。
+          💡 <strong>計算說明</strong>：遵循 CME 官方無會議定錨月（Anchor Month）方法論，具備「跨會期自動定錨切換」機制：10/28 會議結束後，系統自動切換目標至 2026-12-09 會議，並改以 2027 年 1 月無會議定錨月期貨（ZQF7）市價（100 - P）直接定錨 12/09 會後隱含利率。再比較會後隱含利率與現行 EFFR（3.88%）之利差，以 25 bps 為單位精確拆解各目標區間之真實市場機率。
         </div>
       </div>
     </div>
@@ -635,10 +635,10 @@
           <span>生產者物價 PPI / 核心 PPI</span>
           <span class="tag-status status-sticky" id="ind-badge-ppi">能源推升</span>
         </div>
-        <div class="ind-value mono" id="ind-val-ppi">5.4% / 4.7%</div>
+        <div class="ind-value mono" id="ind-val-ppi">6.4% / 5.0%</div>
         <div class="ind-meta">
           <span id="ind-meta-left-ppi">核心前期: 4.7% ｜ 整體前期: 4.8%</span>
-          <span id="ind-meta-right-ppi">發布: 09/10</span>
+          <span id="ind-meta-right-ppi">發布: 10/15</span>
         </div>
       </div>
     </div>
@@ -744,21 +744,42 @@
 
   <!-- Client-side Real-time Yield Hook & FedWatch Calculation -->
   <script>
-        // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
-    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
-      const pNov = parseFloat(priceNov) || 96.075;
-      const pOct = parseFloat(priceOct) || 96.115;
+        // CME FedWatch 官方跨會期自動定錨模型 (Cross-Meeting Dynamic Anchor-Month Model)
+    const FOMC_MEETING_SCHEDULE = [
+      { date: "2026-10-28", shortDate: "10/28", anchorCode: "ZQX6", yahooAnchor: "ZQX26.CBT", anchorName: "11月定錨期貨 (ZQX6)", defaultAnchorPrice: 96.075 },
+      { date: "2026-12-09", shortDate: "12/09", anchorCode: "ZQF7", yahooAnchor: "ZQF27.CBT", anchorName: "1月定錨期貨 (ZQF7)", defaultAnchorPrice: 96.050 },
+      { date: "2027-01-27", shortDate: "01/27", anchorCode: "ZQG7", yahooAnchor: "ZQG27.CBT", anchorName: "2月定錨期貨 (ZQG7)", defaultAnchorPrice: 96.025 }
+    ];
+
+    function getActiveFomcMeetingInfo() {
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      // 當日已過 2026-10-28 時，自動切換至下一場 2026-12-09 會議並改用 ZQF7 (2027年1月無會議定錨月)
+      for (const m of FOMC_MEETING_SCHEDULE) {
+        if (todayStr <= m.date) {
+          const targetDt = new Date(m.date + "T14:00:00-05:00");
+          const days = Math.max(0, Math.ceil((targetDt - now) / 86400000));
+          return Object.assign({}, m, { daysToMeeting: days });
+        }
+      }
+      const last = FOMC_MEETING_SCHEDULE[FOMC_MEETING_SCHEDULE.length - 1];
+      return Object.assign({}, last, { daysToMeeting: 30 });
+    }
+
+    function calcFedWatchFromFutures(priceAnchor, pricePrev, currentEffr, sourceLabel) {
+      const activeMtg = getActiveFomcMeetingInfo();
+      const pAnchor = parseFloat(priceAnchor) || activeMtg.defaultAnchorPrice || 96.050;
       const effr = parseFloat(currentEffr) || 3.88;
 
-      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
-      const postRate = 100.0 - pNov;
+      // 遵循 CME 官方無會議定錨月 (Anchor Month) 方法論：以無會議月期貨 (如 12/09 會議對應 2027年1月 ZQF7) 定錨會後隱含利率
+      const postRate = 100.0 - pAnchor;
       const delta = postRate - effr; // 利差 (%)
       const deltaBps = delta * 100.0; // 利差 (bps)
       const numMoves = delta / 0.25;
 
       let probCut = 0.0;
-      let probHold = 82.0;
-      let probHike = 18.0;
+      let probHold = 72.0;
+      let probHike = 28.0;
 
       if (delta >= 0) {
         probHike = Math.min(100, Math.max(0, numMoves * 100));
@@ -770,11 +791,18 @@
         probHike = 0.0;
       }
 
+      // 動態更新頁面上所有 FOMC 日期與合約標籤
+      const pillEl = document.getElementById("fedwatch-sync-pill");
+      if (pillEl) pillEl.innerText = `下場會議: ${activeMtg.shortDate} (倒數 ${activeMtg.daysToMeeting} 天)`;
+
+      const anchorLblEl = document.getElementById("fedZqContractLabel");
+      if (anchorLblEl) anchorLblEl.innerText = activeMtg.anchorName;
+
       const effrEl = document.getElementById("fedEffrDisplay");
       if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
 
       const zqPriceEl = document.getElementById("fedZqPriceDisplay");
-      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+      if (zqPriceEl) zqPriceEl.innerText = pAnchor.toFixed(3);
 
       const impliedEl = document.getElementById("fedImpliedRateDisplay");
       if (impliedEl) {
@@ -804,7 +832,7 @@
     }
 
     // 頁面初始化自算 FedWatch
-    calcFedWatchFromFutures(96.075, 96.115, 3.88, "期貨定錨基準");
+    calcFedWatchFromFutures(96.050, 96.075, 3.88, "ZQF7 跨會期定錨基準");
 
     
     
@@ -817,7 +845,7 @@
 
 <!-- ROBUST CLOUD AUTO-SYNC & ROLLING 22-DAY CHART ENGINE v2.0 -->
 <script>
-const INITIAL_DAILY_YIELD_HISTORY = [{"d": "09/11", "r": 4.97}, {"d": "09/14", "r": 4.96}, {"d": "09/15", "r": 5.0}, {"d": "09/16", "r": 5.0}, {"d": "09/17", "r": 4.95}, {"d": "09/18", "r": 5.0}, {"d": "09/21", "r": 4.96}, {"d": "09/22", "r": 4.97}, {"d": "09/23", "r": 5.11}, {"d": "09/24", "r": 5.16}, {"d": "09/25", "r": 5.18}, {"d": "09/28", "r": 5.24}, {"d": "09/29", "r": 5.25}, {"d": "09/30", "r": 5.29}, {"d": "10/01", "r": 5.23}, {"d": "10/02", "r": 5.28}, {"d": "10/05", "r": 5.31}, {"d": "10/06", "r": 5.27}, {"d": "10/07", "r": 5.28}, {"d": "10/08", "r": 5.23}, {"d": "10/09", "r": 5.24}, {"d": "10/13", "r": 5.22}];
+const INITIAL_DAILY_YIELD_HISTORY = [{"d": "09/29", "r": 5.20}, {"d": "09/30", "r": 5.22}, {"d": "10/01", "r": 5.23}, {"d": "10/02", "r": 5.28}, {"d": "10/05", "r": 5.31}, {"d": "10/06", "r": 5.27}, {"d": "10/07", "r": 5.28}, {"d": "10/08", "r": 5.23}, {"d": "10/09", "r": 5.24}, {"d": "10/13", "r": 5.22}, {"d": "10/14", "r": 5.18}, {"d": "10/15", "r": 5.14}, {"d": "10/16", "r": 5.10}, {"d": "10/19", "r": 5.09}, {"d": "10/20", "r": 5.12}, {"d": "10/21", "r": 5.13}, {"d": "10/22", "r": 4.96}, {"d": "10/23", "r": 5.00}, {"d": "10/26", "r": 4.99}, {"d": "10/27", "r": 5.00}, {"d": "10/28", "r": 5.05}];
 
 function renderRollingYieldChart(historyArray) {
   const MAX_POINTS = 22;
@@ -924,8 +952,9 @@ function renderRollingYieldChart(historyArray) {
 (async function robustLiveYieldAndChartSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
   const now = new Date();
-  const fomcDate = new Date("2026-10-28");
-  const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+  const activeFomc = typeof getActiveFomcMeetingInfo === "function" ? getActiveFomcMeetingInfo() : { date: "2026-12-09", daysToMeeting: 41 };
+  const fomcDate = new Date(activeFomc.date);
+  const daysToFomc = activeFomc.daysToMeeting;
 
   document.querySelectorAll("[id*='fomc'], .card-header div, .header div").forEach(el => {
     if (el.textContent && el.textContent.includes("2026-10-28") && el.children.length === 0) {
@@ -1074,21 +1103,42 @@ function renderRollingYieldChart(historyArray) {
 
 
 <script>
-    // CME FedWatch 官方雙合約無會議定錨模型 (Anchor-Month Model)
-    function calcFedWatchFromFutures(priceNov, priceOct, currentEffr, sourceLabel) {
-      const pNov = parseFloat(priceNov) || 96.075;
-      const pOct = parseFloat(priceOct) || 96.115;
+    // CME FedWatch 官方跨會期自動定錨模型 (Cross-Meeting Dynamic Anchor-Month Model)
+    const FOMC_MEETING_SCHEDULE = [
+      { date: "2026-10-28", shortDate: "10/28", anchorCode: "ZQX6", yahooAnchor: "ZQX26.CBT", anchorName: "11月定錨期貨 (ZQX6)", defaultAnchorPrice: 96.075 },
+      { date: "2026-12-09", shortDate: "12/09", anchorCode: "ZQF7", yahooAnchor: "ZQF27.CBT", anchorName: "1月定錨期貨 (ZQF7)", defaultAnchorPrice: 96.050 },
+      { date: "2027-01-27", shortDate: "01/27", anchorCode: "ZQG7", yahooAnchor: "ZQG27.CBT", anchorName: "2月定錨期貨 (ZQG7)", defaultAnchorPrice: 96.025 }
+    ];
+
+    function getActiveFomcMeetingInfo() {
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      // 當日已過 2026-10-28 時，自動切換至下一場 2026-12-09 會議並改用 ZQF7 (2027年1月無會議定錨月)
+      for (const m of FOMC_MEETING_SCHEDULE) {
+        if (todayStr <= m.date) {
+          const targetDt = new Date(m.date + "T14:00:00-05:00");
+          const days = Math.max(0, Math.ceil((targetDt - now) / 86400000));
+          return Object.assign({}, m, { daysToMeeting: days });
+        }
+      }
+      const last = FOMC_MEETING_SCHEDULE[FOMC_MEETING_SCHEDULE.length - 1];
+      return Object.assign({}, last, { daysToMeeting: 30 });
+    }
+
+    function calcFedWatchFromFutures(priceAnchor, pricePrev, currentEffr, sourceLabel) {
+      const activeMtg = getActiveFomcMeetingInfo();
+      const pAnchor = parseFloat(priceAnchor) || activeMtg.defaultAnchorPrice || 96.050;
       const effr = parseFloat(currentEffr) || 3.88;
 
-      // 11月無FOMC會議 (Anchor Month)，會後隱含基準利率直接由 11月期貨 (ZQX6) 定錨：EFFR(End)_Oct = 100 - P_Nov
-      const postRate = 100.0 - pNov;
+      // 遵循 CME 官方無會議定錨月 (Anchor Month) 方法論：以無會議月期貨 (如 12/09 會議對應 2027年1月 ZQF7) 定錨會後隱含利率
+      const postRate = 100.0 - pAnchor;
       const delta = postRate - effr; // 利差 (%)
       const deltaBps = delta * 100.0; // 利差 (bps)
       const numMoves = delta / 0.25;
 
       let probCut = 0.0;
-      let probHold = 82.0;
-      let probHike = 18.0;
+      let probHold = 72.0;
+      let probHike = 28.0;
 
       if (delta >= 0) {
         probHike = Math.min(100, Math.max(0, numMoves * 100));
@@ -1100,11 +1150,18 @@ function renderRollingYieldChart(historyArray) {
         probHike = 0.0;
       }
 
+      // 動態更新頁面上所有 FOMC 日期與合約標籤
+      const pillEl = document.getElementById("fedwatch-sync-pill");
+      if (pillEl) pillEl.innerText = `下場會議: ${activeMtg.shortDate} (倒數 ${activeMtg.daysToMeeting} 天)`;
+
+      const anchorLblEl = document.getElementById("fedZqContractLabel");
+      if (anchorLblEl) anchorLblEl.innerText = activeMtg.anchorName;
+
       const effrEl = document.getElementById("fedEffrDisplay");
       if (effrEl) effrEl.innerText = effr.toFixed(2) + "%";
 
       const zqPriceEl = document.getElementById("fedZqPriceDisplay");
-      if (zqPriceEl) zqPriceEl.innerText = pNov.toFixed(3);
+      if (zqPriceEl) zqPriceEl.innerText = pAnchor.toFixed(3);
 
       const impliedEl = document.getElementById("fedImpliedRateDisplay");
       if (impliedEl) {
@@ -1136,16 +1193,7 @@ function renderRollingYieldChart(historyArray) {
 
 <!-- ROLLING 1-MONTH DYNAMIC YIELD CHART & DUAL-CHANNEL FEDWATCH ENGINE -->
 <script>
-const INITIAL_DAILY_YIELD_HISTORY = [
-  {d: "09/09", r: 5.06}, {d: "09/10", r: 5.09},
-  {d: "09/11", r: 5.08}, {d: "09/12", r: 5.10}, {d: "09/15", r: 5.12},
-  {d: "09/16", r: 5.18}, {d: "09/17", r: 5.16}, {d: "09/18", r: 5.14},
-  {d: "09/19", r: 5.15}, {d: "09/22", r: 5.17}, {d: "09/23", r: 5.18},
-  {d: "09/24", r: 5.19}, {d: "09/25", r: 5.21}, {d: "09/26", r: 5.21},
-  {d: "09/29", r: 5.20}, {d: "09/30", r: 5.22}, {d: "10/01", r: 5.24},
-  {d: "10/02", r: 5.28}, {d: "10/05", r: 5.26}, {d: "10/06", r: 5.27},
-  {d: "10/08", r: 5.23}, {d: "10/09", r: 5.26}, {d: "10/13", r: 5.22}
-];
+const INITIAL_DAILY_YIELD_HISTORY = [{"d": "09/29", "r": 5.20}, {"d": "09/30", "r": 5.22}, {"d": "10/01", "r": 5.23}, {"d": "10/02", "r": 5.28}, {"d": "10/05", "r": 5.31}, {"d": "10/06", "r": 5.27}, {"d": "10/07", "r": 5.28}, {"d": "10/08", "r": 5.23}, {"d": "10/09", "r": 5.24}, {"d": "10/13", "r": 5.22}, {"d": "10/14", "r": 5.18}, {"d": "10/15", "r": 5.14}, {"d": "10/16", "r": 5.10}, {"d": "10/19", "r": 5.09}, {"d": "10/20", "r": 5.12}, {"d": "10/21", "r": 5.13}, {"d": "10/22", "r": 4.96}, {"d": "10/23", "r": 5.00}, {"d": "10/26", "r": 4.99}, {"d": "10/27", "r": 5.00}, {"d": "10/28", "r": 5.05}];
 
 function renderRollingYieldChart(latestYieldRate) {
   const MAX_POINTS = 22;
@@ -1252,8 +1300,9 @@ function renderRollingYieldChart(latestYieldRate) {
 (async function robustLiveYieldAndFedWatchSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
   const now = new Date();
-  const fomcDate = new Date("2026-10-28");
-  const daysToFomc = Math.max(0, Math.ceil((fomcDate - now) / (1000 * 60 * 60 * 24)));
+  const activeFomc = typeof getActiveFomcMeetingInfo === "function" ? getActiveFomcMeetingInfo() : { date: "2026-12-09", daysToMeeting: 41 };
+  const fomcDate = new Date(activeFomc.date);
+  const daysToFomc = activeFomc.daysToMeeting;
   
   document.querySelectorAll("[id*='fomc'], .card-header div, .header div").forEach(el => {
     if (el.textContent && el.textContent.includes("2026-10-28") && el.children.length === 0) {
@@ -1264,7 +1313,7 @@ function renderRollingYieldChart(latestYieldRate) {
   // 預設基準參數 (CME 官方雙合約定錨模型)
   let liveYield = null;
   let yieldSourceTag = "雲端同步";
-  let zqNovPrice = 96.075;
+  let zqNovPrice = 96.050;
   let zqOctPrice = 96.115;
   let currentEffr = 3.88;
   let fedSourceTag = "雲端試算表同步";
@@ -1377,7 +1426,7 @@ function renderRollingYieldChart(latestYieldRate) {
   try {
     const [yahooYield, yahooZqNov, yahooZqOct] = await Promise.all([
       liveYield ? Promise.resolve(liveYield) : fetchYahooSymbol("^TNX"),
-      fetchYahooSymbol("ZQX26.CBT"),
+      fetchYahooSymbol((typeof getActiveFomcMeetingInfo === "function" ? getActiveFomcMeetingInfo().yahooAnchor : "ZQF27.CBT")),
       fetchYahooSymbol("ZQV26.CBT")
     ]);
 
@@ -1397,7 +1446,7 @@ function renderRollingYieldChart(latestYieldRate) {
     }
   } catch(e) {}
 
-  const finalYield = liveYield ? liveYield.toFixed(2) : "5.22";
+  const finalYield = liveYield ? liveYield.toFixed(2) : "5.05";
   const statusHtml = `<span style="font-size: 11px; color: var(--green); font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">🟢 ${yieldSourceTag}: ${finalYield}%</span>`;
 
   const headerYieldEl = document.getElementById("header-us10y") || document.querySelector(".header div[style*='text-align: right'] .mono");

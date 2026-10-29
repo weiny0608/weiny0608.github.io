@@ -222,173 +222,386 @@
 
   // 方向二：財報開獎診斷、本週預告與全市場財報日基準快照 (可由 ./earnings_hub.json 與 Google Sheets 即時覆寫)
   const EARNINGS_HUB_SNAPSHOT = {
-    updatedAt: "2026-10-21T11:00:00+08:00",
-    baselineDate: "2026-10-20 收盤 (台北時間 2026-10-21 即時同步)",
-    us10yYield: 5.12,
-    recentDiagnostics: [
-      {
-        symbol: "NFLX",
-        name: "Netflix",
-        reportDate: "2026-10-20",
-        nextReportDate: "2027-01-19",
-        quarter: "Q3 2026",
-        timing: "AMC",
-        verdict: "Beat (EPS 優於預期・Q3 結算中)",
-        badgeText: "10/20 盤後已開獎・Q3 結算中",
-        actualSummary: "Q3 營收 $12.874B（年增 12%，符合市場共識 $12.87B）、營業利益率 34.6%（優於財測）、拆股後稀釋 EPS $0.87（優於共識 $0.82 達 +6.1%，拆股前約當 $8.70）、淨利 $3.664B。",
-        guidanceSummary: "Q4 營收指引 $13.44B、Q4 EPS 指引 $0.67；重申 2026 全年營收指引 $51.1B。",
-        oldEps27: 24.00, newEps27: 25.20, newEps28: 29.50, newEps29: 34.00,
-        sourceUrl: "https://www.tradingview.com/news/tradingview:5f43a356c05d6:0-netflix-posts-q3-revenue-12-874b-operating-margin-34-6-and-diluted-eps-0-87/"
-      },
-      {
-        symbol: "TSM",
-        name: "台積電 ADR",
-        reportDate: "2026-10-15",
-        nextReportDate: "2027-01-14",
-        quarter: "Q3 2026",
-        timing: "BMO",
-        verdict: "Beat & Raise (營收毛利雙破表・已換季)",
-        badgeText: "10/15 已開獎・下次 01/14 (+1季)",
-        actualSummary: "Q3 營收 US$46.72B（季增 16.2%、年增 41.2%，超越財測高標 $45.8B）、毛利率 66.4%、每單位 ADR EPS US$4.60（台幣 NT$29.43，優於共識 $4.46）。",
-        guidanceSummary: "Q4 營收指引大幅上調至 US$52.3B～$54.3B（季增 14%）、毛利率指引 65%～67%，全年資本支出 $60B～$64B。",
-        oldEps27: 8.50, newEps27: 9.20, newEps28: 11.20, newEps29: 13.20,
-        sourceUrl: "https://pr.tsmc.com/english/news/3346"
-      },
-      {
-        symbol: "ASML",
-        name: "艾斯摩爾",
-        reportDate: "2026-10-14",
-        nextReportDate: "2027-01-20",
-        quarter: "Q3 2026",
-        timing: "BMO",
-        verdict: "Beat & Raise (毛利率驚艷・已換季)",
-        badgeText: "10/14 已開獎・下次 01/20 (+1季)",
-        actualSummary: "Q3 營收 €11.7B、毛利率 57.5%（優於預期 54.0%）、Basic EPS €12.95。",
-        guidanceSummary: "Q4 營收指引 €14.2B～€15.2B，2026 全年營收上調至 €44B～€45B。",
-        oldEps27: 29.00, newEps27: 32.50, newEps28: 39.80, newEps29: 46.50,
-        sourceUrl: "https://www.stocktitan.net/news/ASML/asml-reports-11-7-billion-total-net-sales-and-5-0-billion-net-income-dd7ttrmk06ng.html"
-      },
-      {
-        symbol: "GE",
-        name: "奇異航太",
-        reportDate: "2026-10-20",
-        nextReportDate: "2027-01-19",
-        quarter: "Q3 2026",
-        timing: "BMO",
-        verdict: "Beat & Raise (上調全年指引・Q3 結算中)",
-        badgeText: "10/20 已開獎・Q3 結算中",
-        actualSummary: "Q3 調整後 EPS $2.25（優於共識 $2.01）、營收 $13.3B（優於共識 $12.88B）；GM 同日公佈 Q3 EPS $3.70 Beat 並宣布 $20B 庫藏股。",
-        guidanceSummary: "GE 再度上調 2026 全年獲利與自由現金流指引。",
-        oldEps27: 5.40, newEps27: 5.85, newEps28: 7.00, newEps29: 8.30,
-        sourceUrl: "https://www.newsquawk.com/headlines/ge-aerospace-ge-q3-2026-usd-adj-eps-225-exp-201-adj-revenue-133bln-exp-1288bln"
-      }
+    "updatedAt": "2026-10-29T16:05:00+08:00",
+    "baselineDate": "2026-10-28 收盤 (台北時間 2026-10-29 即時同步)",
+    "us10yYield": 5.05,
+    "fomcNextMeeting": "2026-12-09",
+    "source": "Google Sheets LiveQuotes Hub + Main Valuation Sheet (gviz/tq Direct Cloud Sync) + SEC/IR Releases",
+    "recentDiagnostics": [
+        {
+            "symbol": "MSFT",
+            "name": "微軟",
+            "reportDate": "2026-10-28",
+            "nextReportDate": "2027-01-27",
+            "quarter": "Q1 FY27",
+            "timing": "AMC",
+            "verdict": "Beat & Raise (Azure 勁揚 48%・Q1 結算中)",
+            "badgeText": "10/28 盤後已開獎・Q1/Q3 結算中",
+            "badgeStyle": "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd;",
+            "actualSummary": "Q1 FY27 營收 $90.74B（年增 16.7%，優於市場共識 $90.60B）、稀釋 EPS $4.74（優於共識 $4.71），Azure 雲端營收在 AI 算力推升下強勢年增 48%，微軟雲毛利率穩守 65%。",
+            "guidanceSummary": "Copilot 企業授權滲透率持續擴大，AI 資料中心資本支出與商業雲 RPO 訂單動能強勁。",
+            "oldEps27": 14.9,
+            "newEps27": 15.6,
+            "newEps28": 18.0,
+            "newEps29": 20.5,
+            "pe": 28.0,
+            "mult": 0.96,
+            "sourceName": "Microsoft FY27 Q1 Earnings Release",
+            "sourceUrl": "https://www.microsoft.com/en-us/investor/default"
+        },
+        {
+            "symbol": "META",
+            "name": "Meta",
+            "reportDate": "2026-10-28",
+            "nextReportDate": "2027-01-27",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "Revenue Beat (營收年增 26%・AI 資本支出擴大)",
+            "badgeText": "10/28 盤後已開獎・Q3 結算中",
+            "badgeStyle": "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd;",
+            "actualSummary": "Q3 營收 $64.60B（年增 26%，超越市場共識 $63.34B），AI 廣告投放轉換率與平均單價雙雙提升；單季 GAAP EPS $3.83（受一次性法規準備金與重資本投入影響）。",
+            "guidanceSummary": "重申全年資本支出 $130B～$145B 投入次世代 Llama 與 AI 算力叢集，並擴大股權回購與長期 AI 變現佈局。",
+            "oldEps27": 30.0,
+            "newEps27": 31.8,
+            "newEps28": 37.0,
+            "newEps29": 42.8,
+            "pe": 22.0,
+            "mult": 0.96,
+            "sourceName": "Meta Q3 2026 Earnings Release",
+            "sourceUrl": "https://admiralmarkets.com/analytics/traders-blog/meta-stock-muse-singapore"
+        },
+        {
+            "symbol": "GOOGL",
+            "name": "Alphabet",
+            "reportDate": "2026-10-27",
+            "nextReportDate": "2027-01-26",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "Cloud 暴增 103% (營益率擴張・Q3 結算中)",
+            "badgeText": "10/27 盤後已開獎・Q3 結算中",
+            "badgeStyle": "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd;",
+            "actualSummary": "Q3 Google Cloud 營收受惠 AI 基礎設施與自研 TPU 需求暴增 103%，合併營業利益年增 30%，整體營業利益率擴張至 31.8%，Gemini 用戶突破 10 億大關。",
+            "guidanceSummary": "持續擴大 AI 伺服器與資料中心資本支出以滿足企業雲端積壓訂單。",
+            "oldEps27": 9.7,
+            "newEps27": 10.3,
+            "newEps28": 11.9,
+            "newEps29": 13.6,
+            "pe": 21.0,
+            "mult": 0.96,
+            "sourceName": "Alphabet Q3 2026 SEC Form 8-K",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm"
+        },
+        {
+            "symbol": "KLAC",
+            "name": "科磊",
+            "reportDate": "2026-10-28",
+            "nextReportDate": "2027-01-27",
+            "quarter": "FQ1 2027",
+            "timing": "AMC",
+            "verdict": "Beat & Raise (檢測設備強勁・Q1 結算中)",
+            "badgeText": "10/28 盤後已開獎・FQ1 結算中",
+            "badgeStyle": "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd;",
+            "actualSummary": "FQ1 27 營收 $4.14B（超越財測中位數 $4.0B）、拆股後 Non-GAAP EPS $1.22（GAAP EPS $1.18），單季自由現金流 $1.34B（近 12 個月 FCF 達 $4.04B）。",
+            "guidanceSummary": "FQ2 營收指引上調至 $4.7B +/- $200M，Non-GAAP 毛利率指引 62.5% +/- 1.0%，Non-GAAP EPS 指引 $1.44 +/- $0.11。",
+            "oldEps27": 34.0,
+            "newEps27": 36.2,
+            "newEps28": 44.5,
+            "newEps29": 52.0,
+            "pe": 21.0,
+            "mult": 0.96,
+            "sourceName": "KLA FQ1 2027 Official Release",
+            "sourceUrl": "https://ir.kla.com/news-events/press-releases/detail/523/kla-corporation-reports-fiscal-2027-first-quarter-results"
+        },
+        {
+            "symbol": "CDNS",
+            "name": "益華電腦",
+            "reportDate": "2026-10-26",
+            "nextReportDate": "2027-01-25",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "Beat & Record Backlog (在手訂單 $8.2B 創高)",
+            "badgeText": "10/26 已開獎・Q3 結算中",
+            "badgeStyle": "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd;",
+            "actualSummary": "Q3 營收 $1.63B（優於共識 $1.61B，經常性營收年增 18%）、Non-GAAP 稀釋 EPS $2.11（優於共識 $2.05），在手訂單（Backlog）創下 $8.2B 歷史新高。",
+            "guidanceSummary": "受惠 AI 晶片複雜度提升與系統驗證硬體熱銷，全面上調全年營收與獲利展望。",
+            "oldEps27": 7.5,
+            "newEps27": 7.9,
+            "newEps28": 9.2,
+            "newEps29": 10.6,
+            "pe": 34.0,
+            "mult": 0.96,
+            "sourceName": "Cadence Q3 2026 Financial Results",
+            "sourceUrl": "https://investor.cadence.com/news/news-details/2026/Cadence-Reports-Third-Quarter-2026-Financial-Results/"
+        },
+        {
+            "symbol": "TSLA",
+            "name": "特斯拉",
+            "reportDate": "2026-10-21",
+            "nextReportDate": "2027-01-27",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "EPS & 毛利率雙超預期 (已換季)",
+            "badgeText": "10/21 已開獎・下次 01/27 (+1季)",
+            "badgeStyle": "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;",
+            "actualSummary": "Q3 營收 $28.05B、Non-GAAP EPS $0.48（優於共識 $0.43 達 +11.6%），扣除碳權後汽車毛利率回升至 18.1%，單季自由現金流 $1.53B。",
+            "guidanceSummary": "持續推進 Cybercab 自駕量產與儲能業務高毛利擴張。",
+            "oldEps27": 3.2,
+            "newEps27": 3.55,
+            "newEps28": 4.95,
+            "newEps29": 7.1,
+            "pe": 42.0,
+            "mult": 0.96,
+            "sourceName": "Tesla Q3 2026 Update",
+            "sourceUrl": "https://ir.tesla.com"
+        },
+        {
+            "symbol": "TXN",
+            "name": "德州儀器",
+            "reportDate": "2026-10-21",
+            "nextReportDate": "2027-01-21",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "Beat (類比晶片復甦強勁・已換季)",
+            "badgeText": "10/21 已開獎・下次 01/21 (+1季)",
+            "badgeStyle": "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;",
+            "actualSummary": "Q3 營收 $6.06B（年增 28%、季增 11%）、稀釋 EPS $2.62（年增 77%，優於共識 $2.42 達 +8.3%），毛利率達 64%。",
+            "guidanceSummary": "工控與車用類比晶片庫存回補動能延續。",
+            "oldEps27": 7.2,
+            "newEps27": 7.65,
+            "newEps28": 9.0,
+            "newEps29": 10.3,
+            "pe": 23.0,
+            "mult": 0.96,
+            "sourceName": "TI Q3 2026 Results",
+            "sourceUrl": "https://news.alphastreet.com/texas-instruments-q3-2026-earnings-preview-october-21-street-expects-2-42-eps/"
+        },
+        {
+            "symbol": "TSM",
+            "name": "台積電 ADR",
+            "reportDate": "2026-10-15",
+            "nextReportDate": "2027-01-14",
+            "quarter": "Q3 2026",
+            "timing": "BMO",
+            "verdict": "Beat & Raise (營收毛利雙破表・已換季)",
+            "badgeText": "10/15 已開獎・下次 01/14 (+1季)",
+            "badgeStyle": "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;",
+            "actualSummary": "Q3 營收 US$46.72B（季增 16.2%、年增 41.2%）、毛利率 66.4%、每單位 ADR EPS US$4.60（優於共識 $4.46）。",
+            "guidanceSummary": "Q4 營收指引大幅上調至 US$52.3B～$54.3B（毛利率指引 65%～67%），FY27E ADR EPS 校準上調至 $20.50。",
+            "oldEps27": 18.5,
+            "newEps27": 20.5,
+            "newEps28": 23.5,
+            "newEps29": 26.6,
+            "pe": 22.0,
+            "mult": 0.96,
+            "sourceName": "TSMC Q3 2026 Official Release",
+            "sourceUrl": "https://pr.tsmc.com/english/news/3346"
+        },
+        {
+            "symbol": "NFLX",
+            "name": "Netflix",
+            "reportDate": "2026-10-20",
+            "nextReportDate": "2027-01-19",
+            "quarter": "Q3 2026",
+            "timing": "AMC",
+            "verdict": "Beat (EPS 優於預期・已換季)",
+            "badgeText": "10/20 已開獎・下次 01/19 (+1季)",
+            "badgeStyle": "background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;",
+            "actualSummary": "Q3 營收 $12.874B（年增 12%）、營業利益率 34.6%、拆股後稀釋 EPS $0.87（優於共識 $0.82 達 +6.1%）。",
+            "guidanceSummary": "Q4 營收指引 $13.44B；重申 2026 全年營收指引 $51.1B，拆股後 FY27E EPS 校準為 $2.52。",
+            "oldEps27": 2.4,
+            "newEps27": 2.52,
+            "newEps28": 2.95,
+            "newEps29": 3.4,
+            "pe": 28.0,
+            "mult": 0.96,
+            "sourceName": "Netflix Q3 2026 Earnings Release",
+            "sourceUrl": "https://www.tradingview.com/news/tradingview:5f43a356c05d6:0-netflix-posts-q3-revenue-12-874b-operating-margin-34-6-and-diluted-eps-0-87/"
+        }
     ],
-    upcomingPreviews: [
-      {
-        symbol: "TSLA", name: "特斯拉", earningsDate: "2026-10-21", timing: "盤後 (AMC)",
-        consensusEps: "$0.45", consensusRev: "$28.10B",
-        previewNote: "Q3 交車逾 48.6 萬輛、儲能部署 13.7 GWh；聚焦汽車毛利率與 Robotaxi 自駕量產時程。",
-        oldEps27: 3.20, bullEps27: 3.55, bullEps28: 4.95, bullEps29: 7.10,
-        sourceUrl: "https://ir.tesla.com/press-release/tesla-third-quarter-2026-production-deliveries-and-deployments"
-      },
-      {
-        symbol: "IBM", name: "IBM", earningsDate: "2026-10-21", timing: "盤後 (AMC)",
-        consensusEps: "$2.87", consensusRev: "$16.82B",
-        previewNote: "聚焦 Red Hat 混合雲增速、生成式 AI 諮詢訂單簿與全年自由現金流指引。",
-        oldEps27: 11.20, bullEps27: 11.80, bullEps28: 12.80, bullEps29: 13.90,
-        sourceUrl: "https://www.ibm.com/investor/events/earnings-3q26"
-      },
-      {
-        symbol: "LRCX", name: "科林研發", earningsDate: "2026-10-21", timing: "盤後 (AMC)",
-        consensusEps: "$2.18", consensusRev: "$5.95B",
-        previewNote: "FQ1 2027 財報，聚焦 HBM 晶圓深孔蝕刻與先進封裝設備出貨動能。",
-        oldEps27: 39.00, bullEps27: 41.50, bullEps28: 52.00, bullEps29: 60.00,
-        sourceUrl: "https://investor.lamresearch.com/events"
-      },
-      {
-        symbol: "TXN", name: "德州儀器", earningsDate: "2026-10-21", timing: "盤後 (AMC)",
-        consensusEps: "$2.42", consensusRev: "$5.92B",
-        previewNote: "公司財測 EPS $2.23～$2.57；觀察工控與車用類比晶片庫存週期復甦力道。",
-        oldEps27: 7.20, bullEps27: 7.65, bullEps28: 9.00, bullEps29: 10.30,
-        sourceUrl: "https://news.alphastreet.com/texas-instruments-q3-2026-earnings-preview-october-21-street-expects-2-42-eps/"
-      },
-      {
-        symbol: "KLAC", name: "科磊", earningsDate: "2026-10-22", timing: "盤後 (AMC)",
-        consensusEps: "$8.65", consensusRev: "$3.18B",
-        previewNote: "受惠台積電 2nm 與先進封裝製程檢測強度提升，關注 WFE 晶圓廠設備支出展望。",
-        oldEps27: 34.00, bullEps27: 36.20, bullEps28: 44.50, bullEps29: 52.00,
-        sourceUrl: "https://seekingalpha.com/symbol/KLAC"
-      },
-      {
-        symbol: "INTC", name: "英特爾", earningsDate: "2026-10-22", timing: "盤後 (AMC)",
-        consensusEps: "$0.22", consensusRev: "$14.30B",
-        previewNote: "聚焦資料中心 AI 伺服器 CPU 動能與 18A 晶圓代工外部客戶進度。",
-        oldEps27: 1.20, bullEps27: 1.45, bullEps28: 2.05, bullEps29: 2.70,
-        sourceUrl: "https://www.tradingnews.com/news/intc-95-usd-rebounds-as-59-percent-data-center-growth-meets-a-62x-valuation"
-      },
-      {
-        symbol: "NOW", name: "ServiceNow", earningsDate: "2026-10-22", timing: "盤後 (AMC)",
-        consensusEps: "$4.25", consensusRev: "$3.48B",
-        previewNote: "聚焦 Now Assist 企業級 AI Agent 變現率與 cRPO 剩餘履約義務增速。",
-        oldEps27: 17.50, bullEps27: 18.60, bullEps28: 22.80, bullEps29: 27.50,
-        sourceUrl: "https://www.ciodive.com/news/tech-bytes-servicenow-boost-ai-agent-control/833175/"
-      },
-      {
-        symbol: "GOOGL", name: "Alphabet", earningsDate: "2026-10-27", timing: "盤後 (AMC)",
-        consensusEps: "$2.35", consensusRev: "$102.5B",
-        previewNote: "下週科技七巨頭打頭陣，聚焦 Google Cloud 利潤率與 AI 搜尋廣告變現。",
-        oldEps27: 9.70, bullEps27: 10.30, bullEps28: 11.90, bullEps29: 13.60,
-        sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-      },
-      {
-        symbol: "MSFT", name: "微軟", earningsDate: "2026-10-28", timing: "盤後 (AMC)",
-        consensusEps: "$3.65", consensusRev: "$75.8B",
-        previewNote: "聚焦 Azure AI 算力貢獻佔比與 Copilot 企業授權滲透率。",
-        oldEps27: 14.90, bullEps27: 15.60, bullEps28: 18.00, bullEps29: 20.50,
-        sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-      },
-      {
-        symbol: "META", name: "Meta", earningsDate: "2026-10-28", timing: "盤後 (AMC)",
-        consensusEps: "$6.85", consensusRev: "$49.2B",
-        previewNote: "聚焦 AI 廣告投放轉換率提升與 2027 基礎設施資本支出指引。",
-        oldEps27: 30.00, bullEps27: 31.80, bullEps28: 37.00, bullEps29: 42.80,
-        sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-      },
-      {
-        symbol: "AAPL", name: "蘋果", earningsDate: "2026-10-29", timing: "盤後 (AMC)",
-        consensusEps: "$1.88", consensusRev: "$104.0B",
-        previewNote: "聚焦 iPhone 18 / Apple Intelligence 換機週期與服務毛利率。",
-        oldEps27: 8.00, bullEps27: 8.40, bullEps28: 9.35, bullEps29: 10.30,
-        sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-      },
-      {
-        symbol: "AMZN", name: "亞馬遜", earningsDate: "2026-10-29", timing: "盤後 (AMC)",
-        consensusEps: "$1.62", consensusRev: "$182.5B",
-        previewNote: "聚焦 AWS 生成式 AI 雲端增速與北美零售營業利益率擴張。",
-        oldEps27: 7.30, bullEps27: 7.80, bullEps28: 9.50, bullEps29: 11.50,
-        sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-      }
+    "upcomingPreviews": [
+        {
+            "symbol": "AAPL",
+            "name": "蘋果",
+            "earningsDate": "2026-10-29",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$1.88",
+            "consensusRev": "$104.0B",
+            "previewNote": "今晚壓軸開獎！聚焦 iPhone 換機週期、Apple Intelligence 端側 AI 滲透率與 Services 服務毛利率。",
+            "oldEps27": 8.0,
+            "bullEps27": 8.4,
+            "bullEps28": 9.35,
+            "bullEps29": 10.3,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "AMZN",
+            "name": "亞馬遜",
+            "earningsDate": "2026-10-29",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$1.62",
+            "consensusRev": "$182.5B",
+            "previewNote": "今晚壓軸開獎！聚焦 AWS 生成式 AI 雲端增速、自研 Trainium 晶片部署與北美零售營業利益率擴張。",
+            "oldEps27": 7.3,
+            "bullEps27": 7.8,
+            "bullEps28": 9.5,
+            "bullEps29": 11.5,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "NXPI",
+            "name": "恩智浦",
+            "earningsDate": "2026-11-02",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$3.45",
+            "consensusRev": "$3.25B",
+            "previewNote": "下週一打頭陣，聚焦車用雷達、邊緣 AI 微控制器與工業物聯網庫存去化進度。",
+            "oldEps27": 15.2,
+            "bullEps27": 16.1,
+            "bullEps28": 17.8,
+            "bullEps29": 19.2,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "AMD",
+            "name": "超微半導體",
+            "earningsDate": "2026-11-03",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$1.15",
+            "consensusRev": "$8.75B",
+            "previewNote": "下週二焦點，聚焦 MI350/MI400 AI 加速器全年營收上修幅度與 EPYC 伺服器 CPU 市佔率。",
+            "oldEps27": 5.6,
+            "bullEps27": 6.1,
+            "bullEps28": 7.2,
+            "bullEps29": 8.4,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "QCOM",
+            "name": "高通",
+            "earningsDate": "2026-11-04",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$2.85",
+            "consensusRev": "$11.10B",
+            "previewNote": "聚焦 Snapdragon 旗艦手機晶片、AI PC 與車用數位座艙平台（Automotive）營收動能。",
+            "oldEps27": 11.9,
+            "bullEps27": 12.6,
+            "bullEps28": 13.5,
+            "bullEps29": 14.3,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "ARM",
+            "name": "安謀",
+            "earningsDate": "2026-11-05",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$0.42",
+            "consensusRev": "$1.12B",
+            "previewNote": "聚焦 Armv9 架構權利金費率翻倍效應與資料中心客製化 AI 伺服器晶片授權進度。",
+            "oldEps27": 2.1,
+            "bullEps27": 2.3,
+            "bullEps28": 2.85,
+            "bullEps29": 3.45,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        },
+        {
+            "symbol": "FTNT",
+            "name": "飛塔資訊",
+            "earningsDate": "2026-11-05",
+            "timing": "盤後 (AMC)",
+            "consensusEps": "$0.62",
+            "consensusRev": "$1.68B",
+            "previewNote": "聚焦 Unified SASE 安全存取服務邊緣帳單金額（Billings）增速與次世代防火牆升級潮。",
+            "oldEps27": 2.7,
+            "bullEps27": 2.88,
+            "bullEps28": 3.25,
+            "bullEps29": 3.65,
+            "sourceUrl": "https://www.nasdaq.com/market-activity/earnings"
+        }
     ],
-    earningsDates: {
-      "PEP": "2026-10-08", "JPM": "2026-10-13", "WFC": "2026-10-13", "GS": "2026-10-13", "UNH": "2026-10-13",
-      "JNJ": "2026-10-13", "C": "2026-10-13", "ASML": "2026-10-14", "BAC": "2026-10-14", "MS": "2026-10-14",
-      "TSM": "2026-10-15", "AXP": "2026-10-16", "PG": "2026-10-16", "UNP": "2026-10-16", "TRV": "2026-10-17",
-      "NFLX": "2026-10-20", "GE": "2026-10-20", "GM": "2026-10-20", "RTX": "2026-10-20", "TSLA": "2026-10-21",
-      "IBM": "2026-10-21", "LRCX": "2026-10-21", "TXN": "2026-10-21", "TMO": "2026-10-21", "T": "2026-10-21",
-      "KLAC": "2026-10-22", "INTC": "2026-10-22", "NOW": "2026-10-22", "V": "2026-10-22", "KO": "2026-10-22",
-      "BA": "2026-10-22", "VZ": "2026-10-22", "SHW": "2026-10-22", "HON": "2026-10-23", "ABBV": "2026-10-24",
-      "CAT": "2026-10-24", "DOW": "2026-10-24", "CDNS": "2026-10-26", "GOOGL": "2026-10-27", "MSFT": "2026-10-28",
-      "META": "2026-10-28", "MCD": "2026-10-28", "AAPL": "2026-10-29", "AMZN": "2026-10-29", "LLY": "2026-10-29",
-      "MRK": "2026-10-29", "MA": "2026-10-30", "AMGN": "2026-10-30", "XOM": "2026-10-30", "CVX": "2026-10-30",
-      "NXPI": "2026-11-02", "PLTR": "2026-11-02", "BRK.B": "2026-11-02", "AMD": "2026-11-03", "PFE": "2026-11-03",
-      "QCOM": "2026-11-04", "CVS": "2026-11-04", "ARM": "2026-11-05", "FTNT": "2026-11-05", "UBER": "2026-11-05",
-      "TM": "2026-11-06", "AMAT": "2026-11-12", "HD": "2026-11-12", "DIS": "2026-11-13", "NVDA": "2026-11-18",
-      "CSCO": "2026-11-18", "PANW": "2026-11-19", "WMT": "2026-11-19", "INTU": "2026-11-24", "ADI": "2026-11-24",
-      "WDAY": "2026-11-24", "CRM": "2026-11-25", "CRWD": "2026-12-02", "SNPS": "2026-12-02", "MRVL": "2026-12-03",
-      "ORCL": "2026-12-08", "AVGO": "2026-12-10", "ADBE": "2026-12-10", "COST": "2026-12-10", "MU": "2026-12-16",
-      "NKE": "2026-12-18"
+    "earningsDates": {
+        "PEP": "2027-01-08",
+        "JPM": "2027-01-13",
+        "WFC": "2027-01-13",
+        "GS": "2027-01-13",
+        "UNH": "2027-01-13",
+        "JNJ": "2027-01-13",
+        "C": "2027-01-13",
+        "ASML": "2027-01-20",
+        "BAC": "2027-01-14",
+        "MS": "2027-01-14",
+        "TSM": "2027-01-14",
+        "AXP": "2027-01-16",
+        "PG": "2027-01-16",
+        "UNP": "2027-01-16",
+        "TRV": "2027-01-17",
+        "NFLX": "2027-01-19",
+        "GE": "2027-01-19",
+        "GM": "2027-01-19",
+        "RTX": "2027-01-19",
+        "TSLA": "2027-01-27",
+        "IBM": "2027-01-20",
+        "LRCX": "2027-01-21",
+        "TXN": "2027-01-21",
+        "TMO": "2027-01-21",
+        "T": "2027-01-21",
+        "KLAC": "2026-10-28",
+        "INTC": "2026-10-29",
+        "NOW": "2026-10-28",
+        "V": "2027-01-22",
+        "KO": "2027-01-22",
+        "BA": "2027-01-22",
+        "VZ": "2027-01-22",
+        "SHW": "2027-01-22",
+        "HON": "2027-01-23",
+        "ABBV": "2027-01-24",
+        "CAT": "2027-01-24",
+        "DOW": "2027-01-24",
+        "CDNS": "2026-10-26",
+        "GOOGL": "2026-10-27",
+        "MSFT": "2026-10-28",
+        "META": "2026-10-28",
+        "MCD": "2026-10-28",
+        "AAPL": "2026-10-29",
+        "AMZN": "2026-10-29",
+        "LLY": "2026-10-29",
+        "MRK": "2026-10-29",
+        "MA": "2026-10-30",
+        "AMGN": "2026-10-30",
+        "XOM": "2026-10-30",
+        "CVX": "2026-10-30",
+        "NXPI": "2026-11-02",
+        "PLTR": "2026-11-02",
+        "BRK.B": "2026-11-02",
+        "AMD": "2026-11-03",
+        "PFE": "2026-11-03",
+        "QCOM": "2026-11-04",
+        "CVS": "2026-11-04",
+        "ARM": "2026-11-05",
+        "FTNT": "2026-11-05",
+        "UBER": "2026-11-05",
+        "TM": "2026-11-06",
+        "AMAT": "2026-11-12",
+        "HD": "2026-11-12",
+        "DIS": "2026-11-13",
+        "NVDA": "2026-11-18",
+        "CSCO": "2026-11-18",
+        "PANW": "2026-11-19",
+        "WMT": "2026-11-19",
+        "INTU": "2026-11-24",
+        "ADI": "2026-11-24",
+        "WDAY": "2026-11-24",
+        "CRM": "2026-11-25",
+        "CRWD": "2026-12-02",
+        "SNPS": "2026-12-02",
+        "MRVL": "2026-12-03",
+        "ORCL": "2026-12-08",
+        "AVGO": "2026-12-10",
+        "ADBE": "2026-12-10",
+        "COST": "2026-12-10",
+        "MU": "2026-12-16",
+        "NKE": "2026-12-18"
     }
-  };
+};
 
   window.LIVE_QUOTES_HUB = Object.assign({}, LIVE_QUOTES_SNAPSHOT);
   window.MACRO_INDICATORS_HUB = MACRO_INDICATORS_SNAPSHOT.map(item => Object.assign({}, item));
@@ -829,9 +1042,18 @@
         stocks.splice(18, 0, {
           t: "NFLX", n: "Netflix", s: "數位娛樂串流", cat: "CLOUD",
           sp500: true, nasdaq: true, dow: false,
-          p: 68.69, ed: "2026-10-20", eps27: 25.2, eps28: 29.5, eps29: 34.0, pe: 28, mult: 0.96
+          p: 68.69, ed: "2027-01-19", eps27: 2.52, eps28: 2.95, eps29: 3.40, pe: 28, mult: 0.96
         });
       }
+      // 強制校準 NFLX (拆股後基期 1:10) 與 TSM (最新 ADR EPS 基期 $20.50)，消除估值失真
+      stocks.forEach(s => {
+        if (s.t === 'NFLX' && s.eps27 > 10) {
+          s.eps27 = 2.52; s.eps28 = 2.95; s.eps29 = 3.40;
+        }
+        if (s.t === 'TSM' && s.eps27 < 15) {
+          s.eps27 = 20.50; s.eps28 = 23.50; s.eps29 = 26.60;
+        }
+      });
 
       const hubDates = (window.EARNINGS_HUB && window.EARNINGS_HUB.earningsDates) || EARNINGS_HUB_SNAPSHOT.earningsDates || {};
 
@@ -998,7 +1220,7 @@
               <strong style="font-size:14.5px; color:#132a18;">GOOGLEFINANCE 雲端即時股價、六大總經指標 (FRED) ＆ Q3 財報季動態校準雷達</strong>
             </div>
             <div id="livequotes-hub-status" style="font-size:12px; color:#556d59;">
-              🟢 已連線 LiveQuotes 雲端試算表 ｜ NFLX (10/20 Beat)・TSM (10/15 Beat & Raise)・TSLA / IBM / LRCX / TXN (10/21 開獎)
+              🟢 已直連 Google Sheets 雙雲端中樞 ｜ MSFT / META / GOOGL / KLAC / CDNS / TSLA / TXN 已開獎・今晚 AAPL ＆ AMZN 壓軸登場
             </div>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1114,7 +1336,19 @@
             sym = c1;
             isMainSheetRow = true;
           }
-          if (!sym) return;
+          // 讀取主估值表 B1:B4 頂部總經定錨列 (Data Baseline Date / 10-Year US Treasury Yield / Next FOMC countdown)
+          if (!sym) {
+            if (c0.includes("Baseline Date") && c1) {
+              if (window.EARNINGS_HUB) window.EARNINGS_HUB.baselineDate = c1;
+            } else if ((c0.includes("Treasury Yield") || c0.includes("10年期美債")) && c1) {
+              const mY = c1.match(/([0-9]+\.[0-9]+)/);
+              if (mY && window.EARNINGS_HUB) window.EARNINGS_HUB.us10yYield = parseFloat(mY[1]);
+            } else if (c0.includes("FOMC") && c1) {
+              const mF = c1.match(/(\d{4}-\d{2}-\d{2})/);
+              if (mF && window.EARNINGS_HUB) window.EARNINGS_HUB.fomcNextMeeting = mF[1];
+            }
+            return;
+          }
 
           if (!isMainSheetRow) {
             const v1 = c[1] && c[1].v !== null ? c[1].v : null;
@@ -1152,17 +1386,53 @@
               updatedCount++;
             }
           } else {
-            // 主估值表列讀取 (F欄下次財報日 c[5], O欄財報摘要 c[14])
+            // 主估值表 A6:O36 完整直連讀取 (C欄名稱 c[2], E欄現價 c[4], F欄下次財報日 c[5], G欄距離天數 c[6], O欄財報診斷與官方連結 c[14])
+            const nameRaw = c[2] && (c[2].f || c[2].v) ? String(c[2].f || c[2].v).trim() : sym;
+            const pRaw = c[4] && (c[4].f || c[4].v) ? String(c[4].f || c[4].v).replace(/[^0-9.]/g, '') : '';
             const edRaw = c[5] && (c[5].f || c[5].v) ? String(c[5].f || c[5].v).trim() : '';
+            const statusRaw = c[6] && (c[6].f || c[6].v) ? String(c[6].f || c[6].v).trim() : '';
             const sumRaw = c[14] && (c[14].f || c[14].v) ? String(c[14].f || c[14].v).trim() : '';
             const dateMatch = edRaw.match(/(\d{4}-\d{2}-\d{2})/);
             if (dateMatch && window.EARNINGS_HUB && window.EARNINGS_HUB.earningsDates) {
               window.EARNINGS_HUB.earningsDates[sym] = dateMatch[1];
             }
-            if (window.LIVE_QUOTES_HUB[sym]) {
-              if (dateMatch) window.LIVE_QUOTES_HUB[sym].sheetEd = dateMatch[1];
-              if (sumRaw) window.LIVE_QUOTES_HUB[sym].sheetSummary = sumRaw;
+            if (!window.LIVE_QUOTES_HUB[sym]) window.LIVE_QUOTES_HUB[sym] = {};
+            const parsedP = parseFloat(pRaw);
+            if (!isNaN(parsedP) && parsedP > 0 && !window.LIVE_QUOTES_HUB[sym].price) {
+              window.LIVE_QUOTES_HUB[sym].price = parsedP;
             }
+            if (dateMatch) window.LIVE_QUOTES_HUB[sym].sheetEd = dateMatch[1];
+            if (statusRaw) window.LIVE_QUOTES_HUB[sym].sheetStatus = statusRaw;
+            if (sumRaw) {
+              window.LIVE_QUOTES_HUB[sym].sheetSummary = sumRaw;
+              // 若 O 欄有最新財報診斷文字，即時同步至 window.EARNINGS_HUB.recentDiagnostics 供頂部面板渲染
+              if (window.EARNINGS_HUB && Array.isArray(window.EARNINGS_HUB.recentDiagnostics)) {
+                const parts = sumRaw.split("|").map(s => s.trim());
+                const summaryText = parts[0] || sumRaw;
+                const linkUrl = (parts[1] && parts[1].startsWith("http")) ? parts[1] : "";
+                let diagItem = window.EARNINGS_HUB.recentDiagnostics.find(d => d.symbol === sym);
+                if (diagItem) {
+                  if (summaryText.length > 8) diagItem.actualSummary = summaryText;
+                  if (linkUrl) diagItem.sourceUrl = linkUrl;
+                } else if (summaryText.length > 10 && !summaryText.startsWith("http")) {
+                  window.EARNINGS_HUB.recentDiagnostics.unshift({
+                    symbol: sym,
+                    name: nameRaw,
+                    reportDate: dateMatch ? dateMatch[1] : "2026-10-28",
+                    nextReportDate: "2027-01-27",
+                    quarter: "Q3 2026",
+                    timing: "AMC",
+                    verdict: "雲端主表即時診斷",
+                    badgeText: statusRaw || "🔔 財報已開獎 (Q3 結算中)",
+                    actualSummary: summaryText,
+                    guidanceSummary: "",
+                    oldEps27: 10.0, newEps27: 10.8, newEps28: 12.5, newEps29: 14.2,
+                    sourceUrl: linkUrl || "https://www.nasdaq.com/market-activity/earnings"
+                  });
+                }
+              }
+            }
+            updatedCount++;
           }
         });
 
@@ -1186,6 +1456,59 @@
   }
 
   window.syncLiveQuotesFromCloud = syncLiveQuotesFromCloud;
+
+  // 方向五：客戶溝通一鍵情境模式 (Macro Scenario Presets)
+  window.applyMacroScenarioPreset = function (yieldRate, scenarioMode, presetKey, btnEl) {
+    const yVal = parseFloat(yieldRate) || 5.05;
+    const slider = document.getElementById('yieldSlider');
+    if (slider) {
+      slider.value = yVal.toFixed(2);
+    }
+    const scenSel = document.getElementById('scenarioSelect');
+    if (scenSel && scenarioMode) {
+      scenSel.value = scenarioMode;
+    }
+    if (typeof window.updateYield === 'function') {
+      window.updateYield(yVal);
+    }
+    if (typeof window.calcPortfolioRisk === 'function') {
+      window.calcPortfolioRisk();
+    }
+    document.querySelectorAll('.macro-scenario-btn').forEach(b => {
+      b.style.background = '#f8fafc';
+      b.style.color = '#334155';
+      b.style.borderColor = '#cbd5e1';
+      b.style.boxShadow = 'none';
+    });
+    if (btnEl) {
+      if (presetKey === 'soft_landing') {
+        btnEl.style.background = '#ecfdf5';
+        btnEl.style.color = '#065f46';
+        btnEl.style.borderColor = '#10b981';
+        btnEl.style.boxShadow = '0 2px 6px rgba(16, 185, 129, 0.18)';
+      } else if (presetKey === 'fed_hold') {
+        btnEl.style.background = '#eff6ff';
+        btnEl.style.color = '#1e40af';
+        btnEl.style.borderColor = '#3b82f6';
+        btnEl.style.boxShadow = '0 2px 6px rgba(59, 130, 246, 0.18)';
+      } else {
+        btnEl.style.background = '#fff1f2';
+        btnEl.style.color = '#9f1239';
+        btnEl.style.borderColor = '#f43f5e';
+        btnEl.style.boxShadow = '0 2px 6px rgba(244, 63, 94, 0.18)';
+      }
+    }
+    const adviceEl = document.getElementById('macro-scenario-advice-bar');
+    if (adviceEl) {
+      const map = {
+        soft_landing: '🟢 <strong>【軟著陸降息情境｜10Y 殖利率 4.50%】對客溝通重點</strong>：當無風險利率回落 55 bps，科技巨頭折現本益比獲得擴張空間（3 年隱含 CAGR 普遍拉升 3%~5%）。適合建議客戶<strong>分批布局 AI 雲端與高成長軟體現股（GOOGL、AMZN、MSFT、PANW）</strong>，或配置<strong>80%~85% Strike 之積極型 FCN</strong> 參與上檔空間。',
+        fed_hold: '⚖️ <strong>【10/28 FOMC 按兵不動現況｜10Y 殖利率 5.05%】對客溝通重點</strong>：聯準會維持 3.75%~4.00% 利率高原期，單純追高硬體股 PE 空間受限。建議客戶採取<strong>「長天期投資級公司債鎖利 5%+」搭配「75%~80% Strike / 65% KI 之防禦型 FCN」</strong>，將科技巨頭財報後的高波動轉化為 10%~14% 穩健年化票息。',
+        inflation_stress: '🔴 <strong>【通膨復燃升息壓力測試｜10Y 殖利率 5.40%】對客溝通重點</strong>：反映 2 位鷹派委員主張升息與 PPI (6.4%) 黏性之極端壓力測試。高估值硬體股面臨折現收縮，建議客戶<strong>檢視下方「投資組合風險評估系統」，調降高 PE 標的比重，並將 FCN 轉換價下調至 70%~75% 深價外安全邊際區間</strong>。'
+      };
+      adviceEl.innerHTML = map[presetKey] || map.fed_hold;
+    }
+  };
+
 
   function initLiveQuotesAndEarningsEngine() {
     hookRenderTable();
