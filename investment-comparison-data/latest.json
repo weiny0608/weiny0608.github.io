@@ -1,6 +1,6 @@
 {
   "schema": "company-comparison-feed.v1",
-  "checkedAt": "2026-10-29T07:11:15.331Z",
+  "checkedAt": "2026-10-29T09:53:54.115Z",
   "companies": [
     {
       "ticker": "MSFT",
@@ -10,8 +10,8 @@
       "priceAsOf": "2026-10-28T16:00:00.000-0400",
       "priceSource": "CNBC",
       "dividendYieldPct": 0.74,
-      "epsForward": 14.9,
-      "epsFuture": 19.5,
+      "epsForward": 15.6,
+      "epsFuture": 20.5,
       "fairPE": 26,
       "fcfB": 74.1,
       "cashB": 80,
@@ -20,8 +20,8 @@
       "interestB": 2.1,
       "rating": "Aaa / AAA",
       "asOf": null,
-      "modelAsOf": null,
-      "earningsDate": "2026-10-28",
+      "modelAsOf": "2026-10-29T16:24:04+08:00",
+      "earningsDate": "2027-01-27",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -142,8 +142,8 @@
       "priceAsOf": "2026-10-28T16:00:00.000-0400",
       "priceSource": "CNBC",
       "dividendYieldPct": 0.27,
-      "epsForward": 9.7,
-      "epsFuture": 12.8,
+      "epsForward": 10.3,
+      "epsFuture": 13.6,
       "fairPE": 20,
       "fcfB": 72,
       "cashB": 105,
@@ -152,8 +152,8 @@
       "interestB": 0.4,
       "rating": "Aa2 / AA+",
       "asOf": null,
-      "modelAsOf": null,
-      "earningsDate": "2026-10-27",
+      "modelAsOf": "2026-10-29T16:24:04+08:00",
+      "earningsDate": "2027-01-26",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -230,8 +230,8 @@
       "priceAsOf": "2026-10-28T16:10:00.000-0400",
       "priceSource": "CNBC",
       "dividendYieldPct": 0.92,
-      "epsForward": 9.2,
-      "epsFuture": 13.2,
+      "epsForward": 20.5,
+      "epsFuture": 26.6,
       "fairPE": 22,
       "fcfB": 26.5,
       "cashB": 55,
@@ -240,7 +240,7 @@
       "interestB": 0.8,
       "rating": "Aa3 / AA-",
       "asOf": null,
-      "modelAsOf": "2026-10-21T11:00:00+08:00",
+      "modelAsOf": "2026-10-29T16:24:04+08:00",
       "earningsDate": "2027-01-14",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -362,8 +362,8 @@
       "priceAsOf": "2026-10-28T16:00:00.000-0400",
       "priceSource": "CNBC",
       "dividendYieldPct": 1.96,
-      "epsForward": 7.2,
-      "epsFuture": 9.7,
+      "epsForward": 7.65,
+      "epsFuture": 10.3,
       "fairPE": 23,
       "fcfB": 5.2,
       "cashB": 8.5,
@@ -372,8 +372,8 @@
       "interestB": 0.4,
       "rating": "Aa3 / A+",
       "asOf": null,
-      "modelAsOf": null,
-      "earningsDate": "2026-10-21",
+      "modelAsOf": "2026-10-29T16:24:04+08:00",
+      "earningsDate": "2027-01-21",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -417,7 +417,7 @@
       "rating": "Baa2 / BBB",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-22",
+      "earningsDate": "2026-10-29",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -461,7 +461,7 @@
       "rating": "A3 / A",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-21",
+      "earningsDate": "2027-01-20",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -505,7 +505,7 @@
       "rating": "Baa1 / BBB+",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-22",
+      "earningsDate": "2027-01-22",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -549,7 +549,7 @@
       "rating": "Aaa / AAA",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-13",
+      "earningsDate": "2027-01-13",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -681,7 +681,7 @@
       "rating": "A2 / A",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-24",
+      "earningsDate": "2027-01-24",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -769,7 +769,7 @@
       "rating": "A1 / A+",
       "asOf": null,
       "modelAsOf": null,
-      "earningsDate": "2026-10-08",
+      "earningsDate": "2027-01-08",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
         "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
@@ -1520,17 +1520,17 @@
     ]
   },
   "earnings": {
-    "updatedAt": "2026-10-21T11:00:00+08:00"
+    "updatedAt": "2026-10-29T16:24:04+08:00"
   },
   "treasury": {
-    "yieldPct": 5.001,
-    "observedAt": "2026-10-29T03:11:02.000-0400"
+    "yieldPct": 4.995,
+    "observedAt": "2026-10-29T05:53:50.000-0400"
   },
   "sourceStatus": {
     "valuation": "來源模型，資料期間未提供",
     "financials": "原工具財務模型，資料期間未提供",
     "quotes": "20/20 檔取得帶時間報價",
-    "earnings": "2026-10-21T11:00:00+08:00",
+    "earnings": "2026-10-29T16:24:04+08:00",
     "macro": "2026-10-21T10:25:00+08:00"
   },
   "syncWarnings": [
