@@ -1,0 +1,1537 @@
+{
+  "schema": "company-comparison-feed.v1",
+  "checkedAt": "2026-10-29T00:21:00.976Z",
+  "companies": [
+    {
+      "ticker": "MSFT",
+      "name": "微軟",
+      "sector": "科技軟體",
+      "price": 531.01,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.74,
+      "epsForward": 14.9,
+      "epsFuture": 19.5,
+      "fairPE": 26,
+      "fcfB": 74.1,
+      "cashB": 80,
+      "debtB": 75,
+      "ebitdaB": 125,
+      "interestB": 2.1,
+      "rating": "Aaa / AAA",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-28",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=MSFT&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "AAPL",
+      "name": "蘋果",
+      "sector": "消費電子",
+      "price": 343.83,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.31,
+      "epsForward": 8,
+      "epsFuture": 9.8,
+      "fairPE": 26,
+      "fcfB": 108,
+      "cashB": 65.2,
+      "debtB": 101,
+      "ebitdaB": 135,
+      "interestB": 3.2,
+      "rating": "Aaa / AA+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-29",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=AAPL&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "NVDA",
+      "name": "輝達",
+      "sector": "半導體",
+      "price": 215.38,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.46,
+      "epsForward": 4.85,
+      "epsFuture": 7,
+      "fairPE": 24,
+      "fcfB": 60.5,
+      "cashB": 35,
+      "debtB": 10.5,
+      "ebitdaB": 85,
+      "interestB": 0.3,
+      "rating": "Aa1 / AA",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-11-18",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=NVDA&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "sector": "網路服務",
+      "price": 324.89,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.27,
+      "epsForward": 9.7,
+      "epsFuture": 12.8,
+      "fairPE": 20,
+      "fcfB": 72,
+      "cashB": 105,
+      "debtB": 28.5,
+      "ebitdaB": 115,
+      "interestB": 0.4,
+      "rating": "Aa2 / AA+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-27",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=GOOGL&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "AMZN",
+      "name": "亞馬遜",
+      "sector": "雲端電商",
+      "price": 254.6,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": null,
+      "epsForward": 7.3,
+      "epsFuture": 10.9,
+      "fairPE": 28,
+      "fcfB": 54,
+      "cashB": 88,
+      "debtB": 82,
+      "ebitdaB": 110,
+      "interestB": 3.4,
+      "rating": "A1 / AA",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-29",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=AMZN&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "TSM",
+      "name": "台積電 ADR",
+      "sector": "晶圓代工",
+      "price": 439.51,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.92,
+      "epsForward": 9.2,
+      "epsFuture": 13.2,
+      "fairPE": 22,
+      "fcfB": 26.5,
+      "cashB": 55,
+      "debtB": 32,
+      "ebitdaB": 45,
+      "interestB": 0.8,
+      "rating": "Aa3 / AA-",
+      "asOf": null,
+      "modelAsOf": "2026-10-21T11:00:00+08:00",
+      "earningsDate": "2027-01-14",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=TSM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "ORCL",
+      "name": "甲骨文",
+      "sector": "企業雲端",
+      "price": 144.54,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 1.38,
+      "epsForward": 7.2,
+      "epsFuture": 9.8,
+      "fairPE": 22,
+      "fcfB": 12.2,
+      "cashB": 10.2,
+      "debtB": 85,
+      "ebitdaB": 22.5,
+      "interestB": 3.4,
+      "rating": "Baa2 / BBB",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-12-08",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=ORCL&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "name": "高通",
+      "sector": "通訊晶片",
+      "price": 182.97,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 2.01,
+      "epsForward": 11.9,
+      "epsFuture": 15,
+      "fairPE": 14,
+      "fcfB": 10.5,
+      "cashB": 12,
+      "debtB": 15.5,
+      "ebitdaB": 14.5,
+      "interestB": 0.6,
+      "rating": "A2 / A",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-11-04",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=QCOM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "TXN",
+      "name": "德州儀器",
+      "sector": "類比半導體",
+      "price": 309.83,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 1.96,
+      "epsForward": 7.2,
+      "epsFuture": 9.7,
+      "fairPE": 23,
+      "fcfB": 5.2,
+      "cashB": 8.5,
+      "debtB": 12,
+      "ebitdaB": 8.8,
+      "interestB": 0.4,
+      "rating": "Aa3 / A+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-21",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=TXN&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "INTC",
+      "name": "英特爾",
+      "sector": "半導體製造",
+      "price": 95.53,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": null,
+      "epsForward": 1.2,
+      "epsFuture": 2.4,
+      "fairPE": 16,
+      "fcfB": -8.5,
+      "cashB": 22,
+      "debtB": 50,
+      "ebitdaB": 12,
+      "interestB": 1.8,
+      "rating": "Baa2 / BBB",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-22",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=INTC&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "IBM",
+      "name": "IBM",
+      "sector": "資訊科技",
+      "price": 253.22,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 2.67,
+      "epsForward": 11.2,
+      "epsFuture": 13,
+      "fairPE": 18,
+      "fcfB": 12.5,
+      "cashB": 13,
+      "debtB": 54,
+      "ebitdaB": 14.5,
+      "interestB": 1.5,
+      "rating": "A3 / A",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-21",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=IBM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "VZ",
+      "name": "威訊通訊",
+      "sector": "電信服務",
+      "price": 43.18,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 6.55,
+      "epsForward": 4.8,
+      "epsFuture": 5.2,
+      "fairPE": 9.5,
+      "fcfB": 19.2,
+      "cashB": 4.5,
+      "debtB": 145,
+      "ebitdaB": 48,
+      "interestB": 5.6,
+      "rating": "Baa1 / BBB+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-22",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=VZ&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "JNJ",
+      "name": "嬌生",
+      "sector": "醫療製藥",
+      "price": 271.04,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 1.98,
+      "epsForward": 11,
+      "epsFuture": 12.6,
+      "fairPE": 15,
+      "fcfB": 18.2,
+      "cashB": 24,
+      "debtB": 35,
+      "ebitdaB": 30,
+      "interestB": 1,
+      "rating": "Aaa / AAA",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-13",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=JNJ&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "WMT",
+      "name": "沃爾瑪",
+      "sector": "民生零售",
+      "price": 118.77,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 0.83,
+      "epsForward": 2.95,
+      "epsFuture": 3.7,
+      "fairPE": 27,
+      "fcfB": 15.5,
+      "cashB": 12.5,
+      "debtB": 60,
+      "ebitdaB": 38,
+      "interestB": 2.4,
+      "rating": "Aa2 / AA",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-11-19",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=WMT&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "MRK",
+      "name": "默克",
+      "sector": "生物製藥",
+      "price": 140.93,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 2.41,
+      "epsForward": 9.5,
+      "epsFuture": 11.4,
+      "fairPE": 13,
+      "fcfB": 13.5,
+      "cashB": 11.5,
+      "debtB": 36,
+      "ebitdaB": 20.5,
+      "interestB": 1.2,
+      "rating": "Aa3 / A+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-29",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=MRK&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "ABBV",
+      "name": "艾伯維",
+      "sector": "生物製藥",
+      "price": 285.99,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 2.42,
+      "epsForward": 12.5,
+      "epsFuture": 15.5,
+      "fairPE": 15,
+      "fcfB": 18,
+      "cashB": 13.5,
+      "debtB": 62,
+      "ebitdaB": 25,
+      "interestB": 2.6,
+      "rating": "A2 / A",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-24",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=ABBV&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "MCD",
+      "name": "麥當勞",
+      "sector": "連鎖餐飲",
+      "price": 250.5,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 3.08,
+      "epsForward": 13.2,
+      "epsFuture": 15.9,
+      "fairPE": 22,
+      "fcfB": 7.2,
+      "cashB": 4.5,
+      "debtB": 52,
+      "ebitdaB": 14,
+      "interestB": 1.6,
+      "rating": "Baa1 / BBB+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-28",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=MCD&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "PEP",
+      "name": "百事公司",
+      "sector": "食品飲料",
+      "price": 132.63,
+      "priceAsOf": "2026-10-28T16:00:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 4.46,
+      "epsForward": 8.7,
+      "epsFuture": 10.15,
+      "fairPE": 20,
+      "fcfB": 9,
+      "cashB": 8,
+      "debtB": 44,
+      "ebitdaB": 17,
+      "interestB": 1.3,
+      "rating": "A1 / A+",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-08",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=PEP&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "DIS",
+      "name": "迪士尼",
+      "sector": "影視娛樂",
+      "price": 109.04,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 1.38,
+      "epsForward": 5.4,
+      "epsFuture": 7.2,
+      "fairPE": 18,
+      "fcfB": 9.5,
+      "cashB": 7.5,
+      "debtB": 46,
+      "ebitdaB": 17,
+      "interestB": 1.9,
+      "rating": "A2 / A",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-11-13",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=DIS&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    },
+    {
+      "ticker": "XOM",
+      "name": "埃克森美孚",
+      "sector": "綜合能源",
+      "price": 182.02,
+      "priceAsOf": "2026-10-28T16:10:00.000-0400",
+      "priceSource": "CNBC",
+      "dividendYieldPct": 2.26,
+      "epsForward": 9.5,
+      "epsFuture": 11,
+      "fairPE": 13,
+      "fcfB": 36,
+      "cashB": 31,
+      "debtB": 41,
+      "ebitdaB": 68,
+      "interestB": 1.1,
+      "rating": "Aa2 / AA-",
+      "asOf": null,
+      "modelAsOf": null,
+      "earningsDate": "2026-10-30",
+      "sourceNotes": [
+        "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
+        "2027／2029 EPS 與倍數沿用原估值模型；僅採已列出 newEps 的來源校準，不採財報前 bull 情境。",
+        "財務數字及評等沿用原償債工具，來源未提供逐筆財報期間；同步時間不代表財報日期。"
+      ],
+      "sources": [
+        {
+          "label": "原估值工具",
+          "url": "https://weiny0608.github.io/nasdaq/"
+        },
+        {
+          "label": "原財務與債券工具",
+          "url": "https://weiny0608.github.io/large-company-financial-dashboard/"
+        },
+        {
+          "label": "財報排程與模型校準",
+          "url": "https://raw.githubusercontent.com/weiny0608/weiny0608.github.io/main/earnings_hub.json"
+        },
+        {
+          "label": "CNBC 報價",
+          "url": "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=XOM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json"
+        }
+      ]
+    }
+  ],
+  "bondReferences": [
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 4 3/4 05/12/35",
+      "price": 99.95,
+      "couponPct": 4.75,
+      "maturity": "2035/05/12",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 4.53,
+      "spreadBps": 35,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 4 1/2 02/23/36",
+      "price": 98.4,
+      "couponPct": 4.5,
+      "maturity": "2036/02/23",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 4.33,
+      "spreadBps": 30,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 4.3 05/10/33",
+      "price": 98.79,
+      "couponPct": 4.3,
+      "maturity": "2033/05/10",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 4.12,
+      "spreadBps": 28,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 4.15 05/10/30",
+      "price": 99.13,
+      "couponPct": 4.15,
+      "maturity": "2030/05/10",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 3.97,
+      "spreadBps": 25,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 3 1/4 08/08/29",
+      "price": 96.63,
+      "couponPct": 3.25,
+      "maturity": "2029/08/08",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 3.19,
+      "spreadBps": 20,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AAPL",
+      "name": "AAPL 1.7 08/05/31",
+      "price": 87.24,
+      "couponPct": 1.7,
+      "maturity": "2031/08/05",
+      "rating": "Aaa/AA+",
+      "seniority": "優先無擔保",
+      "ytm": 1.84,
+      "spreadBps": 22,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "MSFT 4.1 02/06/37",
+      "price": 93.82,
+      "couponPct": 4.1,
+      "maturity": "2037/02/06",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 4.13,
+      "spreadBps": 25,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "MSFT 3 1/2 02/12/35",
+      "price": 91.81,
+      "couponPct": 3.5,
+      "maturity": "2035/02/12",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 3.6,
+      "spreadBps": 20,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "MSFT 4.2 11/03/35",
+      "price": 96.75,
+      "couponPct": 4.2,
+      "maturity": "2035/11/03",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 4.11,
+      "spreadBps": 25,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "MSFT 3.45 08/08/36",
+      "price": 88.79,
+      "couponPct": 3.45,
+      "maturity": "2036/08/08",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 3.66,
+      "spreadBps": 22,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVDA 2.85 04/01/30",
+      "price": 94.11,
+      "couponPct": 2.85,
+      "maturity": "2030/04/01",
+      "rating": "Aa1/AA",
+      "seniority": "優先無擔保",
+      "ytm": 2.87,
+      "spreadBps": 22,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "AMZN 4.8 12/05/34",
+      "price": 99.64,
+      "couponPct": 4.8,
+      "maturity": "2034/12/05",
+      "rating": "A1/AA",
+      "seniority": "優先無擔保",
+      "ytm": 4.57,
+      "spreadBps": 45,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "AMZN 4.7 12/01/32",
+      "price": 99.95,
+      "couponPct": 4.7,
+      "maturity": "2032/12/01",
+      "rating": "A1/AA",
+      "seniority": "優先無擔保",
+      "ytm": 4.46,
+      "spreadBps": 42,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "AMZN 3 7/8 08/22/37",
+      "price": 88.87,
+      "couponPct": 3.875,
+      "maturity": "2037/08/22",
+      "rating": "A1/AA",
+      "seniority": "優先無擔保",
+      "ytm": 4.11,
+      "spreadBps": 48,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "AMZN 3.6 04/13/32",
+      "price": 94.18,
+      "couponPct": 3.6,
+      "maturity": "2032/04/13",
+      "rating": "A1/AA",
+      "seniority": "優先無擔保",
+      "ytm": 3.62,
+      "spreadBps": 38,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "TSM",
+      "name": "TAISEM 4 1/4 04/22/32",
+      "price": 98.05,
+      "couponPct": 4.25,
+      "maturity": "2032/04/22",
+      "rating": "Aa3/AA-",
+      "seniority": "優先無擔保",
+      "ytm": 4.1,
+      "spreadBps": 35,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "TSM",
+      "name": "TAISEM 4 5/8 07/22/32",
+      "price": 100.02,
+      "couponPct": 4.625,
+      "maturity": "2032/07/22",
+      "rating": "Aa3/AA-",
+      "seniority": "優先無擔保",
+      "ytm": 4.38,
+      "spreadBps": 40,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "TSM",
+      "name": "TAISEM 2 1/4 04/23/31",
+      "price": 89.65,
+      "couponPct": 2.25,
+      "maturity": "2031/04/23",
+      "rating": "Aa3/AA-",
+      "seniority": "優先無擔保",
+      "ytm": 2.38,
+      "spreadBps": 30,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "ORCL",
+      "name": "ORCL 4.9 02/06/33",
+      "price": 94.62,
+      "couponPct": 4.9,
+      "maturity": "2033/02/06",
+      "rating": "Baa2/BBB",
+      "seniority": "優先無擔保",
+      "ytm": 4.88,
+      "spreadBps": 85,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "ORCL",
+      "name": "ORCL 2.95 04/01/30",
+      "price": 91.48,
+      "couponPct": 2.95,
+      "maturity": "2030/04/01",
+      "rating": "Baa2/BBB",
+      "seniority": "優先無擔保",
+      "ytm": 3.05,
+      "spreadBps": 75,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "QCOM",
+      "name": "QCOM 4.65 05/20/35",
+      "price": 97.51,
+      "couponPct": 4.65,
+      "maturity": "2035/05/20",
+      "rating": "A2/A",
+      "seniority": "優先無擔保",
+      "ytm": 4.52,
+      "spreadBps": 50,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "QCOM",
+      "name": "QCOM 5.4 05/20/33",
+      "price": 103.23,
+      "couponPct": 5.4,
+      "maturity": "2033/05/20",
+      "rating": "A2/A",
+      "seniority": "優先無擔保",
+      "ytm": 4.97,
+      "spreadBps": 55,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "TXN",
+      "name": "TXN 5.1 05/23/35",
+      "price": 100.4,
+      "couponPct": 5.1,
+      "maturity": "2035/05/23",
+      "rating": "Aa3/A+",
+      "seniority": "優先無擔保",
+      "ytm": 4.82,
+      "spreadBps": 45,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "INTC",
+      "name": "INTC 5.15 02/21/34",
+      "price": 99.63,
+      "couponPct": 5.15,
+      "maturity": "2034/02/21",
+      "rating": "Baa2/BBB",
+      "seniority": "優先無擔保",
+      "ytm": 4.9,
+      "spreadBps": 95,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "INTC",
+      "name": "INTC 5.2 02/10/33",
+      "price": 100.52,
+      "couponPct": 5.2,
+      "maturity": "2033/02/10",
+      "rating": "Baa2/BBB",
+      "seniority": "優先無擔保",
+      "ytm": 4.91,
+      "spreadBps": 92,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "INTC",
+      "name": "INTC 4.15 08/05/32",
+      "price": 95.41,
+      "couponPct": 4.15,
+      "maturity": "2032/08/05",
+      "rating": "Baa2/BBB",
+      "seniority": "優先無擔保",
+      "ytm": 4.12,
+      "spreadBps": 85,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "IBM",
+      "name": "IBM 4.9 02/05/34",
+      "price": 98.14,
+      "couponPct": 4.9,
+      "maturity": "2034/02/05",
+      "rating": "A3/A",
+      "seniority": "優先無擔保",
+      "ytm": 4.75,
+      "spreadBps": 60,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "IBM",
+      "name": "IBM 4 3/4 02/06/33",
+      "price": 98.94,
+      "couponPct": 4.75,
+      "maturity": "2033/02/06",
+      "rating": "A3/A",
+      "seniority": "優先無擔保",
+      "ytm": 4.55,
+      "spreadBps": 55,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "VZ",
+      "name": "VZ 5 1/4 04/02/35",
+      "price": 99.56,
+      "couponPct": 5.25,
+      "maturity": "2035/04/02",
+      "rating": "Baa1/BBB+",
+      "seniority": "優先無擔保",
+      "ytm": 5.01,
+      "spreadBps": 85,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "VZ",
+      "name": "VZ 5.05 05/09/33",
+      "price": 100.28,
+      "couponPct": 5.05,
+      "maturity": "2033/05/09",
+      "rating": "Baa1/BBB+",
+      "seniority": "優先無擔保",
+      "ytm": 4.78,
+      "spreadBps": 75,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "JNJ",
+      "name": "JNJ 5.95 08/15/37",
+      "price": 108.84,
+      "couponPct": 5.95,
+      "maturity": "2037/08/15",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 5.2,
+      "spreadBps": 45,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "JNJ",
+      "name": "JNJ 5 03/01/35",
+      "price": 101.9,
+      "couponPct": 5,
+      "maturity": "2035/03/01",
+      "rating": "Aaa/AAA",
+      "seniority": "優先無擔保",
+      "ytm": 4.66,
+      "spreadBps": 40,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "WMT",
+      "name": "WMT 4.9 04/28/35",
+      "price": 100.26,
+      "couponPct": 4.9,
+      "maturity": "2035/04/28",
+      "rating": "Aa2/AA",
+      "seniority": "優先無擔保",
+      "ytm": 4.64,
+      "spreadBps": 45,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "WMT",
+      "name": "WMT 6.2 04/15/38",
+      "price": 110.32,
+      "couponPct": 6.2,
+      "maturity": "2038/04/15",
+      "rating": "Aa2/AA",
+      "seniority": "優先無擔保",
+      "ytm": 5.35,
+      "spreadBps": 85,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MRK",
+      "name": "MRK 6.55 09/15/37",
+      "price": 111.36,
+      "couponPct": 6.55,
+      "maturity": "2037/09/15",
+      "rating": "Aa3/A+",
+      "seniority": "優先無擔保",
+      "ytm": 5.58,
+      "spreadBps": 82,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "ABBV",
+      "name": "ABBV 4 1/2 05/14/35",
+      "price": 95.61,
+      "couponPct": 4.5,
+      "maturity": "2035/05/14",
+      "rating": "A2/A",
+      "seniority": "優先無擔保",
+      "ytm": 4.46,
+      "spreadBps": 55,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "MCD",
+      "name": "MCD 4.7 12/09/35",
+      "price": 97.03,
+      "couponPct": 4.7,
+      "maturity": "2035/12/09",
+      "rating": "Baa1/BBB+",
+      "seniority": "優先無擔保",
+      "ytm": 4.58,
+      "spreadBps": 55,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "PEP",
+      "name": "PEP 5.0 02/07/35",
+      "price": 99.93,
+      "couponPct": 5,
+      "maturity": "2035/02/07",
+      "rating": "A1/A+",
+      "seniority": "優先無擔保",
+      "ytm": 4.75,
+      "spreadBps": 50,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "DIS",
+      "name": "DIS 6.65 11/15/37",
+      "price": 111.64,
+      "couponPct": 6.65,
+      "maturity": "2037/11/15",
+      "rating": "A2/A",
+      "seniority": "優先無擔保",
+      "ytm": 5.68,
+      "spreadBps": 95,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    },
+    {
+      "ticker": "XOM",
+      "name": "XOM 2.61 10/15/30",
+      "price": 92.5,
+      "couponPct": 2.61,
+      "maturity": "2030/10/15",
+      "rating": "Aa2/AA-",
+      "seniority": "優先無擔保",
+      "ytm": 2.67,
+      "spreadBps": 35,
+      "asOf": null,
+      "source": "原債券工具參考值，報價時間未提供"
+    }
+  ],
+  "macro": {
+    "updatedAt": "2026-10-21T10:25:00+08:00",
+    "indicators": [
+      {
+        "id": "core_pce",
+        "name": "核心 PCE 年增率 (Core PCE)",
+        "fredSeries": "PCEPILFE",
+        "calcType": "yoy_pct",
+        "value": "3.0%",
+        "numericValue": 3,
+        "prevValue": "3.3%",
+        "consensus": "3.0%",
+        "metaLeft": "前期: 3.3% ｜ 預期: 3.0%",
+        "releaseDate": "09/30",
+        "referencePeriod": "2026-08",
+        "nextReleaseDate": "2026-10-29",
+        "badgeText": "Fed核心指標",
+        "badgeClass": "status-sticky",
+        "sourceName": "BEA Personal Income & Outlays",
+        "sourceUrl": "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+      },
+      {
+        "id": "headline_pce",
+        "name": "整體 PCE 年增率 (Headline PCE)",
+        "fredSeries": "PCEPI",
+        "calcType": "yoy_pct",
+        "value": "3.4%",
+        "numericValue": 3.4,
+        "prevValue": "3.7%",
+        "consensus": "3.4%",
+        "metaLeft": "前期: 3.7% ｜ 預期: 3.4%",
+        "releaseDate": "09/30",
+        "referencePeriod": "2026-08",
+        "nextReleaseDate": "2026-10-29",
+        "badgeText": "較前期趨緩",
+        "badgeClass": "status-easing",
+        "sourceName": "BEA Personal Income & Outlays",
+        "sourceUrl": "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+      },
+      {
+        "id": "nfp",
+        "name": "大非農新增就業 (Nonfarm Payrolls)",
+        "fredSeries": "PAYEMS",
+        "calcType": "mom_diff_10k",
+        "value": "+2.9 萬人",
+        "numericValue": 2.9,
+        "prevValue": "13.3 萬",
+        "consensus": "4.5 萬(均值)",
+        "metaLeft": "前期: 13.3 萬 ｜ 均值: 4.5 萬",
+        "releaseDate": "10/02",
+        "referencePeriod": "2026-09",
+        "nextReleaseDate": "2026-11-06",
+        "badgeText": "動能放緩",
+        "badgeClass": "status-easing",
+        "sourceName": "BLS Employment Situation",
+        "sourceUrl": "https://www.bls.gov/news.release/empsit.nr0.htm"
+      },
+      {
+        "id": "adp",
+        "name": "小非農就業 (ADP Employment)",
+        "fredSeries": "ADPMNUSNERSA",
+        "calcType": "mom_diff_10k",
+        "value": "+9.0 萬人",
+        "numericValue": 9,
+        "prevValue": "3.6 萬",
+        "consensus": "8.5 萬",
+        "metaLeft": "前期: 3.6 萬 ｜ 預期: 8.5 萬",
+        "releaseDate": "09/30",
+        "referencePeriod": "2026-09",
+        "nextReleaseDate": "2026-11-04",
+        "badgeText": "就業回溫",
+        "badgeClass": "status-solid",
+        "sourceName": "ADP National Employment Report",
+        "sourceUrl": "https://mediacenter.adp.com/2026-09-30-ADP-National-Employment-Report-Private-Sector-Employment-Increased-by-90,000-Jobs-in-September"
+      },
+      {
+        "id": "unrate",
+        "name": "失業率 (Unemployment Rate)",
+        "fredSeries": "UNRATE",
+        "calcType": "level_pct",
+        "value": "4.2%",
+        "numericValue": 4.2,
+        "prevValue": "4.2%",
+        "consensus": "4.2%",
+        "metaLeft": "前期: 4.2% ｜ 預期: 4.2%",
+        "releaseDate": "10/02",
+        "referencePeriod": "2026-09",
+        "nextReleaseDate": "2026-11-06",
+        "badgeText": "健康低檔",
+        "badgeClass": "status-solid",
+        "sourceName": "BLS Employment Situation",
+        "sourceUrl": "https://www.bls.gov/news.release/empsit.nr0.htm"
+      },
+      {
+        "id": "ppi",
+        "name": "生產者物價 PPI / 核心 PPI",
+        "fredSeries": "PPIFIS,PPIFES",
+        "calcType": "dual_yoy_pct",
+        "value": "6.4% / 5.0%",
+        "numericValue": 6.4,
+        "coreNumericValue": 5,
+        "prevValue": "5.4%",
+        "consensus": "4.4%",
+        "metaLeft": "核心預期: 4.4% ｜ 整體前期: 5.4%",
+        "releaseDate": "10/15",
+        "referencePeriod": "2026-09",
+        "nextReleaseDate": "2026-11-13",
+        "badgeText": "通膨升溫",
+        "badgeClass": "status-sticky",
+        "sourceName": "BLS Producer Price Index",
+        "sourceUrl": "https://www.bls.gov/news.release/ppi.nr0.htm"
+      }
+    ]
+  },
+  "earnings": {
+    "updatedAt": "2026-10-21T11:00:00+08:00"
+  },
+  "treasury": {
+    "yieldPct": 5.034,
+    "observedAt": "2026-10-28T20:20:38.000-0400"
+  },
+  "sourceStatus": {
+    "valuation": "來源模型，資料期間未提供",
+    "financials": "原工具財務模型，資料期間未提供",
+    "quotes": "20/20 檔取得帶時間報價",
+    "earnings": "2026-10-21T11:00:00+08:00",
+    "macro": "2026-10-21T10:25:00+08:00"
+  },
+  "syncWarnings": []
+}
