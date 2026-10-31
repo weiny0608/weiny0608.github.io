@@ -1,6 +1,6 @@
 {
   "schema": "company-comparison-feed.v1",
-  "checkedAt": "2026-10-30T23:52:57.194Z",
+  "checkedAt": "2026-10-31T05:53:28.663Z",
   "companies": [
     {
       "ticker": "MSFT",
@@ -20,7 +20,7 @@
       "interestB": 2.1,
       "rating": "Aaa / AAA",
       "asOf": null,
-      "modelAsOf": "2026-10-30T09:59:02+08:00",
+      "modelAsOf": "2026-10-31T09:37:25+08:00",
       "earningsDate": "2027-01-27",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -152,7 +152,7 @@
       "interestB": 0.4,
       "rating": "Aa2 / AA+",
       "asOf": null,
-      "modelAsOf": "2026-10-30T09:59:02+08:00",
+      "modelAsOf": "2026-10-31T09:37:25+08:00",
       "earningsDate": "2027-01-26",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -240,7 +240,7 @@
       "interestB": 0.8,
       "rating": "Aa3 / AA-",
       "asOf": null,
-      "modelAsOf": "2026-10-30T09:59:02+08:00",
+      "modelAsOf": "2026-10-31T09:37:25+08:00",
       "earningsDate": "2027-01-14",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -372,7 +372,7 @@
       "interestB": 0.4,
       "rating": "Aa3 / A+",
       "asOf": null,
-      "modelAsOf": "2026-10-30T09:59:02+08:00",
+      "modelAsOf": "2026-10-31T09:37:25+08:00",
       "earningsDate": "2027-01-21",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -1520,7 +1520,7 @@
     ]
   },
   "earnings": {
-    "updatedAt": "2026-10-30T09:59:02+08:00"
+    "updatedAt": "2026-10-31T09:37:25+08:00"
   },
   "treasury": {
     "yieldPct": 4.933,
@@ -1530,8 +1530,29 @@
     "valuation": "來源模型，資料期間未提供",
     "financials": "原工具財務模型，資料期間未提供",
     "quotes": "20/20 檔取得帶時間報價",
-    "earnings": "2026-10-30T09:59:02+08:00",
+    "earnings": "2026-10-31T09:37:25+08:00",
     "macro": "2026-10-21T10:25:00+08:00"
   },
-  "syncWarnings": []
+  "syncWarnings": [
+    "MSFT 沿用上一筆帶時間報價",
+    "AAPL 沿用上一筆帶時間報價",
+    "NVDA 沿用上一筆帶時間報價",
+    "GOOGL 沿用上一筆帶時間報價",
+    "AMZN 沿用上一筆帶時間報價",
+    "TSM 沿用上一筆帶時間報價",
+    "ORCL 沿用上一筆帶時間報價",
+    "QCOM 沿用上一筆帶時間報價",
+    "TXN 沿用上一筆帶時間報價",
+    "INTC 沿用上一筆帶時間報價",
+    "IBM 沿用上一筆帶時間報價",
+    "VZ 沿用上一筆帶時間報價",
+    "JNJ 沿用上一筆帶時間報價",
+    "WMT 沿用上一筆帶時間報價",
+    "MRK 沿用上一筆帶時間報價",
+    "ABBV 沿用上一筆帶時間報價",
+    "MCD 沿用上一筆帶時間報價",
+    "PEP 沿用上一筆帶時間報價",
+    "DIS 沿用上一筆帶時間報價",
+    "XOM 沿用上一筆帶時間報價"
+  ]
 }
