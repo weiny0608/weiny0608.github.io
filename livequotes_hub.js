@@ -107,43 +107,54 @@
     "ARKK":  { price: 9.21,   chgPct:  0.34, high52: 10.66,  low52: 6.74 }
   };
 
-  // 方向三：六大核心總經指標官方最新基準快照 (含 10/15 發布之 9 月 PPI 6.4% / 核心 5.0%)
+  // 方向三：六大核心總經指標官方最新基準快照 (含 10/29 發布之 9 月 PCE 3.6%/核心 3.1% 與 11/04 發布之 10 月 ADP +8.6 萬人)
+  const MACRO_RELEASE_SCHEDULES = {
+    core_pce: ["2026-09-30", "2026-10-29", "2026-11-25", "2026-12-23", "2027-01-29", "2027-02-26", "2027-03-26", "2027-04-30", "2027-05-28", "2027-06-25"],
+    headline_pce: ["2026-09-30", "2026-10-29", "2026-11-25", "2026-12-23", "2027-01-29", "2027-02-26", "2027-03-26", "2027-04-30", "2027-05-28", "2027-06-25"],
+    nfp: ["2026-10-02", "2026-11-06", "2026-12-04", "2027-01-08", "2027-02-05", "2027-03-05", "2027-04-02", "2027-05-07", "2027-06-04"],
+    adp: ["2026-09-30", "2026-11-04", "2026-12-02", "2027-01-06", "2027-02-03", "2027-03-03", "2027-04-01", "2027-05-05", "2027-06-02"],
+    unrate: ["2026-10-02", "2026-11-06", "2026-12-04", "2027-01-08", "2027-02-05", "2027-03-05", "2027-04-02", "2027-05-07", "2027-06-04"],
+    ppi: ["2026-10-15", "2026-11-13", "2026-12-15", "2027-01-14", "2027-02-12", "2027-03-12", "2027-04-14", "2027-05-13", "2027-06-11"]
+  };
+
   const MACRO_INDICATORS_SNAPSHOT = [
     {
       id: "core_pce",
       name: "核心 PCE 年增率 (Core PCE)",
       fredSeries: "PCEPILFE",
       calcType: "yoy_pct",
-      value: "3.0%",
-      numericValue: 3.0,
-      prevValue: "3.3%",
+      value: "3.1%",
+      numericValue: 3.1,
+      prevValue: "3.0%",
       consensus: "3.0%",
-      metaLeft: "前期: 3.3% ｜ 預期: 3.0%",
-      releaseDate: "09/30",
-      referencePeriod: "2026-08",
-      nextReleaseDate: "2026-10-29",
+      metaLeft: "前期: 3.0% ｜ 預期: 3.0%",
+      releaseDate: "10/29",
+      referencePeriod: "2026-09",
+      nextReleaseDate: "2026-11-25",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.core_pce,
       badgeText: "Fed核心指標",
       badgeClass: "status-sticky",
       sourceName: "BEA Personal Income & Outlays",
-      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026"
     },
     {
       id: "headline_pce",
       name: "整體 PCE 年增率 (Headline PCE)",
       fredSeries: "PCEPI",
       calcType: "yoy_pct",
-      value: "3.4%",
-      numericValue: 3.4,
-      prevValue: "3.7%",
-      consensus: "3.4%",
-      metaLeft: "前期: 3.7% ｜ 預期: 3.4%",
-      releaseDate: "09/30",
-      referencePeriod: "2026-08",
-      nextReleaseDate: "2026-10-29",
-      badgeText: "較前期趨緩",
-      badgeClass: "status-easing",
+      value: "3.6%",
+      numericValue: 3.6,
+      prevValue: "3.4%",
+      consensus: "3.5%",
+      metaLeft: "前期: 3.4% ｜ 預期: 3.5%",
+      releaseDate: "10/29",
+      referencePeriod: "2026-09",
+      nextReleaseDate: "2026-11-25",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.headline_pce,
+      badgeText: "通膨微溫",
+      badgeClass: "status-sticky",
       sourceName: "BEA Personal Income & Outlays",
-      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+      sourceUrl: "https://www.bea.gov/news/2026/personal-income-and-outlays-september-2026"
     },
     {
       id: "nfp",
@@ -158,6 +169,7 @@
       releaseDate: "10/02",
       referencePeriod: "2026-09",
       nextReleaseDate: "2026-11-06",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.nfp,
       badgeText: "動能放緩",
       badgeClass: "status-easing",
       sourceName: "BLS Employment Situation",
@@ -168,18 +180,19 @@
       name: "小非農就業 (ADP Employment)",
       fredSeries: "ADPMNUSNERSA",
       calcType: "mom_diff_10k",
-      value: "+9.0 萬人",
-      numericValue: 9.0,
-      prevValue: "3.6 萬",
-      consensus: "8.5 萬",
-      metaLeft: "前期: 3.6 萬 ｜ 預期: 8.5 萬",
-      releaseDate: "09/30",
-      referencePeriod: "2026-09",
-      nextReleaseDate: "2026-11-04",
-      badgeText: "就業回溫",
+      value: "+8.6 萬人",
+      numericValue: 8.6,
+      prevValue: "8.6 萬",
+      consensus: "8.0 萬",
+      metaLeft: "前期: 8.6 萬 ｜ 預期: 8.0 萬",
+      releaseDate: "11/04",
+      referencePeriod: "2026-10",
+      nextReleaseDate: "2026-12-02",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.adp,
+      badgeText: "穩健擴張",
       badgeClass: "status-solid",
       sourceName: "ADP National Employment Report",
-      sourceUrl: "https://mediacenter.adp.com/2026-09-30-ADP-National-Employment-Report-Private-Sector-Employment-Increased-by-90,000-Jobs-in-September"
+      sourceUrl: "https://mediacenter.adp.com/2026-11-04-ADP-National-Employment-Report-Private-Sector-Employment-Increased-by-86,000-Jobs-in-October"
     },
     {
       id: "unrate",
@@ -194,6 +207,7 @@
       releaseDate: "10/02",
       referencePeriod: "2026-09",
       nextReleaseDate: "2026-11-06",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.unrate,
       badgeText: "健康低檔",
       badgeClass: "status-solid",
       sourceName: "BLS Employment Situation",
@@ -213,6 +227,7 @@
       releaseDate: "10/15",
       referencePeriod: "2026-09",
       nextReleaseDate: "2026-11-13",
+      releaseSchedule: MACRO_RELEASE_SCHEDULES.ppi,
       badgeText: "通膨升溫",
       badgeClass: "status-sticky",
       sourceName: "BLS Producer Price Index",
@@ -607,15 +622,50 @@
   window.MACRO_INDICATORS_HUB = MACRO_INDICATORS_SNAPSHOT.map(item => Object.assign({}, item));
   window.EARNINGS_HUB = JSON.parse(JSON.stringify(EARNINGS_HUB_SNAPSHOT));
 
+  // 自動檢核並推進六大總經指標之發布日 (releaseDate) 與下次發布日 (nextReleaseDate)
+  function resolveMacroReleaseSchedule(ind, todayStr, forceAdvanceReleaseDate) {
+    if (!ind || !ind.id) return;
+    const sched = Array.isArray(ind.releaseSchedule) && ind.releaseSchedule.length > 0
+      ? ind.releaseSchedule.slice().sort()
+      : (MACRO_RELEASE_SCHEDULES[ind.id] ? MACRO_RELEASE_SCHEDULES[ind.id].slice().sort() : []);
+    if (sched.length === 0) return;
+    ind.releaseSchedule = sched;
+
+    const pastOrToday = sched.filter(d => d <= todayStr);
+    const futureDates = sched.filter(d => d >= todayStr);
+
+    if (forceAdvanceReleaseDate || !ind.nextReleaseDate || ind.nextReleaseDate < todayStr) {
+      if (pastOrToday.length > 0) {
+        const latestIso = pastOrToday[pastOrToday.length - 1];
+        ind.releaseDate = `${latestIso.slice(5, 7)}/${latestIso.slice(8, 10)}`;
+      }
+      const strictFuture = sched.filter(d => d > todayStr);
+      if (strictFuture.length > 0) {
+        ind.nextReleaseDate = strictFuture[0];
+      } else {
+        const parts = sched[sched.length - 1].split('-').map(Number);
+        const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+        while (dt.toISOString().slice(0, 10) <= todayStr) {
+          dt.setDate(dt.getDate() + 30);
+        }
+        ind.nextReleaseDate = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+      }
+    } else if (futureDates.length > 0 && !ind.nextReleaseDate) {
+      ind.nextReleaseDate = futureDates[0];
+    }
+  }
+
   // 將六大總經指標渲染至網頁 DOM (支援 index.html 與 nasdaq/index.html)
   function applyMacroIndicatorsToPage(indicatorsList, sourceLabel) {
     if (!Array.isArray(indicatorsList) || indicatorsList.length === 0) return;
 
     const now = new Date();
     const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     indicatorsList.forEach(ind => {
       if (!ind || !ind.id) return;
+      resolveMacroReleaseSchedule(ind, todayStr, false);
 
       let box = document.getElementById(`ind-box-${ind.id}`);
       if (!box) {
@@ -659,6 +709,8 @@
               releaseHtml = `發布: ${ind.releaseDate} <span style="color:#d97706; font-weight:800;" title="下次官方發布日：今日 (${nextShort}) 美東 08:30">· 🔔今日開獎</span>`;
             } else if (diffDays > 0 && diffDays <= 5) {
               releaseHtml = `發布: ${ind.releaseDate} <span style="color:#059669; font-weight:700;" title="下次官方發布日：${ind.nextReleaseDate} (倒數 ${diffDays} 天)">· 下期 ${nextShort}</span>`;
+            } else if (diffDays > 5) {
+              releaseHtml = `發布: ${ind.releaseDate} <span style="color:#6c8370; font-weight:600;" title="下次官方發布日：${ind.nextReleaseDate} (倒數 ${diffDays} 天)">· 下期 ${nextShort}</span>`;
             }
           }
         }
@@ -735,8 +787,146 @@
     return null;
   }
 
+  async function syncMacroIndicatorsFromFredClient() {
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    let fredUpdated = false;
+    const getInd = id => (window.MACRO_INDICATORS_HUB || []).find(x => x.id === id);
+
+    const tasks = [
+      async () => {
+        const item = getInd('core_pce');
+        if (!item) return;
+        const obs = await fetchFredSeriesObservations('PCEPILFE', 16);
+        if (obs && obs.length >= 13) {
+          const latest = obs[obs.length - 1], prev12 = obs[obs.length - 13];
+          const prev1 = obs[obs.length - 2], prev13 = obs[obs.length - 14];
+          if (latest.period > (item.referencePeriod || '2026-08')) {
+            const yoy = ((latest.value / prev12.value) - 1.0) * 100.0;
+            const prevYoy = ((prev1.value / prev13.value) - 1.0) * 100.0;
+            item.value = `${yoy.toFixed(1)}%`;
+            item.numericValue = Number(yoy.toFixed(1));
+            item.prevValue = `${prevYoy.toFixed(1)}%`;
+            item.metaLeft = `前期: ${prevYoy.toFixed(1)}% ｜ 預期: ${item.consensus || item.value}`;
+            item.referencePeriod = latest.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      },
+      async () => {
+        const item = getInd('headline_pce');
+        if (!item) return;
+        const obs = await fetchFredSeriesObservations('PCEPI', 16);
+        if (obs && obs.length >= 13) {
+          const latest = obs[obs.length - 1], prev12 = obs[obs.length - 13];
+          const prev1 = obs[obs.length - 2], prev13 = obs[obs.length - 14];
+          if (latest.period > (item.referencePeriod || '2026-08')) {
+            const yoy = ((latest.value / prev12.value) - 1.0) * 100.0;
+            const prevYoy = ((prev1.value / prev13.value) - 1.0) * 100.0;
+            item.value = `${yoy.toFixed(1)}%`;
+            item.numericValue = Number(yoy.toFixed(1));
+            item.prevValue = `${prevYoy.toFixed(1)}%`;
+            item.metaLeft = `前期: ${prevYoy.toFixed(1)}% ｜ 預期: ${item.consensus || item.value}`;
+            item.referencePeriod = latest.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      },
+      async () => {
+        const item = getInd('nfp');
+        if (!item) return;
+        const obs = await fetchFredSeriesObservations('PAYEMS', 6);
+        if (obs && obs.length >= 3) {
+          const latest = obs[obs.length - 1], prev1 = obs[obs.length - 2], prev2 = obs[obs.length - 3];
+          if (latest.period > (item.referencePeriod || '2026-09')) {
+            const diffWan = (latest.value - prev1.value) / 10.0;
+            const prevWan = (prev1.value - prev2.value) / 10.0;
+            const sign = diffWan >= 0 ? '+' : '';
+            item.value = `${sign}${diffWan.toFixed(1)} 萬人`;
+            item.numericValue = Number(diffWan.toFixed(1));
+            item.prevValue = `${prevWan.toFixed(1)} 萬`;
+            item.metaLeft = `前期: ${prevWan.toFixed(1)} 萬 ｜ 均值: ${item.consensus || '4.5 萬'}`;
+            item.referencePeriod = latest.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      },
+      async () => {
+        const item = getInd('adp');
+        if (!item) return;
+        const obs = await fetchFredSeriesObservations('ADPMNUSNERSA', 6);
+        if (obs && obs.length >= 3) {
+          const latest = obs[obs.length - 1], prev1 = obs[obs.length - 2], prev2 = obs[obs.length - 3];
+          if (latest.period > (item.referencePeriod || '2026-09')) {
+            const divisor = latest.value > 500000 ? 10000.0 : 10.0;
+            const diffWan = (latest.value - prev1.value) / divisor;
+            const prevWan = (prev1.value - prev2.value) / divisor;
+            const sign = diffWan >= 0 ? '+' : '';
+            item.value = `${sign}${diffWan.toFixed(1)} 萬人`;
+            item.numericValue = Number(diffWan.toFixed(1));
+            item.prevValue = `${prevWan.toFixed(1)} 萬`;
+            item.metaLeft = `前期: ${prevWan.toFixed(1)} 萬 ｜ 預期: ${item.consensus || '8.0 萬'}`;
+            item.referencePeriod = latest.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      },
+      async () => {
+        const item = getInd('unrate');
+        if (!item) return;
+        const obs = await fetchFredSeriesObservations('UNRATE', 6);
+        if (obs && obs.length >= 2) {
+          const latest = obs[obs.length - 1], prev1 = obs[obs.length - 2];
+          if (latest.period > (item.referencePeriod || '2026-09')) {
+            item.value = `${latest.value.toFixed(1)}%`;
+            item.numericValue = Number(latest.value.toFixed(1));
+            item.prevValue = `${prev1.value.toFixed(1)}%`;
+            item.metaLeft = `前期: ${prev1.value.toFixed(1)}% ｜ 預期: ${latest.value.toFixed(1)}%`;
+            item.referencePeriod = latest.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      },
+      async () => {
+        const item = getInd('ppi');
+        if (!item) return;
+        const [obsH, obsC] = await Promise.all([
+          fetchFredSeriesObservations('PPIFIS', 16),
+          fetchFredSeriesObservations('PPIFES', 16)
+        ]);
+        if (obsH && obsH.length >= 13 && obsC && obsC.length >= 13) {
+          const latestH = obsH[obsH.length - 1], prev12H = obsH[obsH.length - 13];
+          const prev1H = obsH[obsH.length - 2], prev13H = obsH[obsH.length - 14];
+          const latestC = obsC[obsC.length - 1], prev12C = obsC[obsC.length - 13];
+          if (latestH.period > (item.referencePeriod || '2026-09')) {
+            const yoyH = ((latestH.value / prev12H.value) - 1.0) * 100.0;
+            const prevYoyH = ((prev1H.value / prev13H.value) - 1.0) * 100.0;
+            const yoyC = ((latestC.value / prev12C.value) - 1.0) * 100.0;
+            item.value = `${yoyH.toFixed(1)}% / ${yoyC.toFixed(1)}%`;
+            item.numericValue = Number(yoyH.toFixed(1));
+            item.coreNumericValue = Number(yoyC.toFixed(1));
+            item.prevValue = `${prevYoyH.toFixed(1)}%`;
+            item.metaLeft = `核心預期: ${item.consensus || `${yoyC.toFixed(1)}%`} ｜ 整體前期: ${prevYoyH.toFixed(1)}%`;
+            item.referencePeriod = latestH.period;
+            resolveMacroReleaseSchedule(item, todayStr, true);
+            fredUpdated = true;
+          }
+        }
+      }
+    ];
+
+    await Promise.allSettled(tasks.map(fn => fn()));
+    return fredUpdated;
+  }
+
   async function syncMacroIndicatorsFromCloud(manualTrigger) {
     let updatedFrom = null;
+    let syncDateTag = '';
 
     const jsonPaths = ['./macro_indicators.json', '../macro_indicators.json'];
     for (const path of jsonPaths) {
@@ -746,7 +936,10 @@
         const data = await res.json();
         if (data && Array.isArray(data.indicators) && data.indicators.length >= 6) {
           window.MACRO_INDICATORS_HUB = data.indicators;
-          updatedFrom = '官方排程 JSON 同步';
+          if (data.updatedAt && /^\d{4}-\d{2}-\d{2}/.test(data.updatedAt)) {
+            syncDateTag = ` · ${data.updatedAt.slice(5, 7)}/${data.updatedAt.slice(8, 10)} 更新`;
+          }
+          updatedFrom = `官方排程 JSON 同步${syncDateTag}`;
           applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
           break;
         }
@@ -791,6 +984,20 @@
           updatedFrom = 'Google Sheets 雲端中樞同步';
           applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
           break;
+        }
+      } catch (e) {}
+    }
+
+    // 若使用者手動點擊同步，或有指標已抵達發布日，啟動前端 FRED 即時序列檢核
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const needsFredCheck = manualTrigger || (window.MACRO_INDICATORS_HUB || []).some(ind => !ind.nextReleaseDate || ind.nextReleaseDate <= todayStr);
+    if (needsFredCheck) {
+      try {
+        const fredChanged = await syncMacroIndicatorsFromFredClient();
+        if (fredChanged) {
+          updatedFrom = 'FRED 官方序列即時同步';
+          applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, updatedFrom);
         }
       } catch (e) {}
     }
@@ -1513,7 +1720,7 @@
   function initLiveQuotesAndEarningsEngine() {
     hookRenderTable();
     injectUpgradePanels();
-    applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, 'BEA/BLS/ADP 官方快照 (10/21)');
+    applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, 'BEA/BLS/ADP 官方快照 (11/05)');
     applyQuotesToPage(window.LIVE_QUOTES_HUB, 'GOOGLEFINANCE 雲端快照 (10/21)');
     syncEarningsHubFromCloud(false);
     syncMacroIndicatorsFromCloud(false);

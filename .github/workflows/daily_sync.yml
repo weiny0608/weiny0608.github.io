@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add earnings_hub.json macro_indicators.json livequotes_hub.js
+          git add earnings_hub.json macro_indicators.json livequotes_hub.js index.html nasdaq/index.html
           if ! git diff --cached --quiet; then
             git commit -m "chore(cloud-sync): auto-sync Google Sheets & FRED data ($(date -u +'%Y-%m-%d %H:%M UTC'))"
             git push
