@@ -1,12 +1,43 @@
 import unittest
 from datetime import date, datetime, timezone
 from unittest.mock import patch
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 import sync_reported_earnings as collector
 
 
 class ReportedEarningsTest(unittest.TestCase):
+    def test_verified_ciks_cover_dashboard_tickers_when_live_map_is_blocked(self):
+        class Client:
+            def json(self, url):
+                raise HTTPError(url, 403, 'Forbidden', {}, None)
+
+        ciks = collector.load_ciks(Client())
+        self.assertEqual(set(ciks), {collector.ticker_key(symbol) for symbol in collector.tracked_symbols(collector.ROOT)})
+        self.assertEqual(ciks['XOM'], 2115436)
+        self.assertEqual(ciks['GOOG'], ciks['GOOGL'])
+
+    def test_submissions_403_stops_batch_after_first_company(self):
+        client = collector.SecClient('Test contact@example.com')
+        attempted = []
+
+        def blocked(request, timeout):
+            url = request.full_url
+            attempted.append(url)
+            raise HTTPError(url, 403, 'Forbidden', {}, None)
+
+        symbols = ['AMD', 'ARM', 'QCOM']
+        now = datetime(2026, 11, 6, tzinfo=timezone.utc)
+        with patch.object(collector, 'urlopen', side_effect=blocked):
+            with self.assertRaisesRegex(RuntimeError, 'SEC submissions refused access.*Existing feed retained'):
+                collector.update_feed(client, symbols, symbols, {'results': []}, now)
+            with self.assertRaises(HTTPError):
+                client.get(f'{collector.DATA}/submissions/CIK0001973239.json')
+        self.assertEqual(attempted, [
+            f'{collector.SEC}/files/company_tickers.json',
+            f'{collector.DATA}/submissions/CIK0000002488.json',
+        ])
+
     def test_xbrl_pairs_same_accession_period_and_currency(self):
         accession = '0000002488-26-000191'
         quarter = {'accn': accession, 'start': '2026-06-28', 'end': '2026-09-26', 'fy': 2026, 'fp': 'Q3'}

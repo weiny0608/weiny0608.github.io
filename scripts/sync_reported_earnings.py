@@ -19,6 +19,7 @@ from urllib.request import Request, urlopen
 from issuer_earnings import latest_issuer_result
 
 ROOT = Path(__file__).resolve().parents[1]
+TICKER_CACHE = Path(__file__).with_name('sec_ticker_ciks.json')
 DATA = 'https://data.sec.gov'
 SEC = 'https://www.sec.gov'
 REPORT_FORMS = {'10-Q', '10-K', '20-F', '40-F'}
@@ -42,10 +43,14 @@ class SecClient:
         self.user_agent = user_agent
         self.last_request = 0.0
         self.cache = {}
+        self.blocked_hosts = {}
 
     def get(self, url):
         if url in self.cache:
             return self.cache[url]
+        host = urlsplit(url).hostname
+        if host in self.blocked_hosts:
+            raise self.blocked_hosts[host]
         for attempt in range(2):
             time.sleep(max(0, 0.25 - (time.monotonic() - self.last_request)))
             self.last_request = time.monotonic()
@@ -53,6 +58,8 @@ class SecClient:
                 with urlopen(Request(url, headers={'User-Agent': self.user_agent}), timeout=20) as response:
                     payload = response.read().decode('utf-8-sig', errors='replace')
             except HTTPError as exc:
+                if exc.code == 403:
+                    self.blocked_hosts[host] = exc
                 if attempt or exc.code not in (429, 500, 502, 503, 504):
                     raise
                 retry_after = exc.headers.get('Retry-After', '')
@@ -84,6 +91,18 @@ def tracked_symbols(root):
 
 def ticker_key(symbol):
     return symbol.upper().replace('.', '-')
+
+
+def load_ciks(client):
+    try:
+        tickers = client.json(f'{SEC}/files/company_tickers.json')
+        if not isinstance(tickers, dict) or not tickers:
+            raise ValueError('Invalid SEC ticker mapping')
+        return {ticker_key(item['ticker']): item['cik_str'] for item in tickers.values()}
+    except (OSError, TypeError, ValueError, KeyError) as exc:
+        print(f'SEC live ticker mapping unavailable ({exc}); using verified local CIKs.', file=sys.stderr)
+        cached = json.loads(TICKER_CACHE.read_text(encoding='utf-8'))['tickers']
+        return {ticker_key(symbol): cik for symbol, cik in cached.items()}
 
 
 def iso_date(value):
@@ -447,6 +466,8 @@ def latest_result(client, symbol, cik, existing, today):
                 break
         except (OSError, ValueError) as exc:
             print(f'{symbol}: SEC exhibit unavailable ({exc})', file=sys.stderr)
+            if isinstance(exc, HTTPError) and exc.code == 403:
+                break
     return prefer_result(best, best_candidate)
 
 
@@ -461,8 +482,7 @@ def prefer_result(existing, candidate):
 
 
 def update_feed(client, symbols, selected, previous, now):
-    tickers = client.json(f'{SEC}/files/company_tickers.json')
-    cik_by_ticker = {ticker_key(item['ticker']): item['cik_str'] for item in tickers.values()}
+    cik_by_ticker = load_ciks(client)
     results = {item['symbol']: item for item in previous.get('results', []) if item['symbol'] in symbols}
     completed = 0
     for symbol in selected:
@@ -474,6 +494,11 @@ def update_feed(client, symbols, selected, previous, now):
             result = latest_result(client, symbol, cik, results.get(symbol, {}), now.date())
         except (OSError, ValueError) as exc:
             print(f'{symbol}: SEC check failed ({exc})', file=sys.stderr)
+            if isinstance(exc, HTTPError) and exc.code == 403:
+                if not completed:
+                    raise RuntimeError('SEC submissions refused access (HTTP 403). Existing feed retained.') from exc
+                print('SEC submissions refused access; remaining company results retained.', file=sys.stderr)
+                break
             continue
         completed += 1
         if result:
@@ -518,7 +543,8 @@ def refresh_feed(client, symbols, selected, previous, now):
             raise sec_error
         message = f'SEC data unavailable ({sec_error}). Checked {issuer_checked} issuer site(s); other results retained.'
         print(f'::warning::{message}' if os.environ.get('GITHUB_ACTIONS') else message, file=sys.stderr)
-    return result_feed(previous, results, symbols, now)
+    feed = result_feed(previous, results, symbols, now)
+    return {**feed, 'secStatus': 'unavailable' if sec_error else 'available'}
 
 
 def main():

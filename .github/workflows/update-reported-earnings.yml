@@ -11,6 +11,7 @@ on:
     paths:
       - '.github/workflows/update-reported-earnings.yml'
       - 'scripts/issuer_earnings.py'
+      - 'scripts/sec_ticker_ciks.json'
       - 'scripts/sync_reported_earnings.py'
       - 'scripts/test_sync_reported_earnings.py'
 
@@ -39,7 +40,7 @@ jobs:
       - name: Check issuer filings
         env:
           SEC_USER_AGENT: >-
-            ${{ vars.SEC_USER_AGENT || format('NASDAQ Valuation Dashboard (contact: https://github.com/{0}/issues)', github.repository) }}
+            ${{ secrets.SEC_USER_AGENT || vars.SEC_USER_AGENT || format('NASDAQ Valuation Dashboard (contact: https://github.com/{0}/issues)', github.repository) }}
         run: python3 scripts/sync_reported_earnings.py
       - name: Commit verified results
         run: |

@@ -26,6 +26,7 @@
   let reportedEarnings = new Map();
   let reportedEarningsUpdatedAt = null;
   let reportedEarningsSyncFailed = false;
+  let reportedEarningsSecUnavailable = false;
   let reportedEarningsRequest;
 
   // 2026-10-21 GOOGLEFINANCE 雲端即時股價中樞最新快照 (2026-10-20 美股收盤 0ms 零延遲啟動基準)
@@ -1141,7 +1142,7 @@
       ? (results.length ? '暫時無法同步，以下為先前取得的結果。' : '暫時無法取得官方財報資料，請稍後重新同步。')
       : (reportedEarningsUpdatedAt ? '目前沒有可顯示的官方財報資料。' : '正在讀取官方財報資料…');
     const syncLabel = reportedEarningsUpdatedAt
-      ? `台北時間 ${SYNC_TIME.format(reportedEarningsUpdatedAt)} 同步 · ${results.length} 檔`
+      ? `資料更新 ${SYNC_TIME.format(reportedEarningsUpdatedAt)} 台北時間 · ${results.length} 檔`
       : '';
     const moreOpen = cardsContainer.querySelector('#lq-more-reported')?.open ? ' open' : '';
     const calibrationOpen = cardsContainer.querySelector('#lq-model-actions')?.open ? ' open' : '';
@@ -1175,6 +1176,7 @@
         </div>
         <div style="font-size:11px; color:#475569;">每檔顯示最新一季 · 公布或申報日期採美東時間</div>
         ${reportedEarningsSyncFailed || !results.length ? `<p style="font-size:11.5px; color:#475569; margin:7px 0;">${resultsMessage}</p>` : ''}
+        ${reportedEarningsSecUnavailable ? '<p style="font-size:11.5px; color:#92400e; margin:7px 0;">SEC 財報來源暫時無法連線，部分公司可能尚未更新。</p>' : ''}
         ${results.length ? `<ul style="${listStyle}">${results.slice(0, 4).map(renderResult).join('')}</ul>` : ''}
         ${results.length > 4 ? `
           <details id="lq-more-reported"${moreOpen}>
@@ -1494,6 +1496,7 @@
       if (!reportedEarningsUpdatedAt || updatedAt >= reportedEarningsUpdatedAt) {
         reportedEarnings = results;
         reportedEarningsUpdatedAt = updatedAt;
+        reportedEarningsSecUnavailable = data.secStatus === 'unavailable';
       }
       reportedEarningsSyncFailed = false;
       applyQuotesToPage(window.LIVE_QUOTES_HUB);
