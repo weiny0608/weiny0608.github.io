@@ -1,6 +1,6 @@
 {
   "schema": "company-comparison-feed.v1",
-  "checkedAt": "2026-11-06T02:31:45.774Z",
+  "checkedAt": "2026-11-06T04:59:31.174Z",
   "companies": [
     {
       "ticker": "MSFT",
@@ -1591,8 +1591,8 @@
     "updatedAt": "2026-11-06T10:30:07+08:00"
   },
   "treasury": {
-    "yieldPct": 4.855,
-    "observedAt": "2026-11-05T21:31:25.000-0500"
+    "yieldPct": 4.835,
+    "observedAt": "2026-11-05T23:59:05.000-0500"
   },
   "sourceStatus": {
     "valuation": "來源模型，資料期間未提供",
