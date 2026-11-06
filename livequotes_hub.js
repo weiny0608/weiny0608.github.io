@@ -2,7 +2,7 @@
  * GOOGLEFINANCE LiveQuotes Cloud Hub, Q3 Earnings Auto-Rollover / EPS Calibration Engine
  * & Fed Core Macro Indicators Multi-Channel Auto-Sync Engine (v2.0 Dynamic Auto-Update)
  * 方向一：建立 GOOGLEFINANCE 雲端即時股價中樞 (LiveQuotes)
- * 方向二：財報開獎自動偵測、動態預告面板、自動換季 (+90天) 與 EPS 模型滾動校準 (earnings_hub.json + Google Sheets 雙向同步)
+ * 方向二：SEC 財報實績、財報排程與 EPS 估值情境
  * 方向三：六大核心總經指標 (Core PCE / PCE / NFP / ADP / 失業率 / PPI) 自動抓取與雲端同步引擎
  */
 (function () {
@@ -10,6 +10,23 @@
 
   const LIVE_QUOTES_SHEET_ID = '14F4q5WvvjQRlGSSDcnK7QWBTxDZkT51RzN0bXo5vRYk';
   const MAIN_VALUATION_SHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
+  const REPORTED_EARNINGS_URL = new URL('reported_earnings.json', document.currentScript.src);
+  const US_DATE = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit'
+  });
+  const SYNC_TIME = new Intl.DateTimeFormat('zh-TW', {
+    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+  });
+  const MONEY_NUMBER = new Intl.NumberFormat('zh-TW', {
+    minimumFractionDigits: 2, maximumFractionDigits: 4
+  });
+  const EARNINGS_SYMBOL = /^[A-Z][A-Z.0-9-]{0,9}$/;
+  const DAY_MS = 86400000;
+  let reportedEarnings = new Map();
+  let reportedEarningsUpdatedAt = null;
+  let reportedEarningsSyncFailed = false;
+  let reportedEarningsRequest;
 
   // 2026-10-21 GOOGLEFINANCE 雲端即時股價中樞最新快照 (2026-10-20 美股收盤 0ms 零延遲啟動基準)
   const LIVE_QUOTES_SNAPSHOT = {
@@ -1014,207 +1031,172 @@
 
   window.syncMacroIndicatorsFromCloud = syncMacroIndicatorsFromCloud;
 
-  // 方向二：財報開獎自動偵測、今日開獎徽章、Q3 結算徽章與 +90 天自動換季
+  function earningsDay(date) {
+    return /^\d{4}-\d{2}-\d{2}$/.test(date) ? Date.parse(date) / DAY_MS : NaN;
+  }
+
+  function safeEarningsLink(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' ? url.href : '';
+    } catch {
+      return '';
+    }
+  }
+
+  function escapeEarningsText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+  }
+
   function resolveEarningsStatus(targetDateStr, sym) {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const parts = String(targetDateStr || "2026-11-01").split("-").map(Number);
-    let target = new Date(parts[0] || 2026, (parts[1] || 1) - 1, parts[2] || 1);
-    let rawDiff = Math.round((target - today) / 86400000);
+    const today = earningsDay(US_DATE.format(new Date()));
+    const target = earningsDay(targetDateStr);
+    const report = reportedEarnings.get(sym);
+    const reportedDay = earningsDay(report?.reportDate);
+    const rawDiff = target - today;
+    const recentReport = reportedDay >= today - 3 && reportedDay <= today;
+    const matchesSchedule = !Number.isFinite(target) || (rawDiff <= 1 && reportedDay >= target - 1);
 
-    // 檢查是否已經在 recentDiagnostics 中公佈財報
-    const hub = window.EARNINGS_HUB || {};
-    const diagMatch = sym && Array.isArray(hub.recentDiagnostics)
-      ? hub.recentDiagnostics.find(d => d.symbol === sym && d.reportDate === targetDateStr)
-      : null;
-
-    // 若為當日開獎 (rawDiff === 0) 且尚未被列入已開獎診斷，顯示「⚡ 今晚開獎 (0 天)」
-    if (rawDiff === 0 && !diagMatch) {
+    if (recentReport && matchesSchedule) {
+      return { days: 0, displayDate: report.reportDate, badgeText: '已收錄財報', isReported: true };
+    }
+    if (!Number.isFinite(target)) {
+      return { days: 9999, displayDate: '—', badgeText: '日期待確認' };
+    }
+    if (rawDiff >= -3 && rawDiff <= 0) {
       return {
         days: 0,
-        rawDiff: 0,
         displayDate: targetDateStr,
-        isSettling: false,
-        isToday: true,
-        isRolled: false,
-        badgeText: "⚡ 今日開獎 (0 天)",
-        badgeStyle: "background:#fff1f2; color:#be123c; border:1px solid #fecdd3; font-weight:800;"
+        badgeText: rawDiff < 0 ? '已過預定日・待核對' : '今日預計公布'
       };
     }
-
-    // 開獎後 1~3 天內 (-3 <= rawDiff <= -1) 或已列入開獎診斷：顯示 🔔 財報已開獎 (Q3 結算中)
-    if ((rawDiff < 0 && rawDiff >= -3) || (rawDiff === 0 && diagMatch)) {
-      return {
-        days: 0,
-        rawDiff: rawDiff,
-        displayDate: targetDateStr,
-        isSettling: true,
-        isToday: false,
-        isRolled: false,
-        badgeText: "🔔 財報已開獎 (Q3 結算中)",
-        badgeStyle: "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd; font-weight:800;"
-      };
-    }
-
-    // 超過 3 天 (rawDiff < -3)：優先使用診斷中指定的 nextReportDate，否則自動推進一季 (+90 天)
-    if (rawDiff < -3 && diagMatch && diagMatch.nextReportDate) {
-      const nParts = String(diagMatch.nextReportDate).split("-").map(Number);
-      const nextTarget = new Date(nParts[0] || 2027, (nParts[1] || 1) - 1, nParts[2] || 15);
-      const nextDiff = Math.round((nextTarget - today) / 86400000);
-      if (nextDiff > 0) {
-        return {
-          days: nextDiff,
-          rawDiff: nextDiff,
-          displayDate: diagMatch.nextReportDate,
-          isSettling: false,
-          isToday: false,
-          isRolled: true,
-          badgeText: `${nextDiff} 天`,
-          badgeStyle: ""
-        };
+    if (rawDiff < -3) {
+      const explicitNext = window.EARNINGS_HUB?.recentDiagnostics?.find(item =>
+        item.symbol === sym && item.reportDate === targetDateStr)?.nextReportDate;
+      const nextDay = earningsDay(explicitNext);
+      if (nextDay > today) {
+        return { days: nextDay - today, displayDate: explicitNext, isRolled: true };
       }
+      const estimate = target + Math.ceil(-rawDiff / 90) * 90;
+      return {
+        days: estimate - today,
+        displayDate: new Date(estimate * DAY_MS).toISOString().slice(0, 10),
+        isRolled: true
+      };
     }
-
-    let rolled = false;
-    while (rawDiff < -3) {
-      target = new Date(target.getTime() + 90 * 86400000);
-      rawDiff = Math.round((target - today) / 86400000);
-      rolled = true;
-    }
-
-    const y = target.getFullYear();
-    const m = String(target.getMonth() + 1).padStart(2, "0");
-    const d = String(target.getDate()).padStart(2, "0");
-    return {
-      days: rawDiff,
-      rawDiff: rawDiff,
-      displayDate: `${y}-${m}-${d}`,
-      isSettling: false,
-      isToday: false,
-      isRolled: rolled,
-      badgeText: `${rawDiff} 天`,
-      badgeStyle: ""
-    };
+    return { days: rawDiff, displayDate: targetDateStr };
   }
 
   window.resolveEarningsStatus = resolveEarningsStatus;
 
-  // 動態渲染「🔔 最新財報開獎診斷」與「⚡ 本週重點開獎預告」雙卡片 (100% 依當日實際日期與雲端資料自動更新)
+  function formatReportedAmounts(result) {
+    const currency = result.currency;
+    const revenue = Math.abs(result.revenue) >= 1e8
+      ? `${currency} ${MONEY_NUMBER.format(result.revenue / 1e8)} 億`
+      : `${currency} ${MONEY_NUMBER.format(result.revenue)}`;
+    const eps = `${currency} ${MONEY_NUMBER.format(result.eps)}`;
+    const perUnit = result.epsBasis === 'ADS' ? '／ADS' : '';
+    return `營收 ${revenue} · ${result.accounting} 稀釋 EPS ${eps}${perUnit}`;
+  }
+
   function renderDynamicEarningsPanel() {
     const cardsContainer = document.getElementById('lq-dynamic-cards-grid');
     if (!cardsContainer) return;
 
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const mmdd = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
-
+    const today = earningsDay(US_DATE.format(new Date()));
     const hub = window.EARNINGS_HUB || EARNINGS_HUB_SNAPSHOT;
-    const diagnostics = Array.isArray(hub.recentDiagnostics) && hub.recentDiagnostics.length > 0
-      ? hub.recentDiagnostics
-      : EARNINGS_HUB_SNAPSHOT.recentDiagnostics;
-    const previews = Array.isArray(hub.upcomingPreviews) && hub.upcomingPreviews.length > 0
-      ? hub.upcomingPreviews
-      : EARNINGS_HUB_SNAPSHOT.upcomingPreviews;
+    const stockList = typeof stocks !== 'undefined' && Array.isArray(stocks) ? stocks : [];
+    const companies = new Map(stockList.map(stock => [stock.t, stock]));
+    const previewList = Array.isArray(hub.upcomingPreviews) ? hub.upcomingPreviews : [];
+    const previews = new Map(previewList.filter(item => EARNINGS_SYMBOL.test(item?.symbol)).map(item => [item.symbol, item]));
+    const schedule = new Map(stockList.map(stock => [stock.t, stock._origEd || stock.ed]));
+    previews.forEach((item, symbol) => {
+      if (!schedule.has(symbol)) schedule.set(symbol, item.earningsDate);
+    });
 
-    // 篩選今日 (diff === 0) 與未來 10 天內即將開獎之重點公司
-    const activePreviews = previews.map(item => {
-      const copy = Object.assign({}, item);
-      const parts = String(copy.earningsDate || '').split('-').map(Number);
-      if (parts.length === 3) {
-        const dt = new Date(parts[0], parts[1] - 1, parts[2]);
-        copy._diffDays = Math.round((dt - today) / 86400000);
-        copy._shortDate = `${String(parts[1]).padStart(2, '0')}/${String(parts[2]).padStart(2, '0')}`;
-      } else {
-        copy._diffDays = 99;
-        copy._shortDate = '';
-      }
-      return copy;
-    }).filter(item => item._diffDays >= 0 && item._diffDays <= 10)
-      .sort((a, b) => a._diffDays - b._diffDays);
+    const upcoming = Array.from(schedule, ([symbol, date]) => ({ symbol, date, days: earningsDay(date) - today }))
+      .filter(item => {
+        const report = reportedEarnings.get(item.symbol);
+        const alreadyReported = report && earningsDay(report.reportDate) >= earningsDay(item.date) - 1;
+        return item.days >= 0 && item.days <= 14 && !alreadyReported;
+      })
+      .sort((a, b) => a.days - b.days || a.symbol.localeCompare(b.symbol));
+    const results = Array.from(reportedEarnings.values())
+      .sort((a, b) => b.reportDate.localeCompare(a.reportDate) || a.symbol.localeCompare(b.symbol));
 
-    // 若預設清單皆已過期，從 stocks 陣列自動挑出未來 14 天內開獎之公司
-    if (activePreviews.length === 0 && typeof stocks !== 'undefined' && Array.isArray(stocks)) {
-      stocks.forEach(s => {
-        const st = s._earnStatus || resolveEarningsStatus(s._origEd || s.ed, s.t);
-        if (st && st.days >= 0 && st.days <= 14) {
-          const parts = String(st.displayDate || s.ed).split('-');
-          activePreviews.push({
-            symbol: s.t,
-            name: s.n,
-            earningsDate: st.displayDate || s.ed,
-            timing: "盤後",
-            _diffDays: st.days,
-            _shortDate: parts.length === 3 ? `${parts[1]}/${parts[2]}` : st.displayDate,
-            consensusEps: `$${(s.eps27 / 4).toFixed(2)}`,
-            consensusRev: "詳見財報表",
-            previewNote: `${s.s}指標大廠，系統自動排程倒數追蹤中。`,
-            oldEps27: s.eps27,
-            bullEps27: +(s.eps27 * 1.06).toFixed(2),
-            bullEps28: +(s.eps28 * 1.06).toFixed(2),
-            bullEps29: +(s.eps29 * 1.06).toFixed(2),
-            sourceUrl: "https://www.nasdaq.com/market-activity/earnings"
-          });
-        }
+    const renderResult = result => {
+      const company = companies.get(result.symbol)?.n;
+      const name = escapeEarningsText(company ? `${result.symbol}（${company}）` : result.symbol);
+      const period = result.quarter ? `${escapeEarningsText(result.quarter)} · ` : '';
+      return `<li style="margin:0 0 5px;">
+        <strong>${name}</strong> · ${result.reportDate} · ${period}季末 ${result.periodEnd}<br>
+        ${formatReportedAmounts(result)}
+        <a href="${escapeEarningsText(result.sourceUrl)}" target="_blank" rel="noopener" style="color:#4c1d95; text-decoration:underline;">${escapeEarningsText(result.sourceName || '官方來源')} ↗</a>
+      </li>`;
+    };
+    const listStyle = 'font-size:11.5px; color:#475569; line-height:1.55; margin:8px 0; padding-left:18px;';
+    const resultsMessage = reportedEarningsSyncFailed
+      ? (results.length ? '暫時無法同步，以下為先前取得的結果。' : '暫時無法取得官方財報資料，請稍後重新同步。')
+      : (reportedEarningsUpdatedAt ? '目前沒有可顯示的官方財報資料。' : '正在讀取官方財報資料…');
+    const syncLabel = reportedEarningsUpdatedAt
+      ? `台北時間 ${SYNC_TIME.format(reportedEarningsUpdatedAt)} 同步 · ${results.length} 檔`
+      : '';
+    const moreOpen = cardsContainer.querySelector('#lq-more-reported')?.open ? ' open' : '';
+    const calibrationOpen = cardsContainer.querySelector('#lq-model-actions')?.open ? ' open' : '';
+
+    const upcomingHtml = upcoming.slice(0, 6).map(({ symbol, date, days }) => {
+      const company = companies.get(symbol)?.n || previews.get(symbol)?.name;
+      const name = escapeEarningsText(company ? `${symbol}（${company}）` : symbol);
+      const timing = days ? `預計 ${days} 天後` : '今日預計公布';
+      return `<li style="margin:0 0 5px;"><strong>${name}</strong> · ${date} · ${timing}</li>`;
+    }).join('');
+
+    // EPS 校準僅使用既有估值假設，官方單季數字不直接代入模型。
+    const calibrationItems = EARNINGS_HUB_SNAPSHOT.recentDiagnostics.slice(0, 3).map(item => ({
+      symbol: item.symbol, oldEps27: item.oldEps27,
+      newEps27: item.newEps27, newEps28: item.newEps28, newEps29: item.newEps29
+    }));
+    upcoming.slice(0, 2).forEach(({ symbol, date }) => {
+      const preview = previews.get(symbol);
+      if (preview?.earningsDate !== date || ![preview.oldEps27, preview.bullEps27, preview.bullEps28, preview.bullEps29].every(Number.isFinite)) return;
+      calibrationItems.push({
+        symbol, oldEps27: preview.oldEps27, newEps27: preview.bullEps27,
+        newEps28: preview.bullEps28, newEps29: preview.bullEps29
       });
-      activePreviews.sort((a, b) => a._diffDays - b._diffDays);
-    }
-
-    const rolledTickers = (typeof stocks !== 'undefined' && Array.isArray(stocks))
-      ? stocks.filter(s => s._earnStatus && s._earnStatus.isRolled).map(s => s.t).slice(0, 8).join('、')
-      : 'TSM、ASML、JPM、WFC、GS、MS、BAC、UNH';
-
-    const d1 = diagnostics[0] || EARNINGS_HUB_SNAPSHOT.recentDiagnostics[0];
-    const d2 = diagnostics[1] || EARNINGS_HUB_SNAPSHOT.recentDiagnostics[1];
-    const d3 = diagnostics[2] || EARNINGS_HUB_SNAPSHOT.recentDiagnostics[2];
-
-    const previewHeadline = activePreviews.slice(0, 4).map(p => `${p.symbol} (${p._shortDate})`).join(' ＆ ') || '下週重點科技股財報';
+    });
 
     cardsContainer.innerHTML = `
-      <!-- 左側：最新已開獎公司 Beat/Miss 診斷與 EPS 上修校準 -->
       <div style="background:#ffffff; border:1px solid #ddd6fe; border-left:4px solid #7c3aed; border-radius:8px; padding:12px 14px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px; flex-wrap:wrap;">
-          <strong style="font-size:13px; color:#1e1b4b;">🔔 最新財報開獎診斷：${d1.symbol} (${d1.name}) ＆ ${d2.symbol} (${d2.name})</strong>
-          <span style="font-size:10.5px; font-weight:800; background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd; padding:2px 8px; border-radius:999px;">${d1.badgeText}</span>
+          <strong style="font-size:13px; color:#1e1b4b;">🔔 最新已公布財報</strong>
+          <span style="font-size:10.5px; color:#6d28d9;">${syncLabel}</span>
         </div>
-        <div style="font-size:11.5px; color:#475569; line-height:1.55; margin-bottom:8px;">
-          • <strong><a href="${d1.sourceUrl}" target="_blank" rel="noopener" style="color:#4c1d95; text-decoration:underline;">${d1.symbol} (${d1.name})</a></strong>：${d1.actualSummary} ${d1.guidanceSummary || ''}<br>
-          • <strong><a href="${d2.sourceUrl}" target="_blank" rel="noopener" style="color:#4c1d95; text-decoration:underline;">${d2.symbol} (${d2.name})</a></strong>：${d2.actualSummary} ${d2.guidanceSummary || ''}<br>
-          • <strong>估值模型修正建議</strong>：建議將 <code>${d2.symbol} FY27 EPS</code> 由 <strong>$${Number(d2.oldEps27).toFixed(2)} 上調至 $${Number(d2.newEps27).toFixed(2)}</strong>；<code>${d1.symbol} FY27 EPS</code> 由 <strong>$${Number(d1.oldEps27).toFixed(2)} 上調至 $${Number(d1.newEps27).toFixed(2)}</strong>（<a href="${d3.sourceUrl}" target="_blank" rel="noopener" style="color:#6d28d9;">${d3.symbol}</a> 亦建議由 $${Number(d3.oldEps27).toFixed(2)} 上調至 $${Number(d3.newEps27).toFixed(2)}）。
-        </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button type="button" id="btn-calib-${d2.symbol}" onclick="window.applyEarningsCalibration('${d2.symbol}', ${d2.newEps27}, ${d2.newEps28}, ${d2.newEps29})" style="font-size:11px; font-weight:800; color:#fff; background:#7c3aed; border:none; padding:5px 11px; border-radius:6px; cursor:pointer;">✅ 套用 ${d2.symbol} EPS 上修 ($${Number(d2.oldEps27).toFixed(2)}→$${Number(d2.newEps27).toFixed(2)})</button>
-          <button type="button" id="btn-calib-${d1.symbol}" onclick="window.applyEarningsCalibration('${d1.symbol}', ${d1.newEps27}, ${d1.newEps28}, ${d1.newEps29})" style="font-size:11px; font-weight:800; color:#4c1d95; background:#ede9fe; border:1px solid #c4b5fd; padding:5px 11px; border-radius:6px; cursor:pointer;">✅ 套用 ${d1.symbol} EPS 上修 ($${Number(d1.oldEps27).toFixed(2)}→$${Number(d1.newEps27).toFixed(2)})</button>
-          <button type="button" id="btn-calib-${d3.symbol}" onclick="window.applyEarningsCalibration('${d3.symbol}', ${d3.newEps27}, ${d3.newEps28}, ${d3.newEps29})" style="font-size:11px; font-weight:700; color:#475569; background:#f8fafc; border:1px solid #cbd5e1; padding:5px 10px; border-radius:6px; cursor:pointer;">✅ 套用 ${d3.symbol} ($${Number(d3.oldEps27).toFixed(1)}→$${Number(d3.newEps27).toFixed(1)})</button>
-          <span id="calib-status-${d2.symbol}" style="font-size:11px; color:#6d28d9; font-weight:700;"></span>
-          <span id="calib-status-${d1.symbol}" style="font-size:11px; color:#6d28d9; font-weight:700;"></span>
-          <span id="calib-status-${d3.symbol}" style="font-size:11px; color:#6d28d9; font-weight:700;"></span>
-        </div>
+        <div style="font-size:11px; color:#475569;">每檔顯示最新一季 · 公布或申報日期採美東時間</div>
+        ${reportedEarningsSyncFailed || !results.length ? `<p style="font-size:11.5px; color:#475569; margin:7px 0;">${resultsMessage}</p>` : ''}
+        ${results.length ? `<ul style="${listStyle}">${results.slice(0, 4).map(renderResult).join('')}</ul>` : ''}
+        ${results.length > 4 ? `
+          <details id="lq-more-reported"${moreOpen}>
+            <summary style="font-size:11.5px; font-weight:700; color:#4c1d95; cursor:pointer;">查看其餘 ${results.length - 4} 檔</summary>
+            <ul style="${listStyle}">${results.slice(4).map(renderResult).join('')}</ul>
+          </details>` : ''}
       </div>
 
-      <!-- 右側：今日與本週重點開獎預告 (依當日日期動態倒數) -->
       <div style="background:#ffffff; border:1px solid #fde047; border-left:4px solid #ca8a04; border-radius:8px; padding:12px 14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px; flex-wrap:wrap;">
-          <strong style="font-size:13px; color:#132a18;">⚡ 本週重點開獎預告 (${mmdd} 即時倒數)：${previewHeadline}</strong>
-          <span style="font-size:10.5px; font-weight:800; background:#fef9c3; color:#854d0e; border:1px solid #fde047; padding:2px 8px; border-radius:999px;">06:00 晨報 ＆ 盤後自動抓取</span>
-        </div>
-        <div style="font-size:11.5px; color:#475569; line-height:1.55; margin-bottom:8px;">
-          ${activePreviews.slice(0, 3).map(p => {
-            const badge = p._diffDays === 0
-              ? `<span style="color:#be123c; font-weight:800; background:#fff1f2; border:1px solid #fecdd3; padding:1px 5px; border-radius:4px;">⚡ 今晚 (${p._shortDate}) ${p.timing} 開獎・倒數 0 天</span>`
-              : `<span style="color:#854d0e; font-weight:700; background:#fef9c3; border:1px solid #fde047; padding:1px 5px; border-radius:4px;">⏳ ${p._shortDate} ${p.timing} 開獎・倒數 ${p._diffDays} 天</span>`;
-            return `• <strong><a href="${p.sourceUrl}" target="_blank" rel="noopener" style="color:#132a18; text-decoration:underline;">${p.symbol} (${p.name})</a></strong>：${badge}，市場共識 EPS <strong>${p.consensusEps}</strong>、營收 <strong>${p.consensusRev}</strong>。${p.previewNote}`;
-          }).join('<br>')}
-          <br>• <strong>自動換季機制 (+90天)</strong>：${rolledTickers} 等開獎已滿 3 天標的，下次財報日已自動推進至 2027 Q1。
-        </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          ${activePreviews[0] ? `<button type="button" onclick="window.applyEarningsCalibration('${activePreviews[0].symbol}', ${activePreviews[0].bullEps27}, ${activePreviews[0].bullEps28}, ${activePreviews[0].bullEps29})" style="font-size:11px; font-weight:800; color:#fff; background:#059669; border:none; padding:5px 11px; border-radius:6px; cursor:pointer;">📈 預演 ${activePreviews[0].symbol} Beat 上修 ($${Number(activePreviews[0].oldEps27).toFixed(2)}→$${Number(activePreviews[0].bullEps27).toFixed(2)})</button>` : ''}
-          ${activePreviews[1] ? `<button type="button" onclick="window.applyEarningsCalibration('${activePreviews[1].symbol}', ${activePreviews[1].bullEps27}, ${activePreviews[1].bullEps28}, ${activePreviews[1].bullEps29})" style="font-size:11px; font-weight:700; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:5px 10px; border-radius:6px; cursor:pointer;">📈 預演 ${activePreviews[1].symbol} Beat 上修</button>` : ''}
-          <button type="button" onclick="window.resetEarningsCalibrations()" style="font-size:11px; font-weight:600; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 10px; border-radius:6px; cursor:pointer;">還原預設 EPS</button>
-          ${activePreviews[0] ? `<span id="calib-status-${activePreviews[0].symbol}" style="font-size:11px; color:#059669; font-weight:700;"></span>` : ''}
-          ${activePreviews[1] ? `<span id="calib-status-${activePreviews[1].symbol}" style="font-size:11px; color:#059669; font-weight:700;"></span>` : ''}
-        </div>
-      </div>
-    `;
+        <strong style="font-size:13px; color:#132a18;">⚡ 未來 14 天財報預告</strong>
+        <div style="font-size:11px; color:#475569; margin-top:6px;">日期為排程預估（美東時間）</div>
+        ${upcomingHtml ? `<ul style="${listStyle}">${upcomingHtml}</ul>` : `<p style="font-size:11.5px; color:#475569; margin:7px 0;">目前沒有待公布的排程。</p>`}
+        <details id="lq-model-actions"${calibrationOpen}>
+          <summary style="font-size:11.5px; font-weight:700; color:#475569; cursor:pointer;">估值模型 EPS 情境</summary>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:6px;">
+            ${calibrationItems.map(item => `
+              <button type="button" onclick="window.applyEarningsCalibration('${item.symbol}', ${item.newEps27}, ${item.newEps28}, ${item.newEps29})" style="font-size:11px; font-weight:700; color:#4c1d95; background:#f5f3ff; border:1px solid #c4b5fd; padding:5px 10px; border-radius:6px; cursor:pointer;">預演 ${item.symbol} EPS ($${item.oldEps27.toFixed(2)}→$${item.newEps27.toFixed(2)})</button>
+              <span id="calib-status-${item.symbol}" style="font-size:11px; color:#6d28d9;"></span>`).join('')}
+            <button type="button" onclick="window.resetEarningsCalibrations()" style="font-size:11px; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 10px; border-radius:6px; cursor:pointer;">還原預設 EPS</button>
+          </div>
+        </details>
+      </div>`;
   }
 
   window.renderDynamicEarningsPanel = renderDynamicEarningsPanel;
@@ -1264,10 +1246,6 @@
 
       const hubDates = (window.EARNINGS_HUB && window.EARNINGS_HUB.earningsDates) || EARNINGS_HUB_SNAPSHOT.earningsDates || {};
 
-      window.getDaysDiff = function (edStr) {
-        return resolveEarningsStatus(edStr).days;
-      };
-
       stocks.forEach(s => {
         // 優先採用 earnings_hub.json 或 Google Sheets 同步之最新財報日
         if (hubDates[s.t]) {
@@ -1285,18 +1263,11 @@
           if (q.sheetEd && /^\d{4}-\d{2}-\d{2}$/.test(q.sheetEd)) {
             s._origEd = q.sheetEd;
           }
-          if (q.sheetSummary) {
-            s._sheetSummary = q.sheetSummary;
-          }
         }
 
         const status = resolveEarningsStatus(s._origEd, s.t);
         s._earnStatus = status;
-        if (status.isRolled) {
-          s.ed = status.displayDate;
-        } else {
-          s.ed = s._origEd;
-        }
+        s.ed = status.displayDate;
       });
 
       try {
@@ -1323,7 +1294,7 @@
     renderDynamicEarningsPanel();
 
     const statusEl = document.getElementById('livequotes-hub-status');
-    if (statusEl) {
+    if (statusEl && sourceLabel) {
       statusEl.innerHTML = `🟢 <strong>LiveQuotes 雲端報價與財報排程中樞已同步</strong> (${sourceLabel}) ｜ 已即時更新 ${Object.keys(quotesMap).length} 檔美股現價、六大總經指標與財報倒數`;
     }
   }
@@ -1359,18 +1330,23 @@
       const edTd = tds[11];
       const daysTd = tds[12];
       const st = sObj._earnStatus || resolveEarningsStatus(sObj._origEd || sObj.ed, sObj.t);
-      if (sObj._sheetSummary && edTd) {
-        edTd.setAttribute('title', sObj._sheetSummary);
+      const report = reportedEarnings.get(sym);
+      if (report) {
+        edTd.title = `最近已公布財報（${report.reportDate}）：${formatReportedAmounts(report)}`;
       }
-      if ((st.isSettling || st.isToday) && daysTd) {
-        daysTd.innerHTML = `<span class="countdown-badge mono" style="${st.badgeStyle}">${st.badgeText}</span>`;
+      if (st.isReported && report) {
+        const link = document.createElement('a');
+        link.className = 'countdown-badge badge-normal mono';
+        link.href = report.sourceUrl;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = `${st.badgeText} ↗`;
+        daysTd.replaceChildren(link);
+      } else if (st.badgeText) {
+        daysTd.innerHTML = `<span class="countdown-badge badge-normal mono">${st.badgeText}</span>`;
       } else if (st.isRolled) {
-        if (edTd) {
-          edTd.innerHTML = `<span class="mono" title="原財報日 (${sObj._origEd}) 已開獎滿 3 天，自動推進一季 (+90天)">${st.displayDate} <span style="font-size:9.5px; color:#059669; font-weight:700; background:#ecfdf5; border:1px solid #a7f3d0; padding:1px 4px; border-radius:4px;">+1季</span></span>`;
-        }
-        if (daysTd) {
-          daysTd.innerHTML = `<span class="countdown-badge badge-normal mono">${st.days} 天</span>`;
-        }
+        edTd.textContent = `${st.displayDate}（估）`;
+        daysTd.innerHTML = `<span class="countdown-badge badge-normal mono">${st.days} 天（估）</span>`;
       }
     });
   }
@@ -1398,7 +1374,7 @@
       panel.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="background:#059669; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px;">全自動數據中樞 已啟用</span>
+            <span style="background:#059669; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px;">股價、財報與總經資料</span>
             <span id="livequotes-hub-status" style="font-size:12.5px; color:#132a18;">🟢 <strong>LiveQuotes 雲端報價與財報排程中樞連線中...</strong></span>
           </div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
@@ -1407,7 +1383,7 @@
             <button type="button" onclick="window.syncEarningsHubFromCloud(true); window.syncLiveQuotesFromCloud(true); window.syncMacroIndicatorsFromCloud(true);" style="font-size:11.5px; font-weight:700; color:#ffffff; background:#059669; border:none; padding:5px 12px; border-radius:6px; cursor:pointer;">⚡ 重新同步股價、財報與總經數據</button>
           </div>
         </div>
-        <div id="lq-dynamic-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;"></div>
+        <div id="lq-dynamic-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:12px;"></div>
       `;
 
       valSection.insertAdjacentElement('afterend', panel);
@@ -1466,7 +1442,7 @@
     if (typeof calcPortfolioRisk === 'function') calcPortfolioRisk();
 
     const lbl = document.getElementById(`calib-status-${sym}`);
-    if (lbl) lbl.textContent = `✔ 已套用 ${sym} 最新財報 EPS 校準`;
+    if (lbl) lbl.textContent = `✔ 已套用 ${sym} 估值情境`;
   };
 
   window.resetEarningsCalibrations = function () {
@@ -1482,14 +1458,62 @@
       if (typeof renderTable === 'function') renderTable();
       if (typeof calcPortfolioRisk === 'function') calcPortfolioRisk();
     }
-    ['ASML', 'TSM', 'NFLX', 'TSLA', 'IBM', 'LRCX', 'TXN'].forEach(sym => {
-      const lbl = document.getElementById(`calib-status-${sym}`);
-      if (lbl) lbl.textContent = '已還原預設';
+    document.querySelectorAll('[id^="calib-status-"]').forEach(label => {
+      label.textContent = '已還原預設';
     });
   };
 
-  // 從同源 earnings_hub.json 讀取最新財報開獎診斷與財報日曆
-  async function syncEarningsHubFromCloud(manualTrigger) {
+  async function fetchReportedEarnings() {
+    try {
+      const url = new URL(REPORTED_EARNINGS_URL);
+      url.searchParams.set('t', Date.now());
+      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (!response.ok) throw new Error('Official earnings feed unavailable');
+      const data = await response.json();
+      const updatedAt = new Date(data.updatedAt);
+      if (!data.updatedAt || !Number.isFinite(updatedAt.getTime()) || !Array.isArray(data.results)) {
+        throw new Error('Invalid official earnings feed');
+      }
+
+      const results = new Map();
+      for (const row of data.results) {
+        const sourceUrl = safeEarningsLink(row?.sourceUrl);
+        if (!row || !EARNINGS_SYMBOL.test(row.symbol) || !sourceUrl
+            || !Number.isFinite(earningsDay(row.reportDate)) || !Number.isFinite(earningsDay(row.periodEnd))
+            || !Number.isFinite(row.revenue) || !Number.isFinite(row.eps)
+            || !/^[A-Z]{3}$/.test(row.currency) || !['GAAP', 'IFRS'].includes(row.accounting)) {
+          continue;
+        }
+        const previous = results.get(row.symbol);
+        if (!previous || row.periodEnd > previous.periodEnd
+            || (row.periodEnd === previous.periodEnd && row.reportDate > previous.reportDate)) {
+          results.set(row.symbol, { ...row, sourceUrl });
+        }
+      }
+      if (data.results.length && !results.size) throw new Error('No valid official results');
+      if (!reportedEarningsUpdatedAt || updatedAt >= reportedEarningsUpdatedAt) {
+        reportedEarnings = results;
+        reportedEarningsUpdatedAt = updatedAt;
+      }
+      reportedEarningsSyncFailed = false;
+      applyQuotesToPage(window.LIVE_QUOTES_HUB);
+      return true;
+    } catch {
+      reportedEarningsSyncFailed = true;
+      renderDynamicEarningsPanel();
+      return false;
+    }
+  }
+
+  function syncReportedEarningsFromCloud() {
+    if (!document.getElementById('lq-dynamic-cards-grid')) return Promise.resolve(false);
+    if (!reportedEarningsRequest) {
+      reportedEarningsRequest = fetchReportedEarnings().finally(() => { reportedEarningsRequest = null; });
+    }
+    return reportedEarningsRequest;
+  }
+
+  async function syncEarningsCalendarFromCloud() {
     const jsonPaths = ['./earnings_hub.json', '../earnings_hub.json'];
     for (const path of jsonPaths) {
       try {
@@ -1504,6 +1528,11 @@
       } catch (e) {}
     }
     return false;
+  }
+
+  async function syncEarningsHubFromCloud() {
+    const results = await Promise.all([syncReportedEarningsFromCloud(), syncEarningsCalendarFromCloud()]);
+    return results.some(Boolean);
   }
 
   window.syncEarningsHubFromCloud = syncEarningsHubFromCloud;
@@ -1533,8 +1562,7 @@
           const c0 = c[0] && c[0].v !== null ? String(c[0].v).trim() : '';
           const c1 = c[1] && c[1].v !== null ? String(c[1].v).trim() : '';
 
-          // 支援 LiveQuotes (A欄代號, C欄現價, D欄漲跌, E欄52高, F欄52低, H欄財報狀態/日期, I欄財報摘要)
-          // 以及主估值表 (B欄代號, E欄現價, F欄下次財報日, G欄距離天數, O欄財報診斷)
+          // 支援 LiveQuotes 與主估值表的報價及財報日期欄位。
           let sym = '';
           let isMainSheetRow = false;
           if (/^[A-Z.]{1,6}$/.test(c0) && c0 !== 'TICKER') {
@@ -1564,7 +1592,6 @@
             const v4 = c[4] && c[4].v !== null ? c[4].v : null;
             const v5 = c[5] && c[5].v !== null ? c[5].v : null;
             const v7 = c[7] && (c[7].f || c[7].v) ? String(c[7].f || c[7].v).trim() : '';
-            const v8 = c[8] && (c[8].f || c[8].v) ? String(c[8].f || c[8].v).trim() : '';
 
             let price = null, chgPct = 0, high52 = null, low52 = null;
             if (typeof v1 === 'number' && v1 > 0) {
@@ -1587,18 +1614,14 @@
                 chgPct: !isNaN(chgPct) ? Math.round(chgPct * 100) / 100 : (prev.chgPct || 0),
                 high52: !isNaN(high52) && high52 > 0 ? Math.round(high52 * 100) / 100 : (prev.high52 || null),
                 low52:  !isNaN(low52)  && low52 > 0  ? Math.round(low52 * 100) / 100  : (prev.low52 || null),
-                sheetEd: dateMatch ? dateMatch[1] : prev.sheetEd,
-                sheetSummary: v8 || prev.sheetSummary
+                sheetEd: dateMatch ? dateMatch[1] : prev.sheetEd
               };
               updatedCount++;
             }
           } else {
-            // 主估值表 A6:O36 完整直連讀取 (C欄名稱 c[2], E欄現價 c[4], F欄下次財報日 c[5], G欄距離天數 c[6], O欄財報診斷與官方連結 c[14])
-            const nameRaw = c[2] && (c[2].f || c[2].v) ? String(c[2].f || c[2].v).trim() : sym;
+            // 主估值表欄位：E 現價、F 下次財報日。
             const pRaw = c[4] && (c[4].f || c[4].v) ? String(c[4].f || c[4].v).replace(/[^0-9.]/g, '') : '';
             const edRaw = c[5] && (c[5].f || c[5].v) ? String(c[5].f || c[5].v).trim() : '';
-            const statusRaw = c[6] && (c[6].f || c[6].v) ? String(c[6].f || c[6].v).trim() : '';
-            const sumRaw = c[14] && (c[14].f || c[14].v) ? String(c[14].f || c[14].v).trim() : '';
             const dateMatch = edRaw.match(/(\d{4}-\d{2}-\d{2})/);
             if (dateMatch && window.EARNINGS_HUB && window.EARNINGS_HUB.earningsDates) {
               window.EARNINGS_HUB.earningsDates[sym] = dateMatch[1];
@@ -1609,36 +1632,6 @@
               window.LIVE_QUOTES_HUB[sym].price = parsedP;
             }
             if (dateMatch) window.LIVE_QUOTES_HUB[sym].sheetEd = dateMatch[1];
-            if (statusRaw) window.LIVE_QUOTES_HUB[sym].sheetStatus = statusRaw;
-            if (sumRaw) {
-              window.LIVE_QUOTES_HUB[sym].sheetSummary = sumRaw;
-              // 若 O 欄有最新財報診斷文字，即時同步至 window.EARNINGS_HUB.recentDiagnostics 供頂部面板渲染
-              if (window.EARNINGS_HUB && Array.isArray(window.EARNINGS_HUB.recentDiagnostics)) {
-                const parts = sumRaw.split("|").map(s => s.trim());
-                const summaryText = parts[0] || sumRaw;
-                const linkUrl = (parts[1] && parts[1].startsWith("http")) ? parts[1] : "";
-                let diagItem = window.EARNINGS_HUB.recentDiagnostics.find(d => d.symbol === sym);
-                if (diagItem) {
-                  if (summaryText.length > 8) diagItem.actualSummary = summaryText;
-                  if (linkUrl) diagItem.sourceUrl = linkUrl;
-                } else if (summaryText.length > 10 && !summaryText.startsWith("http")) {
-                  window.EARNINGS_HUB.recentDiagnostics.unshift({
-                    symbol: sym,
-                    name: nameRaw,
-                    reportDate: dateMatch ? dateMatch[1] : "2026-10-28",
-                    nextReportDate: "2027-01-27",
-                    quarter: "Q3 2026",
-                    timing: "AMC",
-                    verdict: "雲端主表即時診斷",
-                    badgeText: statusRaw || "🔔 財報已開獎 (Q3 結算中)",
-                    actualSummary: summaryText,
-                    guidanceSummary: "",
-                    oldEps27: 10.0, newEps27: 10.8, newEps28: 12.5, newEps29: 14.2,
-                    sourceUrl: linkUrl || "https://www.nasdaq.com/market-activity/earnings"
-                  });
-                }
-              }
-            }
             updatedCount++;
           }
         });

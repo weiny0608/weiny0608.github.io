@@ -1,0 +1,57 @@
+{
+  "updatedAt": "2026-11-06T04:45:00Z",
+  "results": [
+    {
+      "symbol": "QCOM",
+      "reportDate": "2026-11-04",
+      "periodEnd": "2026-09-27",
+      "quarter": "Q4 FY2026",
+      "revenue": 10322000000,
+      "eps": 1.17,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://investor.qualcomm.com/files/content_files/FY2026-4th-Quarter-Earnings-Release.pdf",
+      "sourceName": "Qualcomm Investor Relations"
+    },
+    {
+      "symbol": "ARM",
+      "reportDate": "2026-11-04",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q2 FY2027",
+      "revenue": 1443000000,
+      "eps": 0.12,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://investors.arm.com/static-files/0b5baa2e-fc47-4d05-b724-e49de7bd4356",
+      "sourceName": "Arm Investor Relations"
+    },
+    {
+      "symbol": "AMD",
+      "reportDate": "2026-11-03",
+      "periodEnd": "2026-09-26",
+      "quarter": "Q3 FY2026",
+      "revenue": 13377000000,
+      "eps": 1.46,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1303/amd-reports-third-quarter-2026-financial-results",
+      "sourceName": "AMD Investor Relations"
+    },
+    {
+      "symbol": "FTNT",
+      "reportDate": "2026-10-28",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q3 FY2026",
+      "revenue": 2078400000,
+      "eps": 0.86,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://investor.fortinet.com/news-releases/news-release-details/fortinet-reports-strong-third-quarter-2026-financial-results",
+      "sourceName": "Fortinet Investor Relations"
+    }
+  ]
+}

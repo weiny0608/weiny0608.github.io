@@ -1,0 +1,115 @@
+import unittest
+from datetime import date, datetime, timezone
+from unittest.mock import patch
+from urllib.error import URLError
+
+import sync_reported_earnings as collector
+
+
+class ReportedEarningsTest(unittest.TestCase):
+    def test_xbrl_pairs_same_accession_period_and_currency(self):
+        accession = '0000002488-26-000191'
+        quarter = {'accn': accession, 'start': '2026-06-28', 'end': '2026-09-26', 'fy': 2026, 'fp': 'Q3'}
+        ytd = {**quarter, 'start': '2025-12-28'}
+        document = {'facts': {'us-gaap': {
+            'RevenueFromContractWithCustomerExcludingAssessedTax': {'units': {'USD': [
+                {**ytd, 'val': 32_000_000_000}, {**quarter, 'val': 13_377_000_000},
+            ]}},
+            'EarningsPerShareDiluted': {'units': {
+                'USD/shares': [
+                    {**ytd, 'val': 3.52}, {**quarter, 'accn': 'other', 'val': 2.09},
+                    {**quarter, 'val': 1.46},
+                ],
+                'EUR/shares': [{**quarter, 'val': 1.17}],
+            }},
+        }}}
+        result = collector.tagged_facts(document, accession, date(2026, 11, 4), date(2026, 9, 26))
+        self.assertEqual(result, (date(2026, 9, 26), 'Q3 FY2026', 13_377_000_000, 1.46, 'USD', 'GAAP'))
+        self.assertIsNone(collector.tagged_facts(document, accession, date(2026, 11, 4), date(2026, 9, 27)))
+
+    def test_q4_release_prefers_gaap_quarter_over_fiscal_year_and_adjusted_values(self):
+        report = '''<h1>Qualcomm Announces Fourth Quarter and Fiscal 2026 Results</h1>
+          <p>Today announced results for its fiscal fourth quarter and year ended September 27, 2026.</p>
+          <table><tr><td>GAAP</td><td>Non-GAAP</td></tr>
+          <tr><td>(in millions, except per share data)</td><td>Q4 Fiscal 2026</td>
+              <td>Q4 Fiscal 2025</td><td>Q4 Fiscal 2026</td></tr>
+          <tr><td>Revenues</td><td>$</td><td>10,322</td><td>$11,270</td><td>$10,442</td></tr>
+          <tr><td>Diluted earnings (loss) per share (EPS)</td><td>$</td><td>1.17</td><td>($2.89)</td><td>$2.17</td></tr></table>'''
+        result = collector.press_metrics(report, date(2026, 11, 4), 'USD')
+        self.assertEqual(result, (date(2026, 9, 27), 'Q4 FY2026', 10_322_000_000, 1.17, 'USD', 'GAAP', 'share'))
+        adjusted_first = report.replace('<td>GAAP</td><td>Non-GAAP</td>', '<td>Non-GAAP</td><td>GAAP</td>')
+        self.assertIsNone(collector.press_metrics(adjusted_first, date(2026, 11, 4), 'USD'))
+        year_first = report.replace('Q4 Fiscal 2026</td>', 'Fiscal Year 2026</td>', 1)
+        self.assertIsNone(collector.press_metrics(year_first, date(2026, 11, 4), 'USD'))
+
+    def test_consolidated_statement_can_report_loss_with_explicit_currency(self):
+        report = '''<h1>Company Announces Third Quarter 2026 Results</h1>
+          <h2>Condensed Consolidated Statements of Income</h2><p>In millions of euros, except per share data</p>
+          <table><tr><td>Three Months Ended</td><td>Nine Months Ended</td></tr>
+          <tr><td></td><td>September 30, 2026</td><td>September 30, 2025</td></tr>
+          <tr><td>Total revenue</td><td>2,078.4</td><td>1,724.9</td><td>5,975.9</td></tr>
+          <tr><td>Earnings per share:</td><td></td></tr>
+          <tr><td>Basic</td><td>(0.25)</td></tr>
+          <tr><td>Diluted</td><td>(</td><td>0.25</td><td>)</td></tr></table>'''
+        result = collector.press_metrics(report, date(2026, 10, 28))
+        self.assertEqual(result, (date(2026, 9, 30), 'Q3 FY2026', 2_078_400_000, -0.25, 'EUR', 'GAAP', 'share'))
+
+    def test_failed_symbols_retain_seed_and_leave_sync_time_unchanged(self):
+        class Client:
+            def json(self, _):
+                return {'0': {'ticker': 'AMD', 'cik_str': 2488}, '1': {'ticker': 'ARM', 'cik_str': 1973239}}
+
+        seeded = {'symbol': 'AMD', 'periodEnd': '2026-09-26', 'reportDate': '2026-11-03'}
+        feed = {'updatedAt': '2026-11-06T00:00:00Z', 'results': [seeded]}
+        now = datetime(2026, 11, 6, tzinfo=timezone.utc)
+        with patch.object(collector, 'latest_result', side_effect=[URLError('test outage'), None]):
+            self.assertEqual(collector.update_feed(Client(), ['AMD', 'ARM'], ['AMD', 'ARM'], feed, now), feed)
+        with patch.object(collector, 'latest_result', side_effect=URLError('test outage')):
+            with self.assertRaisesRegex(RuntimeError, 'Existing feed retained'):
+                collector.update_feed(Client(), ['AMD'], ['AMD'], feed, now)
+        later_filing = {**seeded, 'reportDate': '2026-11-04'}
+        self.assertEqual(collector.prefer_result(seeded, later_filing), seeded)
+
+    def test_exhibit_index_only_uses_filing_directory(self):
+        filing = {'accessionNumber': '0000804328-26-000127'}
+        directory = collector.archive_dir(804328, filing['accessionNumber'])
+        index = f'''<table><tr><td>Press release</td><td><a href="qcom.htm">qcom.htm</a></td><td>EX-99.1</td></tr>
+        <tr><td>Other</td><td><a href="https://example.com/other.htm">other.htm</a></td><td>EX-99.2</td></tr>
+        <tr><td>Cover</td><td><a href="cover.htm">cover.htm</a></td><td>8-K</td></tr></table>'''
+        self.assertEqual(collector.exhibit_urls(804328, filing, index), [directory + 'qcom.htm'])
+
+    def test_earnings_release_is_available_before_the_quarterly_filing(self):
+        accession = '0000002488-26-000188'
+        directory = collector.archive_dir(2488, accession)
+        submissions = {'filings': {'recent': {
+            'form': ['8-K'], 'filingDate': ['2026-11-03'], 'reportDate': ['2026-11-03'],
+            'accessionNumber': [accession], 'primaryDocument': ['amd-20261103.htm'], 'items': ['2.02,9.01'],
+        }}}
+        exhibit = '''<h1>AMD Reports Third Quarter 2026 Financial Results</h1>
+            <p>Financial results for the third quarter ended September 26, 2026.</p>
+            <h2>GAAP Quarterly Financial Results</h2><table>
+            <tr><td></td><td>Q3'26</td><td>Q3'25</td></tr>
+            <tr><td>Revenue ($M)</td><td>$13,377</td><td>$9,246</td></tr>
+            <tr><td>Diluted earnings per share</td><td>$1.46</td><td>$0.75</td></tr></table>'''
+
+        class Client:
+            def json(self, url):
+                return submissions if '/submissions/' in url else {}
+
+            def get(self, url):
+                if url == directory + accession + '-index.html':
+                    return '<table><tr><td>Press release</td><td><a href="q32026991.htm">q32026991.htm</a></td><td>EX-99.1</td></tr></table>'
+                if url == directory + 'q32026991.htm':
+                    return exhibit
+                raise AssertionError(f'Unexpected URL: {url}')
+
+        result = collector.latest_result(Client(), 'AMD', 2488, {}, date(2026, 11, 3))
+        self.assertEqual(result['sourceUrl'], directory + 'q32026991.htm')
+        self.assertEqual(result['reportDate'], '2026-11-03')
+        self.assertEqual(result['periodEnd'], '2026-09-26')
+        self.assertEqual(result['revenue'], 13_377_000_000)
+        self.assertEqual(result['eps'], 1.46)
+
+
+if __name__ == '__main__':
+    unittest.main()

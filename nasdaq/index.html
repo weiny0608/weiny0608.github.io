@@ -1316,7 +1316,7 @@
             <th onclick="sortTable('peForward')">預估 P/E</th>
             <th onclick="sortTable('fcf')">自由現金流 (FCF)</th>
             <th onclick="sortTable('riskScore')">風險係數</th>
-            <th onclick="sortTable('ed')">下次財報日</th>
+            <th onclick="sortTable('ed')">財報日期</th>
             <th onclick="sortTable('days')">倒數天數</th>
             <th>FY27 估值</th>
             <th>FY28 估值</th>
@@ -1628,48 +1628,9 @@
     let sortCol = "idx";
     let sortAsc = true;
 
-    // 方向二：財報開獎自動偵測、Q3 結算徽章與 +90 天自動換季引擎
-    function resolveEarningsStatus(targetDateStr) {
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const parts = String(targetDateStr || "2026-11-01").split("-").map(Number);
-      let target = new Date(parts[0] || 2026, (parts[1] || 1) - 1, parts[2] || 1);
-      let rawDiff = Math.round((target - today) / 86400000);
-
-      // 若當前日期 >= 財報發佈日，且在開獎後 0~3 天內：轉為 🔔 財報已開獎 (Q3 結算中)
-      if (rawDiff <= 0 && rawDiff >= -3) {
-        return {
-          days: 0,
-          displayDate: targetDateStr,
-          isSettling: true,
-          isRolled: false,
-          badgeText: "🔔 財報已開獎 (Q3 結算中)",
-          badgeStyle: "background:#f5f3ff; color:#6d28d9; border:1px solid #c4b5fd; font-weight:800;"
-        };
-      }
-
-      // 超過 3 天後自動將下次財報日推進一季 (+90 天)
-      let rolled = false;
-      while (rawDiff < -3) {
-        target = new Date(target.getTime() + 90 * 86400000);
-        rawDiff = Math.round((target - today) / 86400000);
-        rolled = true;
-      }
-      const y = target.getFullYear();
-      const m = String(target.getMonth() + 1).padStart(2, "0");
-      const d = String(target.getDate()).padStart(2, "0");
-      return {
-        days: rawDiff,
-        displayDate: `${y}-${m}-${d}`,
-        isSettling: false,
-        isRolled: rolled,
-        badgeText: `${rawDiff} 天`,
-        badgeStyle: ""
-      };
-    }
-
     function getDaysDiff(targetDateStr) {
-      return resolveEarningsStatus(targetDateStr).days;
+      const date = Date.parse(targetDateStr);
+      return Number.isFinite(date) ? Math.max(0, Math.ceil((date - Date.now()) / 86400000)) : 9999;
     }
 
     function updateYield(val) {
@@ -1815,7 +1776,7 @@ const STOCK_FINANCIALS = {
         if (typeof selectedCategory !== 'undefined' && selectedCategory !== "ALL" && s.cat !== selectedCategory) return;
         if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query)) return;
 
-        const days = typeof getDaysDiff === 'function' ? getDaysDiff(s.ed) : 30;
+        const days = s._earnStatus?.days ?? getDaysDiff(s.ed);
         const adjPE = (s.pe || 20) * peScenarioMult;
         const eps27 = s.eps27 || 5.0;
         const eps28 = s.eps28 || 6.0;
@@ -1902,7 +1863,7 @@ const STOCK_FINANCIALS = {
           <td class="mono" style="color:var(--green); font-weight:700;">$${item.fcf.toFixed(1)}B</td>
           <td><span class="risk-badge ${riskBadgeClass}">${item.riskScore} ${riskBadgeText}</span></td>
           <td class="mono">${item.ed}</td>
-          <td><span class="countdown-badge ${badgeClass} mono">${item.days} 天</span></td>
+          <td><span class="countdown-badge ${badgeClass} mono">${item.days === 9999 ? '日期待確認' : `${item.days} 天`}</span></td>
           <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
           <td class="mono val-cell">$${item.val28.toFixed(1)}</td>
           <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
