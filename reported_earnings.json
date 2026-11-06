@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-06T05:05:48+00:00",
+  "updatedAt": "2026-11-06T18:21:11+00:00",
   "results": [
+    {
+      "symbol": "MCD",
+      "reportDate": "2026-11-06",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q3 FY2026",
+      "revenue": 7157000000,
+      "eps": 3.51,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000083/mcd-20260930.htm",
+      "sourceName": "SEC Form 10-Q"
+    },
     {
       "symbol": "MS",
       "reportDate": "2026-11-05",
@@ -896,19 +909,6 @@
       "accounting": "GAAP",
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "MCD",
-      "reportDate": "2026-08-07",
-      "periodEnd": "2026-06-30",
-      "quarter": "Q2 FY2026",
-      "revenue": 7099000000,
-      "eps": 3.32,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000073/mcd-20260630.htm",
       "sourceName": "SEC Form 10-Q"
     },
     {
