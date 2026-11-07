@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-06T10:30:07+08:00",
+  "updatedAt": "2026-11-07T09:57:43+08:00",
   "source": "BEA / BLS / ADP Official Releases & FRED Auto-Sync Engine",
   "indicators": [
     {
@@ -72,9 +72,9 @@
       "prevValue": "13.3 萬",
       "consensus": "4.5 萬(均值)",
       "metaLeft": "前期: 13.3 萬 ｜ 均值: 4.5 萬",
-      "releaseDate": "10/02",
+      "releaseDate": "11/06",
       "referencePeriod": "2026-09",
-      "nextReleaseDate": "2026-11-06",
+      "nextReleaseDate": "2026-12-04",
       "releaseSchedule": [
         "2026-10-02",
         "2026-11-06",
@@ -130,9 +130,9 @@
       "prevValue": "4.2%",
       "consensus": "4.2%",
       "metaLeft": "前期: 4.2% ｜ 預期: 4.2%",
-      "releaseDate": "10/02",
+      "releaseDate": "11/06",
       "referencePeriod": "2026-09",
-      "nextReleaseDate": "2026-11-06",
+      "nextReleaseDate": "2026-12-04",
       "releaseSchedule": [
         "2026-10-02",
         "2026-11-06",
