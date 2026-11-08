@@ -16,7 +16,8 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-from issuer_earnings import latest_issuer_result
+from issuer_earnings import asml_exhibit_metrics, latest_issuer_result, tsm_exhibit_metrics
+from issuer_exhibit_specials import berkshire_statement_metrics, berkshire_statement_name, citi_exhibit_metrics
 
 ROOT = Path(__file__).resolve().parents[1]
 TICKER_CACHE = Path(__file__).with_name('sec_ticker_ciks.json')
@@ -32,9 +33,12 @@ REVENUE_TAGS = (
 EPS_TAGS = ('EarningsPerShareDiluted', 'DilutedEarningsLossPerShare')
 CURRENCY = re.compile(r'[A-Z]{3}')
 ISO_DATE = re.compile(r'\d{4}-\d{2}-\d{2}')
-MONTH_DATE = re.compile(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+([0-9]{1,2}),?\s+(20[0-9]{2})\b', re.I)
+MONTH_DATE = re.compile(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+([0-9]{1,2})(?:,\s*|\s+)(20[0-9]{2})\b', re.I)
 ORDINALS = {'first': '1', 'second': '2', 'third': '3', 'fourth': '4'}
 REVENUE_LABEL = re.compile(r'(?:(?:total|net) )?(?:net )?(?:operating )?(?:revenues?|net sales|sales)(?:,? net)?')
+EPS_GROUP_LABEL = re.compile(r'(?:net )?(?:earnings|income|loss)(?:/(?:earnings|income|loss))? per (?:ordinary |common )?(share|ads)(?: \(eps\))?')
+QUARTER_HEADER = re.compile(r'\b(?:three months?|1[1-6]\s+weeks?\s+ended|quarter(?:ly)?|Q[1-4])\b', re.I)
+LONGER_PERIOD_HEADER = re.compile(r'\b(?:(?:six|nine|twelve) months?|(?:26|39|52|53)\s+weeks?\s+ended|(?:full|fiscal) year)\b', re.I)
 SCALE = {'thousand': 1_000, 'million': 1_000_000, 'billion': 1_000_000_000, 'k': 1_000, 'm': 1_000_000, 'b': 1_000_000_000}
 
 
@@ -159,7 +163,9 @@ def tagged_facts(document, accession, filed, end):
                         value = fact.get('val')
                         if not start_date or not end_date or (end and end_date != end):
                             continue
-                        if not (75 <= (end_date - start_date).days <= 105 and 0 <= (filed - end_date).days <= 150):
+                        # Some retailers report a 16-week fourth quarter in their annual filing.
+                        max_days = 119 if fact.get('fp') in ('FY', 'Q4') else 105
+                        if not (75 <= (end_date - start_date).days <= max_days and 0 <= (filed - end_date).days <= 150):
                             continue
                         if type(value) not in (float, int) or not math.isfinite(value) or (metric == 'revenue' and value < 0):
                             continue
@@ -292,20 +298,37 @@ def press_quarter(text):
     match = re.search(r'\b(first|second|third|fourth)\s+quarter\b(?:\s+of)?\s+(?:(?:fiscal(?:\s+year)?|FY)\s+)?(20\d{2})\b', text, re.I)
     if match:
         return f'Q{ORDINALS[match[1].lower()]} FY{match[2]}'
+    match = re.search(r'\bfiscal(?:\s+year)?\s+(20\d{2})\s+(first|second|third|fourth)\s+quarter\b', text, re.I)
+    if match:
+        return f'Q{ORDINALS[match[2].lower()]} FY{match[1]}'
+    match = re.search(r'\bfourth quarter and (?:(?:full[- ]year\s+)?fiscal(?:\s+year)?|full[- ]year)\s+(20\d{2})\b', text, re.I)
+    if match:
+        return f'Q4 FY{match[1]}'
     return None
 
 
-def press_metrics(document, filed, currency_hint=None, accounting_hint='GAAP'):
+def statement_dates(headers, header):
+    for index, cell in enumerate(headers):
+        partial = re.fullmatch(r'three months? ended\s*([A-Za-z]+\s+\d{1,2},?)', cell, re.I)
+        if partial:
+            year = next((value for value in headers[index + 1:] if re.fullmatch(r'20\d{2}', value)), None)
+            if year:
+                return list(quarter_dates(f'{partial[1]} {year}'))
+    return list(quarter_dates(header))
+
+
+def press_metrics(document, filed, currency_hint=None, accounting_hint='GAAP', *, share_class=None):
     """Extract only explicitly quarter-labelled consolidated GAAP/IFRS table values."""
     filing = FilingTables(document)
     lead = clean(' '.join(filing.text)[:9000])
     if not re.search(r'\b(?:quarter|Q[1-4])\b', lead, re.I) or re.search(r'\bpreliminary\b', lead[:500], re.I):
         return None
+    release_quarter = press_quarter(lead[:1000])
     for context, rows in filing.tables:
         headers = []
         revenue_rows = []
         eps_rows = []
-        eps_group = False
+        eps_group = None
         for cells in rows:
             values = [cell[0] for cell in cells]
             if not values or not any(values):
@@ -315,26 +338,36 @@ def press_metrics(document, filed, currency_hint=None, accounting_hint='GAAP'):
             label = re.sub(r'\s*\([$€£¥]?[kmb]\)|\s*\(\d+\)|:|\(loss\)', '', label, flags=re.I).lower()
             label = clean(label)
             number = first_numeric(values[label_index + 1:])
-            if number is None and not revenue_rows and not eps_rows:
+            if not revenue_rows and not eps_rows and (number is None or re.fullmatch(r'20\d{2}', label)):
                 headers.extend(values)
-            if number is None and re.search(r'(?:earnings|income|loss) per (?:ordinary |common )?(?:share|ads)', label):
-                eps_group = True
+            group_label = EPS_GROUP_LABEL.fullmatch(label)
+            if number is None and group_label:
+                eps_group = 'ADS' if group_label[1] == 'ads' else 'share'
+            elif number is None and share_class and label == 'diluted earnings per share':
+                eps_group = 'class'
+            elif label not in ('basic', 'diluted') and not (eps_group == 'class' and label.startswith('class ')):
+                eps_group = None
             if number is None:
                 continue
             if REVENUE_LABEL.fullmatch(label):
                 revenue_rows.append((not label.startswith('total '), number))
-            diluted_row = eps_group and label == 'diluted'
             per_share_row = re.search(r'per (?:diluted |ordinary |common )?(?:share|ads)|\beps\b', label)
-            if re.search(r'\bdiluted\b', label) and (diluted_row or per_share_row):
+            excluded_eps = re.search(r'\b(?:non[- ]gaap|adjusted|shares? (?:used|outstanding)|weighted[- ]average)\b', label)
+            if eps_group == 'class' and label == f'class {share_class} common stock':
+                eps_rows.append((number, 'share'))
+            elif label == 'diluted' and eps_group in ('share', 'ADS'):
+                eps_rows.append((number, eps_group))
+                eps_group = None
+            elif per_share_row and not excluded_eps and re.search(r'\bdiluted\b', label):
                 eps_rows.append((number, 'ADS' if 'ads' in label else 'share'))
         if not revenue_rows or len(set(eps_rows)) != 1:
             continue
         header = clean(' '.join(headers))
-        if not re.search(r'\b(?:three months?|quarter(?:ly)?|Q[1-4])\b', header, re.I):
+        quarter_start = QUARTER_HEADER.search(header)
+        if not quarter_start:
             continue
         # Prevent taking YTD or adjusted columns when they precede the quarterly GAAP column.
-        longer_period = re.search(r'\b(?:(?:six|nine|twelve) months?|(?:full|fiscal) year)\b', header, re.I)
-        quarter_start = re.search(r'\b(?:three months?|quarter(?:ly)?|Q[1-4])\b', header, re.I)
+        longer_period = LONGER_PERIOD_HEADER.search(header)
         accounting_labels = re.findall(r'(?<![a-z])(?:non[- ]gaap|gaap|ifrs)\b', header, re.I)
         headings = re.findall(r'(?<![a-z])(non[- ]gaap|gaap|ifrs)\s+quarterly financial results\b', context, re.I)
         if not accounting_labels and headings:
@@ -353,12 +386,15 @@ def press_metrics(document, filed, currency_hint=None, accounting_hint='GAAP'):
         revenue = {value for rank, value in revenue_rows if rank == best_rank}
         if len(revenue) != 1 or min(revenue) < 0:
             continue
-        scales = set(re.findall(r'\bin\s+(thousand|million|billion)s\b', context + ' ' + header, re.I))
+        # In statements such as "in millions, except shares ... reflected in thousands",
+        # the exception applies to the share-count rows, not to revenue.
+        scale_text = re.sub(r'\bexcept\b[^()]{0,100}?\b(?:reflected|expressed|stated|shown|presented|reported) in (?:thousand|million|billion)s\b', '', context + ' ' + header, flags=re.I)
+        scales = set(re.findall(r'\bin\s+(thousand|million|billion)s\b', scale_text, re.I))
         scales |= {scale.lower() for scale in re.findall(r'\brevenues?\s*\([$€£¥]([kmb])\)', ' '.join(cell[0] for row in rows for cell in row), re.I)}
         factors = {SCALE[scale.lower()] for scale in scales}
         if len(factors) != 1:
             continue
-        dates = list(quarter_dates(header))
+        dates = statement_dates(headers, header)
         if not dates:
             for match in re.finditer(r'\bended\s+([^.;]{8,40})', lead, re.I):
                 dates.extend(quarter_dates(match[1]))
@@ -374,7 +410,10 @@ def press_metrics(document, filed, currency_hint=None, accounting_hint='GAAP'):
         if not currency:
             continue
         eps, basis = eps_rows[0]
-        quarter = press_quarter(header) or press_quarter(lead[:1000])
+        header_quarter = press_quarter(header)
+        if header_quarter and release_quarter and header_quarter != release_quarter:
+            continue
+        quarter = header_quarter or release_quarter
         accounting = accounting_labels[0].upper() if explicit_gaap else accounting_hint
         if accounting not in ('GAAP', 'IFRS'):
             continue
@@ -395,6 +434,28 @@ def recent_filings(submissions, cutoff):
             yield filed, filing
 
 
+def latest_berkshire_result(client, cik, filings, existing):
+    best = existing or None
+    for filed, filing in filings:
+        end = iso_date(filing['reportDate'])
+        if filing['form'] != '10-Q' or not end:
+            continue
+        if best and end.isoformat() <= best['periodEnd']:
+            continue
+        directory = archive_dir(cik, filing['accessionNumber'])
+        try:
+            name = berkshire_statement_name(client.get(directory + 'FilingSummary.xml'))
+            if name:
+                url = directory + name
+                metrics = berkshire_statement_metrics(FilingTables(client.get(url)), filed, end)
+                if metrics:
+                    candidate = make_result('BRK.B', filed, *metrics, url, '10-Q')
+                    best = prefer_result(best, candidate)
+        except (OSError, ValueError) as exc:
+            print(f'BRK.B: SEC statement unavailable ({exc})', file=sys.stderr)
+    return best
+
+
 def latest_result(client, symbol, cik, existing, today):
     padded = str(cik).zfill(10)
     submissions = client.json(f'{DATA}/submissions/CIK{padded}.json')
@@ -402,12 +463,15 @@ def latest_result(client, symbol, cik, existing, today):
     filings = list(recent_filings(submissions, cutoff))
     if not filings:
         return existing or None
-    facts_url = f'{DATA}/api/xbrl/companyfacts/CIK{padded}.json'
-    try:
-        facts = client.json(facts_url)
-    except (OSError, ValueError) as exc:
-        print(f'{symbol}: XBRL facts unavailable ({exc})', file=sys.stderr)
-        facts = {}
+    if symbol == 'BRK.B':
+        return latest_berkshire_result(client, cik, filings, existing)
+    issuer_exhibit = {'ASML': asml_exhibit_metrics, 'TSM': tsm_exhibit_metrics}.get(symbol)
+    facts = {}
+    if not issuer_exhibit:
+        try:
+            facts = client.json(f'{DATA}/api/xbrl/companyfacts/CIK{padded}.json')
+        except (OSError, ValueError) as exc:
+            print(f'{symbol}: XBRL facts unavailable ({exc})', file=sys.stderr)
     best = existing or None
     hinted_currency = existing.get('currency')
     reports = []
@@ -449,7 +513,13 @@ def latest_result(client, symbol, cik, existing, today):
             currency_hint = (best_candidate or {}).get('currency') or hinted_currency or ('USD' if form == '8-K' else None)
             accounting_hint = (best_candidate or {}).get('accounting') or existing.get('accounting') or ('GAAP' if form == '8-K' else None)
             for url in exhibit_urls(cik, filing, index):
-                metrics = press_metrics(client.get(url), filed, currency_hint, accounting_hint)
+                document = client.get(url)
+                if issuer_exhibit:
+                    metrics = issuer_exhibit(document, filed)
+                else:
+                    metrics = press_metrics(document, filed, currency_hint, accounting_hint, share_class='a' if symbol == 'V' else None)
+                    if not metrics and symbol == 'C' and form == '8-K':
+                        metrics = citi_exhibit_metrics(FilingTables(document), filed)
                 if not metrics:
                     continue
                 end, quarter, revenue, eps, currency, accounting, basis = metrics

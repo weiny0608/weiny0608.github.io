@@ -1098,8 +1098,9 @@
       ? `${currency} ${MONEY_NUMBER.format(result.revenue / 1e8)} 億`
       : `${currency} ${MONEY_NUMBER.format(result.revenue)}`;
     const eps = `${currency} ${MONEY_NUMBER.format(result.eps)}`;
-    const perUnit = result.epsBasis === 'ADS' ? '／ADS' : '';
-    return `營收 ${revenue} · ${result.accounting} 稀釋 EPS ${eps}${perUnit}`;
+    const perUnit = result.epsBasis === 'ADS' ? '／ADS' : result.symbol === 'TSM' ? '／普通股' : '';
+    const epsLabel = result.epsBasis === 'class_b' ? 'B 股等值 EPS' : '稀釋 EPS';
+    return `營收 ${revenue} · ${result.accounting} ${epsLabel} ${eps}${perUnit}`;
   }
 
   function renderDynamicEarningsPanel() {

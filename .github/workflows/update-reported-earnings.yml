@@ -5,12 +5,15 @@ on:
     # Cover U.S. premarket through evening earnings releases in both time zones.
     - cron: '38 11-23 * * 1-5'
     - cron: '38 0-3 * * 2-6'
+    # Some issuers publish results on weekends.
+    - cron: '38 16 * * 0,6'
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - '.github/workflows/update-reported-earnings.yml'
       - 'scripts/issuer_earnings.py'
+      - 'scripts/issuer_exhibit_specials.py'
       - 'scripts/sec_ticker_ciks.json'
       - 'scripts/sync_reported_earnings.py'
       - 'scripts/test_sync_reported_earnings.py'

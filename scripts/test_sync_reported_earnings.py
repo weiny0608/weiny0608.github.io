@@ -73,6 +73,54 @@ class ReportedEarningsTest(unittest.TestCase):
         year_first = report.replace('Q4 Fiscal 2026</td>', 'Fiscal Year 2026</td>', 1)
         self.assertIsNone(collector.press_metrics(year_first, date(2026, 11, 4), 'USD'))
 
+    def test_xbrl_accepts_sixteen_week_fourth_quarter_but_not_full_year(self):
+        quarter = {'accn': 'costco', 'start': '2026-05-11', 'end': '2026-08-30', 'fy': 2026, 'fp': 'FY'}
+        annual = {**quarter, 'start': '2025-09-01'}
+        document = {'facts': {'us-gaap': {
+            'Revenues': {'units': {'USD': [{**annual, 'val': 275_000_000_000}, {**quarter, 'val': 95_723_000_000}]}},
+            'EarningsPerShareDiluted': {'units': {'USD/shares': [{**annual, 'val': 20.12}, {**quarter, 'val': 6.75}]}},
+        }}}
+        result = collector.tagged_facts(document, 'costco', date(2026, 9, 24), date(2026, 8, 30))
+        self.assertEqual(result, (date(2026, 8, 30), 'Q4 FY2026', 95_723_000_000, 6.75, 'USD', 'GAAP'))
+
+    def test_apple_statement_does_not_treat_diluted_share_count_as_eps(self):
+        # Structure and values from the November 2, 2026 Apple 8-K earnings exhibit.
+        report = '''<h1>Apple reports fourth quarter results</h1>
+          <p>Results for its fiscal 2026 fourth quarter ended September 26, 2026.</p>
+          <h2>Condensed Consolidated Statements of Operations (Unaudited)</h2>
+          <p>(In millions, except number of shares, which are reflected in thousands, and per-share amounts)</p>
+          <table><tr><td></td><td colspan="3">Three Months Ended</td><td colspan="3">Twelve Months Ended</td></tr>
+          <tr><td></td><td>September 26,<br>2026</td><td>September 27,<br>2025</td>
+            <td>September 26,<br>2026</td><td>September 27,<br>2025</td></tr>
+          <tr><td>Total net sales<sup>(1)</sup></td><td>114,477</td><td>102,466</td><td>478,834</td></tr>
+          <tr><td>Earnings per share:</td></tr>
+          <tr><td>Basic</td><td>$</td><td>2.11</td><td>1.85</td><td>9.01</td></tr>
+          <tr><td>Diluted</td><td>$</td><td>2.10</td><td>1.85</td><td>8.98</td></tr>
+          <tr><td>Shares used in computing earnings per share:</td></tr>
+          <tr><td>Basic</td><td>14,570,195</td><td>14,815,307</td></tr>
+          <tr><td>Diluted</td><td>14,630,318</td><td>14,863,609</td></tr></table>'''
+        result = collector.press_metrics(report, date(2026, 11, 2), 'USD')
+        self.assertEqual(result, (date(2026, 9, 26), 'Q4 FY2026', 114_477_000_000, 2.10, 'USD', 'GAAP', 'share'))
+        swapped = report.replace('September 26,<br>2026</td>', 'September 27,<br>2025</td>', 1)
+        self.assertIsNone(collector.press_metrics(swapped, date(2026, 11, 2), 'USD'))
+
+    def test_visa_uses_class_a_and_quarter_end_from_split_table_header(self):
+        report = '''<h1>Visa Reports Fiscal Fourth Quarter and Full-Year 2026 Results</h1>
+          <p>Payments volume for the three months ended June 30, 2026 increased.</p>
+          <h2>Visa Consolidated Statements of Operations (unaudited)</h2>
+          <table><tr><td></td><td>Three Months EndedSeptember 30,</td><td>Twelve Months EndedSeptember 30,</td></tr>
+          <tr><td></td><td>2026</td><td>2025</td><td>2026</td><td>2025</td></tr>
+          <tr><td>(in millions, except per share data)</td></tr>
+          <tr><td>Net revenue</td><td>$</td><td>12,139</td><td>$</td><td>10,724</td></tr>
+          <tr><td>Diluted Earnings Per Share</td></tr>
+          <tr><td>Class A common stock</td><td>$</td><td>3.19</td></tr>
+          <tr><td>Class B-1 common stock</td><td>$</td><td>4.60</td></tr>
+          <tr><td>Diluted Weighted-average Shares Outstanding</td></tr>
+          <tr><td>Class A common stock</td><td>1,880</td></tr></table>'''
+        self.assertIsNone(collector.press_metrics(report, date(2026, 10, 27), 'USD'))
+        result = collector.press_metrics(report, date(2026, 10, 27), 'USD', share_class='a')
+        self.assertEqual(result, (date(2026, 9, 30), 'Q4 FY2026', 12_139_000_000, 3.19, 'USD', 'GAAP', 'share'))
+
     def test_consolidated_statement_can_report_loss_with_explicit_currency(self):
         report = '''<h1>Company Announces Third Quarter 2026 Results</h1>
           <h2>Condensed Consolidated Statements of Income</h2><p>In millions of euros, except per share data</p>

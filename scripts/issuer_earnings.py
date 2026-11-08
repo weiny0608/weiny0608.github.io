@@ -1,4 +1,4 @@
-"""Read quarterly GAAP results from official issuer sites when available."""
+"""Read quarterly results from official issuer announcements."""
 
 from datetime import date, datetime
 from decimal import Decimal
@@ -10,6 +10,15 @@ from urllib.request import Request, urlopen
 AMD_RESULTS = "https://ir.amd.com/financial-information/financial-results"
 AMD_RELEASE = re.compile(
     r'https://ir\.amd\.com/news-events/press-releases/detail/\d+/amd-reports-[a-z0-9-]+'
+)
+TSM_RELEASE = re.compile(
+    r'TSMC \(TWSE:\s*2330,\s*NYSE:\s*TSM\) today announced '
+    r'consolidated revenue of NT\$\s*(?P<revenue>\d+(?:,\d{3})*(?:\.\d+)?) billion,\s*'
+    r'net (?:income|loss) of NT\$\s*[\d,.]+ billion,\s*and diluted earnings per share of '
+    r'NT\$\s*(?P<eps>-?\d+\.\d+)(?:\s*\(US\$\s*-?\d+\.\d+ per ADR unit\))? '
+    r'for the (?P<ordinal>first|second|third|fourth) quarter ended '
+    r'(?P<end>[A-Za-z]+ \d{1,2}, 20\d{2})\.',
+    re.I,
 )
 
 
@@ -97,3 +106,81 @@ def latest_issuer_result(symbol):
         raise ValueError("AMD financial results page contains no quarterly earnings releases")
     entry = max(entries, key=lambda item: item[2])
     return _amd_result(_read(entry[3]), entry)
+
+
+def tsm_exhibit_metrics(document, filed):
+    """Parse the TIFRS consolidated release attached to a TSMC Form 6-K."""
+    text = ' '.join(unescape(re.sub(r'<[^>]+>', ' ', document)).split())
+    release = TSM_RELEASE.search(text[:2000])
+    if not release or not re.search(r'\bTIFRS on a consolidated basis\b', text[release.end():release.end() + 700], re.I):
+        return None
+    quarter = ('first', 'second', 'third', 'fourth').index(release['ordinal'].lower()) + 1
+    try:
+        period_end = datetime.strptime(release['end'], '%B %d, %Y').date()
+    except ValueError:
+        return None
+    quarter_ends = ((3, 31), (6, 30), (9, 30), (12, 31))
+    if (period_end.month, period_end.day) != quarter_ends[quarter - 1] or not 0 <= (filed - period_end).days <= 150:
+        return None
+
+    revenue = Decimal(release['revenue'].replace(',', '')) * 1_000_000_000
+    # Prefer the unrounded first column of the same quarter's TWD table when present.
+    sales = re.search(
+        rf'{period_end.year} {release["ordinal"]} quarter consolidated results:\s*'
+        rf'\(Unit:\s*NT\$ million, except for EPS\)\s*{quarter}Q{period_end.year % 100:02d} Amount\b'
+        r'[^:]{0,240}?\bNet sales\s+(\d+(?:,\d{3})*)(?=\s|$)',
+        text[release.end():], re.I,
+    )
+    if sales:
+        exact_revenue = Decimal(sales[1].replace(',', '')) * 1_000_000
+        if abs(revenue - exact_revenue) > 5_000_000:
+            return None
+        revenue = exact_revenue
+    return period_end, f'Q{quarter} FY{period_end.year}', int(revenue), float(release['eps']), 'TWD', 'IFRS', 'share'
+
+
+def asml_exhibit_metrics(document, filed):
+    """Read ASML's consolidated US GAAP income-statement slide in its Form 6-K."""
+    slides = [' '.join(unescape(content).split()) for content in
+              re.findall(r'<font\b[^>]*>([^<]*)</font>', document, re.I)]
+    title = re.search(r'\bFinancial Statements US GAAP Q([1-4]) (20\d{2})\b', ' '.join(slides[:3]), re.I)
+    if not title or not any('asml financial statements' in slide.lower() for slide in slides[:5]):
+        return None
+    quarter, year = map(int, title.groups())
+    number = r'(?:-?\d[\d,]*\.\d+|\(\d[\d,]*\.\d+\))'
+    results = set()
+    for slide in slides:
+        header = re.match(
+            r'Three months ended(?: (?P<ytd>Six months|Nine months|Twelve months|Years?) ended)? '
+            r'(?P<ends>(?:[A-Za-z]{3} \d{1,2}, ){2,4})'
+            r'\(Unaudited,\s*(?:€, in millions|in millions €), except per share data\) '
+            r'(?P<years>(?:20\d{2} ){2,4})Net system sales\b',
+            slide, re.I,
+        )
+        if not header or 'Summary US GAAP Consolidated Statements of Operations' not in slide:
+            continue
+        ends = re.findall(r'[A-Za-z]{3} \d{1,2}', header['ends'])
+        years = [int(value) for value in header['years'].split()]
+        expected_years = [year - 1, year] * (2 if header['ytd'] else 1)
+        if years != expected_years or len(ends) != len(years):
+            continue
+        try:
+            period_end = datetime.strptime(f'{ends[1]} {year}', '%b %d %Y').date()
+        except ValueError:
+            continue
+        if period_end.month != quarter * 3 or not 0 <= (filed - period_end).days <= 150:
+            continue
+        revenue = re.search(rf'\bTotal net sales ((?:{number} )+)Total cost of sales\b', slide, re.I)
+        eps = re.search(
+            rf'\bDiluted net income per ordinary share ((?:{number} )+)Weighted average number\b', slide, re.I,
+        )
+        if not revenue or not eps:
+            continue
+        sales_columns, eps_columns = revenue[1].split(), eps[1].split()
+        if len(sales_columns) != len(years) or len(eps_columns) != len(years):
+            continue
+        sales = Decimal(sales_columns[1].replace(',', '')) * 1_000_000
+        diluted = Decimal(eps_columns[1].replace(',', '').replace('(', '-').replace(')', ''))
+        if sales >= 0:
+            results.add((period_end, f'Q{quarter} FY{year}', int(sales), float(diluted), 'EUR', 'GAAP', 'share'))
+    return next(iter(results)) if len(results) == 1 else None
