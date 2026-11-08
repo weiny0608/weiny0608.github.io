@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-08T14:10:20+00:00",
+  "updatedAt": "2026-11-08T14:12:58+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -249,6 +249,19 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
+      "symbol": "AAPL",
+      "reportDate": "2026-11-02",
+      "periodEnd": "2026-09-26",
+      "quarter": "Q4 FY2026",
+      "revenue": 114477000000.0,
+      "eps": 2.1,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000024/a8-kex991q4202609262026.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
       "symbol": "TMO",
       "reportDate": "2026-10-30",
       "periodEnd": "2026-09-26",
@@ -442,6 +455,19 @@
       "epsBasis": "share",
       "sourceUrl": "https://investor.fortinet.com/news-releases/news-release-details/fortinet-reports-strong-third-quarter-2026-financial-results",
       "sourceName": "Fortinet Investor Relations"
+    },
+    {
+      "symbol": "V",
+      "reportDate": "2026-10-27",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q4 FY2026",
+      "revenue": 12139000000.0,
+      "eps": 3.19,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000126/q42026earningsrelease.htm",
+      "sourceName": "SEC Form 8-K"
     },
     {
       "symbol": "SHW",
@@ -717,6 +743,45 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
+      "symbol": "TSM",
+      "reportDate": "2026-10-15",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q3 FY2026",
+      "revenue": 1494243000000,
+      "eps": 29.43,
+      "currency": "TWD",
+      "accounting": "IFRS",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000726/a3q26e_withguidancexfinal.htm",
+      "sourceName": "SEC Form 6-K"
+    },
+    {
+      "symbol": "ASML",
+      "reportDate": "2026-10-14",
+      "periodEnd": "2026-09-27",
+      "quarter": "Q3 FY2026",
+      "revenue": 11662000000,
+      "eps": 12.93,
+      "currency": "EUR",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/financial_statementsxusx.htm",
+      "sourceName": "SEC Form 6-K"
+    },
+    {
+      "symbol": "C",
+      "reportDate": "2026-10-13",
+      "periodEnd": "2026-09-30",
+      "quarter": "Q3 FY2026",
+      "revenue": 23845000000,
+      "eps": 2.85,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/831001/000110465926115323/c-ex99d1.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
       "symbol": "PEP",
       "reportDate": "2026-10-08",
       "periodEnd": "2026-09-05",
@@ -756,6 +821,19 @@
       "sourceName": "SEC Form 8-K"
     },
     {
+      "symbol": "COST",
+      "reportDate": "2026-09-24",
+      "periodEnd": "2026-08-30",
+      "quarter": "Q4 FY2026",
+      "revenue": 95723000000.0,
+      "eps": 6.75,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000084/costex9918-k92426.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
       "symbol": "ADBE",
       "reportDate": "2026-09-22",
       "periodEnd": "2026-08-28",
@@ -792,6 +870,19 @@
       "accounting": "GAAP",
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000076/avgo-08022026x8kxex99.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
+      "symbol": "PANW",
+      "reportDate": "2026-09-01",
+      "periodEnd": "2026-07-31",
+      "quarter": "Q4 FY2026",
+      "revenue": 3410000000.0,
+      "eps": -0.35,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000019/ex991q426earningsrelease.htm",
       "sourceName": "SEC Form 8-K"
     },
     {
@@ -886,6 +977,19 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
+      "symbol": "INTU",
+      "reportDate": "2026-08-25",
+      "periodEnd": "2026-07-31",
+      "quarter": "Q4 FY2026",
+      "revenue": 4354000000.0,
+      "eps": 1.34,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000029/fy26q4earningspressrelease.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
       "symbol": "HD",
       "reportDate": "2026-08-25",
       "periodEnd": "2026-08-02",
@@ -925,6 +1029,19 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
+      "symbol": "CSCO",
+      "reportDate": "2026-08-12",
+      "periodEnd": "2026-07-25",
+      "quarter": "Q4 FY2026",
+      "revenue": 17252000000.0,
+      "eps": 0.97,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000106/exhibit991pressrelease-q4f.htm",
+      "sourceName": "SEC Form 8-K"
+    },
+    {
       "symbol": "DIS",
       "reportDate": "2026-08-05",
       "periodEnd": "2026-06-27",
@@ -936,50 +1053,11 @@
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
       "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "AAPL",
-      "reportDate": "2026-07-31",
-      "periodEnd": "2026-06-27",
-      "quarter": "Q3 FY2026",
-      "revenue": 109417000000,
-      "eps": 2.02,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "PANW",
-      "reportDate": "2026-06-03",
-      "periodEnd": "2026-04-30",
-      "quarter": "Q3 FY2026",
-      "revenue": 3002000000,
-      "eps": -0.22,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000015/panw-20260430.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "COST",
-      "reportDate": "2026-06-03",
-      "periodEnd": "2026-05-10",
-      "quarter": "Q3 FY2026",
-      "revenue": 70527000000,
-      "eps": 4.93,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000051/cost-20260510.htm",
-      "sourceName": "SEC Form 10-Q"
     }
   ],
   "coverage": {
     "total": 82,
-    "withResults": 75
+    "withResults": 81
   },
   "secStatus": "available"
 }
