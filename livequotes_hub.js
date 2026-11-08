@@ -23,11 +23,17 @@
   });
   const EARNINGS_SYMBOL = /^[A-Z][A-Z.0-9-]{0,9}$/;
   const DAY_MS = 86400000;
+  const MODEL_EPS_FIELDS = ['eps27', 'eps28', 'eps29'];
   let reportedEarnings = new Map();
   let reportedEarningsUpdatedAt = null;
   let reportedEarningsSyncFailed = false;
   let reportedEarningsSecUnavailable = false;
   let reportedEarningsRequest;
+
+  window.getReportedEarningsForValuation = function (symbol) {
+    const report = reportedEarnings.get(symbol);
+    return report ? { ...report } : null;
+  };
 
   // 2026-10-21 GOOGLEFINANCE 雲端即時股價中樞最新快照 (2026-10-20 美股收盤 0ms 零延遲啟動基準)
   const LIVE_QUOTES_SNAPSHOT = {
@@ -1205,17 +1211,39 @@
   window.renderDynamicEarningsPanel = renderDynamicEarningsPanel;
 
   // 將報價與財報日期字典套用至頁面上的 stocks / GOOGLE_FINANCE_LATEST_CLOSES / FCN 模擬器並重繪
+  function setValuationQuoteStatus(message) {
+    if (!document.getElementById('valuation-section')) return;
+    const status = document.getElementById('livequotes-hub-status');
+    if (status) status.textContent = message;
+  }
+
+  function applyModelCalibration(stock, calibration) {
+    const fields = MODEL_EPS_FIELDS.filter(field => Number.isFinite(calibration?.[field]));
+    if (!fields.length) return false;
+    if (!stock._valuationOriginalEps) {
+      stock._valuationOriginalEps = Object.fromEntries(MODEL_EPS_FIELDS
+        .filter(field => Object.prototype.hasOwnProperty.call(stock, field))
+        .map(field => [field, stock[field]]));
+    }
+    fields.forEach(field => { stock[field] = calibration[field]; });
+    stock._valuationCalibrationAt = typeof calibration.updatedAt === 'string'
+      && Number.isFinite(Date.parse(calibration.updatedAt)) ? calibration.updatedAt : null;
+    return true;
+  }
+
   function applyQuotesToPage(quotesMap, sourceLabel) {
     if (!quotesMap) return;
+    const isValuationPage = !!document.getElementById('valuation-section');
 
-    // 同步頂部基準日文字
-    const now = new Date();
-    const todayStr = `${now.getFullYear()} 年 ${now.getMonth() + 1} 月 ${now.getDate()} 日`;
-    document.querySelectorAll('.header p').forEach(pEl => {
-      if (pEl.textContent.includes('基準日：')) {
-        pEl.textContent = pEl.textContent.replace(/基準日：[^｜]+/, `基準日：${todayStr} (雲端即時同步) `);
-      }
-    });
+    if (!isValuationPage) {
+      const now = new Date();
+      const todayStr = `${now.getFullYear()} 年 ${now.getMonth() + 1} 月 ${now.getDate()} 日`;
+      document.querySelectorAll('.header p').forEach(pEl => {
+        if (pEl.textContent.includes('基準日：')) {
+          pEl.textContent = pEl.textContent.replace(/基準日：[^｜]+/, `基準日：${todayStr} (雲端即時同步) `);
+        }
+      });
+    }
 
     if (typeof GOOGLE_FINANCE_LATEST_CLOSES !== 'undefined') {
       Object.keys(quotesMap).forEach(sym => {
@@ -1239,6 +1267,7 @@
       }
       // 強制校準 NFLX (拆股後基期 1:10) 與 TSM (最新 ADR EPS 基期 $20.50)，消除估值失真
       stocks.forEach(s => {
+        if (s._valuationOriginalEps) return;
         if (s.t === 'NFLX' && s.eps27 > 10) {
           s.eps27 = 2.52; s.eps28 = 2.95; s.eps29 = 3.40;
         }
@@ -1274,14 +1303,10 @@
       });
 
       try {
-        const savedCalib = JSON.parse(localStorage.getItem('EPS_CALIBRATIONS_V1') || '{}');
-        Object.keys(savedCalib).forEach(sym => {
+        const savedCalib = JSON.parse(localStorage.getItem('EPS_CALIBRATIONS_V1') || '{}') || {};
+        Object.entries(savedCalib).forEach(([sym, calibration]) => {
           const st = stocks.find(x => x.t === sym);
-          if (st && savedCalib[sym]) {
-            if (savedCalib[sym].eps27) st.eps27 = savedCalib[sym].eps27;
-            if (savedCalib[sym].eps28) st.eps28 = savedCalib[sym].eps28;
-            if (savedCalib[sym].eps29) st.eps29 = savedCalib[sym].eps29;
-          }
+          if (st) applyModelCalibration(st, calibration);
         });
       } catch (e) {}
 
@@ -1297,7 +1322,7 @@
     renderDynamicEarningsPanel();
 
     const statusEl = document.getElementById('livequotes-hub-status');
-    if (statusEl && sourceLabel) {
+    if (statusEl && sourceLabel && !isValuationPage) {
       statusEl.innerHTML = `🟢 <strong>LiveQuotes 雲端報價與財報排程中樞已同步</strong> (${sourceLabel}) ｜ 已即時更新 ${Object.keys(quotesMap).length} 檔美股現價、六大總經指標與財報倒數`;
     }
   }
@@ -1317,7 +1342,7 @@
       if (!sObj) return;
 
       const priceTd = tds[5];
-      if (priceTd && !priceTd.dataset.lqDecorated) {
+      if (priceTd && !priceTd.dataset.lqDecorated && Number.isFinite(sObj.p) && sObj.p > 0) {
         priceTd.dataset.lqDecorated = "1";
         const chg = sObj.chg;
         const chgHtml = (chg !== undefined && chg !== null && !isNaN(chg))
@@ -1425,19 +1450,13 @@
     const st = stocks.find(x => x.t === sym);
     if (!st) return;
 
-    if (!st._origEps27) {
-      st._origEps27 = st.eps27;
-      st._origEps28 = st.eps28;
-      st._origEps29 = st.eps29;
-    }
-
-    st.eps27 = eps27;
-    st.eps28 = eps28;
-    st.eps29 = eps29;
+    const calibration = { eps27, eps28, eps29, updatedAt: new Date().toISOString() };
+    if (!MODEL_EPS_FIELDS.every(field => Number.isFinite(calibration[field]))) return;
+    applyModelCalibration(st, calibration);
 
     try {
-      const saved = JSON.parse(localStorage.getItem('EPS_CALIBRATIONS_V1') || '{}');
-      saved[sym] = { eps27, eps28, eps29, updatedAt: new Date().toISOString() };
+      const saved = JSON.parse(localStorage.getItem('EPS_CALIBRATIONS_V1') || '{}') || {};
+      saved[sym] = calibration;
       localStorage.setItem('EPS_CALIBRATIONS_V1', JSON.stringify(saved));
     } catch (e) {}
 
@@ -1452,11 +1471,15 @@
     try { localStorage.removeItem('EPS_CALIBRATIONS_V1'); } catch (e) {}
     if (typeof stocks !== 'undefined' && Array.isArray(stocks)) {
       stocks.forEach(s => {
-        if (s._origEps27) {
-          s.eps27 = s._origEps27;
-          s.eps28 = s._origEps28;
-          s.eps29 = s._origEps29;
+        const original = s._valuationOriginalEps;
+        if (original) {
+          MODEL_EPS_FIELDS.forEach(field => {
+            if (Object.prototype.hasOwnProperty.call(original, field)) s[field] = original[field];
+            else delete s[field];
+          });
+          delete s._valuationOriginalEps;
         }
+        delete s._valuationCalibrationAt;
       });
       if (typeof renderTable === 'function') renderTable();
       if (typeof calcPortfolioRisk === 'function') calcPortfolioRisk();
@@ -1549,6 +1572,7 @@
     ];
 
     let anySynced = false;
+    let pricesRetrievedAt = null;
 
     for (const url of sheetUrls) {
       try {
@@ -1611,6 +1635,7 @@
             }
 
             if (price && price > 0) {
+              pricesRetrievedAt = new Date();
               const prev = window.LIVE_QUOTES_HUB[sym] || {};
               const dateMatch = v7.match(/(\d{4}-\d{2}-\d{2})/);
               window.LIVE_QUOTES_HUB[sym] = {
@@ -1634,6 +1659,7 @@
             const parsedP = parseFloat(pRaw);
             if (!isNaN(parsedP) && parsedP > 0 && !window.LIVE_QUOTES_HUB[sym].price) {
               window.LIVE_QUOTES_HUB[sym].price = parsedP;
+              pricesRetrievedAt = new Date();
             }
             if (dateMatch) window.LIVE_QUOTES_HUB[sym].sheetEd = dateMatch[1];
             updatedCount++;
@@ -1655,6 +1681,11 @@
 
     if (!anySynced && manualTrigger) {
       applyQuotesToPage(window.LIVE_QUOTES_HUB, 'Google Finance 雲端快照基準 (2026-10-21)');
+    }
+    if (pricesRetrievedAt) {
+      setValuationQuoteStatus(`Google 試算表報價讀取時間（台北）${SYNC_TIME.format(pricesRetrievedAt)}。個別市場報價時間未提供，部分標的可能沿用備援資料。`);
+    } else if (manualTrigger) {
+      setValuationQuoteStatus('此次未讀到 Google 試算表報價，可能顯示先前報價或內建快照。');
     }
     return anySynced;
   }
@@ -1717,6 +1748,7 @@
   function initLiveQuotesAndEarningsEngine() {
     hookRenderTable();
     injectUpgradePanels();
+    setValuationQuoteStatus('內建報價備援為美東 2026-10-20 收盤基準。財報依個別官方來源更新。');
     applyMacroIndicatorsToPage(window.MACRO_INDICATORS_HUB, 'BEA/BLS/ADP 官方快照 (11/05)');
     applyQuotesToPage(window.LIVE_QUOTES_HUB, 'GOOGLEFINANCE 雲端快照 (10/21)');
     syncEarningsHubFromCloud(false);

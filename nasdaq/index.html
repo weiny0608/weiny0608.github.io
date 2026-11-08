@@ -944,7 +944,7 @@
     <div>
       <div class="badge-live">系統自動排程連線中 ｜ Google Fast Data 引擎</div>
       <h1>美股儀表板：標普 500、道瓊與納斯達克巨頭三年估值動態</h1>
-      <p>基準日：2026 年 10 月 29 日 ｜ 10 年期美債 5.05% 即時定錨 ｜ 支援標普 500、納斯達克與道瓊三大指數切換 ｜ 自由現金流、本益比與多標的投資組合總體風險評估模型</p>
+      <p>支援標普 500、納斯達克與道瓊三大指數切換 ｜ 財報、報價與估值假設的來源和日期見各區</p>
     </div>
     <div style="text-align: right;">
       <div class="mono" style="font-size: 18px; font-weight: 800; color: var(--accent);">US10Y: 5.05% <span style="font-size: 12px; color: var(--green); font-weight: 600;">(-2 bps)</span></div>
@@ -1260,7 +1260,7 @@
     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
       <div class="control-group">
         <label>情境模式：</label>
-        <select id="scenarioSelect" onchange="renderTable()">
+        <select id="scenarioSelect" onchange="renderTable(); calcPortfolioRisk()">
           <option value="base" selected>中性情境 (Base Case)</option>
           <option value="bear">偏弱情境 (Bearish)</option>
           <option value="bull">偏強情境 (Bullish)</option>
@@ -1301,6 +1301,10 @@
 
   <!-- Data Table Card -->
   <div class="table-card" style="margin-bottom: 36px;">
+    <p style="padding:12px 14px; margin:0; font-size:12px; line-height:1.6; color:var(--text-muted);">
+      <strong>官方實績</strong>　單季 EPS 依各筆官方公告，季末日與來源列在數字下方。近四季本益比及自由現金流待核實，暫不計入評分。<br>
+      <strong>估值試算</strong>　FY27–29 使用頁面內建 EPS 與本益比假設。內建假設未提供設定日期，套用個別 EPS 情境後會顯示套用日。回報欄為模型試算。
+    </p>
     <div class="table-container">
       <table id="stockTable">
         <thead>
@@ -1310,19 +1314,19 @@
             <th onclick="sortTable('n')">公司名稱</th>
             <th>所屬指數</th>
             <th>分類領域</th>
-            <th onclick="sortTable('p')">現價</th>
-            <th onclick="sortTable('eps')">當前 EPS</th>
-            <th onclick="sortTable('peCurrent')">當前 P/E</th>
-            <th onclick="sortTable('peForward')">預估 P/E</th>
+            <th onclick="sortTable('p')">試算股價</th>
+            <th>官方單季 EPS</th>
+            <th onclick="sortTable('peCurrent')">近四季 P/E</th>
+            <th onclick="sortTable('peForward')">模型預估 P/E</th>
             <th onclick="sortTable('fcf')">自由現金流 (FCF)</th>
-            <th onclick="sortTable('riskScore')">風險係數</th>
+            <th onclick="sortTable('riskScore')">模型風險參考</th>
             <th onclick="sortTable('ed')">財報日期</th>
             <th onclick="sortTable('days')">倒數天數</th>
-            <th>FY27 估值</th>
-            <th>FY28 估值</th>
-            <th>FY29 估值</th>
-            <th onclick="sortTable('totalRet')">3年累積回報</th>
-            <th onclick="sortTable('cagr')">3年年化 (CAGR)</th>
+            <th>FY27 模型估值</th>
+            <th>FY28 模型估值</th>
+            <th>FY29 模型估值</th>
+            <th onclick="sortTable('totalRet')">模型累積回報</th>
+            <th onclick="sortTable('cagr')">模型年化 (CAGR)</th>
             <th style="text-align: center;">投組加入</th>
           </tr>
         </thead>
@@ -1341,14 +1345,14 @@
       <div>
         <h2 style="font-size: 18px; font-weight: 800; color: #132a18;">多標的投資組合風險評估與估值安全邊際診斷</h2>
         <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
-          綜合「當前本益比、預估本益比壓縮度、自由現金流 (FCF) 印鈔規模、3年 CAGR 安全邊際與無風險利率折現壓力」建立動態風險係數 (0~100)
+          預估本益比與 3 年年化沿用上方估值情境。近四季本益比和自由現金流需有可核對的財務來源與期間，資料齊全才顯示整體評級。
         </p>
       </div>
       <div class="risk-presets">
         <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 2px;">快捷組合：</span>
         <button class="risk-preset-btn active" onclick="loadRiskPreset('p1', this)">AI 核心進攻組 (NVDA/TSM/MSFT/AVGO)</button>
         <button class="risk-preset-btn" onclick="loadRiskPreset('p2', this)">科技巨頭防禦組 (AAPL/GOOGL/MSFT/META)</button>
-        <button class="risk-preset-btn" onclick="loadRiskPreset('p3', this)">現金流印鈔機 (AAPL/MSFT/GOOGL/AMZN)</button>
+        <button class="risk-preset-btn" onclick="loadRiskPreset('p3', this)">大型科技組合 (AAPL/MSFT/GOOGL/AMZN)</button>
         <button class="risk-preset-btn" onclick="loadRiskPreset('p4', this)">多元全天候平衡 (NVDA/AAPL/JPM/XOM)</button>
         <button class="risk-preset-btn" onclick="loadRiskPreset('custom', this)">自由自訂</button>
       </div>
@@ -1384,19 +1388,19 @@
       <!-- Right Column: Risk Diagnosis, Gauge & Key Metrics -->
       <div>
         <!-- Overall Status Banner -->
-        <div id="portfolioRiskBanner" class="risk-banner banner-low">
+        <div id="portfolioRiskBanner" class="risk-banner">
           <div class="risk-banner-header">
             <div>
               <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">投資組合總體風險評級</div>
-              <div id="portfolioRiskTitle" style="font-size: 17px; font-weight: 800; margin-top: 2px;">🟢 穩健防禦等級 (估值安全邊際充足)</div>
+              <div id="portfolioRiskTitle" style="font-size: 17px; font-weight: 800; margin-top: 2px;">風險評級待確認</div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 10px; opacity: 0.8;">加權綜合風險分數</div>
-              <div id="portfolioRiskScore" class="risk-score-badge mono">42.5</div>
+              <div id="portfolioRiskScore" class="risk-score-badge mono">待確認</div>
             </div>
           </div>
           <div id="portfolioRiskDesc" class="risk-desc-text">
-            投組整體估值與預估成長性處於合理區間，自由現金流充沛，具備較佳的抗利率波動防禦能力。
+            將依各持股已確認的資料顯示可計算的指標。
           </div>
         </div>
 
@@ -1404,10 +1408,10 @@
         <div class="risk-gauge-box">
           <div style="display: flex; justify-content: space-between; align-items: baseline;">
             <span style="font-size: 11.5px; font-weight: 700; color: #244129;">組合風險指針儀表盤 (0 ~ 100)</span>
-            <span id="riskGaugeStatusText" style="font-size: 11px; font-weight: 700; color: var(--accent);">低~中度風險區</span>
+            <span id="riskGaugeStatusText" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">待確認</span>
           </div>
           <div class="risk-gauge-track">
-            <div id="riskGaugeNeedle" class="risk-gauge-needle" style="left: 42.5%;" data-score="42.5"></div>
+            <div id="riskGaugeNeedle" class="risk-gauge-needle" hidden></div>
           </div>
           <div class="risk-gauge-labels">
             <span>🟢 穩健防禦 (0~35)</span>
@@ -1420,20 +1424,20 @@
         <!-- 4 Key Portfolio Metrics -->
         <div class="risk-metrics-grid">
           <div class="risk-metric-box">
-            <div class="risk-metric-lbl">加權當前 P/E</div>
-            <div class="risk-metric-val mono" id="metricWeightedCurrentPE">32.4x</div>
+            <div class="risk-metric-lbl">加權近四季 P/E</div>
+            <div class="risk-metric-val mono" id="metricWeightedCurrentPE">待確認</div>
           </div>
           <div class="risk-metric-box">
-            <div class="risk-metric-lbl">加權預估 P/E</div>
-            <div class="risk-metric-val mono" id="metricWeightedForwardPE">26.8x</div>
+            <div class="risk-metric-lbl">加權預估 P/E（情境）</div>
+            <div class="risk-metric-val mono" id="metricWeightedForwardPE">待確認</div>
           </div>
           <div class="risk-metric-box">
-            <div class="risk-metric-lbl">投組年 FCF 總額</div>
-            <div class="risk-metric-val mono" style="color: var(--green);" id="metricTotalFCF">$175.3B</div>
+            <div class="risk-metric-lbl">持股公司 FCF 合計</div>
+            <div class="risk-metric-val mono" id="metricTotalFCF">待確認</div>
           </div>
           <div class="risk-metric-box">
-            <div class="risk-metric-lbl">3年預估年化 (CAGR)</div>
-            <div class="risk-metric-val mono" id="metricWeightedCAGR">+14.2%</div>
+            <div class="risk-metric-lbl">3 年預估年化（情境）</div>
+            <div class="risk-metric-val mono" id="metricWeightedCAGR">待確認</div>
           </div>
         </div>
 
@@ -1444,40 +1448,40 @@
           <div class="dim-row">
             <div class="dim-header">
               <span>估值擴張溢價壓力 (Valuation Stretch)</span>
-              <span id="dimValuationScore" class="mono">58 / 100</span>
+              <span id="dimValuationScore" class="mono">待確認</span>
             </div>
             <div class="dim-bar-wrap">
-              <div id="dimValuationBar" class="dim-bar-fill" style="width: 58%; background: #f59e0b;"></div>
+              <div id="dimValuationBar" class="dim-bar-fill" style="width: 0;"></div>
             </div>
           </div>
 
           <div class="dim-row">
             <div class="dim-header">
               <span>未來 3 年安全邊際風險 (Margin of Safety)</span>
-              <span id="dimSafetyScore" class="mono">35 / 100</span>
+              <span id="dimSafetyScore" class="mono">待確認</span>
             </div>
             <div class="dim-bar-wrap">
-              <div id="dimSafetyBar" class="dim-bar-fill" style="width: 35%; background: #10b981;"></div>
+              <div id="dimSafetyBar" class="dim-bar-fill" style="width: 0;"></div>
             </div>
           </div>
 
           <div class="dim-row">
             <div class="dim-header">
               <span>自由現金流保護墊 (Cash Cushion Risk)</span>
-              <span id="dimFcfScore" class="mono">20 / 100</span>
+              <span id="dimFcfScore" class="mono">待確認</span>
             </div>
             <div class="dim-bar-wrap">
-              <div id="dimFcfBar" class="dim-bar-fill" style="width: 20%; background: #10b981;"></div>
+              <div id="dimFcfBar" class="dim-bar-fill" style="width: 0;"></div>
             </div>
           </div>
 
           <div class="dim-row">
             <div class="dim-header">
               <span>產業集中度風險 (Sector Concentration)</span>
-              <span id="dimSectorScore" class="mono">52 / 100</span>
+              <span id="dimSectorScore" class="mono">待確認</span>
             </div>
             <div class="dim-bar-wrap">
-              <div id="dimSectorBar" class="dim-bar-fill" style="width: 52%; background: #f59e0b;"></div>
+              <div id="dimSectorBar" class="dim-bar-fill" style="width: 0;"></div>
             </div>
           </div>
         </div>
@@ -1497,12 +1501,12 @@
               <th>代號</th>
               <th>公司名稱</th>
               <th>板塊領域</th>
-              <th>當前現價</th>
+              <th>試算股價</th>
               <th>配置權重</th>
-              <th>當前 P/E</th>
-              <th>預估 P/E</th>
+              <th>近四季 P/E</th>
+              <th>預估 P/E（情境）</th>
               <th>自由現金流 (FCF)</th>
-              <th>3年年化 (CAGR)</th>
+              <th>3 年預估年化（情境）</th>
               <th>個別風險係數</th>
               <th>風險評級</th>
               <th>風險貢獻</th>
@@ -1666,108 +1670,82 @@
       renderTable();
     }
 
-    // ==========================================================
-    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
-    // ==========================================================
-// ==========================================================
-    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
-    // ==========================================================
-            // ==========================================================
-    // FINANCIAL INDICATORS DATABASE & RISK SCORING MODEL
-    // ==========================================================
-const STOCK_FINANCIALS = {
-      "NVDA": { eps: 3.15, fcf: 60.8, peCurrent: 45.2 },
-      "MSFT": { eps: 12.30, fcf: 74.1, peCurrent: 35.4 },
-      "AAPL": { eps: 6.65, fcf: 108.8, peCurrent: 34.3 },
-      "AMZN": { eps: 4.70, fcf: 53.0, peCurrent: 42.1 },
-      "GOOGL": { eps: 7.55, fcf: 69.1, peCurrent: 23.2 },
-      "GOOG": { eps: 7.55, fcf: 69.1, peCurrent: 23.2 },
-      "META": { eps: 22.10, fcf: 51.2, peCurrent: 26.9 },
-      "TSLA": { eps: 3.40, fcf: 7.5, peCurrent: 72.1 },
-      "AVGO": { eps: 5.40, fcf: 21.9, peCurrent: 33.0 },
-      "TSM": { eps: 6.80, fcf: 28.5, peCurrent: 27.7 },
-      "ASML": { eps: 21.50, fcf: 7.2, peCurrent: 40.0 },
-      "AMD": { eps: 3.80, fcf: 4.5, peCurrent: 41.6 },
-      "QCOM": { eps: 10.20, fcf: 11.2, peCurrent: 16.2 },
-      "TXN": { eps: 5.80, fcf: 3.8, peCurrent: 33.1 },
-      "AMAT": { eps: 8.80, fcf: 7.6, peCurrent: 23.3 },
-      "LRCX": { eps: 33.50, fcf: 4.8, peCurrent: 23.4 },
-      "KLAC": { eps: 28.40, fcf: 3.5, peCurrent: 25.4 },
-      "MU": { eps: 7.55, fcf: 4.2, peCurrent: 14.2 },
-      "ARM": { eps: 1.55, fcf: 1.4, peCurrent: 89.0 },
-      "ADI": { eps: 6.40, fcf: 3.2, peCurrent: 34.4 },
-      "MRVL": { eps: 1.50, fcf: 1.8, peCurrent: 52.0 },
-      "NXPI": { eps: 13.50, fcf: 3.1, peCurrent: 17.8 },
-      "INTC": { eps: 1.20, fcf: 2.1, peCurrent: 19.6 },
-      "ORCL": { eps: 7.20, fcf: 12.3, peCurrent: 23.3 },
-      "CRM": { eps: 11.50, fcf: 12.4, peCurrent: 24.8 },
-      "ADBE": { eps: 18.50, fcf: 8.2, peCurrent: 27.6 },
-      "NOW": { eps: 17.50, fcf: 3.6, peCurrent: 50.9 },
-      "INTU": { eps: 18.90, fcf: 5.2, peCurrent: 33.9 },
-      "PANW": { eps: 6.30, fcf: 3.2, peCurrent: 54.8 },
-      "CRWD": { eps: 4.10, fcf: 1.2, peCurrent: 69.5 },
-      "PLTR": { eps: 0.55, fcf: 1.1, peCurrent: 76.4 },
-      "IBM": { eps: 11.20, fcf: 12.5, peCurrent: 19.2 },
-      "CSCO": { eps: 3.75, fcf: 10.2, peCurrent: 14.7 },
-      "SNPS": { eps: 13.80, fcf: 1.9, peCurrent: 40.6 },
-      "CDNS": { eps: 6.50, fcf: 1.4, peCurrent: 42.3 },
-      "FTNT": { eps: 2.10, fcf: 2.1, peCurrent: 36.2 },
-      "WDAY": { eps: 7.20, fcf: 2.4, peCurrent: 34.7 },
-      "UBER": { eps: 2.80, fcf: 6.2, peCurrent: 27.9 },
-      "NFLX": { eps: 19.80, fcf: 7.1, peCurrent: 34.6 },
-      "BRK.B": { eps: 22.00, fcf: 38.5, peCurrent: 20.5 },
-      "JPM": { eps: 18.50, fcf: 35.0, peCurrent: 11.8 },
-      "BAC": { eps: 3.40, fcf: 22.0, peCurrent: 12.1 },
-      "WFC": { eps: 5.15, fcf: 18.0, peCurrent: 12.1 },
-      "C": { eps: 5.40, fcf: 14.5, peCurrent: 12.0 },
-      "GS": { eps: 38.50, fcf: 15.2, peCurrent: 12.9 },
-      "MS": { eps: 7.20, fcf: 11.8, peCurrent: 15.1 },
-      "AXP": { eps: 13.50, fcf: 12.5, peCurrent: 19.1 },
-      "V": { eps: 12.00, fcf: 20.5, peCurrent: 22.9 },
-      "MA": { eps: 14.80, fcf: 14.2, peCurrent: 28.5 },
-      "WMT": { eps: 2.45, fcf: 15.5, peCurrent: 33.3 },
-      "COST": { eps: 16.20, fcf: 8.5, peCurrent: 56.3 },
-      "JNJ": { eps: 9.80, fcf: 19.5, peCurrent: 16.8 },
-      "UNH": { eps: 27.50, fcf: 28.0, peCurrent: 21.3 },
-      "LLY": { eps: 18.50, fcf: 6.8, peCurrent: 50.0 },
-      "PFE": { eps: 2.30, fcf: 9.5, peCurrent: 12.7 },
-      "MRK": { eps: 7.80, fcf: 14.0, peCurrent: 15.1 },
-      "ABBV": { eps: 11.20, fcf: 18.5, peCurrent: 17.2 },
-      "CVS": { eps: 6.50, fcf: 8.2, peCurrent: 9.4 },
-      "DIS": { eps: 4.85, fcf: 8.5, peCurrent: 19.9 },
-      "MCD": { eps: 11.80, fcf: 7.2, peCurrent: 25.6 },
-      "PEP": { eps: 8.10, fcf: 9.2, peCurrent: 21.6 },
-      "KO": { eps: 2.85, fcf: 11.0, peCurrent: 25.4 },
-      "XOM": { eps: 9.20, fcf: 35.0, peCurrent: 13.5 },
-      "CVX": { eps: 12.50, fcf: 19.8, peCurrent: 12.2 },
-      "T": { eps: 2.25, fcf: 17.5, peCurrent: 9.8 },
-      "VZ": { eps: 4.60, fcf: 18.2, peCurrent: 9.7 },
-      "GM": { eps: 9.80, fcf: 11.5, peCurrent: 4.9 },
-      "TM": { eps: 22.00, fcf: 24.0, peCurrent: 9.8 }
-    };
+    const valuationDateFormat = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Taipei' });
 
-    function calcStockRiskScore(s, fwdPE, cagr, fcf, curPE) {
-      let valScore = fwdPE <= 15 ? 15 : (fwdPE <= 25 ? 35 : (fwdPE <= 35 ? 60 : (fwdPE <= 50 ? 80 : 95)));
-      let cagrScore = cagr >= 18 ? 15 : (cagr >= 10 ? 35 : (cagr >= 5 ? 55 : (cagr >= 0 ? 75 : 95)));
-      let fcfScore = fcf >= 50 ? 10 : (fcf >= 20 ? 25 : (fcf >= 8 ? 45 : (fcf >= 2 ? 65 : 85)));
-      let rateScore = (curPE > 40 || (s && s.cat === 'SEMIS')) ? 75 : (((s && (s.cat === 'FINANCE' || s.cat === 'ENERGY'))) ? 25 : 50);
-      const score = Math.round(valScore * 0.30 + cagrScore * 0.30 + fcfScore * 0.25 + rateScore * 0.15);
-      return Math.min(99, Math.max(10, score));
+    function currentValuationScenario() {
+      return document.getElementById('scenarioSelect')?.value || 'base';
+    }
+
+    function valuationNumber(value, digits = 1, prefix = '', suffix = '') {
+      return Number.isFinite(value) ? `${prefix}${value.toFixed(digits)}${suffix}` : '待確認';
+    }
+
+    function valuationPercent(value) {
+      return valuationNumber(value, 1, value >= 0 ? '+' : '', '%');
+    }
+
+    function valuationMetrics(stock, scenario = 'base') {
+      const multiplier = scenario === 'bull' ? 1.15 : scenario === 'bear' ? 0.85 : 1;
+      const price = Number.isFinite(stock?.p) && stock.p > 0 ? stock.p : null;
+      const assumedPE = Number.isFinite(stock?.pe) && stock.pe > 0 ? stock.pe * multiplier : null;
+      const assumption = Number.isFinite(stock?.mult) && stock.mult > 0 ? stock.mult : null;
+      const [eps27, eps28, eps29] = ['eps27', 'eps28', 'eps29'].map(key => {
+        const eps = stock?.[key];
+        return Number.isFinite(eps) && eps > 0 ? eps * multiplier : null;
+      });
+      const modelValue = (eps, adjustment) =>
+        eps !== null && assumedPE !== null && adjustment !== null ? eps * assumedPE * adjustment : null;
+      const val27 = modelValue(eps27, assumption);
+      const val28 = modelValue(eps28, assumption === null ? null : assumption * 0.98);
+      const val29 = modelValue(eps29, 0.94);
+      const changeRatio = price !== null && val29 !== null ? val29 / price : null;
+      const totalRet = changeRatio === null ? null : (changeRatio - 1) * 100;
+      const cagr = changeRatio === null ? null : (Math.cbrt(changeRatio) - 1) * 100;
+      const peForward = price !== null && eps27 !== null ? price / eps27 : null;
+
+      // Official earnings supply quarterly EPS. Current P/E and FCF need separately verified inputs.
+      const peCurrent = null;
+      const fcf = null;
+      const valuation = peForward === null ? null
+        : peForward <= 15 ? 15 : peForward <= 25 ? 35 : peForward <= 35 ? 60 : peForward <= 50 ? 80 : 95;
+      const safety = cagr === null ? null : cagr >= 18 ? 15 : cagr >= 10 ? 35 : cagr >= 5 ? 55 : cagr >= 0 ? 75 : 95;
+      const riskFactors = { valuation, safety, fcf: null, rate: null };
+      // The two available model factors carry equal weight. Publish their coverage alongside the score.
+      const available = [valuation, safety].filter(Number.isFinite);
+      const riskScore = available.length ? Math.round(available.reduce((sum, value) => sum + value, 0) / available.length) : null;
+      return { price, peCurrent, peForward, fcf, val27, val28, val29, totalRet, cagr, riskFactors, riskScore };
+    }
+
+    function escapeValuationText(value) {
+      const entity = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+      return String(value ?? '').replace(/[&<>"']/g, char => entity[char]);
+    }
+
+    function officialEpsMarkup(symbol) {
+      const report = window.getReportedEarningsForValuation?.(symbol);
+      if (!report || !Number.isFinite(report.eps)) return '待確認';
+      const basis = report.epsBasis === 'ADS' ? '／ADS' : report.epsBasis === 'class_b' ? ' B 股等值' : '／股';
+      return `<strong>${escapeValuationText(report.currency)} ${report.eps.toFixed(2)}${basis}</strong>
+        <div style="font-size:10px; color:var(--text-muted);">${escapeValuationText(report.accounting)} · 季末 ${escapeValuationText(report.periodEnd)}</div>
+        <a href="${escapeValuationText(report.sourceUrl)}" target="_blank" rel="noopener" style="font-size:10px;" title="公布或申報日 ${escapeValuationText(report.reportDate)}">${escapeValuationText(report.sourceName || '官方來源')} ↗</a>`;
+    }
+
+    function valuationSourceLabel(stock) {
+      if (!Object.hasOwn(stock, '_valuationCalibrationAt')) return '內建模型 · 日期未提供';
+      const appliedAt = typeof stock._valuationCalibrationAt === 'string' ? new Date(stock._valuationCalibrationAt) : null;
+      return appliedAt && Number.isFinite(appliedAt.getTime())
+        ? `本機 EPS 情境 · ${valuationDateFormat.format(appliedAt)}`
+        : '本機 EPS 情境 · 套用日期未提供';
     }
 
     function renderTable() {
-      const scenario = document.getElementById("scenarioSelect").value;
+      const scenario = currentValuationScenario();
       const query = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("tableBody");
       if (!tbody) return;
       tbody.innerHTML = "";
 
-      let epsMult = 1.0;
-      let peScenarioMult = 1.0;
-      if (scenario === "BULL") { epsMult = 1.15; peScenarioMult = 1.15; }
-      else if (scenario === "BEAR") { epsMult = 0.85; peScenarioMult = 0.85; }
-
-      let processed = [];
+      const processed = [];
 
       stocks.forEach((s, idx) => {
         if (typeof selectedIndexFilter !== 'undefined' && selectedIndexFilter === 'SP500' && !s.sp500) return;
@@ -1777,26 +1755,7 @@ const STOCK_FINANCIALS = {
         if (query && !s.t.toLowerCase().includes(query) && !s.n.toLowerCase().includes(query)) return;
 
         const days = s._earnStatus?.days ?? getDaysDiff(s.ed);
-        const adjPE = (s.pe || 20) * peScenarioMult;
-        const eps27 = s.eps27 || 5.0;
-        const eps28 = s.eps28 || 6.0;
-        const eps29 = s.eps29 || 7.0;
-        const mult = s.mult || 0.95;
-
-        const val27 = eps27 * epsMult * (adjPE * mult);
-        const val28 = eps28 * epsMult * (adjPE * (mult * 0.98));
-        const val29 = eps29 * epsMult * (adjPE * 0.94);
-
-        const totalRet = ((val29 / s.p - 1) * 100);
-        const cagr = ((Math.pow(Math.max(0.1, val29 / s.p), 1/3) - 1) * 100);
-
-        const fin = STOCK_FINANCIALS[s.t] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
-        const eps = fin.eps || +(s.p / 25).toFixed(2);
-        const curPE = fin.peCurrent || +(s.p / eps).toFixed(1);
-        const forwardEPS = (s.eps27 || (eps * 1.15)) * epsMult;
-        const fwdPE = forwardEPS > 0 ? +(s.p / forwardEPS).toFixed(1) : 20.0;
-        const fcf = fin.fcf || 5.0;
-        const riskScore = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
+        const metrics = valuationMetrics(s, scenario);
 
         processed.push({
           idx: idx + 1,
@@ -1807,25 +1766,18 @@ const STOCK_FINANCIALS = {
           sp500: s.sp500,
           nasdaq: s.nasdaq,
           dow: s.dow,
-          p: s.p,
-          eps: eps,
-          peCurrent: curPE,
-          peForward: fwdPE,
-          fcf: fcf,
-          riskScore: riskScore,
+          ...metrics,
+          p: metrics.price,
           ed: s.ed,
-          days: days,
-          val27: val27,
-          val28: val28,
-          val29: val29,
-          totalRet: totalRet,
-          cagr: cagr
+          days,
+          modelSource: valuationSourceLabel(s)
         });
       });
 
       processed.sort((a, b) => {
-        let v1 = a[sortCol];
-        let v2 = b[sortCol];
+        const v1 = a[sortCol];
+        const v2 = b[sortCol];
+        if (v1 == null || v2 == null) return Number(v1 == null) - Number(v2 == null);
         if (typeof v1 === 'string') return sortAsc ? v1.localeCompare(v2) : v2.localeCompare(v1);
         return sortAsc ? (v1 - v2) : (v2 - v1);
       });
@@ -1835,15 +1787,11 @@ const STOCK_FINANCIALS = {
         if (item.days <= 14) badgeClass = "badge-urgent";
         else if (item.days <= 30) badgeClass = "badge-soon";
 
-        const retClass = item.totalRet >= 0 ? "return-positive" : "return-negative";
-        const cagrClass = item.cagr >= 0 ? "return-positive" : "return-negative";
-
-        let riskBadgeClass = "risk-mid";
-        let riskBadgeText = "均衡";
-        if (item.riskScore <= 35) { riskBadgeClass = "risk-low"; riskBadgeText = "穩健"; }
-        else if (item.riskScore <= 60) { riskBadgeClass = "risk-mid"; riskBadgeText = "均衡"; }
-        else if (item.riskScore <= 78) { riskBadgeClass = "risk-elev"; riskBadgeText = "溢價"; }
-        else { riskBadgeClass = "risk-high"; riskBadgeText = "高壓"; }
+        const retClass = item.totalRet === null ? '' : item.totalRet >= 0 ? 'return-positive' : 'return-negative';
+        const cagrClass = item.cagr === null ? '' : item.cagr >= 0 ? 'return-positive' : 'return-negative';
+        const factors = Object.values(item.riskFactors);
+        const riskCoverage = factors.filter(Number.isFinite).length;
+        const riskText = item.riskScore === null ? '待確認' : `${item.riskScore}（${riskCoverage}/${factors.length} 項）`;
 
         const spxBadge = item.sp500 ? '<span class="idx-badge active-idx spx">S&P</span>' : '<span class="idx-badge">S&P</span>';
         const ndxBadge = item.nasdaq ? '<span class="idx-badge active-idx ndx">NDX</span>' : '<span class="idx-badge">NDX</span>';
@@ -1856,19 +1804,19 @@ const STOCK_FINANCIALS = {
           <td><span class="company-name">${item.n}</span></td>
           <td style="white-space:nowrap;">${spxBadge}${ndxBadge}${dowBadge}</td>
           <td><span class="sector-tag">${item.s}</span></td>
-          <td class="mono">$${item.p.toFixed(2)}</td>
-          <td class="mono font-bold">$${item.eps.toFixed(2)}</td>
-          <td class="mono">${item.peCurrent.toFixed(1)}x</td>
-          <td class="mono" style="font-weight:700; color:var(--accent);">${item.peForward.toFixed(1)}x</td>
-          <td class="mono" style="color:var(--green); font-weight:700;">$${item.fcf.toFixed(1)}B</td>
-          <td><span class="risk-badge ${riskBadgeClass}">${item.riskScore} ${riskBadgeText}</span></td>
+          <td class="mono">${valuationNumber(item.p, 2, '$')}</td>
+          <td class="mono">${officialEpsMarkup(item.t)}</td>
+          <td class="mono">${valuationNumber(item.peCurrent, 1, '', 'x')}</td>
+          <td class="mono" style="font-weight:700; color:var(--accent);">${valuationNumber(item.peForward, 1, '', 'x')}</td>
+          <td class="mono">${valuationNumber(item.fcf, 1, '$', 'B')}</td>
+          <td class="mono" title="依可用模型因子計算。自由現金流與近四季本益比待核實。">${riskText}</td>
           <td class="mono">${item.ed}</td>
           <td><span class="countdown-badge ${badgeClass} mono">${item.days === 9999 ? '日期待確認' : `${item.days} 天`}</span></td>
-          <td class="mono val-cell">$${item.val27.toFixed(1)}</td>
-          <td class="mono val-cell">$${item.val28.toFixed(1)}</td>
-          <td class="mono val-cell-strong">$${item.val29.toFixed(1)}</td>
-          <td class="mono ${retClass}">${item.totalRet >= 0 ? "+" : ""}${item.totalRet.toFixed(1)}%</td>
-          <td class="mono ${cagrClass}">${item.cagr >= 0 ? "+" : ""}${item.cagr.toFixed(1)}%</td>
+          <td class="mono val-cell">${valuationNumber(item.val27, 1, '$')}<div style="font-size:10px; color:var(--text-muted);">${item.modelSource}</div></td>
+          <td class="mono val-cell">${valuationNumber(item.val28, 1, '$')}</td>
+          <td class="mono val-cell-strong">${valuationNumber(item.val29, 1, '$')}</td>
+          <td class="mono ${retClass}">${valuationPercent(item.totalRet)}</td>
+          <td class="mono ${cagrClass}">${valuationPercent(item.cagr)}</td>
           <td style="text-align: center;"><button class="btn-add-portfolio" onclick="addStockToPortfolio('${item.t}')">＋ 投組</button></td>
         `;
         tbody.appendChild(tr);
@@ -1977,17 +1925,18 @@ const STOCK_FINANCIALS = {
       const container = document.getElementById("portfolioAssetsContainer");
       if (!container) return;
       container.innerHTML = "";
-      
+
       const countText = document.getElementById("portfolioCountText");
       if (countText) countText.innerText = `目前 ${portfolioAssets.length} 檔標的 (上限 8 檔)`;
 
       portfolioAssets.forEach((a, idx) => {
-        const sObj = stocks.find(x => x.t === a.sym) || { t: a.sym, n: a.sym, s: "標的", p: 100 };
+        const stock = stocks.find(item => item.t === a.sym);
+        const { price } = valuationMetrics(stock);
         const row = document.createElement("div");
         row.className = "asset-risk-row";
         row.innerHTML = `
           <div><span class="ticker-symbol mono">${a.sym}</span></div>
-          <div style="font-size: 12px; font-weight: 600; color: #1f3523;">${sObj.n} <span style="font-size:10px; color:var(--text-muted);">($${sObj.p.toFixed(1)})</span></div>
+          <div style="font-size: 12px; font-weight: 600; color: #1f3523;">${stock?.n ?? a.sym} <span style="font-size:10px; color:var(--text-muted);">(${valuationNumber(price, 1, "$")})</span></div>
           <div class="asset-weight-wrap">
             <input type="range" min="1" max="100" value="${a.weight}" oninput="updatePortfolioWeight(${idx}, this.value)">
             <span class="asset-weight-val mono" id="weightVal_${idx}">${a.weight}%</span>
@@ -2000,180 +1949,139 @@ const STOCK_FINANCIALS = {
       });
     }
 
+    function portfolioRiskBand(score) {
+      if (!Number.isFinite(score)) return { label: "待確認", badge: "", banner: "" };
+      if (score <= 35) return { label: "較低", badge: "risk-low", banner: "banner-low" };
+      if (score <= 60) return { label: "中等", badge: "risk-mid", banner: "banner-medium" };
+      if (score <= 78) return { label: "偏高", badge: "risk-elev", banner: "banner-elevated" };
+      return { label: "較高", badge: "risk-high", banner: "banner-high" };
+    }
+
     function calcPortfolioRisk() {
-      let totalWeight = portfolioAssets.reduce((sum, a) => sum + a.weight, 0);
-      if (totalWeight <= 0) totalWeight = 100;
+      const scenario = currentValuationScenario();
+      const holdings = portfolioAssets.map(asset => {
+        const stock = stocks.find(item => item.t === asset.sym);
+        return { asset, stock, metrics: valuationMetrics(stock, scenario) };
+      });
+      const active = holdings.filter(({ asset }) => asset.weight > 0);
+      const totalWeight = active.reduce((sum, { asset }) => sum + asset.weight, 0);
+      const hasHoldingScore = metrics => Number.isFinite(metrics.riskScore)
+        && Object.values(metrics.riskFactors).every(Number.isFinite);
 
-      let weightedCurrentPE = 0;
-      let weightedForwardPE = 0;
-      let totalFCF = 0;
-      let weightedCAGR = 0;
-      let weightedScore = 0;
+      // Only publish a portfolio-wide metric if it covers every weighted holding.
+      const aggregate = (select, weighted = true) => {
+        if (!totalWeight) return null;
+        const values = active.map(({ asset, metrics }) => ({ weight: asset.weight, value: select(metrics) }));
+        if (values.some(({ value }) => !Number.isFinite(value))) return null;
+        return values.reduce((sum, { weight, value }) => sum + value * (weighted ? weight / totalWeight : 1), 0);
+      };
 
-      let valStretchSum = 0;
-      let marginSafetySum = 0;
-      let cashCushionSum = 0;
-      let sectorsMap = {};
+      const weightedCurrentPE = aggregate(metrics => metrics.peCurrent);
+      const weightedForwardPE = aggregate(metrics => metrics.peForward);
+      const totalFCF = aggregate(metrics => metrics.fcf, false);
+      const weightedCAGR = aggregate(metrics => metrics.cagr);
+      const weightedScore = aggregate(metrics => hasHoldingScore(metrics) ? metrics.riskScore : null);
+
+      let sectorConcScore = null;
+      if (totalWeight && active.every(({ stock }) => stock?.cat)) {
+        const sectorWeights = new Map();
+        for (const { asset, stock } of active) {
+          const weight = asset.weight / totalWeight;
+          sectorWeights.set(stock.cat, (sectorWeights.get(stock.cat) ?? 0) + weight);
+        }
+        const hhi = [...sectorWeights.values()].reduce((sum, weight) => sum + weight ** 2, 0);
+        sectorConcScore = Math.min(100, Math.round(hhi * 85 + (active.length <= 2 ? 20 : 0)));
+      }
+
+      const hasCompleteScore = Number.isFinite(weightedScore) && Number.isFinite(sectorConcScore);
+      const finalScore = hasCompleteScore
+        ? Math.min(99, Math.max(12, Math.round(weightedScore * 0.85 + sectorConcScore * 0.15)))
+        : null;
 
       const tbody = document.getElementById("portfolioTableBody");
-      if (tbody) tbody.innerHTML = "";
-
-      portfolioAssets.forEach(a => {
-        const s = stocks.find(x => x.t === a.sym) || { t: a.sym, n: a.sym, s: "一般", cat: "OTHER", p: 100, eps27: 5, eps28: 6, eps29: 7, pe: 20, mult: 0.95 };
-        const fin = STOCK_FINANCIALS[a.sym] || { eps: +(s.p / 25).toFixed(2), fcf: +(s.p * 0.1).toFixed(1), peCurrent: 25 };
-        
-        const epsMult = 1.0;
-        const peScenarioMult = 1.0;
-        const adjPE = s.pe * peScenarioMult;
-        const val29 = s.eps29 * epsMult * (adjPE * 0.94);
-        const cagr = ((Math.pow(val29 / s.p, 1/3) - 1) * 100);
-        const fwdPE = s.eps27 ? +(s.p / s.eps27).toFixed(1) : +(s.p / (fin.eps * 1.15)).toFixed(1);
-        const curPE = fin.peCurrent || +(s.p / fin.eps).toFixed(1);
-        const fcf = fin.fcf;
-
-        const normW = a.weight / totalWeight;
-        const indRisk = calcStockRiskScore(s, fwdPE, cagr, fcf, curPE);
-        const riskContrib = indRisk * normW;
-
-        weightedCurrentPE += curPE * normW;
-        weightedForwardPE += fwdPE * normW;
-        totalFCF += fcf;
-        weightedCAGR += cagr * normW;
-        weightedScore += riskContrib;
-
-        let vStr = fwdPE <= 15 ? 15 : (fwdPE <= 25 ? 35 : (fwdPE <= 35 ? 60 : (fwdPE <= 50 ? 80 : 95)));
-        let mSaf = cagr >= 18 ? 15 : (cagr >= 10 ? 35 : (cagr >= 5 ? 55 : (cagr >= 0 ? 75 : 95)));
-        let cCsh = fcf >= 50 ? 10 : (fcf >= 20 ? 25 : (fcf >= 8 ? 45 : (fcf >= 2 ? 65 : 85)));
-
-        valStretchSum += vStr * normW;
-        marginSafetySum += mSaf * normW;
-        cashCushionSum += cCsh * normW;
-        sectorsMap[s.cat || "OTHER"] = (sectorsMap[s.cat || "OTHER"] || 0) + normW;
-
-        let badgeClass = "risk-mid";
-        let lvlText = "🟡 均衡成長";
-        if (indRisk <= 35) { badgeClass = "risk-low"; lvlText = "🟢 穩健防禦"; }
-        else if (indRisk <= 60) { badgeClass = "risk-mid"; lvlText = "🟡 均衡成長"; }
-        else if (indRisk <= 78) { badgeClass = "risk-elev"; lvlText = "🟠 溢價警戒"; }
-        else { badgeClass = "risk-high"; lvlText = "🔴 極度透支"; }
-
-        if (tbody) {
+      if (tbody) {
+        tbody.innerHTML = "";
+        holdings.forEach(({ asset, stock, metrics }, idx) => {
+          const { price, peCurrent, peForward, fcf, cagr, riskScore } = metrics;
+          const complete = hasHoldingScore(metrics);
+          const band = portfolioRiskBand(complete ? riskScore : null);
+          const contribution = hasCompleteScore && complete ? riskScore * Math.max(0, asset.weight) / totalWeight : null;
+          const cagrClass = Number.isFinite(cagr) ? (cagr >= 0 ? 'return-positive' : 'return-negative') : '';
+          const factors = Object.values(metrics.riskFactors);
+          const scoreCoverage = !complete && Number.isFinite(riskScore)
+            ? ` <small>情境 ${factors.filter(Number.isFinite).length}/${factors.length}</small>` : "";
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td><span class="ticker-symbol mono">${s.t}</span></td>
-            <td><span class="company-name">${s.n}</span></td>
-            <td><span class="sector-tag">${s.s}</span></td>
-            <td class="mono">$${s.p.toFixed(1)}</td>
-            <td class="mono font-bold">${a.weight}%</td>
-            <td class="mono">${curPE.toFixed(1)}x</td>
-            <td class="mono">${fwdPE.toFixed(1)}x</td>
-            <td class="mono" style="color:var(--green); font-weight:700;">$${fcf.toFixed(1)}B</td>
-            <td class="mono ${cagr >= 0 ? 'return-positive' : 'return-negative'}">${cagr >= 0 ? '+' : ''}${cagr.toFixed(1)}%</td>
-            <td class="mono font-bold">${indRisk}</td>
-            <td><span class="risk-badge ${badgeClass}">${lvlText}</span></td>
-            <td class="mono" style="font-weight:700;">${riskContrib.toFixed(1)}</td>
-            <td style="text-align: center;"><button class="btn-remove-asset" style="width:24px;height:24px;display:inline-flex;" onclick="removePortfolioAsset(${portfolioAssets.indexOf(a)})">✕</button></td>
+            <td><span class="ticker-symbol mono">${asset.sym}</span></td>
+            <td><span class="company-name">${stock?.n ?? asset.sym}</span></td>
+            <td><span class="sector-tag">${stock?.s ?? '待確認'}</span></td>
+            <td class="mono">${valuationNumber(price, 1, "$")}</td>
+            <td class="mono font-bold">${asset.weight}%</td>
+            <td class="mono">${valuationNumber(peCurrent, 1, "", "x")}</td>
+            <td class="mono">${valuationNumber(peForward, 1, "", "x")}</td>
+            <td class="mono">${valuationNumber(fcf, 1, "$", "B")}</td>
+            <td class="mono ${cagrClass}">${valuationPercent(cagr)}</td>
+            <td class="mono font-bold">${valuationNumber(riskScore, 0)}${scoreCoverage}</td>
+            <td><span class="risk-badge ${band.badge}">${band.label}</span></td>
+            <td class="mono" style="font-weight:700;">${valuationNumber(contribution)}</td>
+            <td style="text-align: center;"><button class="btn-remove-asset" style="width:24px;height:24px;display:inline-flex;" onclick="removePortfolioAsset(${idx})">✕</button></td>
           `;
           tbody.appendChild(tr);
-        }
-      });
+        });
+      }
 
-      // Sector concentration penalty: Herfindahl Index
-      let hhi = 0;
-      Object.values(sectorsMap).forEach(w => { hhi += w * w; });
-      let sectorConcScore = Math.min(100, Math.round(hhi * 85 + (portfolioAssets.length <= 2 ? 20 : 0)));
-
-      let finalScore = Math.round(weightedScore * 0.85 + sectorConcScore * 0.15);
-      finalScore = Math.min(99, Math.max(12, finalScore));
-
-      // Update Key Metric Cards
-      const curPEEl = document.getElementById("metricWeightedCurrentPE");
-      if (curPEEl) curPEEl.innerText = `${weightedCurrentPE.toFixed(1)}x`;
-
-      const fwdPEEl = document.getElementById("metricWeightedForwardPE");
-      if (fwdPEEl) fwdPEEl.innerText = `${weightedForwardPE.toFixed(1)}x`;
-
-      const fcfEl = document.getElementById("metricTotalFCF");
-      if (fcfEl) fcfEl.innerText = `$${totalFCF.toFixed(1)}B`;
-
+      const setText = (id, text) => {
+        const element = document.getElementById(id);
+        if (element) element.innerText = text;
+      };
+      setText("metricWeightedCurrentPE", valuationNumber(weightedCurrentPE, 1, "", "x"));
+      setText("metricWeightedForwardPE", valuationNumber(weightedForwardPE, 1, "", "x"));
+      setText("metricTotalFCF", valuationNumber(totalFCF, 1, "$", "B"));
+      setText("metricWeightedCAGR", valuationPercent(weightedCAGR));
       const cagrEl = document.getElementById("metricWeightedCAGR");
       if (cagrEl) {
-        cagrEl.innerText = `${weightedCAGR >= 0 ? '+' : ''}${weightedCAGR.toFixed(1)}%`;
-        cagrEl.style.color = weightedCAGR >= 0 ? "var(--green)" : "var(--red)";
+        cagrEl.style.color = Number.isFinite(weightedCAGR)
+          ? (weightedCAGR >= 0 ? "var(--green)" : "var(--red)")
+          : "var(--text-muted)";
       }
 
-      // Update Gauge
+      const updateDimension = (dimension, value) => {
+        const score = Number.isFinite(value) ? Math.round(value) : null;
+        const bar = document.getElementById(`dim${dimension}Bar`);
+        if (bar) {
+          bar.style.width = Number.isFinite(score) ? `${score}%` : "0";
+          bar.style.background = Number.isFinite(score)
+            ? (score > 70 ? "#f43f5e" : (score > 50 ? "#f59e0b" : "#10b981"))
+            : "";
+        }
+        setText(`dim${dimension}Score`, valuationNumber(score, 0, "", " / 100"));
+      };
+      updateDimension("Valuation", aggregate(metrics => metrics.riskFactors.valuation));
+      updateDimension("Safety", aggregate(metrics => metrics.riskFactors.safety));
+      updateDimension("Fcf", aggregate(metrics => metrics.riskFactors.fcf));
+      updateDimension("Sector", sectorConcScore);
+
+      const band = portfolioRiskBand(finalScore);
+      const banner = document.getElementById("portfolioRiskBanner");
+      if (banner) banner.className = band.banner ? `risk-banner ${band.banner}` : "risk-banner";
       const needle = document.getElementById("riskGaugeNeedle");
       if (needle) {
-        needle.style.left = `${finalScore}%`;
-        needle.setAttribute("data-score", finalScore.toFixed(1));
+        needle.hidden = !hasCompleteScore;
+        needle.style.left = hasCompleteScore ? `${finalScore}%` : "";
+        if (hasCompleteScore) needle.setAttribute("data-score", finalScore.toFixed(1));
+        else needle.removeAttribute("data-score");
       }
-
-      // Update Dimension Bars
-      const vBar = document.getElementById("dimValuationBar");
-      const vScore = document.getElementById("dimValuationScore");
-      if (vBar && vScore) {
-        const sc = Math.round(valStretchSum);
-        vBar.style.width = `${sc}%`;
-        vBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
-        vScore.innerText = `${sc} / 100`;
-      }
-
-      const sBar = document.getElementById("dimSafetyBar");
-      const sScore = document.getElementById("dimSafetyScore");
-      if (sBar && sScore) {
-        const sc = Math.round(marginSafetySum);
-        sBar.style.width = `${sc}%`;
-        sBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
-        sScore.innerText = `${sc} / 100`;
-      }
-
-      const fBar = document.getElementById("dimFcfBar");
-      const fScore = document.getElementById("dimFcfScore");
-      if (fBar && fScore) {
-        const sc = Math.round(cashCushionSum);
-        fBar.style.width = `${sc}%`;
-        fBar.style.background = sc > 70 ? "#f43f5e" : (sc > 50 ? "#f59e0b" : "#10b981");
-        fScore.innerText = `${sc} / 100`;
-      }
-
-      const secBar = document.getElementById("dimSectorBar");
-      const secScore = document.getElementById("dimSectorScore");
-      if (secBar && secScore) {
-        secBar.style.width = `${sectorConcScore}%`;
-        secBar.style.background = sectorConcScore > 70 ? "#f43f5e" : (sectorConcScore > 50 ? "#f59e0b" : "#10b981");
-        secScore.innerText = `${sectorConcScore} / 100`;
-      }
-
-      // Update Banner
-      const banner = document.getElementById("portfolioRiskBanner");
-      const titleEl = document.getElementById("portfolioRiskTitle");
-      const scoreEl = document.getElementById("portfolioRiskScore");
-      const descEl = document.getElementById("portfolioRiskDesc");
-      const gaugeTxt = document.getElementById("riskGaugeStatusText");
-
-      if (scoreEl) scoreEl.innerText = finalScore.toFixed(1);
-
-      if (finalScore <= 35) {
-        if (banner) banner.className = "risk-banner banner-low";
-        if (titleEl) titleEl.innerText = "🟢 穩健防禦等級 (估值安全邊際充足)";
-        if (gaugeTxt) { gaugeTxt.innerText = "🟢 低風險穩健區"; gaugeTxt.style.color = "var(--green)"; }
-        if (descEl) descEl.innerText = `投組加權自由現金流充沛 ($${totalFCF.toFixed(1)}B)，預估本益比 (${weightedForwardPE.toFixed(1)}x) 處於合理估值下緣，3年預估年化報酬 (+${weightedCAGR.toFixed(1)}%) 顯著高於 10年美債殖利率 5.28%，抗震防禦力強。`;
-      } else if (finalScore <= 60) {
-        if (banner) banner.className = "risk-banner banner-medium";
-        if (titleEl) titleEl.innerText = "🟡 均衡成長等級 (風險與回報結構平衡)";
-        if (gaugeTxt) { gaugeTxt.innerText = "🟡 均衡中度風險區"; gaugeTxt.style.color = "var(--yellow)"; }
-        if (descEl) descEl.innerText = `投組具備強勁成長動能，加權 P/E (${weightedForwardPE.toFixed(1)}x) 反映產業龍頭溢價。3年年化回報 (+${weightedCAGR.toFixed(1)}%) 提供合理的風險補償，建議定期檢視季度盈餘兌現度。`;
-      } else if (finalScore <= 78) {
-        if (banner) banner.className = "risk-banner banner-elevated";
-        if (titleEl) titleEl.innerText = "🟠 估值溢價警戒 (對高利率折現敏感)";
-        if (gaugeTxt) { gaugeTxt.innerText = "🟠 偏高風險溢價區"; gaugeTxt.style.color = "#ea580c"; }
-        if (descEl) descEl.innerText = `投組預估本益比偏高 (${weightedForwardPE.toFixed(1)}x) 且產業集中度較高 (${sectorConcScore}/100)，在美債殖利率 5.28% 高利率定錨下，若未來獲利增速降溫易面臨估值壓縮回撤風險。`;
+      setText("portfolioRiskScore", valuationNumber(finalScore));
+      setText("portfolioRiskTitle", hasCompleteScore ? `模型評級：${band.label}` : "風險評級待確認");
+      setText("riskGaugeStatusText", band.label);
+      if (hasCompleteScore) {
+        setText("portfolioRiskDesc", "本評級使用上方估值情境及各持股已確認的財務資料。");
+      } else if (!totalWeight) {
+        setText("portfolioRiskDesc", "請先設定至少一檔持股的配置權重。");
       } else {
-        if (banner) banner.className = "risk-banner banner-high";
-        if (titleEl) titleEl.innerText = "🔴 高估值透支警示 (安全邊際薄弱)";
-        if (gaugeTxt) { gaugeTxt.innerText = "🔴 高度風險警戒區"; gaugeTxt.style.color = "var(--red)"; }
-        if (descEl) descEl.innerText = `投組股價多已超前反映未來數年成長預期，盈餘安全邊際偏低或 3年年化回報低於無風險利率，容錯空間小，建議納入防禦性現金流標的分散波動。`;
+        const missing = active.filter(({ metrics }) => !hasHoldingScore(metrics)).map(({ asset }) => asset.sym);
+        const coverage = missing.length ? `以下持股的評分資料待確認：${missing.join("、")}。` : "部分產業資料待確認。";
+        setText("portfolioRiskDesc", `${coverage}有足夠資料的個別指標會繼續顯示。`);
       }
     }
 
