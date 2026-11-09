@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T00:34:21+00:00",
+  "updatedAt": "2026-11-09T00:38:32+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -2829,6 +2829,21 @@
       "operatingCashFlow": 18710000000,
       "capitalExpenditure": 15407000000,
       "value": 3303000000
+    },
+    {
+      "symbol": "TSM",
+      "currency": "TWD",
+      "accounting": "IFRS",
+      "capexBasis": "issuer_capex",
+      "periodType": "quarter",
+      "periodStart": "2026-07-01",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-15",
+      "value": 476560000000,
+      "operatingCashFlow": 919770000000,
+      "capitalExpenditure": 443210000000,
+      "sourceName": "台積電財報簡報（SEC 6-K）",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000726/a3q26presentatione.htm"
     },
     {
       "symbol": "TXN",
