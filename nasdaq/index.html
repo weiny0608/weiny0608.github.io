@@ -1302,8 +1302,9 @@
   <!-- Data Table Card -->
   <div class="table-card" style="margin-bottom: 36px;">
     <p style="padding:12px 14px; margin:0; font-size:12px; line-height:1.6; color:var(--text-muted);">
-      <strong>官方實績</strong>　單季 EPS 依各筆官方公告，季末日與來源列在數字下方。近四季本益比及自由現金流待核實，暫不計入評分。<br>
+      <strong>官方實績</strong>　單季 EPS 依官方公告。自由現金流用現金流量表的營業現金流減現金資本支出，逐筆標示期間及來源。只有同一財報期末的美元全年或近四季數值可用於 FCF 評分，金融股另行排除。近四季本益比待核實。<br>
       <strong>估值試算</strong>　FY27–29 使用頁面內建 EPS 與本益比假設。內建假設未提供設定日期，套用個別 EPS 情境後會顯示套用日。回報欄為模型試算。
+      <span id="valuationCashFlowCoverage" style="display:block;"></span>
     </p>
     <div class="table-container">
       <table id="stockTable">
@@ -1318,7 +1319,7 @@
             <th>官方單季 EPS</th>
             <th onclick="sortTable('peCurrent')">近四季 P/E</th>
             <th onclick="sortTable('peForward')">模型預估 P/E</th>
-            <th onclick="sortTable('fcf')">自由現金流 (FCF)</th>
+            <th>財報計算 FCF</th>
             <th onclick="sortTable('riskScore')">模型風險參考</th>
             <th onclick="sortTable('ed')">財報日期</th>
             <th onclick="sortTable('days')">倒數天數</th>
@@ -1345,7 +1346,7 @@
       <div>
         <h2 style="font-size: 18px; font-weight: 800; color: #132a18;">多標的投資組合風險評估與估值安全邊際診斷</h2>
         <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
-          預估本益比與 3 年年化沿用上方估值情境。近四季本益比和自由現金流需有可核對的財務來源與期間，資料齊全才顯示整體評級。
+          預估本益比與 3 年年化沿用上方估值情境。持股明細列出可由財報計算的自由現金流，幣別、期間與資本支出口徑一致且資料齊全時才顯示合計。整體評級仍需完整評分資料。
         </p>
       </div>
       <div class="risk-presets">
@@ -1432,8 +1433,9 @@
             <div class="risk-metric-val mono" id="metricWeightedForwardPE">待確認</div>
           </div>
           <div class="risk-metric-box">
-            <div class="risk-metric-lbl">持股公司 FCF 合計</div>
+            <div class="risk-metric-lbl">持股公司自由現金流合計</div>
             <div class="risk-metric-val mono" id="metricTotalFCF">待確認</div>
+            <div class="risk-metric-lbl" id="metricTotalFCFCoverage">等候可核對的財報資料</div>
           </div>
           <div class="risk-metric-box">
             <div class="risk-metric-lbl">3 年預估年化（情境）</div>
@@ -1473,6 +1475,7 @@
             <div class="dim-bar-wrap">
               <div id="dimFcfBar" class="dim-bar-fill" style="width: 0;"></div>
             </div>
+            <div class="risk-metric-lbl" id="dimFcfCoverage">等候可納入評分的資料</div>
           </div>
 
           <div class="dim-row">
@@ -1505,7 +1508,7 @@
               <th>配置權重</th>
               <th>近四季 P/E</th>
               <th>預估 P/E（情境）</th>
-              <th>自由現金流 (FCF)</th>
+              <th>財報自由現金流 (FCF)</th>
               <th>3 年預估年化（情境）</th>
               <th>個別風險係數</th>
               <th>風險評級</th>
@@ -1703,17 +1706,22 @@
       const cagr = changeRatio === null ? null : (Math.cbrt(changeRatio) - 1) * 100;
       const peForward = price !== null && eps27 !== null ? price / eps27 : null;
 
-      // Official earnings supply quarterly EPS. Current P/E and FCF need separately verified inputs.
+      // Quarterly EPS alone does not establish the trailing earnings denominator for P/E.
       const peCurrent = null;
-      const fcf = null;
+      const cashFlow = window.getReportedCashFlowForValuation?.(stock?.t) ?? null;
+      const earnings = window.getReportedEarningsForValuation?.(stock?.t);
+      const fcf = cashFlow ? cashFlow.value / 1e9 : null;
+      const eligibleFcf = cashFlow?.currency === 'USD' && cashFlow.periodEnd === earnings?.periodEnd
+        && ['annual', 'ttm'].includes(cashFlow.periodType) && stock?.cat && stock.cat !== 'FINANCE';
       const valuation = peForward === null ? null
         : peForward <= 15 ? 15 : peForward <= 25 ? 35 : peForward <= 35 ? 60 : peForward <= 50 ? 80 : 95;
       const safety = cagr === null ? null : cagr >= 18 ? 15 : cagr >= 10 ? 35 : cagr >= 5 ? 55 : cagr >= 0 ? 75 : 95;
-      const riskFactors = { valuation, safety, fcf: null, rate: null };
-      // The two available model factors carry equal weight. Publish their coverage alongside the score.
-      const available = [valuation, safety].filter(Number.isFinite);
-      const riskScore = available.length ? Math.round(available.reduce((sum, value) => sum + value, 0) / available.length) : null;
-      return { price, peCurrent, peForward, fcf, val27, val28, val29, totalRet, cagr, riskFactors, riskScore };
+      const fcfRisk = !eligibleFcf ? null : fcf >= 50 ? 10 : fcf >= 20 ? 25 : fcf >= 8 ? 45 : fcf >= 2 ? 65 : 85;
+      const riskFactors = { valuation, safety, fcf: fcfRisk, rate: null };
+      const available = [[valuation, 30], [safety, 30], [fcfRisk, 25]].filter(([score]) => Number.isFinite(score));
+      const weight = available.reduce((sum, [, w]) => sum + w, 0);
+      const riskScore = weight ? Math.round(available.reduce((sum, [score, w]) => sum + score * w, 0) / weight) : null;
+      return { price, peCurrent, peForward, fcf, cashFlow, val27, val28, val29, totalRet, cagr, riskFactors, riskScore };
     }
 
     function escapeValuationText(value) {
@@ -1730,6 +1738,33 @@
         <a href="${escapeValuationText(report.sourceUrl)}" target="_blank" rel="noopener" style="font-size:10px;" title="公布或申報日 ${escapeValuationText(report.reportDate)}">${escapeValuationText(report.sourceName || '官方來源')} ↗</a>`;
     }
 
+    function cashFlowMarkup(cashFlow) {
+      if (!cashFlow) return '待確認';
+      const labels = { quarter: '單季', ytd: '財年累計', annual: '全年', ttm: '近四季' };
+      const amount = value => Math.abs(value) >= 1e7
+        ? `${(value / 1e8).toLocaleString('zh-TW', { maximumFractionDigits: 2 })} 億`
+        : value.toLocaleString('zh-TW');
+      const capex = cashFlow.capexBasis === 'productive_assets' ? '生產性資產現金支出' : '廠房設備現金支出';
+      const method = period => `營業現金流 ${amount(period.operatingCashFlow)} − ${capex} ${amount(period.capitalExpenditure)}`;
+      const officialLink = source => `<a href="${escapeValuationText(source.sourceUrl)}" target="_blank" rel="noopener">${escapeValuationText(source.sourceName || '官方來源')} ↗</a>`;
+      const reported = cashFlow.reportedPeriod || cashFlow;
+      const latestEarnings = window.getReportedEarningsForValuation?.(cashFlow.symbol);
+      const olderPeriod = latestEarnings && latestEarnings.periodEnd > reported.periodEnd;
+      return `<strong>${escapeValuationText(cashFlow.currency)} ${amount(reported.value)}</strong>
+        <div style="font-size:10px; color:var(--text-muted);">${labels[reported.periodType]} · 至 ${escapeValuationText(reported.periodEnd)}</div>
+        ${olderPeriod ? '<div style="font-size:10px; color:var(--text-muted);">較新一季現金流待核對</div>' : ''}
+        ${cashFlow.reportedPeriod ? `<div style="font-size:10px; color:var(--text-muted);">另算近四季 ${escapeValuationText(cashFlow.currency)} ${amount(cashFlow.value)}</div>` : ''}
+        <div style="font-size:10px; color:var(--text-muted);">財報計算 · ${officialLink(cashFlow)}</div>
+        <details style="font-size:10px; color:var(--text-muted);">
+          <summary>計算明細</summary>
+          <div>${escapeValuationText(reported.periodStart)} 至 ${escapeValuationText(reported.periodEnd)}</div>
+          <div>${escapeValuationText(method(reported))}</div>
+          ${cashFlow.periodType === 'ttm' ? '<div>近四季以去年全年＋今年累計−去年同期累計計算。</div>' : ''}
+          ${cashFlow.reportedPeriod ? `<div>近四季：${escapeValuationText(method(cashFlow))}</div>` : ''}
+          ${(cashFlow.supportingSources || []).map(source => `<div>全年基期 · ${officialLink(source)}</div>`).join('')}
+        </details>`;
+    }
+
     function valuationSourceLabel(stock) {
       if (!Object.hasOwn(stock, '_valuationCalibrationAt')) return '內建模型 · 日期未提供';
       const appliedAt = typeof stock._valuationCalibrationAt === 'string' ? new Date(stock._valuationCalibrationAt) : null;
@@ -1744,6 +1779,11 @@
       const tbody = document.getElementById("tableBody");
       if (!tbody) return;
       tbody.innerHTML = "";
+      const coverage = document.getElementById('valuationCashFlowCoverage');
+      if (coverage) {
+        const count = stocks.filter(stock => window.getReportedCashFlowForValuation?.(stock.t)).length;
+        coverage.textContent = count ? `目前估值表 ${count}／${stocks.length} 檔已有可核對的自由現金流。` : '';
+      }
 
       const processed = [];
 
@@ -1808,8 +1848,8 @@
           <td class="mono">${officialEpsMarkup(item.t)}</td>
           <td class="mono">${valuationNumber(item.peCurrent, 1, '', 'x')}</td>
           <td class="mono" style="font-weight:700; color:var(--accent);">${valuationNumber(item.peForward, 1, '', 'x')}</td>
-          <td class="mono">${valuationNumber(item.fcf, 1, '$', 'B')}</td>
-          <td class="mono" title="依可用模型因子計算。自由現金流與近四季本益比待核實。">${riskText}</td>
+          <td class="mono">${cashFlowMarkup(item.cashFlow)}</td>
+          <td class="mono" title="依目前可用因子計算，未納入的項目不計分。">${riskText}</td>
           <td class="mono">${item.ed}</td>
           <td><span class="countdown-badge ${badgeClass} mono">${item.days === 9999 ? '日期待確認' : `${item.days} 天`}</span></td>
           <td class="mono val-cell">${valuationNumber(item.val27, 1, '$')}<div style="font-size:10px; color:var(--text-muted);">${item.modelSource}</div></td>
@@ -1969,18 +2009,39 @@
         && Object.values(metrics.riskFactors).every(Number.isFinite);
 
       // Only publish a portfolio-wide metric if it covers every weighted holding.
-      const aggregate = (select, weighted = true) => {
+      const aggregate = select => {
         if (!totalWeight) return null;
         const values = active.map(({ asset, metrics }) => ({ weight: asset.weight, value: select(metrics) }));
         if (values.some(({ value }) => !Number.isFinite(value))) return null;
-        return values.reduce((sum, { weight, value }) => sum + value * (weighted ? weight / totalWeight : 1), 0);
+        return values.reduce((sum, { weight, value }) => sum + value * weight / totalWeight, 0);
       };
 
       const weightedCurrentPE = aggregate(metrics => metrics.peCurrent);
       const weightedForwardPE = aggregate(metrics => metrics.peForward);
-      const totalFCF = aggregate(metrics => metrics.fcf, false);
       const weightedCAGR = aggregate(metrics => metrics.cagr);
       const weightedScore = aggregate(metrics => hasHoldingScore(metrics) ? metrics.riskScore : null);
+      const cashFlows = active.map(({ metrics }) => metrics.cashFlow).filter(flow =>
+        flow && Number.isFinite(flow.value) && flow.currency && flow.periodType &&
+        flow.periodStart && flow.periodEnd && flow.sourceUrl
+      );
+      const firstFlow = cashFlows[0];
+      const comparableCashFlows = firstFlow && cashFlows.length === active.length && cashFlows.every(flow =>
+        flow.currency === firstFlow.currency && flow.periodType === firstFlow.periodType &&
+        flow.periodStart === firstFlow.periodStart && flow.periodEnd === firstFlow.periodEnd &&
+        flow.capexBasis === firstFlow.capexBasis
+      );
+      // Distinct share classes may point to the same issuer cash flow statement.
+      const issuerCashFlows = new Map();
+      let issuerAmountsAgree = true;
+      for (const flow of cashFlows) {
+        if (issuerCashFlows.has(flow.sourceUrl) && issuerCashFlows.get(flow.sourceUrl) !== flow.value) {
+          issuerAmountsAgree = false;
+        }
+        issuerCashFlows.set(flow.sourceUrl, flow.value);
+      }
+      const totalFCF = comparableCashFlows && issuerAmountsAgree
+        ? [...issuerCashFlows.values()].reduce((sum, value) => sum + value, 0)
+        : null;
 
       let sectorConcScore = null;
       if (totalWeight && active.every(({ stock }) => stock?.cat)) {
@@ -2002,7 +2063,7 @@
       if (tbody) {
         tbody.innerHTML = "";
         holdings.forEach(({ asset, stock, metrics }, idx) => {
-          const { price, peCurrent, peForward, fcf, cagr, riskScore } = metrics;
+          const { price, peCurrent, peForward, cashFlow, cagr, riskScore } = metrics;
           const complete = hasHoldingScore(metrics);
           const band = portfolioRiskBand(complete ? riskScore : null);
           const contribution = hasCompleteScore && complete ? riskScore * Math.max(0, asset.weight) / totalWeight : null;
@@ -2019,7 +2080,7 @@
             <td class="mono font-bold">${asset.weight}%</td>
             <td class="mono">${valuationNumber(peCurrent, 1, "", "x")}</td>
             <td class="mono">${valuationNumber(peForward, 1, "", "x")}</td>
-            <td class="mono">${valuationNumber(fcf, 1, "$", "B")}</td>
+            <td class="mono">${cashFlowMarkup(cashFlow)}</td>
             <td class="mono ${cagrClass}">${valuationPercent(cagr)}</td>
             <td class="mono font-bold">${valuationNumber(riskScore, 0)}${scoreCoverage}</td>
             <td><span class="risk-badge ${band.badge}">${band.label}</span></td>
@@ -2036,7 +2097,23 @@
       };
       setText("metricWeightedCurrentPE", valuationNumber(weightedCurrentPE, 1, "", "x"));
       setText("metricWeightedForwardPE", valuationNumber(weightedForwardPE, 1, "", "x"));
-      setText("metricTotalFCF", valuationNumber(totalFCF, 1, "$", "B"));
+      const cashFlowCoverage = `已取得 ${cashFlows.length}/${active.length} 檔`;
+      if (Number.isFinite(totalFCF)) {
+        const totalInBillions = totalFCF / 1e9;
+        const precision = totalFCF !== 0 && Math.abs(totalInBillions) < 0.01 ? 9 : 2;
+        const amount = new Intl.NumberFormat("zh-TW", { maximumFractionDigits: precision }).format(totalInBillions);
+        setText("metricTotalFCF", `${firstFlow.currency} ${amount} 十億`);
+        const issuerCoverage = issuerCashFlows.size !== cashFlows.length ? `，${issuerCashFlows.size} 家公司` : "";
+        const periodLabel = { quarter: "單季", ytd: "財年累計", annual: "全年", ttm: "近四季" }[firstFlow.periodType];
+        setText("metricTotalFCFCoverage", `${cashFlowCoverage}${issuerCoverage} · ${periodLabel} ${firstFlow.periodStart} 至 ${firstFlow.periodEnd}`);
+      } else {
+        const fullyCovered = active.length > 0 && cashFlows.length === active.length;
+        setText("metricTotalFCF", fullyCovered ? "逐檔列示" : "待確認");
+        const reason = fullyCovered
+          ? (comparableCashFlows ? "同一來源的數值待核對" : "幣別、期間或資本支出口徑不同")
+          : "合計須有完整資料";
+        setText("metricTotalFCFCoverage", active.length ? `${cashFlowCoverage} · ${reason}` : "尚無配置權重");
+      }
       setText("metricWeightedCAGR", valuationPercent(weightedCAGR));
       const cagrEl = document.getElementById("metricWeightedCAGR");
       if (cagrEl) {
@@ -2059,6 +2136,8 @@
       updateDimension("Valuation", aggregate(metrics => metrics.riskFactors.valuation));
       updateDimension("Safety", aggregate(metrics => metrics.riskFactors.safety));
       updateDimension("Fcf", aggregate(metrics => metrics.riskFactors.fcf));
+      const scoredCashFlows = active.filter(({ metrics }) => Number.isFinite(metrics.riskFactors.fcf)).length;
+      setText("dimFcfCoverage", `符合評分口徑 ${scoredCashFlows}/${active.length} 檔`);
       updateDimension("Sector", sectorConcScore);
 
       const band = portfolioRiskBand(finalScore);

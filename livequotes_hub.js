@@ -25,6 +25,7 @@
   const DAY_MS = 86400000;
   const MODEL_EPS_FIELDS = ['eps27', 'eps28', 'eps29'];
   let reportedEarnings = new Map();
+  let reportedCashFlows = new Map();
   let reportedEarningsUpdatedAt = null;
   let reportedEarningsSyncFailed = false;
   let reportedEarningsSecUnavailable = false;
@@ -34,6 +35,19 @@
     const report = reportedEarnings.get(symbol);
     return report ? { ...report } : null;
   };
+
+  window.getReportedCashFlowForValuation = function (symbol) {
+    const report = reportedCashFlows.get(symbol);
+    return report ? { ...report } : null;
+  };
+
+  function validCashFlowAmounts(row) {
+    return row && ['quarter', 'ytd', 'annual', 'ttm'].includes(row.periodType)
+      && [row.periodStart, row.periodEnd].every(value => Number.isFinite(earningsDay(value)))
+      && row.periodStart < row.periodEnd
+      && [row.value, row.operatingCashFlow, row.capitalExpenditure].every(Number.isSafeInteger)
+      && row.capitalExpenditure >= 0 && row.value === row.operatingCashFlow - row.capitalExpenditure;
+  }
 
   // 2026-10-21 GOOGLEFINANCE 雲端即時股價中樞最新快照 (2026-10-20 美股收盤 0ms 零延遲啟動基準)
   const LIVE_QUOTES_SNAPSHOT = {
@@ -1519,6 +1533,31 @@
       if (data.results.length && !results.size) throw new Error('No valid official results');
       if (!reportedEarningsUpdatedAt || updatedAt >= reportedEarningsUpdatedAt) {
         reportedEarnings = results;
+        if (Array.isArray(data.cashFlows)) {
+          const cashFlows = new Map();
+          for (const row of data.cashFlows) {
+            const sourceUrl = safeEarningsLink(row?.sourceUrl);
+            if (!row || !EARNINGS_SYMBOL.test(row.symbol) || !sourceUrl || !/^[A-Z]{3}$/.test(row.currency)
+                || !['GAAP', 'IFRS'].includes(row.accounting)
+                || !['ppe', 'productive_assets'].includes(row.capexBasis)
+                || !Number.isFinite(earningsDay(row.reportDate)) || !validCashFlowAmounts(row)
+                || row.periodEnd > row.reportDate) continue;
+            const previous = cashFlows.get(row.symbol);
+            if (!previous || row.periodEnd > previous.periodEnd
+                || (row.periodEnd === previous.periodEnd && row.reportDate > previous.reportDate)) {
+              const supportingSources = (Array.isArray(row.supportingSources) ? row.supportingSources : [])
+                .flatMap(source => {
+                  const url = safeEarningsLink(source?.sourceUrl);
+                  return url ? [{ sourceUrl: url, sourceName: source.sourceName }] : [];
+                });
+              const period = row.reportedPeriod;
+              const reportedPeriod = validCashFlowAmounts(period) && period.periodEnd === row.periodEnd
+                && ['quarter', 'ytd'].includes(period.periodType) ? period : null;
+              cashFlows.set(row.symbol, { ...row, sourceUrl, supportingSources, reportedPeriod });
+            }
+          }
+          reportedCashFlows = cashFlows;
+        }
         reportedEarningsUpdatedAt = updatedAt;
         reportedEarningsSecUnavailable = data.secStatus === 'unavailable';
       }

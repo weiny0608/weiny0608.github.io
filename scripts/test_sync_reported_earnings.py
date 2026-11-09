@@ -7,6 +7,85 @@ import sync_reported_earnings as collector
 
 
 class ReportedEarningsTest(unittest.TestCase):
+    @staticmethod
+    def cash_fact(accn, form, start, end, value):
+        return {'accn': accn, 'form': form, 'start': start, 'end': end, 'val': value}
+
+    @staticmethod
+    def cash_document(operating, capex, productive=None):
+        concepts = {
+            'NetCashProvidedByUsedInOperatingActivities': {'units': {'USD': operating}},
+            'PaymentsToAcquirePropertyPlantAndEquipment': {'units': {'USD': capex}},
+        }
+        if productive is not None:
+            concepts['PaymentsToAcquireProductiveAssets'] = {'units': {'USD': productive}}
+        return {'facts': {'us-gaap': concepts}}
+
+    def test_cash_flow_uses_same_context_and_accepts_negative_operating_or_zero_capex(self):
+        fact = self.cash_fact('one', '10-Q', '2026-06-01', '2026-08-31', -135_000_000)
+        operating = [fact, fact]
+        capex = [
+            {**fact, 'accn': 'different-filing', 'val': 999},
+            {**fact, 'start': '2026-01-01', 'val': 999},
+            {**fact, 'val': 0},
+        ]
+        data = self.cash_document(operating, capex, [{**fact, 'val': 200_000_000}])
+        key = (date(2026, 6, 1), date(2026, 8, 31), 'USD', 'GAAP', 'ppe')
+        self.assertEqual(collector.cash_flow_contexts(data, 'one', '10-Q'), {key: (-135_000_000, 0)})
+        # Same-priority disagreement and unexpectedly signed cash outflows are unsafe.
+        for bad_capex in ([*capex, {**fact, 'val': 1}], [{**fact, 'val': -1}], []):
+            with self.subTest(bad_capex=bad_capex):
+                self.assertEqual(collector.cash_flow_contexts(self.cash_document(operating, bad_capex), 'one', '10-Q'), {})
+        mixed_currency = self.cash_document(operating, capex)
+        mixed_currency['facts']['us-gaap']['PaymentsToAcquirePropertyPlantAndEquipment']['units'] = {'EUR': capex}
+        self.assertEqual(collector.cash_flow_contexts(mixed_currency, 'one', '10-Q'), {})
+        productive = self.cash_document(operating, [], [{**fact, 'val': 199_000_000}])
+        self.assertEqual(collector.cash_flow_contexts(productive, 'one', '10-Q'), {
+            (*key[:-1], 'productive_assets'): (-135_000_000, 199_000_000),
+        })
+
+    def test_cash_flow_uses_exact_trailing_year_only_with_comparable_periods(self):
+        current = '0000000001-26-000003'
+        annual = '0000000001-26-000001'
+        operating = [
+            self.cash_fact(current, '10-Q', '2025-12-28', '2026-09-26', 28),
+            self.cash_fact(current, '10-Q', '2024-12-29', '2025-09-27', 20),
+            self.cash_fact(annual, '10-K', '2024-12-29', '2025-12-27', 30),
+        ]
+        capex = [{**fact, 'val': amount} for fact, amount in zip(operating, [9, 5, 7])]
+        filings = {'filings': {'recent': {
+            'form': ['10-Q', '10-K'], 'accessionNumber': [current, annual],
+            'filingDate': ['2026-11-04', '2026-02-10'], 'reportDate': ['2026-09-26', '2025-12-27'],
+            'primaryDocument': ['q.htm', 'k.htm'],
+        }}}
+
+        class Client:
+            def __init__(self, facts):
+                self.facts = facts
+
+            def json(self, url):
+                return self.facts if '/companyfacts/' in url else filings
+
+        as_of = date(2026, 11, 9)
+        row = collector.latest_cash_flow(Client(self.cash_document(operating, capex)), 'TEST', 1, as_of)
+        self.assertEqual(
+            (row['periodType'], row['periodStart'], row['periodEnd'], row['operatingCashFlow'], row['capitalExpenditure'], row['value']),
+            ('ttm', '2025-09-28', '2026-09-26', 38, 11, 27),
+        )
+        self.assertEqual(row['reportedPeriod']['value'], 19)
+        self.assertTrue(row['sourceUrl'].endswith('/q.htm'))
+        self.assertTrue(row['supportingSources'][0]['sourceUrl'].endswith('/k.htm'))
+        without_comparative = collector.latest_cash_flow(Client(self.cash_document(operating, capex[::2])), 'TEST', 1, as_of)
+        self.assertEqual((without_comparative['periodType'], without_comparative['value']), ('ytd', 19))
+
+    def test_cash_flow_feed_keeps_prior_rows_during_incomplete_check(self):
+        row = {'symbol': 'AMD', 'periodEnd': '2026-09-30', 'reportDate': '2026-11-04', 'periodType': 'ttm'}
+        prior = {'updatedAt': '2026-11-04T00:00:00+00:00', 'results': [], 'cashFlows': [row]}
+        weaker = {**row, 'periodType': 'ytd'}
+        now = datetime(2026, 11, 9, tzinfo=timezone.utc)
+        self.assertIs(collector.prefer_cash_flow(row, weaker), row)
+        self.assertIs(collector.result_feed(prior, {}, ['AMD'], now, {'AMD': row}), prior)
+
     def test_verified_ciks_cover_dashboard_tickers_when_live_map_is_blocked(self):
         class Client:
             def json(self, url):

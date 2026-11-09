@@ -31,6 +31,15 @@ REVENUE_TAGS = (
     'RevenueFromContractWithCustomerIncludingAssessedTax',
 )
 EPS_TAGS = ('EarningsPerShareDiluted', 'DilutedEarningsLossPerShare')
+CASH_FLOW_TAGS = {
+    'us-gaap': ('GAAP', 'NetCashProvidedByUsedInOperatingActivities', {
+        'ppe': 'PaymentsToAcquirePropertyPlantAndEquipment',
+        'productive_assets': 'PaymentsToAcquireProductiveAssets',
+    }),
+    'ifrs-full': ('IFRS', 'CashFlowsFromUsedInOperatingActivities', {
+        'ppe': 'PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities',
+    }),
+}
 CURRENCY = re.compile(r'[A-Z]{3}')
 ISO_DATE = re.compile(r'\d{4}-\d{2}-\d{2}')
 MONTH_DATE = re.compile(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+([0-9]{1,2})(?:,\s*|\s+)(20[0-9]{2})\b', re.I)
@@ -188,6 +197,151 @@ def choose_tag(values):
     rank = min(item[0] for item in values)
     best = [item for item in values if item[0] == rank]
     return best[0] if len({item[1] for item in best}) == 1 else None
+
+
+def cash_flow_contexts(document, accession, form):
+    """Pair consolidated CFO and cash purchases of property, plant and equipment."""
+    contexts = {}
+    for taxonomy, (accounting, operating_tag, capital_tags) in CASH_FLOW_TAGS.items():
+        concepts = document.get('facts', {}).get(taxonomy, {})
+        by_period = {}
+        for metric, tag in {'operatingCashFlow': operating_tag, **capital_tags}.items():
+            for unit, facts in concepts.get(tag, {}).get('units', {}).items():
+                if not CURRENCY.fullmatch(unit):
+                    continue
+                for fact in facts:
+                    if fact.get('accn') != accession or fact.get('form') != form:
+                        continue
+                    start = iso_date(fact.get('start'))
+                    end = iso_date(fact.get('end'))
+                    value = fact.get('val')
+                    if not start or not end or end <= start or type(value) not in (int, float):
+                        continue
+                    if not math.isfinite(value) or int(value) != value:
+                        continue
+                    # These XBRL concepts represent positive cash payments. A negative
+                    # value is ambiguous; don't silently convert a refund into capex.
+                    key = (start, end, unit, accounting)
+                    by_period.setdefault(key, {}).setdefault(metric, set()).add(int(value))
+        for key, values in by_period.items():
+            operating = values.get('operatingCashFlow', set())
+            if len(operating) != 1:
+                continue
+            for basis in capital_tags:
+                if basis not in values:
+                    continue
+                capital = values[basis]
+                if len(capital) == 1 and min(capital) >= 0:
+                    contexts[(*key, basis)] = (next(iter(operating)), next(iter(capital)))
+                break
+    return contexts
+
+
+def cash_flow_period_type(start, end, form):
+    days = (end - start).days
+    if form in ('10-K', '20-F', '40-F'):
+        return 'annual' if 345 <= days <= 385 else None
+    if 75 <= days <= 119:
+        return 'quarter'
+    if 160 <= days <= 300:
+        return 'ytd'
+    return None
+
+
+def cash_flow_provenance(cik, filed, filing):
+    return {
+        'reportDate': filed.isoformat(),
+        'sourceUrl': filing_url(cik, filing),
+        'sourceName': f"SEC Form {filing['form']}",
+    }
+
+
+def trailing_cash_flow(current_key, current_amounts, current_contexts, annual_rows):
+    """Return exact annual + current interim − comparable prior interim when available."""
+    start, end, unit, accounting, basis = current_key
+    annual_rows = [
+        (key, amounts, source) for key, amounts, source in annual_rows
+        if key[1] + timedelta(days=1) == start and key[2:] == (unit, accounting, basis)
+    ]
+    # Use the newest filing for the preceding completed fiscal year.
+    annual_rows.sort(key=lambda item: item[2]['reportDate'], reverse=True)
+    for annual_key, annual_amounts, source in annual_rows:
+        prior = [
+            (key, amounts) for key, amounts in current_contexts.items()
+            if key[0] == annual_key[0] and key[1] < annual_key[1]
+            and key[2:] == (unit, accounting, basis)
+            and abs((end - start).days - (key[1] - key[0]).days) <= 7
+            and 350 <= (end - key[1]).days <= 380
+        ]
+        if len(prior) != 1:
+            continue
+        prior_key, prior_amounts = prior[0]
+        operating, capital = (
+            annual + current - previous
+            for annual, current, previous in zip(annual_amounts, current_amounts, prior_amounts)
+        )
+        if capital >= 0:
+            return prior_key[1] + timedelta(days=1), operating, capital, source
+    return None
+
+
+def latest_cash_flow(client, symbol, cik, today):
+    """Use the latest period with an unambiguous pair of official statement inputs."""
+    padded = str(cik).zfill(10)
+    submissions = client.json(f'{DATA}/submissions/CIK{padded}.json')
+    filings = [
+        (filed, filing) for filed, filing in recent_filings(submissions, today - timedelta(days=550))
+        if filing['form'] in REPORT_FORMS and filed <= today
+    ]
+    if not filings:
+        return None
+    document = client.json(f'{DATA}/api/xbrl/companyfacts/CIK{padded}.json')
+    rows = []
+    annual_rows = []
+    for filed, filing in filings:
+        report_end = iso_date(filing['reportDate'])
+        if not report_end or not 0 <= (filed - report_end).days <= 150:
+            continue
+        form = filing['form']
+        contexts = cash_flow_contexts(document, filing['accessionNumber'], form)
+        same_end = [key for key in contexts if key[1] == report_end and cash_flow_period_type(*key[:2], form)]
+        if not same_end:
+            continue
+        # A 10-Q may include both standalone and cumulative cash flow. Keep the
+        # longest same-end period, with the actual period clearly identified.
+        earliest_start = min(key[0] for key in same_end)
+        latest = [key for key in same_end if key[0] == earliest_start]
+        if len(latest) != 1:
+            continue
+        key = latest[0]
+        period_type = cash_flow_period_type(*key[:2], form)
+        source = cash_flow_provenance(cik, filed, filing)
+        rows.append((key, contexts, period_type, source))
+        if period_type == 'annual':
+            annual_rows.append((key, contexts[key], source))
+    if not rows:
+        return None
+    key, contexts, period_type, source = max(
+        rows, key=lambda row: (row[0][1], row[3]['reportDate'], -row[0][0].toordinal())
+    )
+    start, end, currency, accounting, basis = key
+    operating, capital = contexts[key]
+    trailing = None
+    if period_type != 'annual':
+        trailing = trailing_cash_flow(key, (operating, capital), contexts, annual_rows)
+    record = {'symbol': symbol, **source, 'currency': currency, 'accounting': accounting, 'capexBasis': basis}
+    if trailing:
+        record['reportedPeriod'] = {
+            'periodStart': start.isoformat(), 'periodEnd': end.isoformat(), 'periodType': period_type,
+            'operatingCashFlow': operating, 'capitalExpenditure': capital, 'value': operating - capital,
+        }
+        start, operating, capital, annual_source = trailing
+        period_type = 'ttm'
+        record['supportingSources'] = [annual_source]
+    return {
+        **record, 'periodStart': start.isoformat(), 'periodEnd': end.isoformat(), 'periodType': period_type,
+        'operatingCashFlow': operating, 'capitalExpenditure': capital, 'value': operating - capital,
+    }
 
 
 def clean(value):
@@ -551,9 +705,18 @@ def prefer_result(existing, candidate):
     return existing
 
 
+def prefer_cash_flow(existing, candidate):
+    if not existing or not candidate:
+        return candidate or existing
+    def rank(row):
+        return row['periodEnd'], row['reportDate'], row['periodType'] == 'ttm'
+    return candidate if rank(candidate) >= rank(existing) else existing
+
+
 def update_feed(client, symbols, selected, previous, now):
     cik_by_ticker = load_ciks(client)
     results = {item['symbol']: item for item in previous.get('results', []) if item['symbol'] in symbols}
+    cash_flows = {item['symbol']: item for item in previous.get('cashFlows', []) if item['symbol'] in symbols}
     completed = 0
     for symbol in selected:
         cik = cik_by_ticker.get(ticker_key(symbol))
@@ -573,19 +736,30 @@ def update_feed(client, symbols, selected, previous, now):
         completed += 1
         if result:
             results[symbol] = result
+        try:
+            cash_flow = latest_cash_flow(client, symbol, cik, now.date())
+        except (OSError, ValueError) as exc:
+            print(f'{symbol}: cash flow facts unavailable ({exc})', file=sys.stderr)
+            continue
+        if cash_flow:
+            cash_flows[symbol] = prefer_cash_flow(cash_flows.get(symbol), cash_flow)
     if not completed:
         raise RuntimeError('No SEC company filings could be checked. Existing feed retained.')
-    return result_feed(previous, results, symbols, now)
+    return result_feed(previous, results, symbols, now, cash_flows)
 
 
-def result_feed(previous, results, symbols, now):
-    if results == {item['symbol']: item for item in previous.get('results', [])}:
+def result_feed(previous, results, symbols, now, cash_flows):
+    if (results == {item['symbol']: item for item in previous.get('results', [])}
+            and cash_flows == {item['symbol']: item for item in previous.get('cashFlows', [])}):
         return previous
-    return {
+    feed = {
         'updatedAt': now.isoformat(timespec='seconds'),
         'results': sorted(results.values(), key=lambda item: (item['reportDate'], item['symbol']), reverse=True),
         'coverage': {'total': len(symbols), 'withResults': len(results)},
     }
+    if cash_flows or 'cashFlows' in previous:
+        feed['cashFlows'] = [cash_flows[symbol] for symbol in sorted(cash_flows)]
+    return feed
 
 
 def refresh_feed(client, symbols, selected, previous, now):
@@ -613,7 +787,8 @@ def refresh_feed(client, symbols, selected, previous, now):
             raise sec_error
         message = f'SEC data unavailable ({sec_error}). Checked {issuer_checked} issuer site(s); other results retained.'
         print(f'::warning::{message}' if os.environ.get('GITHUB_ACTIONS') else message, file=sys.stderr)
-    feed = result_feed(previous, results, symbols, now)
+    cash_flows = {item['symbol']: item for item in sec_feed.get('cashFlows', []) if item['symbol'] in symbols}
+    feed = result_feed(previous, results, symbols, now, cash_flows)
     return {**feed, 'secStatus': 'unavailable' if sec_error else 'available'}
 
 
@@ -639,6 +814,7 @@ def main():
         temp.write_text(json.dumps(next_feed, ensure_ascii=False, indent=2, allow_nan=False) + '\n', encoding='utf-8')
         temp.replace(args.output)
     print(f'Confirmed quarterly results: {len(next_feed["results"])} of {len(symbols)} dashboard companies/tickers.')
+    print(f'Cash flow from official filings: {len(next_feed.get("cashFlows", []))} of {len(symbols)} dashboard companies/tickers.')
 
 
 if __name__ == '__main__':
