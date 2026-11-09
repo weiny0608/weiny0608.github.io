@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T00:38:32+00:00",
+  "updatedAt": "2026-11-09T21:37:26+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -1407,19 +1407,19 @@
     },
     {
       "symbol": "BRK.B",
-      "reportDate": "2026-08-10",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526341032/brka-20260630.htm",
+      "reportDate": "2026-11-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526452412/brka-20260930.htm",
       "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
       "reportedPeriod": {
         "periodStart": "2026-01-01",
-        "periodEnd": "2026-06-30",
+        "periodEnd": "2026-09-30",
         "periodType": "ytd",
-        "operatingCashFlow": 21653000000,
-        "capitalExpenditure": 10631000000,
-        "value": 11022000000
+        "operatingCashFlow": 33914000000,
+        "capitalExpenditure": 16137000000,
+        "value": 17777000000
       },
       "supportingSources": [
         {
@@ -1428,12 +1428,12 @@
           "sourceName": "SEC Form 10-K"
         }
       ],
-      "periodStart": "2025-07-01",
-      "periodEnd": "2026-06-30",
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
       "periodType": "ttm",
-      "operatingCashFlow": 46634000000,
-      "capitalExpenditure": 22419000000,
-      "value": 24215000000
+      "operatingCashFlow": 45106000000,
+      "capitalExpenditure": 22339000000,
+      "value": 22767000000
     },
     {
       "symbol": "C",
