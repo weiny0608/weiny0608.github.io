@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-08T14:12:58+00:00",
+  "updatedAt": "2026-11-09T00:34:21+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -1059,5 +1059,1987 @@
     "total": 82,
     "withResults": 81
   },
+  "cashFlows": [
+    {
+      "symbol": "AAPL",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-09-28",
+      "periodEnd": "2026-09-26",
+      "periodType": "annual",
+      "operatingCashFlow": 145097000000,
+      "capitalExpenditure": 9041000000,
+      "value": 136056000000
+    },
+    {
+      "symbol": "ABBV",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551152/000155115226000037/abbv-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 14871000000,
+        "capitalExpenditure": 888000000,
+        "value": 13983000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-20",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551152/000155115226000008/abbv-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 20089000000,
+      "capitalExpenditure": 1217000000,
+      "value": 18872000000
+    },
+    {
+      "symbol": "ADBE",
+      "reportDate": "2026-09-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/796343/000079634326000156/adbe-20260828.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-11-29",
+        "periodEnd": "2026-08-28",
+        "periodType": "ytd",
+        "operatingCashFlow": 7646000000,
+        "capitalExpenditure": 180000000,
+        "value": 7466000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-15",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/796343/000079634326000003/adbe-20251128.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-30",
+      "periodEnd": "2026-08-28",
+      "periodType": "ttm",
+      "operatingCashFlow": 10806000000,
+      "capitalExpenditure": 214000000,
+      "value": 10592000000
+    },
+    {
+      "symbol": "ADI",
+      "reportDate": "2026-08-19",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-11-02",
+        "periodEnd": "2026-08-01",
+        "periodType": "ytd",
+        "operatingCashFlow": 3844515000,
+        "capitalExpenditure": 392677000,
+        "value": 3451838000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2025-11-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-03",
+      "periodEnd": "2026-08-01",
+      "periodType": "ttm",
+      "operatingCashFlow": 5545325000,
+      "capitalExpenditure": 607830000,
+      "value": 4937495000
+    },
+    {
+      "symbol": "AMAT",
+      "reportDate": "2026-08-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026058235/amat-20260726.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-10-27",
+        "periodEnd": "2026-07-26",
+        "periodType": "ytd",
+        "operatingCashFlow": 5568000000,
+        "capitalExpenditure": 1988000000,
+        "value": 3580000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2025-12-12",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/amat-20251026.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-07-28",
+      "periodEnd": "2026-07-26",
+      "periodType": "ttm",
+      "operatingCashFlow": 8396000000,
+      "capitalExpenditure": 2773000000,
+      "value": 5623000000
+    },
+    {
+      "symbol": "AMD",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000191/amd-20260926.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-12-28",
+        "periodEnd": "2026-09-26",
+        "periodType": "ytd",
+        "operatingCashFlow": 6523000000,
+        "capitalExpenditure": 1845000000,
+        "value": 4678000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-28",
+      "periodEnd": "2026-09-26",
+      "periodType": "ttm",
+      "operatingCashFlow": 9123000000,
+      "capitalExpenditure": 2067000000,
+      "value": 7056000000
+    },
+    {
+      "symbol": "AMGN",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/318154/000031815426000155/amgn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 10432000000,
+        "capitalExpenditure": 1812000000,
+        "value": 8620000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/318154/000031815426000010/amgn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 12035000000,
+      "capitalExpenditure": 2454000000,
+      "value": 9581000000
+    },
+    {
+      "symbol": "AMZN",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 113841000000,
+        "capitalExpenditure": 175670000000,
+        "value": -61829000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 168300000000,
+      "capitalExpenditure": 215192000000,
+      "value": -46892000000
+    },
+    {
+      "symbol": "ARM",
+      "reportDate": "2026-05-26",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1973239/000197323926000097/arm-20260331.htm",
+      "sourceName": "SEC Form 20-F",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "periodType": "annual",
+      "operatingCashFlow": 1524000000,
+      "capitalExpenditure": 545000000,
+      "value": 979000000
+    },
+    {
+      "symbol": "ASML",
+      "reportDate": "2026-02-25",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/asml-20251231.htm",
+      "sourceName": "SEC Form 20-F",
+      "currency": "EUR",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "periodType": "annual",
+      "operatingCashFlow": 12658500000,
+      "capitalExpenditure": 1573600000,
+      "value": 11084900000
+    },
+    {
+      "symbol": "AVGO",
+      "reportDate": "2026-09-10",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000080/avgo-20260802.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-11-03",
+        "periodEnd": "2026-08-02",
+        "periodType": "ytd",
+        "operatingCashFlow": 32950000000,
+        "capitalExpenditure": 1013000000,
+        "value": 31937000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2025-12-18",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016825000121/avgo-20251102.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-04",
+      "periodEnd": "2026-08-02",
+      "periodType": "ttm",
+      "operatingCashFlow": 40653000000,
+      "capitalExpenditure": 1250000000,
+      "value": 39403000000
+    },
+    {
+      "symbol": "AXP",
+      "reportDate": "2026-10-23",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/4962/000000496226000409/axp-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 14559000000,
+        "capitalExpenditure": 2994000000,
+        "value": 11565000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/4962/000000496226000080/axp-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 17626000000,
+      "capitalExpenditure": 3716000000,
+      "value": 13910000000
+    },
+    {
+      "symbol": "BA",
+      "reportDate": "2026-10-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 2681000000,
+        "capitalExpenditure": 3040000000,
+        "value": -359000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-30",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 4012000000,
+      "capitalExpenditure": 3996000000,
+      "value": 16000000
+    },
+    {
+      "symbol": "BRK.B",
+      "reportDate": "2026-08-10",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526341032/brka-20260630.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-06-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 21653000000,
+        "capitalExpenditure": 10631000000,
+        "value": 11022000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526083899/brka-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-07-01",
+      "periodEnd": "2026-06-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 46634000000,
+      "capitalExpenditure": 22419000000,
+      "value": 24215000000
+    },
+    {
+      "symbol": "C",
+      "reportDate": "2026-02-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/831001/000083100126000011/c-20251231.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "periodType": "annual",
+      "operatingCashFlow": -67632000000,
+      "capitalExpenditure": 6520000000,
+      "value": -74152000000
+    },
+    {
+      "symbol": "CAT",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000057/cat-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 10593000000,
+        "capitalExpenditure": 2012000000,
+        "value": 8581000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 14184000000,
+      "capitalExpenditure": 2910000000,
+      "value": 11274000000
+    },
+    {
+      "symbol": "CDNS",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/813672/000081367226000121/cdns-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 1414436000,
+        "capitalExpenditure": 163254000,
+        "value": 1251182000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/813672/000081367226000016/cdns-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 1967931000,
+      "capitalExpenditure": 204295000,
+      "value": 1763636000
+    },
+    {
+      "symbol": "COST",
+      "reportDate": "2026-10-07",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-09-01",
+      "periodEnd": "2026-08-30",
+      "periodType": "annual",
+      "operatingCashFlow": 15817000000,
+      "capitalExpenditure": 6435000000,
+      "value": 9382000000
+    },
+    {
+      "symbol": "CRM",
+      "reportDate": "2026-08-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-02-01",
+        "periodEnd": "2026-07-31",
+        "periodType": "ytd",
+        "operatingCashFlow": 7970000000,
+        "capitalExpenditure": 316000000,
+        "value": 7654000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 15750000000,
+      "capitalExpenditure": 596000000,
+      "value": 15154000000
+    },
+    {
+      "symbol": "CRWD",
+      "reportDate": "2026-08-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-02-01",
+        "periodEnd": "2026-07-31",
+        "periodType": "ytd",
+        "operatingCashFlow": 1121205000,
+        "capitalExpenditure": 222037000,
+        "value": 899168000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-05",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 2016615000,
+      "capitalExpenditure": 407897000,
+      "value": 1608718000
+    },
+    {
+      "symbol": "CSCO",
+      "reportDate": "2026-09-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-07-27",
+      "periodEnd": "2026-07-25",
+      "periodType": "annual",
+      "operatingCashFlow": 14177000000,
+      "capitalExpenditure": 1410000000,
+      "value": 12767000000
+    },
+    {
+      "symbol": "CVS",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/64803/000006480326000108/cvs-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 15318000000,
+        "capitalExpenditure": 2357000000,
+        "value": 12961000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-10",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/64803/000006480326000010/cvs-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 18708000000,
+      "capitalExpenditure": 3141000000,
+      "value": 15567000000
+    },
+    {
+      "symbol": "CVX",
+      "reportDate": "2026-11-05",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000200/cvx-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 41161000000,
+        "capitalExpenditure": 12612000000,
+        "value": 28549000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/cvx-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 51950000000,
+      "capitalExpenditure": 17876000000,
+      "value": 34074000000
+    },
+    {
+      "symbol": "DIS",
+      "reportDate": "2026-08-05",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-09-28",
+        "periodEnd": "2026-06-27",
+        "periodType": "ytd",
+        "operatingCashFlow": 12515000000,
+        "capitalExpenditure": 6780000000,
+        "value": 5735000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2025-11-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-06-29",
+      "periodEnd": "2026-06-27",
+      "periodType": "ttm",
+      "operatingCashFlow": 16989000000,
+      "capitalExpenditure": 8696000000,
+      "value": 8293000000
+    },
+    {
+      "symbol": "DOW",
+      "reportDate": "2026-04-24",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1751788/000175178826000134/dow-20260331.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-03-31",
+        "periodType": "quarter",
+        "operatingCashFlow": 1124000000,
+        "capitalExpenditure": 503000000,
+        "value": 621000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-03",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1751788/000175178826000018/dow-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 2065000000,
+      "capitalExpenditure": 2297000000,
+      "value": -232000000
+    },
+    {
+      "symbol": "FTNT",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1262039/000126203926000027/ftnt-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2026-01-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ytd",
+      "operatingCashFlow": 3066700000,
+      "capitalExpenditure": 212800000,
+      "value": 2853900000
+    },
+    {
+      "symbol": "GE",
+      "reportDate": "2026-10-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/40545/000004054526000064/ge-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 7170000000,
+        "capitalExpenditure": 1002000000,
+        "value": 6168000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/40545/000004054526000008/ge-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 9451000000,
+      "capitalExpenditure": 1433000000,
+      "value": 8018000000
+    },
+    {
+      "symbol": "GM",
+      "reportDate": "2026-10-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1467858/000146785826000059/gm-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 16620000000,
+        "capitalExpenditure": 5800000000,
+        "value": 10820000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-27",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1467858/000146785826000013/gm-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 23415000000,
+      "capitalExpenditure": 9020000000,
+      "value": 14395000000
+    },
+    {
+      "symbol": "GOOG",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 127149000000,
+        "capitalExpenditure": 131953000000,
+        "value": -4804000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-05",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 179551000000,
+      "capitalExpenditure": 159804000000,
+      "value": 19747000000
+    },
+    {
+      "symbol": "GOOGL",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 127149000000,
+        "capitalExpenditure": 131953000000,
+        "value": -4804000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-05",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 179551000000,
+      "capitalExpenditure": 159804000000,
+      "value": 19747000000
+    },
+    {
+      "symbol": "GS",
+      "reportDate": "2026-11-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/886982/000088698226000532/gs-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": -21582000000,
+        "capitalExpenditure": 1592000000,
+        "value": -23174000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/886982/000088698226000091/gs-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": -37858000000,
+      "capitalExpenditure": 2123000000,
+      "value": -39981000000
+    },
+    {
+      "symbol": "HD",
+      "reportDate": "2026-08-25",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-02-02",
+        "periodEnd": "2026-08-02",
+        "periodType": "ytd",
+        "operatingCashFlow": 11422000000,
+        "capitalExpenditure": 1724000000,
+        "value": 9698000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-18",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-04",
+      "periodEnd": "2026-08-02",
+      "periodType": "ttm",
+      "operatingCashFlow": 18779000000,
+      "capitalExpenditure": 3680000000,
+      "value": 15099000000
+    },
+    {
+      "symbol": "HON",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000143/hon-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 743000000,
+        "capitalExpenditure": 369000000,
+        "value": 374000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-17",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000013/hon-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 1947000000,
+      "capitalExpenditure": 980000000,
+      "value": 967000000
+    },
+    {
+      "symbol": "IBM",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/51143/000005114326000095/ibm-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 11791000000,
+        "capitalExpenditure": 793000000,
+        "value": 10998000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/51143/000005114326000010/ibm-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 15831000000,
+      "capitalExpenditure": 1175000000,
+      "value": 14656000000
+    },
+    {
+      "symbol": "INTC",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000191/intc-20260926.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-12-28",
+        "periodEnd": "2026-09-26",
+        "periodType": "ytd",
+        "operatingCashFlow": 13184000000,
+        "capitalExpenditure": 10216000000,
+        "value": 2968000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-23",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-28",
+      "periodEnd": "2026-09-26",
+      "periodType": "ttm",
+      "operatingCashFlow": 17472000000,
+      "capitalExpenditure": 13704000000,
+      "value": 3768000000
+    },
+    {
+      "symbol": "INTU",
+      "reportDate": "2026-09-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "annual",
+      "operatingCashFlow": 8838000000,
+      "capitalExpenditure": 175000000,
+      "value": 8663000000
+    },
+    {
+      "symbol": "JNJ",
+      "reportDate": "2026-10-21",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-12-29",
+        "periodEnd": "2026-09-27",
+        "periodType": "ytd",
+        "operatingCashFlow": 18850000000,
+        "capitalExpenditure": 3732000000,
+        "value": 15118000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-11",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-29",
+      "periodEnd": "2026-09-27",
+      "periodType": "ttm",
+      "operatingCashFlow": 26159000000,
+      "capitalExpenditure": 5569000000,
+      "value": 20590000000
+    },
+    {
+      "symbol": "KLAC",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000031920126000034/klac-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-07-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "quarter",
+        "operatingCashFlow": 1530939000,
+        "capitalExpenditure": 194756000,
+        "value": 1336183000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 4512427000,
+      "capitalExpenditure": 474807000,
+      "value": 4037620000
+    },
+    {
+      "symbol": "KO",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-10-02",
+        "periodType": "ytd",
+        "operatingCashFlow": 12471000000,
+        "capitalExpenditure": 1063000000,
+        "value": 11408000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-20",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-27",
+      "periodEnd": "2026-10-02",
+      "periodType": "ttm",
+      "operatingCashFlow": 16227000000,
+      "capitalExpenditure": 1945000000,
+      "value": 14282000000
+    },
+    {
+      "symbol": "LRCX",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000054/lrcx-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-06-29",
+        "periodEnd": "2026-09-27",
+        "periodType": "quarter",
+        "operatingCashFlow": 3497652000,
+        "capitalExpenditure": 257697000,
+        "value": 3239955000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-07",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-29",
+      "periodEnd": "2026-09-27",
+      "periodType": "ttm",
+      "operatingCashFlow": 7576345000,
+      "capitalExpenditure": 1038981000,
+      "value": 6537364000
+    },
+    {
+      "symbol": "MA",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1141391/000114139126000124/ma-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 11859000000,
+        "capitalExpenditure": 667000000,
+        "value": 11192000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-11",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1141391/000114139126000013/ma-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 16861000000,
+      "capitalExpenditure": 779000000,
+      "value": 16082000000
+    },
+    {
+      "symbol": "MCD",
+      "reportDate": "2026-11-06",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000083/mcd-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 8254000000,
+        "capitalExpenditure": 2401000000,
+        "value": 5853000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000035/mcd-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 10951000000,
+      "capitalExpenditure": 3460000000,
+      "value": 7491000000
+    },
+    {
+      "symbol": "META",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026066773/meta-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 96873000000,
+        "capitalExpenditure": 83055000000,
+        "value": 13818000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 133087000000,
+      "capitalExpenditure": 104438000000,
+      "value": 28649000000
+    },
+    {
+      "symbol": "MRK",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/310158/000031015826000248/mrk-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 15846000000,
+        "capitalExpenditure": 2924000000,
+        "value": 12922000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/310158/000031015826000063/mrk-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 18703000000,
+      "capitalExpenditure": 3957000000,
+      "value": 14746000000
+    },
+    {
+      "symbol": "MRVL",
+      "reportDate": "2026-08-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000183563226000025/mrvl-20260801.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-02-01",
+        "periodEnd": "2026-08-01",
+        "periodType": "ytd",
+        "operatingCashFlow": 1244300000,
+        "capitalExpenditure": 282400000,
+        "value": 961900000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-11",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000183563226000011/mrvl-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-03",
+      "periodEnd": "2026-08-01",
+      "periodType": "ttm",
+      "operatingCashFlow": 2200300000,
+      "capitalExpenditure": 470200000,
+      "value": 1730100000
+    },
+    {
+      "symbol": "MSFT",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-07-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "quarter",
+        "operatingCashFlow": 58000000000,
+        "capitalExpenditure": 39367000000,
+        "value": 18633000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-07-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 195878000000,
+      "capitalExpenditure": 135921000000,
+      "value": 59957000000
+    },
+    {
+      "symbol": "MU",
+      "reportDate": "2026-10-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000023/mu-20260903.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2025-08-29",
+      "periodEnd": "2026-09-03",
+      "periodType": "annual",
+      "operatingCashFlow": 89675000000,
+      "capitalExpenditure": 30712000000,
+      "value": 58963000000
+    },
+    {
+      "symbol": "NFLX",
+      "reportDate": "2026-10-21",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 10196296000,
+        "capitalExpenditure": 693540000,
+        "value": 9502756000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-23",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 12307938000,
+      "capitalExpenditure": 932875000,
+      "value": 11375063000
+    },
+    {
+      "symbol": "NKE",
+      "reportDate": "2026-10-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000193/nke-20260831.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-06-01",
+        "periodEnd": "2026-08-31",
+        "periodType": "quarter",
+        "operatingCashFlow": 135000000,
+        "capitalExpenditure": 199000000,
+        "value": -64000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-07-15",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000088/nke-20260531.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-01",
+      "periodEnd": "2026-08-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 2781000000,
+      "capitalExpenditure": 676000000,
+      "value": 2105000000
+    },
+    {
+      "symbol": "NOW",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1373715/000137371526000096/now-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 3096000000,
+        "capitalExpenditure": 346000000,
+        "value": 2750000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1373715/000137371526000007/now-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 5334000000,
+      "capitalExpenditure": 584000000,
+      "value": 4750000000
+    },
+    {
+      "symbol": "NVDA",
+      "reportDate": "2026-08-26",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-26",
+        "periodEnd": "2026-07-26",
+        "periodType": "ytd",
+        "operatingCashFlow": 74421000000,
+        "capitalExpenditure": 4434000000,
+        "value": 69987000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-07-28",
+      "periodEnd": "2026-07-26",
+      "periodType": "ttm",
+      "operatingCashFlow": 134360000000,
+      "capitalExpenditure": 7354000000,
+      "value": 127006000000
+    },
+    {
+      "symbol": "NXPI",
+      "reportDate": "2026-10-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344726000059/nxpi-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-27",
+        "periodType": "ytd",
+        "operatingCashFlow": 2909000000,
+        "capitalExpenditure": 199000000,
+        "value": 2710000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344726000008/nxpi-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-29",
+      "periodEnd": "2026-09-27",
+      "periodType": "ttm",
+      "operatingCashFlow": 3800000000,
+      "capitalExpenditure": 297000000,
+      "value": 3503000000
+    },
+    {
+      "symbol": "ORCL",
+      "reportDate": "2026-09-11",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-06-01",
+        "periodEnd": "2026-08-31",
+        "periodType": "quarter",
+        "operatingCashFlow": 23103000000,
+        "capitalExpenditure": 28499000000,
+        "value": -5396000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-06-22",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-01",
+      "periodEnd": "2026-08-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 46940000000,
+      "capitalExpenditure": 75660000000,
+      "value": -28720000000
+    },
+    {
+      "symbol": "PANW",
+      "reportDate": "2026-09-10",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "annual",
+      "operatingCashFlow": 4553000000,
+      "capitalExpenditure": 440000000,
+      "value": 4113000000
+    },
+    {
+      "symbol": "PEP",
+      "reportDate": "2026-10-08",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/77476/000007747626000048/pep-20260905.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2025-12-28",
+        "periodEnd": "2026-09-05",
+        "periodType": "ytd",
+        "operatingCashFlow": 7950000000,
+        "capitalExpenditure": 2182000000,
+        "value": 5768000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-03",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/77476/000007747626000007/pep-20251227.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-07",
+      "periodEnd": "2026-09-05",
+      "periodType": "ttm",
+      "operatingCashFlow": 14569000000,
+      "capitalExpenditure": 4098000000,
+      "value": 10471000000
+    },
+    {
+      "symbol": "PFE",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800326000127/pfe-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-27",
+        "periodType": "ytd",
+        "operatingCashFlow": 8825000000,
+        "capitalExpenditure": 1542000000,
+        "value": 7283000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-26",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800326000026/pfe-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-29",
+      "periodEnd": "2026-09-27",
+      "periodType": "ttm",
+      "operatingCashFlow": 14173000000,
+      "capitalExpenditure": 2387000000,
+      "value": 11786000000
+    },
+    {
+      "symbol": "PG",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-07-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "quarter",
+        "operatingCashFlow": 5767000000,
+        "capitalExpenditure": 1366000000,
+        "value": 4401000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 19915000000,
+      "capitalExpenditure": 4575000000,
+      "value": 15340000000
+    },
+    {
+      "symbol": "PLTR",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000048/pltr-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 3319902000,
+        "capitalExpenditure": 29969000,
+        "value": 3289933000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-17",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000011/pltr-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 4097197000,
+      "capitalExpenditure": 43241000,
+      "value": 4053956000
+    },
+    {
+      "symbol": "QCOM",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000128/qcom-20260927.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "periodStart": "2025-09-29",
+      "periodEnd": "2026-09-27",
+      "periodType": "annual",
+      "operatingCashFlow": 11145000000,
+      "capitalExpenditure": 2494000000,
+      "value": 8651000000
+    },
+    {
+      "symbol": "RTX",
+      "reportDate": "2026-10-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/101829/000010182926000031/rtx-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 8270000000,
+        "capitalExpenditure": 1964000000,
+        "value": 6306000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/101829/000010182926000006/rtx-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 12435000000,
+      "capitalExpenditure": 2934000000,
+      "value": 9501000000
+    },
+    {
+      "symbol": "SHW",
+      "reportDate": "2026-10-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/89800/000008980026000056/shw-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 2591100000,
+        "capitalExpenditure": 375400000,
+        "value": 2215700000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/89800/000008980026000008/shw-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 3683600000,
+      "capitalExpenditure": 605800000,
+      "value": 3077800000
+    },
+    {
+      "symbol": "SNPS",
+      "reportDate": "2026-08-26",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/883241/000088324126000025/snps-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2025-11-01",
+        "periodEnd": "2026-07-31",
+        "periodType": "ytd",
+        "operatingCashFlow": 2298603000,
+        "capitalExpenditure": 156089000,
+        "value": 2142514000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2025-12-22",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/883241/000088324125000028/snps-20251031.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 2938341000,
+      "capitalExpenditure": 190635000,
+      "value": 2747706000
+    },
+    {
+      "symbol": "T",
+      "reportDate": "2026-02-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732717/000073271726000120/t-20251231.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "periodType": "annual",
+      "operatingCashFlow": 40284000000,
+      "capitalExpenditure": 20842000000,
+      "value": 19442000000
+    },
+    {
+      "symbol": "TMO",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97745/000009774526000179/tmo-20260926.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-26",
+        "periodType": "ytd",
+        "operatingCashFlow": 5867000000,
+        "capitalExpenditure": 1263000000,
+        "value": 4604000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-26",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97745/000009774526000018/tmo-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-09-28",
+      "periodEnd": "2026-09-26",
+      "periodType": "ttm",
+      "operatingCashFlow": 9324000000,
+      "capitalExpenditure": 1728000000,
+      "value": 7596000000
+    },
+    {
+      "symbol": "TSLA",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 14897000000,
+        "capitalExpenditure": 13014000000,
+        "value": 1883000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 18710000000,
+      "capitalExpenditure": 15407000000,
+      "value": 3303000000
+    },
+    {
+      "symbol": "TXN",
+      "reportDate": "2026-10-23",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97476/000009747626000169/txn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 7642000000,
+        "capitalExpenditure": 1653000000,
+        "value": 5989000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97476/000009747626000059/txn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 9896000000,
+      "capitalExpenditure": 2578000000,
+      "value": 7318000000
+    },
+    {
+      "symbol": "UBER",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000041/uber-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 7852000000,
+        "capitalExpenditure": 239000000,
+        "value": 7613000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000015/uber-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 10735000000,
+      "capitalExpenditure": 314000000,
+      "value": 10421000000
+    },
+    {
+      "symbol": "UNH",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000266/unh-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 25087000000,
+        "capitalExpenditure": 2421000000,
+        "value": 22666000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 26195000000,
+      "capitalExpenditure": 3369000000,
+      "value": 22826000000
+    },
+    {
+      "symbol": "UNP",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/100885/000010088526000321/unp-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 8302000000,
+        "capitalExpenditure": 2834000000,
+        "value": 5468000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/100885/000010088526000037/unp-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 10527000000,
+      "capitalExpenditure": 3833000000,
+      "value": 6694000000
+    },
+    {
+      "symbol": "V",
+      "reportDate": "2026-11-05",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/v-20260930.htm",
+      "sourceName": "SEC Form 10-K",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "annual",
+      "operatingCashFlow": 23728000000,
+      "capitalExpenditure": 1671000000,
+      "value": 22057000000
+    },
+    {
+      "symbol": "WDAY",
+      "reportDate": "2026-08-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-02-01",
+        "periodEnd": "2026-07-31",
+        "periodType": "ytd",
+        "operatingCashFlow": 1215000000,
+        "capitalExpenditure": 139000000,
+        "value": 1076000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000014/wday-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 3081000000,
+      "capitalExpenditure": 237000000,
+      "value": 2844000000
+    },
+    {
+      "symbol": "WMT",
+      "reportDate": "2026-08-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000154/wmt-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-02-01",
+        "periodEnd": "2026-07-31",
+        "periodType": "ytd",
+        "operatingCashFlow": 19710000000,
+        "capitalExpenditure": 14181000000,
+        "value": 5529000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000055/wmt-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-08-01",
+      "periodEnd": "2026-07-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 42923000000,
+      "capitalExpenditure": 29414000000,
+      "value": 13509000000
+    },
+    {
+      "symbol": "XOM",
+      "reportDate": "2026-11-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000020/xom-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "periodStart": "2026-01-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ytd",
+      "operatingCashFlow": 57910000000,
+      "capitalExpenditure": 20175000000,
+      "value": 37735000000
+    }
+  ],
   "secStatus": "available"
 }
