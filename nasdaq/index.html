@@ -1744,7 +1744,11 @@
       const amount = value => Math.abs(value) >= 1e7
         ? `${(value / 1e8).toLocaleString('zh-TW', { maximumFractionDigits: 2 })} 億`
         : value.toLocaleString('zh-TW');
-      const capex = cashFlow.capexBasis === 'productive_assets' ? '生產性資產現金支出' : '廠房設備現金支出';
+      const capex = {
+        productive_assets: '生產性資產現金支出',
+        issuer_capex: '簡報列示資本支出',
+        ppe: '廠房設備現金支出'
+      }[cashFlow.capexBasis];
       const method = period => `營業現金流 ${amount(period.operatingCashFlow)} − ${capex} ${amount(period.capitalExpenditure)}`;
       const officialLink = source => `<a href="${escapeValuationText(source.sourceUrl)}" target="_blank" rel="noopener">${escapeValuationText(source.sourceName || '官方來源')} ↗</a>`;
       const reported = cashFlow.reportedPeriod || cashFlow;
@@ -1754,7 +1758,7 @@
         <div style="font-size:10px; color:var(--text-muted);">${labels[reported.periodType]} · 至 ${escapeValuationText(reported.periodEnd)}</div>
         ${olderPeriod ? '<div style="font-size:10px; color:var(--text-muted);">較新一季現金流待核對</div>' : ''}
         ${cashFlow.reportedPeriod ? `<div style="font-size:10px; color:var(--text-muted);">另算近四季 ${escapeValuationText(cashFlow.currency)} ${amount(cashFlow.value)}</div>` : ''}
-        <div style="font-size:10px; color:var(--text-muted);">財報計算 · ${officialLink(cashFlow)}</div>
+        <div style="font-size:10px; color:var(--text-muted);">${cashFlow.capexBasis === 'issuer_capex' ? '依簡報精度' : '財報計算'} · ${officialLink(cashFlow)}</div>
         <details style="font-size:10px; color:var(--text-muted);">
           <summary>計算明細</summary>
           <div>${escapeValuationText(reported.periodStart)} 至 ${escapeValuationText(reported.periodEnd)}</div>

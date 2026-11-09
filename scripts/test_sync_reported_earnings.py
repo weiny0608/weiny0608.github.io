@@ -4,9 +4,25 @@ from unittest.mock import patch
 from urllib.error import HTTPError, URLError
 
 import sync_reported_earnings as collector
+from issuer_earnings import tsm_cash_flow_presentation
 
 
 class ReportedEarningsTest(unittest.TestCase):
+    def test_tsmc_cash_flow_requires_quarter_currency_and_concordant_amounts(self):
+        slide = '''<p>TSMC Property Cash Flows * Free cash flow =
+            Cash from operating activities &#8211; Capital expenditures (In NT$ billions)
+            3Q26 2Q26 3Q25 Beginning Balance 3,134.22 3,035.64 2,364.52
+            Cash from operating activities 919.77 783.36 426.83
+            Capital expenditures (443.21) (496.00) (287.45)
+            Ending Balance 3,621.89 3,134.22 2,470.76 Free Cash Flow * 476.56 287.36 139.38</p>'''
+        filed = date(2026, 10, 15)
+        self.assertEqual(tsm_cash_flow_presentation(slide, filed), (
+            date(2026, 7, 1), date(2026, 9, 30), 919_770_000_000, 443_210_000_000,
+        ))
+        self.assertIsNone(tsm_cash_flow_presentation(slide, date(2026, 7, 16)))
+        self.assertIsNone(tsm_cash_flow_presentation(slide.replace('NT$ billions', 'US$ billions'), filed))
+        self.assertIsNone(tsm_cash_flow_presentation(slide.replace('476.56', '500.00'), filed))
+
     @staticmethod
     def cash_fact(accn, form, start, end, value):
         return {'accn': accn, 'form': form, 'start': start, 'end': end, 'val': value}

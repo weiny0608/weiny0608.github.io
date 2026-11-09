@@ -1539,7 +1539,7 @@
             const sourceUrl = safeEarningsLink(row?.sourceUrl);
             if (!row || !EARNINGS_SYMBOL.test(row.symbol) || !sourceUrl || !/^[A-Z]{3}$/.test(row.currency)
                 || !['GAAP', 'IFRS'].includes(row.accounting)
-                || !['ppe', 'productive_assets'].includes(row.capexBasis)
+                || !['ppe', 'productive_assets', 'issuer_capex'].includes(row.capexBasis)
                 || !Number.isFinite(earningsDay(row.reportDate)) || !validCashFlowAmounts(row)
                 || row.periodEnd > row.reportDate) continue;
             const previous = cashFlows.get(row.symbol);

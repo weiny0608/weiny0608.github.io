@@ -16,7 +16,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-from issuer_earnings import asml_exhibit_metrics, latest_issuer_result, tsm_exhibit_metrics
+from issuer_earnings import asml_exhibit_metrics, latest_issuer_result, tsm_cash_flow_presentation, tsm_exhibit_metrics
 from issuer_exhibit_specials import berkshire_statement_metrics, berkshire_statement_name, citi_exhibit_metrics
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -289,6 +289,8 @@ def latest_cash_flow(client, symbol, cik, today):
     """Use the latest period with an unambiguous pair of official statement inputs."""
     padded = str(cik).zfill(10)
     submissions = client.json(f'{DATA}/submissions/CIK{padded}.json')
+    if symbol == 'TSM':
+        return latest_tsm_cash_flow(client, cik, submissions, today)
     filings = [
         (filed, filing) for filed, filing in recent_filings(submissions, today - timedelta(days=550))
         if filing['form'] in REPORT_FORMS and filed <= today
@@ -419,6 +421,39 @@ def exhibit_urls(cik, filing, index):
                         group = preferred if re.search(r'press release|earnings|shareholder letter|financial statements', description) else other
                         group.append(url)
     return list(dict.fromkeys(preferred + other))[:3]
+
+
+def filing_exhibits(client, cik, filing):
+    directory = archive_dir(cik, filing['accessionNumber'])
+    index_url = directory + filing['accessionNumber'] + '-index.html'
+    try:
+        index = client.get(index_url)
+    except HTTPError as exc:
+        if exc.code != 404:
+            raise
+        index = client.get(index_url.removesuffix('l'))
+    return exhibit_urls(cik, filing, index)
+
+
+def latest_tsm_cash_flow(client, cik, submissions, today):
+    filings = [
+        (filed, filing) for filed, filing in recent_filings(submissions, today - timedelta(days=160))
+        if filing['form'] == '6-K' and filed <= today
+    ]
+    for filed, filing in sorted(filings, key=lambda pair: pair[0], reverse=True)[:10]:
+        for url in filing_exhibits(client, cik, filing):
+            metrics = tsm_cash_flow_presentation(client.get(url), filed)
+            if not metrics:
+                continue
+            start, end, operating, capex = metrics
+            return {
+                'symbol': 'TSM', 'currency': 'TWD', 'accounting': 'IFRS',
+                'capexBasis': 'issuer_capex', 'periodType': 'quarter',
+                'periodStart': start.isoformat(), 'periodEnd': end.isoformat(), 'reportDate': filed.isoformat(),
+                'value': operating - capex, 'operatingCashFlow': operating, 'capitalExpenditure': capex,
+                'sourceName': '台積電財報簡報（SEC 6-K）', 'sourceUrl': url,
+            }
+    return None
 
 
 def first_numeric(values):
@@ -655,18 +690,10 @@ def latest_result(client, symbol, cik, existing, today):
         if best_candidate and filed < iso_date(best_candidate['periodEnd']):
             continue
         form = filing['form']
-        directory = archive_dir(cik, filing['accessionNumber'])
         try:
-            index_url = directory + filing['accessionNumber'] + '-index.html'
-            try:
-                index = client.get(index_url)
-            except HTTPError as exc:
-                if exc.code != 404:
-                    raise
-                index = client.get(index_url.removesuffix('l'))
             currency_hint = (best_candidate or {}).get('currency') or hinted_currency or ('USD' if form == '8-K' else None)
             accounting_hint = (best_candidate or {}).get('accounting') or existing.get('accounting') or ('GAAP' if form == '8-K' else None)
-            for url in exhibit_urls(cik, filing, index):
+            for url in filing_exhibits(client, cik, filing):
                 document = client.get(url)
                 if issuer_exhibit:
                     metrics = issuer_exhibit(document, filed)

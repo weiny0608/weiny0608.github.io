@@ -139,6 +139,47 @@ def tsm_exhibit_metrics(document, filed):
     return period_end, f'Q{quarter} FY{period_end.year}', int(revenue), float(release['eps']), 'TWD', 'IFRS', 'share'
 
 
+def tsm_cash_flow_presentation(document, filed):
+    """Read TSMC's consolidated cash-flow slide in the SEC earnings presentation."""
+    text = ' '.join(unescape(re.sub(r'<[^>]+>', ' ', document)).split())
+    if not re.search(r'\bTSMC\s+(?:Property|Consolidated)\b', text, re.I):
+        return None
+    label = re.compile(
+        r'\bCash Flows\s*\*\s*Free cash flow\s*=\s*Cash from operating activities\s*'
+        r'[–−—-]\s*Capital expenditures\s*\(In NT\$ billions\)\s*'
+        r'(?P<quarter>[1-4])Q(?P<year>\d{2})\s+[1-4]Q\d{2}\s+[1-4]Q\d{2}\s+Beginning Balance\b',
+        re.I,
+    )
+    number = r'(?:-?\d[\d,]*\.\d{2}|\(\d[\d,]*\.\d{2}\))'
+    rows = re.compile(
+        rf'\bCash from operating activities (?P<operating>{number}) {number} {number} '
+        rf'Capital expenditures (?P<capital>{number}) {number} {number} '
+        rf'.{{0,500}}?\bFree Cash Flow\s*\*\s*(?P<free>{number}) {number} {number}(?=\s|$)',
+        re.I,
+    )
+    results = set()
+    for heading in label.finditer(text):
+        current = rows.search(text[heading.end():heading.end() + 750])
+        if not current:
+            continue
+        year = 2000 + int(heading['year'])
+        quarter = int(heading['quarter'])
+        end_month, end_day = ((3, 31), (6, 30), (9, 30), (12, 31))[quarter - 1]
+        end = date(year, end_month, end_day)
+        if not 0 <= (filed - end).days <= 60:
+            continue
+        start = date(year, end_month - 2, 1)
+        operating, capital, published = (
+            Decimal(current[field].replace(',', '').replace('(', '-').replace(')', ''))
+            for field in ('operating', 'capital', 'free')
+        )
+        # The slide reports outflows in parentheses and rounds to NT$0.01 billion.
+        if capital > 0 or abs((operating + capital) - published) > Decimal('0.01'):
+            continue
+        results.add((start, end, int(operating * 1_000_000_000), int(-capital * 1_000_000_000)))
+    return next(iter(results)) if len(results) == 1 else None
+
+
 def asml_exhibit_metrics(document, filed):
     """Read ASML's consolidated US GAAP income-statement slide in its Form 6-K."""
     slides = [' '.join(unescape(content).split()) for content in
