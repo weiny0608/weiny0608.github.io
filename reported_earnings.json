@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T21:37:26+00:00",
+  "updatedAt": "2026-11-10T00:56:23+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -3054,6 +3054,882 @@
       "operatingCashFlow": 57910000000,
       "capitalExpenditure": 20175000000,
       "value": 37735000000
+    }
+  ],
+  "trailingEps": [
+    {
+      "symbol": "AAPL",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-26",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-09-28",
+      "eps": 8.98,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "ADBE",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-08-28",
+      "reportDate": "2026-09-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/796343/000079634326000156/adbe-20260828.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-08-30",
+      "eps": 17.9177,
+      "method": "calculated_ttm",
+      "netIncome": 7284000000,
+      "weightedShares": 406525000,
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-15",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/796343/000079634326000003/adbe-20251128.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-09-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/796343/000079634325000107/adbe-20250829.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "ADI",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-08-01",
+      "reportDate": "2026-08-19",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-08-03",
+      "eps": 8.4208,
+      "method": "calculated_ttm",
+      "netIncome": 4135004000,
+      "weightedShares": 491048000,
+      "supportingSources": [
+        {
+          "reportDate": "2025-11-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-20",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000144/adi-20250802.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "AMAT",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-26",
+      "reportDate": "2026-08-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026058235/amat-20260726.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-07-28",
+      "eps": 11.5982,
+      "method": "calculated_ttm",
+      "netIncome": 9267000000,
+      "weightedShares": 799000000,
+      "supportingSources": [
+        {
+          "reportDate": "2025-12-12",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/amat-20251026.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-21",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000000695125000037/amat-20250727.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "AMGN",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/318154/000031815426000155/amgn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 17.2551,
+      "method": "calculated_ttm",
+      "netIncome": 9391000000,
+      "weightedShares": 544243836,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/318154/000031815426000010/amgn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-05",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/318154/000031815425000072/amgn-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "AMZN",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 12.3732,
+      "method": "calculated_ttm",
+      "netIncome": 134779000000,
+      "weightedShares": 10892819178,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-31",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "CAT",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000057/cat-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 25.461,
+      "method": "calculated_ttm",
+      "netIncome": 11831000000,
+      "weightedShares": 464670959,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-03",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/18230/000001823025000048/cat-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "CDNS",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/813672/000081367226000121/cdns-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 5.0291,
+      "method": "calculated_ttm",
+      "netIncome": 1380619000,
+      "weightedShares": 274524419,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/813672/000081367226000016/cdns-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/813672/000081367225000148/cdns-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "COST",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-08-30",
+      "reportDate": "2026-10-07",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-09-01",
+      "eps": 20.76,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "CRM",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-31",
+      "reportDate": "2026-08-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-08-01",
+      "eps": 10.7835,
+      "method": "calculated_ttm",
+      "netIncome": 9662000000,
+      "weightedShares": 895997260,
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-09-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1108524/000110852425000088/crm-20250731.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "CSCO",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-25",
+      "reportDate": "2026-09-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-07-27",
+      "eps": 3.33,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "DIS",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-06-27",
+      "reportDate": "2026-08-05",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-06-29",
+      "eps": 4.8349,
+      "method": "calculated_ttm",
+      "netIncome": 8600000000,
+      "weightedShares": 1778750000,
+      "supportingSources": [
+        {
+          "reportDate": "2025-11-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000136/dis-20250628.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "FTNT",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-30",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1262039/000126203926000027/ftnt-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 3.0706,
+      "method": "calculated_ttm",
+      "netIncome": 2282300000,
+      "weightedShares": 743283562,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1262039/000126203926000007/ftnt-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-07",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1262039/000126203925000039/ftnt-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "HD",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-08-02",
+      "reportDate": "2026-08-25",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-08-04",
+      "eps": 14.2841,
+      "method": "calculated_ttm",
+      "netIncome": 14227000000,
+      "weightedShares": 996000000,
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-18",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-26",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/354950/000035495025000217/hd-20250803.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "INTU",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-31",
+      "reportDate": "2026-09-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-08-01",
+      "eps": 16.46,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "JNJ",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-27",
+      "reportDate": "2026-10-21",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-09-29",
+      "eps": 6.5824,
+      "method": "calculated_ttm",
+      "netIncome": 16095000000,
+      "weightedShares": 2445150000,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-11",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-22",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/200406/000020040625000209/jnj-20250928.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "LRCX",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-27",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000054/lrcx-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-09-29",
+      "eps": 6.7184,
+      "method": "calculated_ttm",
+      "netIncome": 8449874000,
+      "weightedShares": 1257715750,
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-07",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754925000085/lrcx-20250928.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "MSFT",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 19.1503,
+      "method": "calculated_ttm",
+      "netIncome": 142631000000,
+      "weightedShares": 7447958904,
+      "supportingSources": [
+        {
+          "reportDate": "2026-07-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "MU",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-03",
+      "reportDate": "2026-10-09",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000023/mu-20260903.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-08-29",
+      "eps": 74.33,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "NKE",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-08-31",
+      "reportDate": "2026-10-02",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000193/nke-20260831.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-09-01",
+      "eps": 2.0866,
+      "method": "calculated_ttm",
+      "netIncome": 3093000000,
+      "weightedShares": 1482310685,
+      "supportingSources": [
+        {
+          "reportDate": "2026-07-15",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000088/nke-20260531.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-01",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000097/nke-20250831.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "NVDA",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-26",
+      "reportDate": "2026-08-26",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-07-28",
+      "eps": 7.9057,
+      "method": "calculated_ttm",
+      "netIncome": 192880000000,
+      "weightedShares": 24397500000,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-27",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000209/nvda-20250727.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "NXPI",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-27",
+      "reportDate": "2026-10-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344726000059/nxpi-20260927.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-09-29",
+      "eps": 12.7127,
+      "method": "calculated_ttm",
+      "netIncome": 3228000000,
+      "weightedShares": 253918390,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344726000008/nxpi-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-28",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344725000120/nxpi-20250928.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "PANW",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-31",
+      "reportDate": "2026-09-10",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-08-01",
+      "eps": 0.4,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "PEP",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-05",
+      "reportDate": "2026-10-08",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/77476/000007747626000048/pep-20260905.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-09-07",
+      "eps": 7.9519,
+      "method": "calculated_ttm",
+      "netIncome": 10896000000,
+      "weightedShares": 1370230769,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-03",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/77476/000007747626000007/pep-20251227.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-09",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/77476/000007747625000053/pep-20250906.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "PG",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 6.6363,
+      "method": "calculated_ttm",
+      "netIncome": 16027000000,
+      "weightedShares": 2415039178,
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-24",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/80424/000008042425000245/pg-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "PLTR",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-11-03",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000048/pltr-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 1.4267,
+      "method": "calculated_ttm",
+      "netIncome": 3669105000,
+      "weightedShares": 2571822299,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-17",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000011/pltr-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000132165525000131/pltr-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "QCOM",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-27",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000128/qcom-20260927.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-09-29",
+      "eps": 12.7,
+      "method": "reported_annual"
+    },
+    {
+      "symbol": "RTX",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-20",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/101829/000010182926000031/rtx-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 6.1574,
+      "method": "calculated_ttm",
+      "netIncome": 8403000000,
+      "weightedShares": 1364702192,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/101829/000010182926000006/rtx-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-21",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/101829/000010182925000042/rtx-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "SHW",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-27",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/89800/000008980026000056/shw-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 10.8559,
+      "method": "calculated_ttm",
+      "netIncome": 2676100000,
+      "weightedShares": 246510685,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/89800/000008980026000008/shw-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-28",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/89800/000008980025000126/shw-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "TRV",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-16",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000181/trv-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 38.1893,
+      "method": "calculated_ttm",
+      "netIncome": 8272000000,
+      "weightedShares": 216605205,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-12",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-16",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/86312/000008631225000069/trv-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "TSLA",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 0.9096,
+      "method": "calculated_ttm",
+      "netIncome": 3220000000,
+      "weightedShares": 3539967123,
+      "supportingSources": [
+        {
+          "reportDate": "2026-01-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-23",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025045968/tsla-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "TXN",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-23",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97476/000009747626000169/txn-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 7.7206,
+      "method": "calculated_ttm",
+      "netIncome": 7072000000,
+      "weightedShares": 915991781,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97476/000009747626000059/txn-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-23",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/97476/000009747625000060/txn-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "UBER",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-11-04",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000041/uber-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 1.6757,
+      "method": "calculated_ttm",
+      "netIncome": 3468000000,
+      "weightedShares": 2069523567,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1543151/000154315126000015/uber-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-04",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1543151/000154315125000033/uber-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "UNP",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-22",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/100885/000010088526000321/unp-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 12.8275,
+      "method": "calculated_ttm",
+      "netIncome": 7618000000,
+      "weightedShares": 593880548,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-06",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/100885/000010088526000037/unp-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-23",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/100885/000010088525000321/unp-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "VZ",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000052/vz-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-01",
+      "eps": 3.9148,
+      "method": "calculated_ttm",
+      "netIncome": 16420000000,
+      "weightedShares": 4194350685,
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-17",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000007/vz-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-10-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271225000116/vz-20250930.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "WMT",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-07-31",
+      "reportDate": "2026-08-28",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000154/wmt-20260731.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-08-01",
+      "eps": 2.7594,
+      "method": "calculated_ttm",
+      "netIncome": 22076000000,
+      "weightedShares": 8000180822,
+      "supportingSources": [
+        {
+          "reportDate": "2026-03-13",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000055/wmt-20260131.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-08-29",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/104169/000010416925000137/wmt-20250731.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
     }
   ],
   "secStatus": "available"
