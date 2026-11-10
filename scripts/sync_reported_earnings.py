@@ -31,6 +31,11 @@ REVENUE_TAGS = (
     'RevenueFromContractWithCustomerIncludingAssessedTax',
 )
 EPS_TAGS = ('EarningsPerShareDiluted', 'DilutedEarningsLossPerShare')
+TRAILING_INCOME_TAGS = (
+    'NetIncomeLossAvailableToCommonStockholdersDiluted',
+    'NetIncomeLossAvailableToCommonStockholdersBasic',
+    'NetIncomeLoss',
+)
 CASH_FLOW_TAGS = {
     'us-gaap': ('GAAP', 'NetCashProvidedByUsedInOperatingActivities', {
         'ppe': 'PaymentsToAcquirePropertyPlantAndEquipment',
@@ -343,6 +348,163 @@ def latest_cash_flow(client, symbol, cik, today):
     return {
         **record, 'periodStart': start.isoformat(), 'periodEnd': end.isoformat(), 'periodType': period_type,
         'operatingCashFlow': operating, 'capitalExpenditure': capital, 'value': operating - capital,
+    }
+
+
+def exact_duration_facts(concepts, tag, unit, filing):
+    """Get unique amounts tied to one submission and exact date intervals."""
+    values = {}
+    for fact in concepts.get(tag, {}).get('units', {}).get(unit, []):
+        if fact.get('accn') != filing['accessionNumber'] or fact.get('form') != filing['form']:
+            continue
+        start, end = iso_date(fact.get('start')), iso_date(fact.get('end'))
+        val = fact.get('val')
+        if start and end and start < end and type(val) in (int, float) and math.isfinite(val):
+            values.setdefault((start, end), set()).add(val)
+    return {dates: next(iter(amounts)) for dates, amounts in values.items() if len(amounts) == 1}
+
+
+def inclusive_days(dates):
+    return (dates[1] - dates[0]).days + 1
+
+
+def diluted_earnings_contexts(concepts, filing):
+    """Use income numerators that reconcile to the filed diluted EPS to the cent."""
+    per_share = exact_duration_facts(concepts, 'EarningsPerShareDiluted', 'USD/shares', filing)
+    shares = exact_duration_facts(concepts, 'WeightedAverageNumberOfDilutedSharesOutstanding', 'shares', filing)
+    earnings = {}
+    for tag in TRAILING_INCOME_TAGS:
+        income = exact_duration_facts(concepts, tag, 'USD', filing)
+        for dates in per_share.keys() & shares.keys() & income.keys():
+            if (dates not in earnings and shares[dates] > 0 and income[dates] > 0
+                    and abs(income[dates] / shares[dates] - per_share[dates]) <= 0.005001):
+                earnings[dates] = (income[dates], shares[dates], per_share[dates], tag)
+    return earnings
+
+
+def has_noncomparable_earnings(concepts, first_date, last_date, accessions):
+    """Discontinue a bridge when structured tags identify a split or discontinued operations."""
+    for tag, concept in concepts.items():
+        normalized = tag.lower()
+        split = 'stocksplit' in normalized and ('ratio' in normalized or 'shares' in normalized)
+        discontinued = 'discontinuedoperations' in normalized and (
+            normalized.startswith(('incomeloss', 'earningsper', 'profitloss'))
+        )
+        if not (split or discontinued):
+            continue
+        for facts in concept.get('units', {}).values():
+            for fact in facts:
+                if fact.get('accn') not in accessions:
+                    continue
+                end = iso_date(fact.get('end'))
+                if end and first_date <= end <= last_date and fact.get('val') not in (None, 0):
+                    if not split or 'ratio' not in normalized or fact['val'] != 1:
+                        return True
+    return False
+
+
+def latest_trailing_eps(client, symbol, cik, earnings, today):
+    """Read as-filed annual EPS or derive a comparable US GAAP rolling estimate."""
+    if not earnings or (earnings.get('currency'), earnings.get('accounting'), earnings.get('epsBasis')) != (
+        'USD', 'GAAP', 'share'
+    ):
+        return None
+    end = iso_date(earnings.get('periodEnd'))
+    if not end:
+        return None
+    padded = str(cik).zfill(10)
+    submissions = client.json(f'{DATA}/submissions/CIK{padded}.json')
+    tickers = submissions.get('tickers') or []
+    exchanges = submissions.get('exchanges') or []
+    # SEC Company Facts is entity-wide. Don't attach it to an unverified share class.
+    if {ticker_key(ticker) for ticker in tickers} != {ticker_key(symbol)} or not set(exchanges) & {'Nasdaq', 'NYSE'}:
+        return None
+    filings = sorted(
+        [(filed, filing) for filed, filing in recent_filings(submissions, today - timedelta(days=560))
+         if filed <= today and filing['form'] in ('10-K', '10-Q')],
+        key=lambda item: item[0], reverse=True,
+    )
+    newest = next(((filed, filing) for filed, filing in filings if iso_date(filing['reportDate']) == end), None)
+    if not newest:
+        return None
+    filed, filing = newest
+    concepts = client.json(f'{DATA}/api/xbrl/companyfacts/CIK{padded}.json').get('facts', {}).get('us-gaap', {})
+    source = cash_flow_provenance(cik, filed, filing)
+    record = {'symbol': symbol, 'currency': 'USD', 'epsBasis': 'share', 'accounting': 'GAAP',
+              'periodEnd': end.isoformat(), **source}
+
+    if filing['form'] == '10-K':
+        values = [(dates, eps) for dates, eps in exact_duration_facts(
+            concepts, 'EarningsPerShareDiluted', 'USD/shares', filing
+        ).items() if dates[1] == end and 345 <= inclusive_days(dates) <= 385]
+        if len(values) == 1:
+            dates, eps = values[0]
+            return {**record, 'periodStart': dates[0].isoformat(), 'eps': eps, 'method': 'reported_annual'}
+        return None
+
+    quarterly = exact_duration_facts(concepts, 'EarningsPerShareDiluted', 'USD/shares', filing)
+    current_quarter = [eps for dates, eps in quarterly.items() if dates[1] == end and 75 <= inclusive_days(dates) <= 119]
+    if len(current_quarter) != 1 or not math.isclose(current_quarter[0], earnings['eps'], rel_tol=0, abs_tol=0.005001):
+        return None
+    current_contexts = diluted_earnings_contexts(concepts, filing)
+    current_periods = [dates for dates in current_contexts if dates[1] == end and 75 <= inclusive_days(dates) <= 300]
+    if not current_periods:
+        return None
+    current_dates = min(current_periods)
+    current_income, current_shares, _, income_tag = current_contexts[current_dates]
+    annual = next(((date_filed, report) for date_filed, report in filings
+                   if report['form'] == '10-K'
+                   and iso_date(report['reportDate']) == current_dates[0] - timedelta(days=1)), None)
+    if not annual:
+        return None
+    annual_filed, annual_filing = annual
+    annual_end = iso_date(annual_filing['reportDate'])
+    annual_contexts = diluted_earnings_contexts(concepts, annual_filing)
+    annual_dates = [dates for dates in annual_contexts if dates[1] == annual_end and 345 <= inclusive_days(dates) <= 385]
+    if len(annual_dates) != 1:
+        return None
+    annual_dates = annual_dates[0]
+    comparative = [dates for dates in current_contexts
+                   if dates[0] == annual_dates[0] and dates[1] < annual_end
+                   and abs(inclusive_days(dates) - inclusive_days(current_dates)) <= 7
+                   and 345 <= (end - dates[1]).days <= 385]
+    if len(comparative) != 1:
+        return None
+    prior_dates = comparative[0]
+    prior = next(((date_filed, report) for date_filed, report in filings
+                  if report['form'] == '10-Q' and iso_date(report['reportDate']) == prior_dates[1]), None)
+    if not prior:
+        return None
+    prior_filed, prior_filing = prior
+    # Comparing the restated column against its original submission catches a split
+    # or other revision that would make the share counts incompatible with the bridge.
+    prior_as_filed = diluted_earnings_contexts(concepts, prior_filing).get(prior_dates)
+    if prior_as_filed != current_contexts[prior_dates]:
+        return None
+    prior_income, prior_shares, _, prior_tag = prior_as_filed
+    annual_income, annual_shares, _, annual_tag = annual_contexts[annual_dates]
+    if len({income_tag, prior_tag, annual_tag}) != 1 or annual_income <= prior_income:
+        return None
+    rolling_start = prior_dates[1] + timedelta(days=1)
+    accessions = {item['accessionNumber'] for _, item in filings
+                  if (iso_date(item['reportDate']) or date.min) >= prior_dates[1]}
+    if has_noncomparable_earnings(concepts, prior_dates[0], end, accessions):
+        return None
+
+    total_income = annual_income + current_income - prior_income
+    share_days = (annual_shares * inclusive_days(annual_dates)
+                  + current_shares * inclusive_days(current_dates)
+                  - prior_shares * inclusive_days(prior_dates))
+    rolling_shares = share_days / inclusive_days((rolling_start, end))
+    if not min(annual_shares, current_shares, prior_shares) * 0.80 <= rolling_shares <= max(
+        annual_shares, current_shares, prior_shares
+    ) * 1.20:
+        return None
+    return {
+        **record, 'periodStart': rolling_start.isoformat(), 'eps': round(total_income / rolling_shares, 4),
+        'method': 'calculated_ttm', 'netIncome': total_income, 'weightedShares': round(rolling_shares),
+        'supportingSources': [cash_flow_provenance(cik, annual_filed, annual_filing),
+                              cash_flow_provenance(cik, prior_filed, prior_filing)],
     }
 
 
@@ -744,6 +906,7 @@ def update_feed(client, symbols, selected, previous, now):
     cik_by_ticker = load_ciks(client)
     results = {item['symbol']: item for item in previous.get('results', []) if item['symbol'] in symbols}
     cash_flows = {item['symbol']: item for item in previous.get('cashFlows', []) if item['symbol'] in symbols}
+    trailing_eps = {item['symbol']: item for item in previous.get('trailingEps', []) if item['symbol'] in symbols}
     completed = 0
     for symbol in selected:
         cik = cik_by_ticker.get(ticker_key(symbol))
@@ -767,17 +930,28 @@ def update_feed(client, symbols, selected, previous, now):
             cash_flow = latest_cash_flow(client, symbol, cik, now.date())
         except (OSError, ValueError) as exc:
             print(f'{symbol}: cash flow facts unavailable ({exc})', file=sys.stderr)
-            continue
+            cash_flow = None
         if cash_flow:
             cash_flows[symbol] = prefer_cash_flow(cash_flows.get(symbol), cash_flow)
+        try:
+            eps = latest_trailing_eps(client, symbol, cik, results.get(symbol), now.date())
+        except (OSError, ValueError) as exc:
+            print(f'{symbol}: trailing EPS facts unavailable ({exc})', file=sys.stderr)
+            eps = None
+        if eps:
+            trailing_eps[symbol] = eps
     if not completed:
         raise RuntimeError('No SEC company filings could be checked. Existing feed retained.')
-    return result_feed(previous, results, symbols, now, cash_flows)
+    return result_feed(previous, results, symbols, now, cash_flows, trailing_eps)
 
 
-def result_feed(previous, results, symbols, now, cash_flows):
+def result_feed(previous, results, symbols, now, cash_flows, trailing_eps):
+    # Keep a verified denominator through temporary outages while it remains current.
+    trailing_eps = {symbol: row for symbol, row in trailing_eps.items()
+                    if row.get('periodEnd') == results.get(symbol, {}).get('periodEnd')}
     if (results == {item['symbol']: item for item in previous.get('results', [])}
-            and cash_flows == {item['symbol']: item for item in previous.get('cashFlows', [])}):
+            and cash_flows == {item['symbol']: item for item in previous.get('cashFlows', [])}
+            and trailing_eps == {item['symbol']: item for item in previous.get('trailingEps', [])}):
         return previous
     feed = {
         'updatedAt': now.isoformat(timespec='seconds'),
@@ -786,6 +960,8 @@ def result_feed(previous, results, symbols, now, cash_flows):
     }
     if cash_flows or 'cashFlows' in previous:
         feed['cashFlows'] = [cash_flows[symbol] for symbol in sorted(cash_flows)]
+    if trailing_eps or 'trailingEps' in previous:
+        feed['trailingEps'] = [trailing_eps[symbol] for symbol in sorted(trailing_eps)]
     return feed
 
 
@@ -815,7 +991,8 @@ def refresh_feed(client, symbols, selected, previous, now):
         message = f'SEC data unavailable ({sec_error}). Checked {issuer_checked} issuer site(s); other results retained.'
         print(f'::warning::{message}' if os.environ.get('GITHUB_ACTIONS') else message, file=sys.stderr)
     cash_flows = {item['symbol']: item for item in sec_feed.get('cashFlows', []) if item['symbol'] in symbols}
-    feed = result_feed(previous, results, symbols, now, cash_flows)
+    trailing_eps = {item['symbol']: item for item in sec_feed.get('trailingEps', []) if item['symbol'] in symbols}
+    feed = result_feed(previous, results, symbols, now, cash_flows, trailing_eps)
     return {**feed, 'secStatus': 'unavailable' if sec_error else 'available'}
 
 
@@ -842,6 +1019,7 @@ def main():
         temp.replace(args.output)
     print(f'Confirmed quarterly results: {len(next_feed["results"])} of {len(symbols)} dashboard companies/tickers.')
     print(f'Cash flow from official filings: {len(next_feed.get("cashFlows", []))} of {len(symbols)} dashboard companies/tickers.')
+    print(f'Trailing EPS from official filings: {len(next_feed.get("trailingEps", []))} of {len(symbols)} dashboard companies/tickers.')
 
 
 if __name__ == '__main__':

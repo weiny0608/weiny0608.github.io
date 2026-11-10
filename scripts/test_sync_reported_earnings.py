@@ -8,6 +8,57 @@ from issuer_earnings import tsm_cash_flow_presentation
 
 
 class ReportedEarningsTest(unittest.TestCase):
+    def test_trailing_eps_uses_latest_annual_or_verified_interim_bridge(self):
+        current, annual, prior = ('0000000001-26-000003', '0000000001-26-000002', '0000000001-25-000001')
+        submissions = {'tickers': ['EXAMPLE'], 'exchanges': ['NYSE'], 'filings': {'recent': {
+            'form': ['10-Q', '10-K', '10-Q'],
+            'filingDate': ['2026-04-20', '2026-02-20', '2025-04-20'],
+            'reportDate': ['2026-03-31', '2025-12-31', '2025-03-31'],
+            'accessionNumber': [current, annual, prior],
+            'primaryDocument': ['interim.htm', 'annual.htm', 'comparative.htm'],
+        }}}
+        contexts = [
+            (current, '10-Q', '2026-01-01', '2026-03-31', 3_800, 950, 4.0),
+            (current, '10-Q', '2025-01-01', '2025-03-31', 2_000, 1_000, 2.0),
+            (annual, '10-K', '2025-01-01', '2025-12-31', 10_000, 1_000, 10.0),
+            (prior, '10-Q', '2025-01-01', '2025-03-31', 2_000, 1_000, 2.0),
+        ]
+        concepts = {}
+        for tag, unit, field in (
+            ('NetIncomeLoss', 'USD', 4),
+            ('WeightedAverageNumberOfDilutedSharesOutstanding', 'shares', 5),
+            ('EarningsPerShareDiluted', 'USD/shares', 6),
+        ):
+            concepts[tag] = {'units': {unit: [self.cash_fact(*row[:4], row[field]) for row in contexts]}}
+
+        class Client:
+            def json(self, url):
+                return submissions if '/submissions/' in url else {'facts': {'us-gaap': concepts}}
+
+        def check(end='2026-03-31', eps=4):
+            latest = {'currency': 'USD', 'accounting': 'GAAP', 'epsBasis': 'share', 'periodEnd': end, 'eps': eps}
+            return collector.latest_trailing_eps(Client(), 'EXAMPLE', 1, latest, date(2026, 5, 1))
+
+        interim = check()
+        self.assertEqual((interim['method'], interim['periodStart'], interim['netIncome']),
+                         ('calculated_ttm', '2025-04-01', 11_800))
+        self.assertAlmostEqual(interim['eps'], 11_800 * 365 / (1_000 * 365 + (950 - 1_000) * 90), places=4)
+        self.assertEqual([source['sourceName'] for source in interim['supportingSources']],
+                         ['SEC Form 10-K', 'SEC Form 10-Q'])
+        self.assertEqual((check('2025-12-31')['method'], check('2025-12-31')['eps']), ('reported_annual', 10.0))
+        self.assertIsNone(check('2026-06-30'))
+        self.assertIsNone(check(eps=4.1))
+
+        concepts['StockSplitConversionRatio1'] = {'units': {'pure': [
+            {'accn': current, 'end': '2026-02-15', 'val': 2},
+        ]}}
+        self.assertIsNone(check())
+        concepts.pop('StockSplitConversionRatio1')
+        concepts['WeightedAverageNumberOfDilutedSharesOutstanding']['units']['shares'][-1]['val'] = 2_000
+        self.assertIsNone(check())
+        submissions['tickers'].append('OTHER')
+        self.assertIsNone(check('2025-12-31'))
+
     def test_tsmc_cash_flow_requires_quarter_currency_and_concordant_amounts(self):
         slide = '''<p>TSMC Property Cash Flows * Free cash flow =
             Cash from operating activities &#8211; Capital expenditures (In NT$ billions)
@@ -100,7 +151,7 @@ class ReportedEarningsTest(unittest.TestCase):
         weaker = {**row, 'periodType': 'ytd'}
         now = datetime(2026, 11, 9, tzinfo=timezone.utc)
         self.assertIs(collector.prefer_cash_flow(row, weaker), row)
-        self.assertIs(collector.result_feed(prior, {}, ['AMD'], now, {'AMD': row}), prior)
+        self.assertIs(collector.result_feed(prior, {}, ['AMD'], now, {'AMD': row}, {}), prior)
 
     def test_verified_ciks_cover_dashboard_tickers_when_live_map_is_blocked(self):
         class Client:

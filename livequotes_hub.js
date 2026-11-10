@@ -26,6 +26,7 @@
   const MODEL_EPS_FIELDS = ['eps27', 'eps28', 'eps29'];
   let reportedEarnings = new Map();
   let reportedCashFlows = new Map();
+  let reportedTrailingEps = new Map();
   let reportedEarningsUpdatedAt = null;
   let reportedEarningsSyncFailed = false;
   let reportedEarningsSecUnavailable = false;
@@ -38,6 +39,11 @@
 
   window.getReportedCashFlowForValuation = function (symbol) {
     const report = reportedCashFlows.get(symbol);
+    return report ? { ...report } : null;
+  };
+
+  window.getReportedTrailingEpsForValuation = function (symbol) {
+    const report = reportedTrailingEps.get(symbol);
     return report ? { ...report } : null;
   };
 
@@ -1245,6 +1251,12 @@
     return true;
   }
 
+  function recentObservedStockQuote(stock) {
+    const quote = stock._observedQuote;
+    const elapsed = Date.now() - Date.parse(quote?.observedAt);
+    return quote && elapsed >= -300_000 && elapsed <= 7 * DAY_MS ? quote : null;
+  }
+
   function applyQuotesToPage(quotesMap, sourceLabel) {
     if (!quotesMap) return;
     const isValuationPage = !!document.getElementById('valuation-section');
@@ -1302,7 +1314,8 @@
 
         const q = quotesMap[s.t];
         if (q) {
-          if (q.price > 0) s.p = q.price;
+          // Bundled and Sheets prices do not carry a market observation time.
+          if (q.price > 0 && !recentObservedStockQuote(s)) s.p = q.price;
           if (q.chgPct !== undefined) s.chg = q.chgPct;
           if (q.high52) s.high52 = q.high52;
           if (q.low52) s.low52 = q.low52;
@@ -1358,15 +1371,20 @@
       const priceTd = tds[5];
       if (priceTd && !priceTd.dataset.lqDecorated && Number.isFinite(sObj.p) && sObj.p > 0) {
         priceTd.dataset.lqDecorated = "1";
+        const quote = recentObservedStockQuote(sObj);
+        const displayedQuote = quote?.price === sObj.p ? quote : null;
         const chg = sObj.chg;
-        const chgHtml = (chg !== undefined && chg !== null && !isNaN(chg))
+        const chgHtml = !displayedQuote && (chg !== undefined && chg !== null && !isNaN(chg))
           ? `<div style="font-size:10px; font-weight:700; color:${chg >= 0 ? '#059669' : '#e11d48'};">${chg >= 0 ? '▲ +' : '▼ '}${Number(chg).toFixed(2)}%</div>`
           : '';
-        const rangeTitle = (sObj.low52 && sObj.high52)
+        const rangeTitle = !displayedQuote && (sObj.low52 && sObj.high52)
           ? `52週高低點: $${Number(sObj.low52).toFixed(2)} ~ $${Number(sObj.high52).toFixed(2)}`
           : '';
         if (rangeTitle) priceTd.setAttribute('title', rangeTitle);
-        priceTd.innerHTML = `<div class="mono" style="font-weight:700;">$${sObj.p.toFixed(2)}</div>${chgHtml}`;
+        const quoteHtml = displayedQuote
+          ? `<div style="font-size:10px; white-space:nowrap;"><a href="${escapeEarningsText(displayedQuote.sourceUrl)}" target="_blank" rel="noopener">CNBC ${escapeEarningsText(displayedQuote.observedDate)}（美東）</a></div>`
+          : '';
+        priceTd.innerHTML = `<div class="mono" style="font-weight:700;">$${sObj.p.toFixed(2)}</div>${quoteHtml || chgHtml}`;
       }
 
       const edTd = tds[11];
@@ -1557,6 +1575,30 @@
             }
           }
           reportedCashFlows = cashFlows;
+        }
+        if (Array.isArray(data.trailingEps)) {
+          const trailing = new Map();
+          for (const row of data.trailingEps) {
+            const sourceUrl = safeEarningsLink(row?.sourceUrl);
+            if (!row || !EARNINGS_SYMBOL.test(row.symbol) || !sourceUrl || row.currency !== 'USD'
+                || row.epsBasis !== 'share' || !Number.isFinite(row.eps)
+                || !['reported_annual', 'calculated_ttm'].includes(row.method)
+                || ![row.periodStart, row.periodEnd, row.reportDate].every(value => Number.isFinite(earningsDay(value)))
+                || row.periodStart >= row.periodEnd || row.periodEnd > row.reportDate) continue;
+            const days = earningsDay(row.periodEnd) - earningsDay(row.periodStart) + 1;
+            if (days < 345 || days > 385) continue;
+            const previous = trailing.get(row.symbol);
+            if (previous && (row.periodEnd < previous.periodEnd
+                || (row.periodEnd === previous.periodEnd && row.reportDate < previous.reportDate))) continue;
+            const supportingSources = (Array.isArray(row.supportingSources) ? row.supportingSources : [])
+              .flatMap(source => {
+                const url = safeEarningsLink(source?.sourceUrl);
+                return url ? [{ sourceUrl: url, sourceName: source.sourceName }] : [];
+              });
+            if (row.method === 'calculated_ttm' && !supportingSources.length) continue;
+            trailing.set(row.symbol, { ...row, sourceUrl, supportingSources });
+          }
+          reportedTrailingEps = trailing;
         }
         reportedEarningsUpdatedAt = updatedAt;
         reportedEarningsSecUnavailable = data.secStatus === 'unavailable';
