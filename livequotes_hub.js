@@ -1071,6 +1071,29 @@
     }
   }
 
+  function verifiedTrailingQuarters(row) {
+    if (!Array.isArray(row.quarters) || row.quarters.length !== 4) return null;
+    const quarters = [];
+    for (const quarter of row.quarters) {
+      const sourceUrl = safeEarningsLink(quarter?.sourceUrl);
+      if (!sourceUrl || !Number.isFinite(quarter.eps) || !/^Q[1-4] FY\d{4}$/.test(quarter.quarter)) return null;
+      const start = earningsDay(quarter.periodStart);
+      const end = earningsDay(quarter.periodEnd);
+      const filed = earningsDay(quarter.reportDate);
+      const days = end - start + 1;
+      if (!(days >= 75 && days <= 105 && filed >= end)) return null;
+      const newer = quarters.at(-1);
+      if (newer && (earningsDay(newer.periodStart) - end !== 1 || newer.reportDate <= quarter.reportDate)) return null;
+      quarters.push({ ...quarter, sourceUrl });
+    }
+    const newest = quarters[0];
+    const sum = quarters.reduce((total, quarter) => total + quarter.eps, 0);
+    if (quarters.at(-1).periodStart !== row.periodStart || newest.periodEnd !== row.periodEnd
+        || newest.reportDate !== row.reportDate || newest.sourceUrl !== safeEarningsLink(row.sourceUrl)
+        || Math.abs(row.eps - sum) >= 0.000001) return null;
+    return quarters;
+  }
+
   function escapeEarningsText(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -1581,10 +1604,14 @@
           for (const row of data.trailingEps) {
             const sourceUrl = safeEarningsLink(row?.sourceUrl);
             if (!row || !EARNINGS_SYMBOL.test(row.symbol) || !sourceUrl || row.currency !== 'USD'
-                || row.epsBasis !== 'share' || !Number.isFinite(row.eps)
-                || !['reported_annual', 'calculated_ttm'].includes(row.method)
+                || !Number.isFinite(row.eps)
                 || ![row.periodStart, row.periodEnd, row.reportDate].every(value => Number.isFinite(earningsDay(value)))
                 || row.periodStart >= row.periodEnd || row.periodEnd > row.reportDate) continue;
+            const quarterSum = row.method === 'sum_reported_quarters';
+            const amdShare = row.symbol === 'AMD' && row.epsBasis === 'share' && row.accounting === 'GAAP';
+            const tsmAds = row.symbol === 'TSM' && row.epsBasis === 'ADS' && row.accounting === 'IFRS';
+            const standard = row.epsBasis === 'share' && ['reported_annual', 'calculated_ttm'].includes(row.method);
+            if (!(standard || quarterSum && (amdShare || tsmAds))) continue;
             const days = earningsDay(row.periodEnd) - earningsDay(row.periodStart) + 1;
             if (days < 345 || days > 385) continue;
             const previous = trailing.get(row.symbol);
@@ -1596,7 +1623,9 @@
                 return url ? [{ sourceUrl: url, sourceName: source.sourceName }] : [];
               });
             if (row.method === 'calculated_ttm' && !supportingSources.length) continue;
-            trailing.set(row.symbol, { ...row, sourceUrl, supportingSources });
+            const quarters = quarterSum ? verifiedTrailingQuarters(row) : null;
+            if (quarterSum && !quarters) continue;
+            trailing.set(row.symbol, { ...row, sourceUrl, supportingSources, quarters });
           }
           reportedTrailingEps = trailing;
         }

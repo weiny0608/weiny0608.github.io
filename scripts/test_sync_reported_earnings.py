@@ -4,7 +4,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError, URLError
 
 import sync_reported_earnings as collector
-from issuer_earnings import tsm_cash_flow_presentation
+from issuer_earnings import tsm_ads_quarter, tsm_cash_flow_presentation
 
 
 class ReportedEarningsTest(unittest.TestCase):
@@ -58,6 +58,20 @@ class ReportedEarningsTest(unittest.TestCase):
         self.assertIsNone(check())
         submissions['tickers'].append('OTHER')
         self.assertIsNone(check('2025-12-31'))
+
+    def test_tsmc_adr_eps_requires_explicit_diluted_usd_per_adr(self):
+        release = '''<p>TSMC (TWSE: 2330, NYSE: TSM) today announced consolidated revenue
+            of NT$1,158.90 billion, net income of NT$505.74 billion, and diluted earnings per
+            share of NT$19.50 (US$4.60 per ADR unit) for the third quarter ended September 30,
+            2026.</p><p>All figures were prepared in accordance with TIFRS on a consolidated basis.</p>'''
+        filed = date(2026, 10, 15)
+        self.assertEqual(tsm_ads_quarter(release, filed), {
+            'periodStart': '2026-07-01', 'periodEnd': '2026-09-30', 'quarter': 'Q3 FY2026', 'eps': 4.60,
+        })
+        self.assertIsNone(tsm_ads_quarter(release.replace(' (US$4.60 per ADR unit)', ''), filed))
+        self.assertIsNone(tsm_ads_quarter(release.replace('per ADR unit', 'per share'), filed))
+        self.assertIsNone(tsm_ads_quarter(release.replace('diluted earnings', 'basic earnings'), filed))
+        self.assertIsNone(tsm_ads_quarter(release, date(2026, 7, 16)))
 
     def test_tsmc_cash_flow_requires_quarter_currency_and_concordant_amounts(self):
         slide = '''<p>TSMC Property Cash Flows * Free cash flow =

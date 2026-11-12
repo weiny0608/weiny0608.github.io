@@ -1302,7 +1302,7 @@
   <!-- Data Table Card -->
   <div class="table-card" style="margin-bottom: 36px;">
     <p style="padding:12px 14px; margin:0; font-size:12px; line-height:1.6; color:var(--text-muted);">
-      <strong>財報與報價</strong>　近四季本益比用有日期的報價除以同股別、同幣別的近四季稀釋 EPS。全年採公司申報值，期中推算會標示口徑。自由現金流依財報計算，僅同一財報期末的美元全年或近四季值可用於 FCF 評分，金融股除外。<br>
+      <strong>財報與報價</strong>　近四季本益比用有日期的報價除以同股別、同幣別的近四季稀釋 EPS。全年採公司申報值，近四季推算或逐季加總均標示計算口徑。自由現金流依財報計算，僅同一財報期末的美元全年或近四季值可用於 FCF 評分，金融股除外。<br>
       <strong>估值試算</strong>　FY27–29 使用頁面內建 EPS 與本益比假設。內建假設未提供設定日期，套用個別 EPS 情境後會顯示套用日。回報欄為模型試算。
       <span id="valuationCashFlowCoverage" style="display:block;"></span>
       <span id="valuationTrailingCoverage" style="display:block;"></span>
@@ -1762,17 +1762,28 @@
 
     function trailingPEMarkup({ trailing, quote, ratio }) {
       if (!trailing) return '待確認';
-      const method = trailing.method === 'reported_annual' ? '全年申報 EPS' : '近四季推算 EPS';
+      const methods = {
+        reported_annual: '全年申報 EPS', calculated_ttm: '近四季推算 EPS', sum_reported_quarters: '四季公告 EPS 加總'
+      };
       const headline = trailing.eps <= 0 ? '不適用' : quote ? valuationNumber(ratio, 1, '', 'x') : '報價待確認';
       const sourceLink = source => `<a href="${escapeValuationText(source.sourceUrl)}" target="_blank" rel="noopener">${escapeValuationText(source.sourceName || '來源')} ↗</a>`;
       const priceNote = quote ? `<div>${escapeValuationText(quote.currency)} ${quote.price.toFixed(2)} · ${escapeValuationText(quote.observedDate)} · ${sourceLink(quote)}</div>` : '';
-      const detail = trailing.method === 'calculated_ttm' ? `<details><summary>推算口徑</summary>
-        <div>依可對齊期間的財報盈餘和稀釋股數推算，保留原始申報供核對。</div>
-        <div>${escapeValuationText(trailing.periodStart)} 至 ${escapeValuationText(trailing.periodEnd)}</div>
-        ${trailing.supportingSources.map(source => `<div>${sourceLink(source)}</div>`).join('')}
-        </details>` : '';
+      const basis = trailing.epsBasis === 'ADS' ? '／ADS' : '／股';
+      let detail = '';
+      if (trailing.method === 'calculated_ttm') {
+        detail = `<details><summary>推算口徑</summary>
+          <div>依可對齊期間的財報盈餘和稀釋股數推算，保留原始申報供核對。</div>
+          <div>${escapeValuationText(trailing.periodStart)} 至 ${escapeValuationText(trailing.periodEnd)}</div>
+          ${trailing.supportingSources.map(source => `<div>${sourceLink(source)}</div>`).join('')}
+          </details>`;
+      } else if (trailing.method === 'sum_reported_quarters') {
+        const accounting = trailing.symbol === 'AMD' ? 'GAAP 合計（含停業部門損益）' : 'IFRS 美元／ADS';
+        detail = `<details><summary>四季 EPS 與來源</summary><div>${accounting}</div>
+          ${trailing.quarters.map(quarter => `<div>${escapeValuationText(quarter.quarter)} · USD ${quarter.eps.toFixed(2)}${basis} · ${sourceLink(quarter)}</div>`).join('')}
+          </details>`;
+      }
       return `<strong>${headline}</strong><div style="font-size:10px; color:var(--text-muted);">
-        <div>${method} USD ${trailing.eps.toFixed(2)}</div>
+        <div>${methods[trailing.method]} USD ${trailing.eps.toFixed(2)}${basis}</div>
         <div>期末 ${escapeValuationText(trailing.periodEnd)} · ${sourceLink(trailing)}</div>
         ${priceNote}${detail}</div>`;
     }

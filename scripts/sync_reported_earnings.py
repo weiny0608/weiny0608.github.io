@@ -16,7 +16,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-from issuer_earnings import asml_exhibit_metrics, latest_issuer_result, tsm_cash_flow_presentation, tsm_exhibit_metrics
+from issuer_earnings import (
+    asml_exhibit_metrics, latest_amd_trailing_eps, latest_issuer_result,
+    tsm_ads_quarter, tsm_cash_flow_presentation, tsm_exhibit_metrics,
+)
 from issuer_exhibit_specials import berkshire_statement_metrics, berkshire_statement_name, citi_exhibit_metrics
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -597,6 +600,55 @@ def filing_exhibits(client, cik, filing):
     return exhibit_urls(cik, filing, index)
 
 
+def latest_tsm_ads_eps(client, cik, earnings, today):
+    """Sum the USD diluted EPS per ADS printed in four TSMC 6-K exhibits."""
+    if not earnings or (earnings.get('currency'), earnings.get('accounting'), earnings.get('epsBasis')) != (
+        'TWD', 'IFRS', 'share'
+    ):
+        return None
+    end = iso_date(earnings.get('periodEnd'))
+    if not end or end > today or (end.month, end.day) not in ((3, 31), (6, 30), (9, 30), (12, 31)):
+        return None
+    submissions = client.json(f'{DATA}/submissions/CIK{str(cik).zfill(10)}.json')
+    if 'TSM' not in (submissions.get('tickers') or []) or 'NYSE' not in (submissions.get('exchanges') or []):
+        return None
+    filings = [(filed, filing) for filed, filing in recent_filings(submissions, end - timedelta(days=280))
+               if filing['form'] == '6-K' and filed <= today]
+    quarters = []
+    for quarter_number in range(1, 5):
+        candidates = sorted(
+            ((filed, filing) for filed, filing in filings if 0 <= (filed - end).days <= 60),
+            key=lambda item: (not re.fullmatch(r'tsm-\d{8}x6k\.htm', item[1]['primaryDocument'], re.I), item[0]),
+        )
+        for filed, filing in candidates:
+            try:
+                for url in filing_exhibits(client, cik, filing):
+                    quarter = tsm_ads_quarter(client.get(url), filed)
+                    if quarter and quarter['periodEnd'] == end.isoformat():
+                        quarters.append({**quarter, 'reportDate': filed.isoformat(),
+                                         'sourceName': '台積電法說會財報（SEC 6-K）', 'sourceUrl': url})
+                        break
+            except HTTPError as exc:
+                if exc.code != 404:
+                    raise
+            if len(quarters) == quarter_number:
+                break
+        else:
+            return None
+        end = date.fromisoformat(quarters[-1]['periodStart']) - timedelta(days=1)
+
+    newest = quarters[0]
+    source_keys = ('reportDate', 'sourceName', 'sourceUrl')
+    return {
+        'symbol': 'TSM', 'currency': 'USD', 'epsBasis': 'ADS', 'accounting': 'IFRS',
+        'method': 'sum_reported_quarters', 'eps': float(sum(Decimal(str(row['eps'])) for row in quarters)),
+        'periodStart': quarters[-1]['periodStart'], 'periodEnd': newest['periodEnd'],
+        **{key: newest[key] for key in source_keys},
+        'supportingSources': [{key: quarter[key] for key in source_keys} for quarter in quarters[1:]],
+        'quarters': quarters,
+    }
+
+
 def latest_tsm_cash_flow(client, cik, submissions, today):
     filings = [
         (filed, filing) for filed, filing in recent_filings(submissions, today - timedelta(days=160))
@@ -934,7 +986,8 @@ def update_feed(client, symbols, selected, previous, now):
         if cash_flow:
             cash_flows[symbol] = prefer_cash_flow(cash_flows.get(symbol), cash_flow)
         try:
-            eps = latest_trailing_eps(client, symbol, cik, results.get(symbol), now.date())
+            eps = (latest_tsm_ads_eps(client, cik, results.get(symbol), now.date()) if symbol == 'TSM'
+                   else latest_trailing_eps(client, symbol, cik, results.get(symbol), now.date()))
         except (OSError, ValueError) as exc:
             print(f'{symbol}: trailing EPS facts unavailable ({exc})', file=sys.stderr)
             eps = None
@@ -992,6 +1045,19 @@ def refresh_feed(client, symbols, selected, previous, now):
         print(f'::warning::{message}' if os.environ.get('GITHUB_ACTIONS') else message, file=sys.stderr)
     cash_flows = {item['symbol']: item for item in sec_feed.get('cashFlows', []) if item['symbol'] in symbols}
     trailing_eps = {item['symbol']: item for item in sec_feed.get('trailingEps', []) if item['symbol'] in symbols}
+    amd_eps = trailing_eps.get('AMD', {})
+    amd_result = results.get('AMD')
+    if 'AMD' in selected and amd_result and (
+        amd_eps.get('periodEnd') != amd_result['periodEnd'] or amd_eps.get('method') == 'sum_reported_quarters'
+    ):
+        try:
+            candidate = latest_amd_trailing_eps(amd_result, now.date())
+            if candidate:
+                trailing_eps['AMD'] = candidate
+            elif amd_eps.get('method') == 'sum_reported_quarters':
+                trailing_eps.pop('AMD', None)
+        except (OSError, ValueError) as exc:
+            print(f'AMD: issuer trailing EPS unavailable ({exc})', file=sys.stderr)
     feed = result_feed(previous, results, symbols, now, cash_flows, trailing_eps)
     return {**feed, 'secStatus': 'unavailable' if sec_error else 'available'}
 
