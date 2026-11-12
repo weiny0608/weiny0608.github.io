@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-10T00:56:23+00:00",
+  "updatedAt": "2026-11-12T03:28:57+00:00",
   "results": [
     {
       "symbol": "BRK.B",
@@ -3152,6 +3152,74 @@
       ]
     },
     {
+      "symbol": "AMD",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "method": "sum_reported_quarters",
+      "eps": 4.6,
+      "periodStart": "2025-09-28",
+      "periodEnd": "2026-09-26",
+      "reportDate": "2026-11-03",
+      "sourceName": "AMD Investor Relations",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1303/amd-reports-third-quarter-2026-financial-results",
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-04",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1295/amd-reports-second-quarter-2026-financial-results"
+        },
+        {
+          "reportDate": "2026-05-05",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results"
+        },
+        {
+          "reportDate": "2026-02-03",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1276/amd-reports-fourth-quarter-and-full-year-2025-financial-results"
+        }
+      ],
+      "quarters": [
+        {
+          "periodStart": "2026-06-28",
+          "quarter": "Q3 FY2026",
+          "periodEnd": "2026-09-26",
+          "eps": 1.46,
+          "reportDate": "2026-11-03",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1303/amd-reports-third-quarter-2026-financial-results"
+        },
+        {
+          "periodStart": "2026-03-29",
+          "quarter": "Q2 FY2026",
+          "periodEnd": "2026-06-27",
+          "eps": 1.38,
+          "reportDate": "2026-08-04",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1295/amd-reports-second-quarter-2026-financial-results"
+        },
+        {
+          "periodStart": "2025-12-28",
+          "quarter": "Q1 FY2026",
+          "periodEnd": "2026-03-28",
+          "eps": 0.84,
+          "reportDate": "2026-05-05",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results"
+        },
+        {
+          "periodStart": "2025-09-28",
+          "quarter": "Q4 FY2025",
+          "periodEnd": "2025-12-27",
+          "eps": 0.92,
+          "reportDate": "2026-02-03",
+          "sourceName": "AMD Investor Relations",
+          "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1276/amd-reports-fourth-quarter-and-full-year-2025-financial-results"
+        }
+      ]
+    },
+    {
       "symbol": "AMGN",
       "currency": "USD",
       "epsBasis": "share",
@@ -3793,6 +3861,74 @@
           "reportDate": "2025-10-23",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828025045968/tsla-20250930.htm",
           "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "TSM",
+      "currency": "USD",
+      "epsBasis": "ADS",
+      "accounting": "IFRS",
+      "method": "sum_reported_quarters",
+      "eps": 15.54,
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-15",
+      "sourceName": "台積電法說會財報（SEC 6-K）",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000726/a3q26e_withguidancexfinal.htm",
+      "supportingSources": [
+        {
+          "reportDate": "2026-07-16",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000451/a2q26e_withguidancexfinal.htm"
+        },
+        {
+          "reportDate": "2026-04-16",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000199/a1q26e_withguidancexfinal.htm"
+        },
+        {
+          "reportDate": "2026-01-15",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000008/a4q25e_withguidancexfinal.htm"
+        }
+      ],
+      "quarters": [
+        {
+          "periodStart": "2026-07-01",
+          "periodEnd": "2026-09-30",
+          "quarter": "Q3 FY2026",
+          "eps": 4.6,
+          "reportDate": "2026-10-15",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000726/a3q26e_withguidancexfinal.htm"
+        },
+        {
+          "periodStart": "2026-04-01",
+          "periodEnd": "2026-06-30",
+          "quarter": "Q2 FY2026",
+          "eps": 4.31,
+          "reportDate": "2026-07-16",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000451/a2q26e_withguidancexfinal.htm"
+        },
+        {
+          "periodStart": "2026-01-01",
+          "periodEnd": "2026-03-31",
+          "quarter": "Q1 FY2026",
+          "eps": 3.49,
+          "reportDate": "2026-04-16",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000199/a1q26e_withguidancexfinal.htm"
+        },
+        {
+          "periodStart": "2025-10-01",
+          "periodEnd": "2025-12-31",
+          "quarter": "Q4 FY2025",
+          "eps": 3.14,
+          "reportDate": "2026-01-15",
+          "sourceName": "台積電法說會財報（SEC 6-K）",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000008/a4q25e_withguidancexfinal.htm"
         }
       ]
     },
