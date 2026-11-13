@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-12T03:28:57+00:00",
+  "updatedAt": "2026-11-13T00:40:11+00:00",
   "results": [
+    {
+      "symbol": "CSCO",
+      "reportDate": "2026-11-12",
+      "periodEnd": "2026-10-24",
+      "quarter": "Q1 FY2027",
+      "revenue": 18517000000.0,
+      "eps": 1.14,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000170/exhibit991pressrelease-q1f.htm",
+      "sourceName": "SEC Form 8-K"
+    },
     {
       "symbol": "BRK.B",
       "reportDate": "2026-11-07",
@@ -1027,19 +1040,6 @@
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
       "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "CSCO",
-      "reportDate": "2026-08-12",
-      "periodEnd": "2026-07-25",
-      "quarter": "Q4 FY2026",
-      "revenue": 17252000000.0,
-      "eps": 0.97,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000106/exhibit991pressrelease-q4f.htm",
-      "sourceName": "SEC Form 8-K"
     },
     {
       "symbol": "DIS",
@@ -3366,19 +3366,6 @@
           "sourceName": "SEC Form 10-Q"
         }
       ]
-    },
-    {
-      "symbol": "CSCO",
-      "currency": "USD",
-      "epsBasis": "share",
-      "accounting": "GAAP",
-      "periodEnd": "2026-07-25",
-      "reportDate": "2026-09-02",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
-      "sourceName": "SEC Form 10-K",
-      "periodStart": "2025-07-27",
-      "eps": 3.33,
-      "method": "reported_annual"
     },
     {
       "symbol": "DIS",
