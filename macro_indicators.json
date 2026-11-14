@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T10:39:10+08:00",
+  "updatedAt": "2026-11-14T10:27:53+08:00",
   "source": "BEA / BLS / ADP Official Releases & FRED Auto-Sync Engine",
   "indicators": [
     {
@@ -160,9 +160,9 @@
       "prevValue": "5.4%",
       "consensus": "4.4%",
       "metaLeft": "核心預期: 4.4% ｜ 整體前期: 5.4%",
-      "releaseDate": "10/15",
+      "releaseDate": "11/13",
       "referencePeriod": "2026-09",
-      "nextReleaseDate": "2026-11-13",
+      "nextReleaseDate": "2026-12-15",
       "releaseSchedule": [
         "2026-10-15",
         "2026-11-13",
