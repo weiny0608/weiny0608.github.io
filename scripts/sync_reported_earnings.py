@@ -97,14 +97,18 @@ class SecClient:
         return json.loads(self.get(url))
 
 
-def tracked_symbols(root):
+def valuation_stocks(root):
     html = (root / 'nasdaq' / 'index.html').read_text(encoding='utf-8')
     start = re.search(r'\bconst stocks\s*=\s*', html)
     if not start:
         raise ValueError('Cannot find valuation stocks')
     stocks, _ = json.JSONDecoder().raw_decode(html[start.end():])
+    return {row['t']: row['cat'] for row in stocks}
+
+
+def tracked_symbols(root):
     calendar = json.loads((root / 'earnings_hub.json').read_text(encoding='utf-8'))
-    symbols = {row['t'] for row in stocks} | calendar['earningsDates'].keys()
+    symbols = valuation_stocks(root).keys() | calendar['earningsDates'].keys()
     if 'GOOGL' in symbols:
         symbols.add('GOOG')
     return sorted(symbols)
@@ -955,6 +959,8 @@ def prefer_cash_flow(existing, candidate):
 
 
 def update_feed(client, symbols, selected, previous, now):
+    from quarterly_eps import latest_quarter_sum_eps
+
     cik_by_ticker = load_ciks(client)
     results = {item['symbol']: item for item in previous.get('results', []) if item['symbol'] in symbols}
     cash_flows = {item['symbol']: item for item in previous.get('cashFlows', []) if item['symbol'] in symbols}
@@ -988,6 +994,8 @@ def update_feed(client, symbols, selected, previous, now):
         try:
             eps = (latest_tsm_ads_eps(client, cik, results.get(symbol), now.date()) if symbol == 'TSM'
                    else latest_trailing_eps(client, symbol, cik, results.get(symbol), now.date()))
+            if eps is None and symbol not in ('AMD', 'TSM'):
+                eps = latest_quarter_sum_eps(client, symbol, cik, results.get(symbol), now.date())
         except (OSError, ValueError) as exc:
             print(f'{symbol}: trailing EPS facts unavailable ({exc})', file=sys.stderr)
             eps = None
@@ -1016,6 +1024,49 @@ def result_feed(previous, results, symbols, now, cash_flows, trailing_eps):
     if trailing_eps or 'trailingEps' in previous:
         feed['trailingEps'] = [trailing_eps[symbol] for symbol in sorted(trailing_eps)]
     return feed
+
+
+def refresh_valuation_forecasts(client, categories, selected, previous, results, cash_flows, trailing_eps, now, sec_ok):
+    from operating_forecasts import latest_operating_forecasts
+    from valuation_forecasts import latest_eps_forecast
+
+    years = list(range(now.year + 1, now.year + 4))
+    rows = {}
+    if previous.get('forecastYears') == years:
+        for row in previous.get('valuationForecasts', []):
+            symbol = row['symbol']
+            end = iso_date(row.get('periodEnd'))
+            if (symbol in categories and end and 0 <= (now.date() - end).days <= 220
+                    and row['periodEnd'] == results.get(symbol, {}).get('periodEnd')):
+                rows[symbol] = row
+    if sec_ok:
+        ciks = load_ciks(client)
+        for symbol in selected:
+            earnings = results.get(symbol)
+            cik = ciks.get(ticker_key(symbol))
+            if symbol not in categories or not cik or not earnings:
+                continue
+            row = rows.get(symbol, {'symbol': symbol, 'periodEnd': earnings['periodEnd']}).copy()
+            try:
+                eps = latest_eps_forecast(client, symbol, cik, earnings, trailing_eps.get(symbol), now.date())
+                row.pop('eps', None)
+                if eps:
+                    row['eps'] = eps
+            except (OSError, ValueError) as exc:
+                print(f'{symbol}: EPS forecast source unavailable ({exc})', file=sys.stderr)
+            try:
+                operating = latest_operating_forecasts(client, cik, earnings, cash_flows.get(symbol), now.date(),
+                                                       estimate_fcf=categories[symbol] != 'FINANCE', trailing_eps=trailing_eps.get(symbol))
+                row.pop('revenue', None)
+                row.pop('fcf', None)
+                row.update(operating)
+            except (OSError, ValueError) as exc:
+                print(f'{symbol}: operating forecast source unavailable ({exc})', file=sys.stderr)
+            if any(key in row for key in ('eps', 'revenue', 'fcf')):
+                rows[symbol] = row
+            else:
+                rows.pop(symbol, None)
+    return years, [rows[symbol] for symbol in sorted(rows)]
 
 
 def refresh_feed(client, symbols, selected, previous, now):
@@ -1059,7 +1110,12 @@ def refresh_feed(client, symbols, selected, previous, now):
         except (OSError, ValueError) as exc:
             print(f'AMD: issuer trailing EPS unavailable ({exc})', file=sys.stderr)
     feed = result_feed(previous, results, symbols, now, cash_flows, trailing_eps)
-    return {**feed, 'secStatus': 'unavailable' if sec_error else 'available'}
+    years, forecasts = refresh_valuation_forecasts(client, valuation_stocks(ROOT), selected, previous, results,
+                                                   cash_flows, trailing_eps, now, not sec_error)
+    if previous.get('forecastYears') != years or previous.get('valuationForecasts') != forecasts:
+        feed = {**feed, 'updatedAt': now.isoformat(timespec='seconds')}
+    return {**feed, 'secStatus': 'unavailable' if sec_error else 'available',
+            'forecastYears': years, 'valuationForecasts': forecasts}
 
 
 def main():
@@ -1086,6 +1142,9 @@ def main():
     print(f'Confirmed quarterly results: {len(next_feed["results"])} of {len(symbols)} dashboard companies/tickers.')
     print(f'Cash flow from official filings: {len(next_feed.get("cashFlows", []))} of {len(symbols)} dashboard companies/tickers.')
     print(f'Trailing EPS from official filings: {len(next_feed.get("trailingEps", []))} of {len(symbols)} dashboard companies/tickers.')
+    for metric in ('eps', 'revenue', 'fcf'):
+        count = sum(metric in row for row in next_feed.get('valuationForecasts', []))
+        print(f'Filing-based {metric} forecast: {count} of {len(valuation_stocks(ROOT))} valuation stocks.')
 
 
 if __name__ == '__main__':

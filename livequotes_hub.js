@@ -1121,7 +1121,11 @@
   function readValuationForecasts(data, results) {
     const years = data.forecastYears;
     if (!Array.isArray(years) || years.length !== 3 || !Number.isInteger(years[0]) || years[0] < 2027
-        || years[1] !== years[0] + 1 || years[2] !== years[0] + 2) return;
+        || years[1] !== years[0] + 1 || years[2] !== years[0] + 2) {
+      valuationForecastYears = [];
+      valuationForecasts = new Map();
+      return;
+    }
     const rows = new Map();
     for (const row of Array.isArray(data.valuationForecasts) ? data.valuationForecasts : []) {
       const report = results.get(row?.symbol);
@@ -1372,13 +1376,6 @@
     }
 
     if (typeof stocks !== 'undefined' && Array.isArray(stocks)) {
-      if (!stocks.some(s => s.t === 'NFLX')) {
-        stocks.splice(18, 0, {
-          t: "NFLX", n: "Netflix", s: "數位娛樂串流", cat: "CLOUD",
-          sp500: true, nasdaq: true, dow: false,
-          p: 68.69, ed: "2027-01-19", eps27: 2.52, eps28: 2.95, eps29: 3.40, pe: 28, mult: 0.96
-        });
-      }
       // 強制校準 NFLX (拆股後基期 1:10) 與 TSM (最新 ADR EPS 基期 $20.50)，消除估值失真
       stocks.forEach(s => {
         if (s._valuationOriginalEps) return;

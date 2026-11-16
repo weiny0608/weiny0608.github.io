@@ -14,9 +14,14 @@ on:
       - '.github/workflows/update-reported-earnings.yml'
       - 'scripts/issuer_earnings.py'
       - 'scripts/issuer_exhibit_specials.py'
+      - 'scripts/operating_forecasts.py'
+      - 'scripts/quarterly_eps.py'
       - 'scripts/sec_ticker_ciks.json'
       - 'scripts/sync_reported_earnings.py'
-      - 'scripts/test_sync_reported_earnings.py'
+      - 'scripts/tsm_operating.py'
+      - 'scripts/valuation_forecasts.py'
+      - 'scripts/test_*.py'
+      - 'nasdaq/index.html'
 
 permissions:
   contents: write
@@ -38,9 +43,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Verify quarterly earnings parser
-        run: python3 -B -m unittest discover -s scripts -p 'test_sync_reported_earnings.py'
-      - name: Check issuer filings
+      - name: Verify earnings and forecast models
+        run: python3 -B -m unittest discover -s scripts
+      - name: Check issuer filings and recalculate forecasts
         env:
           SEC_USER_AGENT: >-
             ${{ secrets.SEC_USER_AGENT || vars.SEC_USER_AGENT || format('NASDAQ Valuation Dashboard (contact: https://github.com/{0}/issues)', github.repository) }}
