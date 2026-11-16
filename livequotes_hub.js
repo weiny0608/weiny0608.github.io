@@ -24,9 +24,16 @@
   const EARNINGS_SYMBOL = /^[A-Z][A-Z.0-9-]{0,9}$/;
   const DAY_MS = 86400000;
   const MODEL_EPS_FIELDS = ['eps27', 'eps28', 'eps29'];
+  const FORECAST_METHODS = {
+    eps: ['historical_diluted_eps_growth', 'historical_diluted_eps_change'],
+    revenue: ['annual_revenue_growth'],
+    fcf: ['annual_fcf_margin']
+  };
   let reportedEarnings = new Map();
   let reportedCashFlows = new Map();
   let reportedTrailingEps = new Map();
+  let valuationForecasts = new Map();
+  let valuationForecastYears = [];
   let reportedEarningsUpdatedAt = null;
   let reportedEarningsSyncFailed = false;
   let reportedEarningsSecUnavailable = false;
@@ -46,6 +53,9 @@
     const report = reportedTrailingEps.get(symbol);
     return report ? { ...report } : null;
   };
+
+  window.getValuationForecastYears = () => [...valuationForecastYears];
+  window.getValuationForecastForSymbol = symbol => valuationForecasts.get(symbol) ?? null;
 
   function validCashFlowAmounts(row) {
     return row && ['quarter', 'ytd', 'annual', 'ttm'].includes(row.periodType)
@@ -1071,6 +1081,60 @@
     }
   }
 
+  function readValuationForecastMetric(metric, key, report, years) {
+    const sourceUrl = safeEarningsLink(metric?.sourceUrl);
+    const baseField = key === 'eps' ? 'baseEps' : 'baseValue';
+    const today = US_DATE.format(new Date());
+    if (!sourceUrl || metric.periodEnd !== report.periodEnd || metric.accounting !== report.accounting
+        || !FORECAST_METHODS[key].includes(metric.method)
+        || ![metric.basePeriodEnd, metric.reportDate].every(day => Number.isFinite(earningsDay(day)))
+        || metric.basePeriodEnd > metric.periodEnd || metric.reportDate > today
+        || !Number.isInteger(metric.baseFiscalYear) || metric.baseFiscalYear >= years[0]
+        || !Number.isFinite(metric[baseField]) || !years.every(year => Number.isFinite(metric.years?.[year]))) return null;
+    if (key === 'eps') {
+      const tsmAds = report.symbol === 'TSM' && metric.currency === 'USD' && metric.epsBasis === 'ADS' && metric.accounting === 'IFRS';
+      const matchingShare = metric.currency === report.currency && ['share', 'class_b'].includes(report.epsBasis)
+        && metric.epsBasis === report.epsBasis && (report.currency === 'USD' || report.symbol === 'ASML' && report.currency === 'EUR');
+      if (!(tsmAds || matchingShare)) return null;
+      if (report.symbol === 'GOOGL' && metric.shareClass !== 'A' || report.symbol === 'GOOG' && metric.shareClass !== 'C') return null;
+      if (report.symbol === 'BRK.B' && metric.epsDefinition !== 'equivalent_class_b') return null;
+    } else if (metric.currency !== report.currency) return null;
+    if (key === 'revenue' && years.some(year => metric.years[year] <= 0)) return null;
+    const estimateField = metric.method === 'historical_diluted_eps_change' ? 'annualChange' : key === 'fcf' ? 'margin' : 'growthRate';
+    if (!Number.isFinite(metric[estimateField])) return null;
+    const supportingSources = (Array.isArray(metric.supportingSources) ? metric.supportingSources : []).flatMap(source => {
+      const url = safeEarningsLink(source?.sourceUrl);
+      return url && Number.isFinite(earningsDay(source.reportDate)) && source.reportDate <= today ? [{ ...source, sourceUrl: url }] : [];
+    });
+    const latestSourceDate = [metric, ...supportingSources].reduce((date, source) => date > source.reportDate ? date : source.reportDate, metric.reportDate);
+    if (latestSourceDate < metric.basePeriodEnd) return null;
+    const history = (Array.isArray(metric.history) ? metric.history : []).flatMap(item => {
+      const amount = key === 'eps' ? item?.eps : item?.value;
+      if (!Number.isFinite(amount) || ![item.periodStart, item.periodEnd].every(day => Number.isFinite(earningsDay(day)))
+          || item.periodStart >= item.periodEnd || item.periodEnd > metric.basePeriodEnd) return [];
+      return [{ ...item, sourceUrl: safeEarningsLink(item.sourceUrl) }];
+    });
+    if (history.length < 2) return null;
+    return { ...metric, sourceUrl, history, supportingSources, latestSourceDate };
+  }
+
+  function readValuationForecasts(data, results) {
+    const years = data.forecastYears;
+    if (!Array.isArray(years) || years.length !== 3 || !Number.isInteger(years[0]) || years[0] < 2027
+        || years[1] !== years[0] + 1 || years[2] !== years[0] + 2) return;
+    const rows = new Map();
+    for (const row of Array.isArray(data.valuationForecasts) ? data.valuationForecasts : []) {
+      const report = results.get(row?.symbol);
+      if (!report || report.periodEnd !== row.periodEnd) continue;
+      const eps = readValuationForecastMetric(row.eps, 'eps', report, years);
+      const revenue = readValuationForecastMetric(row.revenue, 'revenue', report, years);
+      const fcf = readValuationForecastMetric(row.fcf, 'fcf', report, years);
+      if (eps || revenue || fcf) rows.set(row.symbol, { symbol: row.symbol, periodEnd: row.periodEnd, eps, revenue, fcf });
+    }
+    valuationForecastYears = years;
+    valuationForecasts = rows;
+  }
+
   function verifiedTrailingQuarters(row) {
     if (!Array.isArray(row.quarters) || row.quarters.length !== 4) return null;
     const quarters = [];
@@ -1196,6 +1260,7 @@
       : '';
     const moreOpen = cardsContainer.querySelector('#lq-more-reported')?.open ? ' open' : '';
     const calibrationOpen = cardsContainer.querySelector('#lq-model-actions')?.open ? ' open' : '';
+    const calibrationAvailable = !valuationForecastYears.length || valuationForecastYears[0] === 2027;
 
     const upcomingHtml = upcoming.slice(0, 6).map(({ symbol, date, days }) => {
       const company = companies.get(symbol)?.n || previews.get(symbol)?.name;
@@ -1242,10 +1307,10 @@
         <details id="lq-model-actions"${calibrationOpen}>
           <summary style="font-size:11.5px; font-weight:700; color:#475569; cursor:pointer;">估值模型 EPS 情境</summary>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:6px;">
-            ${calibrationItems.map(item => `
+            ${calibrationAvailable ? calibrationItems.map(item => `
               <button type="button" onclick="window.applyEarningsCalibration('${item.symbol}', ${item.newEps27}, ${item.newEps28}, ${item.newEps29})" style="font-size:11px; font-weight:700; color:#4c1d95; background:#f5f3ff; border:1px solid #c4b5fd; padding:5px 10px; border-radius:6px; cursor:pointer;">預演 ${item.symbol} EPS ($${item.oldEps27.toFixed(2)}→$${item.newEps27.toFixed(2)})</button>
-              <span id="calib-status-${item.symbol}" style="font-size:11px; color:#6d28d9;"></span>`).join('')}
-            <button type="button" onclick="window.resetEarningsCalibrations()" style="font-size:11px; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 10px; border-radius:6px; cursor:pointer;">還原預設 EPS</button>
+              <span id="calib-status-${item.symbol}" style="font-size:11px; color:#6d28d9;"></span>`).join('') : ''}
+            <button type="button" onclick="window.resetEarningsCalibrations()" style="font-size:11px; color:#475569; background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 10px; border-radius:6px; cursor:pointer;">恢復自動 EPS</button>
           </div>
         </details>
       </div>`;
@@ -1501,7 +1566,7 @@
   }
 
   window.applyEarningsCalibration = function (sym, eps27, eps28, eps29) {
-    if (typeof stocks === 'undefined') return;
+    if (typeof stocks === 'undefined' || valuationForecastYears.length && valuationForecastYears[0] !== 2027) return;
     const st = stocks.find(x => x.t === sym);
     if (!st) return;
 
@@ -1540,7 +1605,7 @@
       if (typeof calcPortfolioRisk === 'function') calcPortfolioRisk();
     }
     document.querySelectorAll('[id^="calib-status-"]').forEach(label => {
-      label.textContent = '已還原預設';
+      label.textContent = '已恢復模型預設';
     });
   };
 
@@ -1608,10 +1673,12 @@
                 || ![row.periodStart, row.periodEnd, row.reportDate].every(value => Number.isFinite(earningsDay(value)))
                 || row.periodStart >= row.periodEnd || row.periodEnd > row.reportDate) continue;
             const quarterSum = row.method === 'sum_reported_quarters';
-            const amdShare = row.symbol === 'AMD' && row.epsBasis === 'share' && row.accounting === 'GAAP';
+            const report = results.get(row.symbol);
+            const commonShare = row.epsBasis === 'share' && row.accounting === 'GAAP' && report?.epsBasis === 'share'
+              && report.currency === 'USD' && report.accounting === 'GAAP' && row.periodEnd === report.periodEnd;
             const tsmAds = row.symbol === 'TSM' && row.epsBasis === 'ADS' && row.accounting === 'IFRS';
             const standard = row.epsBasis === 'share' && ['reported_annual', 'calculated_ttm'].includes(row.method);
-            if (!(standard || quarterSum && (amdShare || tsmAds))) continue;
+            if (!(standard || quarterSum && (commonShare || tsmAds))) continue;
             const days = earningsDay(row.periodEnd) - earningsDay(row.periodStart) + 1;
             if (days < 345 || days > 385) continue;
             const previous = trailing.get(row.symbol);
@@ -1629,6 +1696,7 @@
           }
           reportedTrailingEps = trailing;
         }
+        readValuationForecasts(data, results);
         reportedEarningsUpdatedAt = updatedAt;
         reportedEarningsSecUnavailable = data.secStatus === 'unavailable';
       }
@@ -1676,6 +1744,7 @@
 
   // 從 Google Sheets LiveQuotes 雲端工作表與主估值表拉取最新 GOOGLEFINANCE 報價與財報日期 (支援 fetch 與 JSONP 雙重通道)
   async function syncLiveQuotesFromCloud(manualTrigger) {
+    const datedQuotes = window.refreshValuationQuotes?.();
     const sheetUrls = [
       `https://docs.google.com/spreadsheets/d/${LIVE_QUOTES_SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`,
       `https://docs.google.com/spreadsheets/d/${MAIN_VALUATION_SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`
@@ -1792,12 +1861,15 @@
     if (!anySynced && manualTrigger) {
       applyQuotesToPage(window.LIVE_QUOTES_HUB, 'Google Finance 雲端快照基準 (2026-10-21)');
     }
-    if (pricesRetrievedAt) {
+    const didSyncDated = await datedQuotes;
+    if (didSyncDated) {
+      setValuationQuoteStatus('有日期的 CNBC 美股報價已更新，個別報價日列於估值表。');
+    } else if (pricesRetrievedAt) {
       setValuationQuoteStatus(`Google 試算表報價讀取時間（台北）${SYNC_TIME.format(pricesRetrievedAt)}。個別市場報價時間未提供，部分標的可能沿用備援資料。`);
     } else if (manualTrigger) {
       setValuationQuoteStatus('此次未讀到 Google 試算表報價，可能顯示先前報價或內建快照。');
     }
-    return anySynced;
+    return anySynced || Boolean(didSyncDated);
   }
 
   window.syncLiveQuotesFromCloud = syncLiveQuotesFromCloud;

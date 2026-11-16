@@ -1303,9 +1303,10 @@
   <div class="table-card" style="margin-bottom: 36px;">
     <p style="padding:12px 14px; margin:0; font-size:12px; line-height:1.6; color:var(--text-muted);">
       <strong>財報與報價</strong>　近四季本益比用有日期的報價除以同股別、同幣別的近四季稀釋 EPS。全年採公司申報值，近四季推算或逐季加總均標示計算口徑。自由現金流依財報計算，僅同一財報期末的美元全年或近四季值可用於 FCF 評分，金融股除外。<br>
-      <strong>估值試算</strong>　FY27–29 使用頁面內建 EPS 與本益比假設。內建假設未提供設定日期，套用個別 EPS 情境後會顯示套用日。回報欄為模型試算。
+      <strong>財務預估</strong>　各公司未來三個財年依可核對的財報建立 EPS、營收及自由現金流預估。情境會調整 EPS 與目標本益比，估值與回報隨之重算。各欄為模型試算。
       <span id="valuationCashFlowCoverage" style="display:block;"></span>
       <span id="valuationTrailingCoverage" style="display:block;"></span>
+      <span id="valuationForecastCoverage" style="display:block;"></span>
     </p>
     <div class="table-container">
       <table id="stockTable">
@@ -1317,16 +1318,16 @@
             <th>所屬指數</th>
             <th>分類領域</th>
             <th onclick="sortTable('p')">試算股價</th>
-            <th>官方單季 EPS</th>
+            <th>官方單季 EPS／營收</th>
             <th onclick="sortTable('peCurrent')">近四季 P/E</th>
             <th onclick="sortTable('peForward')">模型預估 P/E</th>
             <th>財報計算 FCF</th>
             <th onclick="sortTable('riskScore')">模型風險參考</th>
             <th onclick="sortTable('ed')">財報日期</th>
             <th onclick="sortTable('days')">倒數天數</th>
-            <th>FY27 模型估值</th>
-            <th>FY28 模型估值</th>
-            <th>FY29 模型估值</th>
+            <th data-valuation-year="0">FY2027 預估</th>
+            <th data-valuation-year="1">FY2028 預估</th>
+            <th data-valuation-year="2">FY2029 預估</th>
             <th onclick="sortTable('totalRet')">模型累積回報</th>
             <th onclick="sortTable('cagr')">模型年化 (CAGR)</th>
             <th style="text-align: center;">投組加入</th>
@@ -1677,6 +1678,8 @@
 
     const valuationDateFormat = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Taipei' });
     const valuationMarketDateFormat = new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/New_York' });
+    const originalValuationYears = [2027, 2028, 2029];
+    const valuationEpsFields = ['eps27', 'eps28', 'eps29'];
 
     function currentValuationScenario() {
       return document.getElementById('scenarioSelect')?.value || 'base';
@@ -1690,21 +1693,41 @@
       return valuationNumber(value, 1, value >= 0 ? '+' : '', '%');
     }
 
-    function trailingValuation(stock, earnings) {
-      const trailing = window.getReportedTrailingEpsForValuation?.(stock?.t);
-      if (!trailing || trailing.periodEnd !== earnings?.periodEnd) return { trailing: null, quote: null, ratio: null };
+    function valuationAmount(value, currency) {
+      const large = Math.abs(value) >= 1e7;
+      const amount = (large ? value / 1e8 : value).toLocaleString('zh-TW', { maximumFractionDigits: 2 });
+      return `${escapeValuationText(currency)} ${amount}${large ? ' 億' : ''}`;
+    }
+
+    function datedValuationQuote(stock, currency, reportDate) {
       const quote = stock?._observedQuote;
       const date = quote?.observedDate;
       const quoteDay = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) ? Date.parse(date) : NaN;
       const marketToday = Date.parse(valuationMarketDateFormat.format(new Date()));
       const quoteAge = (marketToday - quoteDay) / 86400000;
-      const matchingQuote = Number.isFinite(quote?.price) && quote.price > 0 && quote.currency === trailing.currency
-        && quoteAge >= 0 && quoteAge <= 7 && date >= trailing.reportDate;
+      return Number.isFinite(quote?.price) && quote.price > 0 && quote.currency === currency
+        && quoteAge >= 0 && quoteAge <= 7 && (!reportDate || date >= reportDate) ? quote : null;
+    }
+
+    function trailingValuation(stock, earnings) {
+      const trailing = window.getReportedTrailingEpsForValuation?.(stock?.t);
+      if (!trailing || trailing.periodEnd !== earnings?.periodEnd) return { trailing: null, quote: null, ratio: null };
+      const quote = datedValuationQuote(stock, trailing.currency, trailing.reportDate);
       return {
         trailing,
-        quote: matchingQuote ? quote : null,
-        ratio: matchingQuote && trailing.eps > 0 ? quote.price / trailing.eps : null
+        quote,
+        ratio: quote && trailing.eps > 0 ? quote.price / trailing.eps : null
       };
+    }
+
+    function valuationForecastYears() {
+      const published = window.getValuationForecastYears?.();
+      return published?.length ? published : originalValuationYears;
+    }
+
+    function currentValuationForecast(stock, earnings) {
+      const forecast = window.getValuationForecastForSymbol?.(stock?.t);
+      return forecast?.periodEnd === earnings?.periodEnd ? forecast : null;
     }
 
     function valuationMetrics(stock, scenario = 'base') {
@@ -1712,22 +1735,32 @@
       const price = Number.isFinite(stock?.p) && stock.p > 0 ? stock.p : null;
       const assumedPE = Number.isFinite(stock?.pe) && stock.pe > 0 ? stock.pe * multiplier : null;
       const assumption = Number.isFinite(stock?.mult) && stock.mult > 0 ? stock.mult : null;
-      const [eps27, eps28, eps29] = ['eps27', 'eps28', 'eps29'].map(key => {
-        const eps = stock?.[key];
-        return Number.isFinite(eps) && eps > 0 ? eps * multiplier : null;
+      const earnings = window.getReportedEarningsForValuation?.(stock?.t);
+      const forecast = currentValuationForecast(stock, earnings);
+      const forecastYears = valuationForecastYears();
+      const usesOriginalYears = forecastYears[0] === originalValuationYears[0];
+      const manual = usesOriginalYears && stock && Object.hasOwn(stock, '_valuationCalibrationAt');
+      const autoEps = manual ? null : forecast?.eps;
+      const forecastSource = manual ? 'manual' : autoEps ? 'auto' : usesOriginalYears && stock ? 'scenario' : null;
+      const modelEps = forecastYears.map((year, index) => {
+        const eps = autoEps ? autoEps.years[year] : usesOriginalYears ? stock?.[valuationEpsFields[index]] : null;
+        return Number.isFinite(eps) ? eps * multiplier : null;
       });
-      const modelValue = (eps, adjustment) =>
-        eps !== null && assumedPE !== null && adjustment !== null ? eps * assumedPE * adjustment : null;
+      const [eps27, eps28, eps29] = modelEps;
+      const modelCurrency = autoEps?.currency ?? 'USD';
+      const modelValue = (eps, adjustment) => modelCurrency === 'USD'
+        && eps > 0 && assumedPE !== null && adjustment !== null ? eps * assumedPE * adjustment : null;
       const val27 = modelValue(eps27, assumption);
       const val28 = modelValue(eps28, assumption === null ? null : assumption * 0.98);
       const val29 = modelValue(eps29, 0.94);
-      const changeRatio = price !== null && val29 !== null ? val29 / price : null;
+      const forecastQuote = modelCurrency === 'USD' ? datedValuationQuote(stock, modelCurrency, autoEps ? earnings.reportDate : null) : null;
+      const modelPrice = autoEps ? forecastQuote?.price ?? null : price;
+      const changeRatio = modelPrice !== null && val29 !== null ? val29 / modelPrice : null;
       const totalRet = changeRatio === null ? null : (changeRatio - 1) * 100;
       const cagr = changeRatio === null ? null : (Math.cbrt(changeRatio) - 1) * 100;
-      const peForward = price !== null && eps27 !== null ? price / eps27 : null;
+      const peForward = modelPrice !== null && eps27 > 0 ? modelPrice / eps27 : null;
 
       const cashFlow = window.getReportedCashFlowForValuation?.(stock?.t) ?? null;
-      const earnings = window.getReportedEarningsForValuation?.(stock?.t);
       const trailingPE = trailingValuation(stock, earnings);
       const peCurrent = trailingPE.ratio;
       const fcf = cashFlow ? cashFlow.value / 1e9 : null;
@@ -1743,7 +1776,8 @@
       const available = [[valuation, 30], [safety, 30], [fcfRisk, 25], [rate, 15]].filter(([score]) => Number.isFinite(score));
       const weight = available.reduce((sum, [, w]) => sum + w, 0);
       const riskScore = weight ? Math.round(available.reduce((sum, [score, w]) => sum + score * w, 0) / weight) : null;
-      return { price, peCurrent, trailingPE, peForward, fcf, cashFlow, val27, val28, val29, totalRet, cagr, riskFactors, riskScore };
+      return { price, peCurrent, trailingPE, peForward, fcf, cashFlow, val27, val28, val29, totalRet, cagr, riskFactors, riskScore,
+        modelEps, forecast, forecastSource, forecastQuote, assumedPE };
     }
 
     function escapeValuationText(value) {
@@ -1756,6 +1790,7 @@
       if (!report || !Number.isFinite(report.eps)) return '待確認';
       const basis = report.epsBasis === 'ADS' ? '／ADS' : report.epsBasis === 'class_b' ? ' B 股等值' : '／股';
       return `<strong>${escapeValuationText(report.currency)} ${report.eps.toFixed(2)}${basis}</strong>
+        <div style="font-size:10px; color:var(--text-muted);">營收 ${valuationAmount(report.revenue, report.currency)}</div>
         <div style="font-size:10px; color:var(--text-muted);">${escapeValuationText(report.accounting)} · 季末 ${escapeValuationText(report.periodEnd)}</div>
         <a href="${escapeValuationText(report.sourceUrl)}" target="_blank" rel="noopener" style="font-size:10px;" title="公布或申報日 ${escapeValuationText(report.reportDate)}">${escapeValuationText(report.sourceName || '官方來源')} ↗</a>`;
     }
@@ -1777,7 +1812,8 @@
           ${trailing.supportingSources.map(source => `<div>${sourceLink(source)}</div>`).join('')}
           </details>`;
       } else if (trailing.method === 'sum_reported_quarters') {
-        const accounting = trailing.symbol === 'AMD' ? 'GAAP 合計（含停業部門損益）' : 'IFRS 美元／ADS';
+        const accounting = trailing.symbol === 'AMD' ? 'GAAP 合計（含停業部門損益）'
+          : trailing.epsBasis === 'ADS' ? 'IFRS 美元／ADS' : 'GAAP 稀釋 EPS';
         detail = `<details><summary>四季 EPS 與來源</summary><div>${accounting}</div>
           ${trailing.quarters.map(quarter => `<div>${escapeValuationText(quarter.quarter)} · USD ${quarter.eps.toFixed(2)}${basis} · ${sourceLink(quarter)}</div>`).join('')}
           </details>`;
@@ -1819,12 +1855,86 @@
         </details>`;
     }
 
-    function valuationSourceLabel(stock) {
-      if (!Object.hasOwn(stock, '_valuationCalibrationAt')) return '內建模型 · 日期未提供';
+    function valuationSourceLabel(stock, metrics) {
+      if (metrics.forecastSource === 'auto') return '財報模型預估';
+      if (metrics.forecastSource === 'scenario') return '內建 EPS 假設 · 日期未提供';
+      if (metrics.forecastSource !== 'manual') return '同口徑 EPS 資料待補';
       const appliedAt = typeof stock._valuationCalibrationAt === 'string' ? new Date(stock._valuationCalibrationAt) : null;
       return appliedAt && Number.isFinite(appliedAt.getTime())
         ? `本機 EPS 情境 · ${valuationDateFormat.format(appliedAt)}`
         : '本機 EPS 情境 · 套用日期未提供';
+    }
+
+    function forecastEpsUnit(basis, shareClass) {
+      if (basis === 'ADS') return '／ADS';
+      if (basis === 'class_b') return '／B 股等值';
+      if (shareClass === 'A' || shareClass === 'C') return `／${shareClass} 股`;
+      return '／股';
+    }
+
+    function valuationForecastDetails(stock, metrics, expanded) {
+      const { forecast, assumedPE } = metrics;
+      if (!forecast) return '';
+      const sourceLink = source => `<a href="${escapeValuationText(source.sourceUrl)}" target="_blank" rel="noopener">${escapeValuationText(source.sourceName || '財報來源')} ↗</a>`;
+      const methods = {
+        historical_diluted_eps_growth: '同口徑稀釋 EPS 歷史增長，成長率限 −20% 至 +25%',
+        historical_diluted_eps_change: '同口徑稀釋 EPS 年度變動額推算',
+        annual_revenue_growth: '營收成長中位數，成長率限 −20% 至 +30%',
+        annual_fcf_margin: '預估營收 × 歷史自由現金流率中位數'
+      };
+      const labels = { eps: '稀釋 EPS', revenue: '營收', fcf: '自由現金流' };
+      const displays = Object.entries(labels).map(([key, label]) => {
+        const metric = forecast[key];
+        if (!metric) return '';
+        const unit = forecastEpsUnit(metric.epsBasis, metric.shareClass);
+        const amount = value => key === 'eps' ? `${metric.currency} ${value.toFixed(2)}${unit}` : valuationAmount(value, metric.currency);
+        const adjustment = Number.isFinite(metric.margin) ? `現金流率 ${(metric.margin * 100).toFixed(1)}%`
+          : Number.isFinite(metric.growthRate) ? `年成長率 ${valuationPercent(metric.growthRate * 100)}`
+          : `每年變動 ${amount(metric.annualChange)}`;
+        const supporting = [...new Map(metric.supportingSources.map(source => [source.sourceUrl, source])).values()]
+          .filter(source => source.sourceUrl !== metric.sourceUrl);
+        return `<div style="margin-top:5px;"><strong>${label}</strong> · ${escapeValuationText(metric.accounting)}
+          <div>${methods[metric.method]} · ${adjustment}</div>
+          <div>基準期末 ${escapeValuationText(metric.basePeriodEnd)} · ${amount(key === 'eps' ? metric.baseEps : metric.baseValue)}</div>
+          <div>申報 ${escapeValuationText(metric.reportDate)} · ${sourceLink(metric)}</div>
+          ${metric.history.map(item => `<div>${escapeValuationText(item.periodEnd)} · ${amount(key === 'eps' ? item.eps : item.value)}</div>`).join('')}
+          ${supporting.map(source => `<div>參考申報 ${escapeValuationText(source.reportDate)} · ${sourceLink(source)}</div>`).join('')}
+        </div>`;
+      }).join('');
+      return `<details data-forecast-symbol="${escapeValuationText(stock.t)}"${expanded ? ' open' : ''}><summary>預估依據</summary>
+        <div>目標 P/E 假設 ${valuationNumber(assumedPE, 1, '', 'x')}</div>${displays}
+      </details>`;
+    }
+
+    function valuationForecastCells(stock, metrics, years, expanded) {
+      return [metrics.val27, metrics.val28, metrics.val29].map((value, index) => {
+        const year = years[index];
+        const eps = metrics.modelEps[index];
+        const revenue = metrics.forecast?.revenue;
+        const fcf = metrics.forecast?.fcf;
+        const epsForecast = metrics.forecastSource === 'auto' ? metrics.forecast.eps : null;
+        const basis = epsForecast?.epsBasis ?? (stock.t === 'TSM' ? 'ADS' : stock.t === 'BRK.B' ? 'class_b' : 'share');
+        const unit = forecastEpsUnit(basis, epsForecast?.shareClass);
+        const valuation = epsForecast && epsForecast.currency !== 'USD' ? '待確認匯率' : valuationNumber(value, 1, '$');
+        return `<td class="mono ${index === 2 ? 'val-cell-strong' : 'val-cell'}">
+          <strong>估值 ${valuation}</strong>
+          <div style="font-size:10px; color:var(--text-muted);">
+            <div>EPS ${Number.isFinite(eps) ? `${escapeValuationText(epsForecast?.currency ?? 'USD')} ${eps.toFixed(2)}${unit}` : '待確認'}</div>
+            <div>營收 ${revenue ? valuationAmount(revenue.years[year], revenue.currency) : '待補'}</div>
+            <div>FCF ${fcf ? valuationAmount(fcf.years[year], fcf.currency) : stock.cat === 'FINANCE' ? '不適用' : '待補'}</div>
+            ${index === 0 ? `<div>${valuationSourceLabel(stock, metrics)}</div>${valuationForecastDetails(stock, metrics, expanded)}` : ''}
+          </div>
+        </td>`;
+      }).join('');
+    }
+
+    function forwardPEMarkup(metrics) {
+      const { peForward, forecastSource, forecastQuote } = metrics;
+      const value = valuationNumber(peForward, 1, '', 'x');
+      if (forecastSource !== 'auto') return `${value}<div style="font-size:10px; color:var(--text-muted);">${forecastSource ? 'EPS 情境試算' : ''}</div>`;
+      if (metrics.forecast.eps.currency !== 'USD') return '待確認匯率';
+      if (!forecastQuote) return `${value}<div style="font-size:10px; color:var(--text-muted);">報價待確認</div>`;
+      return `${value}<div style="font-size:10px; color:var(--text-muted);">USD ${forecastQuote.price.toFixed(2)} · ${escapeValuationText(forecastQuote.observedDate)} · <a href="${escapeValuationText(forecastQuote.sourceUrl)}" target="_blank" rel="noopener">CNBC ↗</a></div>`;
     }
 
     function renderTable() {
@@ -1832,7 +1942,12 @@
       const query = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("tableBody");
       if (!tbody) return;
+      const expanded = new Set([...tbody.querySelectorAll('details[data-forecast-symbol][open]')].map(detail => detail.dataset.forecastSymbol));
       tbody.innerHTML = "";
+      const years = valuationForecastYears();
+      document.querySelectorAll('[data-valuation-year]').forEach(th => {
+        th.textContent = `FY${years[Number(th.dataset.valuationYear)]} 預估`;
+      });
       const coverage = document.getElementById('valuationCashFlowCoverage');
       if (coverage) {
         const count = stocks.filter(stock => window.getReportedCashFlowForValuation?.(stock.t)).length;
@@ -1844,6 +1959,13 @@
         const withEps = available.filter(item => item.trailing).length;
         const withPe = available.filter(item => item.ratio !== null).length;
         trailingCoverage.textContent = withEps ? `近四季 EPS 有 ${withEps}／${stocks.length} 檔可核對，目前可計算 P/E 為 ${withPe} 檔。` : '';
+      }
+      const forecastCoverage = document.getElementById('valuationForecastCoverage');
+      if (forecastCoverage && window.getValuationForecastYears?.().length) {
+        const forecasts = stocks.map(stock => currentValuationForecast(stock, window.getReportedEarningsForValuation?.(stock.t)));
+        const count = key => forecasts.filter(row => row?.[key]).length;
+        const fcfEligible = stocks.filter(stock => stock.cat !== 'FINANCE').length;
+        forecastCoverage.textContent = `財報模型覆蓋　EPS ${count('eps')}／${stocks.length} 檔 · 營收 ${count('revenue')}／${stocks.length} 檔 · FCF ${count('fcf')}／${fcfEligible} 檔（金融股除外）。`;
       }
 
       const processed = [];
@@ -1871,7 +1993,7 @@
           p: metrics.price,
           ed: s.ed,
           days,
-          modelSource: valuationSourceLabel(s)
+          stock: s
         });
       });
 
@@ -1908,14 +2030,12 @@
           <td class="mono">${valuationNumber(item.p, 2, '$')}</td>
           <td class="mono">${officialEpsMarkup(item.t)}</td>
           <td class="mono">${trailingPEMarkup(item.trailingPE)}</td>
-          <td class="mono" style="font-weight:700; color:var(--accent);">${valuationNumber(item.peForward, 1, '', 'x')}</td>
+          <td class="mono" style="font-weight:700; color:var(--accent);">${forwardPEMarkup(item)}</td>
           <td class="mono">${cashFlowMarkup(item.cashFlow)}</td>
           <td class="mono" title="依目前可用因子計算，未納入的項目不計分。">${riskText}</td>
           <td class="mono">${item.ed}</td>
           <td><span class="countdown-badge ${badgeClass} mono">${item.days === 9999 ? '日期待確認' : `${item.days} 天`}</span></td>
-          <td class="mono val-cell">${valuationNumber(item.val27, 1, '$')}<div style="font-size:10px; color:var(--text-muted);">${item.modelSource}</div></td>
-          <td class="mono val-cell">${valuationNumber(item.val28, 1, '$')}</td>
-          <td class="mono val-cell-strong">${valuationNumber(item.val29, 1, '$')}</td>
+          ${valuationForecastCells(item.stock, item, years, expanded.has(item.t))}
           <td class="mono ${retClass}">${valuationPercent(item.totalRet)}</td>
           <td class="mono ${cagrClass}">${valuationPercent(item.cagr)}</td>
           <td style="text-align: center;"><button class="btn-add-portfolio" onclick="addStockToPortfolio('${item.t}')">＋ 投組</button></td>
@@ -2125,7 +2245,7 @@
       if (tbody) {
         tbody.innerHTML = "";
         holdings.forEach(({ asset, stock, metrics }, idx) => {
-          const { price, trailingPE, peForward, cashFlow, cagr, riskScore } = metrics;
+          const { price, trailingPE, cashFlow, cagr, riskScore } = metrics;
           const complete = hasHoldingScore(metrics);
           const band = portfolioRiskBand(complete ? riskScore : null);
           const contribution = hasCompleteScore && complete ? riskScore * Math.max(0, asset.weight) / totalWeight : null;
@@ -2141,7 +2261,7 @@
             <td class="mono">${valuationNumber(price, 1, "$")}</td>
             <td class="mono font-bold">${asset.weight}%</td>
             <td class="mono">${trailingPEMarkup(trailingPE)}</td>
-            <td class="mono">${valuationNumber(peForward, 1, "", "x")}</td>
+            <td class="mono">${forwardPEMarkup(metrics)}</td>
             <td class="mono">${cashFlowMarkup(cashFlow)}</td>
             <td class="mono ${cagrClass}">${valuationPercent(cagr)}</td>
             <td class="mono font-bold">${valuationNumber(riskScore, 0)}${scoreCoverage}</td>
@@ -2377,7 +2497,39 @@ function applyCnbcStockQuote(stock, row, receivedAt = Date.now()) {
     sourceName: 'CNBC', sourceUrl: cnbcStockQuoteUrl([stock.t])
   });
   stock.p = price;
+  return true;
 }
+
+let valuationQuoteRequest;
+window.refreshValuationQuotes = function () {
+  if (valuationQuoteRequest) return valuationQuoteRequest;
+  const stockBySymbol = new Map(stocks.map(stock => [stock.t, stock]));
+  const symbols = [...stockBySymbol.keys()];
+  const chunks = [];
+  for (let i = 0; i < symbols.length; i += 30) chunks.push(symbols.slice(i, i + 30));
+  valuationQuoteRequest = Promise.all(chunks.map(async chunk => {
+    try {
+      const response = await fetch(cnbcStockQuoteUrl(chunk), { cache: 'no-cache', signal: AbortSignal.timeout(5000) });
+      if (!response.ok) return false;
+      const data = await response.json();
+      const rows = data?.FormattedQuoteResult?.FormattedQuote;
+      if (!Array.isArray(rows)) return false;
+      const receivedAt = Date.now();
+      let updated = false;
+      for (const row of rows) {
+        if (chunk.includes(row?.symbol) && applyCnbcStockQuote(stockBySymbol.get(row.symbol), row, receivedAt)) updated = true;
+      }
+      return updated;
+    } catch {
+      return false;
+    }
+  })).then(results => {
+    renderTable();
+    calcPortfolioRisk();
+    return results.some(Boolean);
+  }).finally(() => { valuationQuoteRequest = null; });
+  return valuationQuoteRequest;
+};
 
 (async function robustLiveYieldAndChartSync() {
   const SPREADSHEET_ID = '1czITJdQ-NGsymNMc9DB2M1Enmxopg644XQb9_seGph8';
@@ -2496,33 +2648,6 @@ function applyCnbcStockQuote(stock, row, receivedAt = Date.now()) {
   // 重新繪製滾動 22 日折線圖與底部橫向數據條
   renderRollingYieldChart(currentHistory);
 
-  // 若當前頁面為美股儀表板 (具備 stocks 陣列與 renderTable 函數)，同步透過 CNBC 無跨域接口更新全數美股最新現價！
-  if (typeof stocks !== 'undefined' && Array.isArray(stocks) && typeof renderTable === 'function') {
-    try {
-      const allSyms = stocks.map(s => s.t);
-      const chunks = [];
-      for (let i = 0; i < allSyms.length; i += 30) {
-        chunks.push(allSyms.slice(i, i + 30));
-      }
-      for (const chunk of chunks) {
-        const stUrl = cnbcStockQuoteUrl(chunk);
-        const stRes = await fetch(stUrl, { signal: AbortSignal.timeout(5000) });
-        if (stRes.ok) {
-          const stJson = await stRes.json();
-          const quotes = (stJson.FormattedQuoteResult && stJson.FormattedQuoteResult.FormattedQuote) || [];
-          if (!Array.isArray(quotes)) continue;
-          quotes.forEach(q => {
-            if (!chunk.includes(q?.symbol)) return;
-            applyCnbcStockQuote(stocks.find(s => s.t === q.symbol), q);
-          });
-        }
-      }
-      renderTable();
-      if (typeof calcPortfolioRisk === 'function') calcPortfolioRisk();
-    } catch (e) {
-      console.warn("Live stock quote sync fallback:", e);
-    }
-  }
 })();
 </script>
 
