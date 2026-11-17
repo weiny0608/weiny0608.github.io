@@ -2513,21 +2513,26 @@ window.refreshValuationQuotes = function () {
   const chunks = [];
   for (let i = 0; i < symbols.length; i += 30) chunks.push(symbols.slice(i, i + 30));
   valuationQuoteRequest = Promise.all(chunks.map(async chunk => {
-    try {
-      const response = await fetch(cnbcStockQuoteUrl(chunk), { cache: 'no-cache', signal: AbortSignal.timeout(5000) });
-      if (!response.ok) return false;
-      const data = await response.json();
-      const rows = data?.FormattedQuoteResult?.FormattedQuote;
-      if (!Array.isArray(rows)) return false;
-      const receivedAt = Date.now();
-      let updated = false;
-      for (const row of rows) {
-        if (chunk.includes(row?.symbol) && applyCnbcStockQuote(stockBySymbol.get(row.symbol), row, receivedAt)) updated = true;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch(cnbcStockQuoteUrl(chunk), { cache: 'no-cache', signal: AbortSignal.timeout(8500) });
+        if (!response.ok) {
+          if (response.status === 429 || response.status >= 500) continue;
+          return false;
+        }
+        const rows = (await response.json())?.FormattedQuoteResult?.FormattedQuote;
+        if (!Array.isArray(rows)) return false;
+        const receivedAt = Date.now();
+        let updated = false;
+        for (const row of rows) {
+          if (chunk.includes(row?.symbol) && applyCnbcStockQuote(stockBySymbol.get(row.symbol), row, receivedAt)) updated = true;
+        }
+        return updated;
+      } catch {
+        // An isolated network failure should not block the other quote batches.
       }
-      return updated;
-    } catch {
-      return false;
     }
+    return false;
   })).then(results => {
     renderTable();
     calcPortfolioRisk();

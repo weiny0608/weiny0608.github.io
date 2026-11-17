@@ -1608,9 +1608,7 @@
 
   async function fetchReportedEarnings() {
     try {
-      const url = new URL(REPORTED_EARNINGS_URL);
-      url.searchParams.set('t', Date.now());
-      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const response = await fetch(REPORTED_EARNINGS_URL, { cache: 'no-cache', signal: AbortSignal.timeout(18000) });
       if (!response.ok) throw new Error('Official earnings feed unavailable');
       const data = await response.json();
       const updatedAt = new Date(data.updatedAt);

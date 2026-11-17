@@ -48,6 +48,11 @@ CASH_FLOW_TAGS = {
         'ppe': 'PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities',
     }),
 }
+# Alternate tags verified as the full capex line in these issuers' statements.
+ISSUER_CAPEX = {
+    'LLY': ('ppe', 'PaymentsToAcquireOtherPropertyPlantAndEquipment'),
+    'VZ': ('productive_assets', 'PaymentsToAcquireOtherProductiveAssets'),
+}
 CURRENCY = re.compile(r'[A-Z]{3}')
 ISO_DATE = re.compile(r'\d{4}-\d{2}-\d{2}')
 MONTH_DATE = re.compile(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+([0-9]{1,2})(?:,\s*|\s+)(20[0-9]{2})\b', re.I)
@@ -211,7 +216,7 @@ def choose_tag(values):
     return best[0] if len({item[1] for item in best}) == 1 else None
 
 
-def cash_flow_contexts(document, accession, form):
+def cash_flow_contexts(document, accession, form, *, symbol=None):
     """Pair consolidated CFO and cash purchases of property, plant and equipment."""
     contexts = {}
     for taxonomy, (accounting, operating_tag, capital_tags) in CASH_FLOW_TAGS.items():
@@ -246,6 +251,15 @@ def cash_flow_contexts(document, accession, form):
                 if len(capital) == 1 and min(capital) >= 0:
                     contexts[(*key, basis)] = (next(iter(operating)), next(iter(capital)))
                 break
+        if accounting == 'GAAP' and symbol in ISSUER_CAPEX:
+            basis, tag = ISSUER_CAPEX[symbol]
+            filing = {'accessionNumber': accession, 'form': form}
+            operations = exact_duration_facts(concepts, operating_tag, 'USD', filing)
+            purchases = exact_duration_facts(concepts, tag, 'USD', filing)
+            for period, outflow in purchases.items():
+                operating = operations.get(period)
+                if operating is not None and int(operating) == operating and outflow >= 0 and int(outflow) == outflow:
+                    contexts.setdefault((*period, 'USD', accounting, basis), (int(operating), int(outflow)))
     return contexts
 
 
@@ -317,7 +331,7 @@ def latest_cash_flow(client, symbol, cik, today):
         if not report_end or not 0 <= (filed - report_end).days <= 150:
             continue
         form = filing['form']
-        contexts = cash_flow_contexts(document, filing['accessionNumber'], form)
+        contexts = cash_flow_contexts(document, filing['accessionNumber'], form, symbol=symbol)
         same_end = [key for key in contexts if key[1] == report_end and cash_flow_period_type(*key[:2], form)]
         if not same_end:
             continue

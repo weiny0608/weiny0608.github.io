@@ -12,6 +12,7 @@ DILUTED_TAGS = ('EarningsPerShareDiluted', 'DilutedEarningsLossPerShare')
 GROWTH_FLOOR = -0.20
 GROWTH_CEILING = 0.25
 ALPHABET_CLASSES = {'GOOGL': 'A', 'GOOG': 'C'}
+CLASS_EPS_SYMBOLS = frozenset((*ALPHABET_CLASSES, 'BRK.B', 'V'))
 
 
 def latest_annual_context(client, cik, today):
@@ -196,15 +197,15 @@ def _annual_class_history(document, period_end, heading, member, eps_label):
                     for value in date_labels]
         except ValueError:
             continue
-        if (len(ends) < 2 or ends[0] != period_end or any(end.month != 12 or end.day != 31 for end in ends)
+        if (len(ends) < 2 or ends[0] != period_end or any((end.month, end.day) != (period_end.month, period_end.day) for end in ends)
                 or any(left.year != right.year + 1 for left, right in zip(ends, ends[1:]))):
             continue
         in_member = False
         for row in table[2:]:
             label, *values = [value for value, _ in row if value] or ['']
-            if label == member:
+            if label.casefold() == member.casefold():
                 in_member = True
-            elif label.startswith(('Class ', 'Equivalent Class ')):
+            elif label.casefold().startswith(('class ', 'equivalent class ')):
                 in_member = False
             elif in_member and label == eps_label:
                 parsed = [re.fullmatch(r'\$\s*(-?[0-9]+(?:\.[0-9]+)?|\([0-9]+(?:\.[0-9]+)?\))', value)
@@ -212,7 +213,8 @@ def _annual_class_history(document, period_end, heading, member, eps_label):
                 if len(parsed) != len(ends) or not all(parsed):
                     return []
                 amounts = [float(value[1].replace('(', '-').replace(')', '')) for value in parsed]
-                return [((date(end.year, 1, 1), end), value) for end, value in zip(ends, amounts)]
+                return [((end.replace(year=end.year - 1) + timedelta(days=1), end), value)
+                        for end, value in zip(ends, amounts)]
     return []
 
 
@@ -223,6 +225,10 @@ def _class_eps_history(client, symbol, cik, filing, period_end):
         statement = 'Consolidated Statements of Earnings'
         member = 'Equivalent Class B [Member]'
         label = 'Net earnings per average equivalent'
+    elif symbol == 'V':
+        statement = 'Earnings Per Share - Schedule of Earnings Per Share, Basic and Diluted (Details)'
+        member = 'Class A common stock'
+        label = 'Earnings per share - diluted (in dollars per share)'
     else:
         statement = 'Net Income Per Share - Schedule of Earnings Per Share (Details)'
         member = f'Class {ALPHABET_CLASSES[symbol]}'
@@ -241,6 +247,90 @@ def _class_eps_history(client, symbol, cik, filing, period_end):
         return [], None
     url = directory + page
     return _annual_class_history(client.get(url), period_end, statement + ' - USD ($)', member, label), url
+
+
+def _listing_ticker_key(symbol):
+    """Normalize the spelling of an SEC or exchange preferred-stock symbol."""
+    normalized = re.sub(r'[./ ]+', '-', symbol.strip().upper())
+    return re.sub(r'(?<=-)PR(?=[A-Z]{1,2}$)', 'P', normalized)
+
+
+def _single_common_listing(document, symbol, cik, filing):
+    """Identify one common share class and classify other securities on an SEC cover."""
+    from sync_reported_earnings import FilingTables
+
+    expected_end = date.fromisoformat(filing['reportDate'])
+    common_title = r'\b(?:common (?:stock|shares?)|ordinary shares?)\b'
+    for _, table in FilingTables(document).tables:
+        rows = [[value for value, _ in row if value] for row in table]
+        values = {row[0]: row[1] for row in rows if len(row) == 2}
+        try:
+            end = datetime.strptime(values.get('Document Period End Date', '').replace('.', '').replace('Sept ', 'Sep '), '%b %d, %Y').date()
+            filing_cik = int(values.get('Entity Central Index Key', '-1'))
+        except ValueError:
+            continue
+        if end != expected_end or values.get('Document Type') != filing['form'] or filing_cik != int(cik):
+            continue
+
+        common = set()
+        other = set()
+        title = None
+        for row in rows:
+            if len(row) != 2:
+                continue
+            key, text = row
+            if key == 'Title of 12(g) Security' and re.search(common_title, text, re.I):
+                return None
+            if key == 'Title of 12(b) Security':
+                if title is not None:
+                    return None
+                title = text
+            elif key == 'Trading Symbol':
+                if title is None:
+                    return None
+                ticker = _listing_ticker_key(text)
+                if re.match(rf'^(?:class [A-Z0-9-]+ )?{common_title}', title, re.I):
+                    common.add(ticker)
+                elif (re.search(r'\bpreferred stock\b', title, re.I)
+                      or (not re.search(common_title, title, re.I)
+                          and re.search(r'\bnotes?\b|\bETNs?\b|\bdebt securities\b', title, re.I))):
+                    other.add(ticker)
+                else:
+                    return None
+                title = None
+        if title is None and common == {_listing_ticker_key(symbol)} and not common & other:
+            return other
+    return None
+
+
+def _official_listing_sources(client, symbol, cik, listed, submissions, annual_filing, report_end, today):
+    from urllib.error import HTTPError
+
+    from sync_reported_earnings import archive_dir, iso_date, recent_filings
+
+    recent = [(filed, filing) for filed, filing in recent_filings(submissions, report_end)
+              if filed <= today and filing['form'] in ('10-K', '10-Q') and iso_date(filing['reportDate']) == report_end]
+    if not recent:
+        return None
+    _, newest = max(recent, key=lambda item: item[0])
+    covers = {filing['accessionNumber']: filing for filing in (annual_filing, newest)}
+    instruments = set()
+    sources = []
+    for accession, filing in covers.items():
+        url = archive_dir(cik, accession) + 'R1.htm'
+        try:
+            other = _single_common_listing(client.get(url), symbol, cik, filing)
+        except HTTPError as error:
+            if error.code != 404:
+                raise
+            return None
+        if other is None:
+            return None
+        instruments.update(other)
+        sources.append({'sourceUrl': url, 'sourceName': f"SEC Form {filing['form']}（上市股別）",
+                        'reportDate': filing['filingDate']})
+    extras = {_listing_ticker_key(ticker) for ticker in listed} - {_listing_ticker_key(symbol)}
+    return sources if extras <= instruments else None
 
 
 def _tsm_eps_forecast(client, cik, earnings, trailing, end, today):
@@ -263,6 +353,7 @@ def _tsm_eps_forecast(client, cik, earnings, trailing, end, today):
 
 def latest_eps_forecast(client, symbol, cik, earnings, trailing, today):
     """Model the next three labeled years, using the quote's currency and share basis."""
+    from forecast_issuer import annual_context_and_cik
     from sync_reported_earnings import DATA, iso_date, ticker_key
 
     if not earnings or earnings.get('symbol') != symbol:
@@ -282,20 +373,27 @@ def latest_eps_forecast(client, symbol, cik, earnings, trailing, today):
     listed = {ticker_key(ticker) for ticker in submissions.get('tickers') or []}
     if ticker_key(symbol) not in listed or not set(submissions.get('exchanges') or []) & {'Nasdaq', 'NYSE'}:
         return None
-    class_filing = symbol in ALPHABET_CLASSES or symbol == 'BRK.B'
+    class_filing = symbol in CLASS_EPS_SYMBOLS
     # Nasdaq-registered ASML shares are ordinary shares, not depositary receipts.
     expected_tickers = {'ASML', 'ASMLF'} if symbol == 'ASML' else {ticker_key(symbol)}
-    if not class_filing and not listed <= expected_tickers:
+    if symbol == 'META' and not listed <= expected_tickers:
         return None
-    annual = latest_annual_context(client, cik, today)
+    annual, source_cik, continuity = annual_context_and_cik(client, cik, today)
     if not annual:
         return None
     concepts, filing, base_end, filed, accounting = annual
     if base_end > end or accounting != earnings.get('accounting') or _split_after_report(concepts, filed, today):
         return None
-    source = annual_source(cik, filing, filed)
+    listing_sources = []
+    if not class_filing and not listed <= expected_tickers:
+        if source_cik != cik:
+            return None
+        listing_sources = _official_listing_sources(client, symbol, cik, listed, submissions, filing, end, today)
+        if not listing_sources:
+            return None
+    source = annual_source(source_cik, filing, filed)
     if class_filing:
-        series, class_url = _class_eps_history(client, symbol, cik, filing, base_end)
+        series, class_url = _class_eps_history(client, symbol, source_cik, filing, base_end)
         if not class_url:
             return None
         source['sourceUrl'] = class_url
@@ -317,4 +415,10 @@ def latest_eps_forecast(client, symbol, cik, earnings, trailing, today):
         forecast['shareClass'] = ALPHABET_CLASSES[symbol]
     if forecast and symbol == 'BRK.B':
         forecast['epsDefinition'] = 'equivalent_class_b'
+    if forecast and symbol == 'V':
+        forecast['shareClass'] = 'A'
+    if forecast:
+        forecast['supportingSources'].extend(listing_sources)
+        if continuity:
+            forecast['supportingSources'].append(continuity)
     return forecast

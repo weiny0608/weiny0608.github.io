@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/update-reported-earnings.yml'
+      - 'scripts/forecast_issuer.py'
       - 'scripts/issuer_earnings.py'
       - 'scripts/issuer_exhibit_specials.py'
       - 'scripts/operating_forecasts.py'

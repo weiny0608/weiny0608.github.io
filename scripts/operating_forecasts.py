@@ -108,15 +108,16 @@ def latest_tsm_operating_forecasts(client, cik, latest_end, trailing_eps, today)
 
 def latest_operating_forecasts(client, cik, earnings, cash_flow, today, *, estimate_fcf, trailing_eps=None):
     """Estimate future fiscal-year revenue and, with comparable cash flows, FCF."""
+    from forecast_issuer import annual_context_and_cik
     from sync_reported_earnings import CASH_FLOW_TAGS, DATA, REVENUE_TAGS, cash_flow_contexts, iso_date
-    from valuation_forecasts import annual_facts, annual_source, fiscal_year_for_period, latest_annual_context
+    from valuation_forecasts import annual_facts, annual_source, fiscal_year_for_period
 
     latest_end = iso_date(earnings.get('periodEnd'))
     if not latest_end or not 0 <= (today - latest_end).days <= 190:
         return {}
     if earnings.get('symbol') == 'TSM':
         return latest_tsm_operating_forecasts(client, cik, latest_end, trailing_eps, today)
-    annual = latest_annual_context(client, cik, today)
+    annual, annual_cik, continuity = annual_context_and_cik(client, cik, today)
     if not annual:
         return {}
     concepts, filing, annual_end, filed, accounting = annual
@@ -134,17 +135,22 @@ def latest_operating_forecasts(client, cik, earnings, cash_flow, today, *, estim
     else:
         return {}
 
-    trailing = trailing_revenue(client, cik, concepts, tag, currency, sales[0], latest_end, earnings.get('revenue'), today)
-    provenance = annual_source(cik, filing, filed)
+    interim = concepts
+    if continuity:
+        taxonomy = 'us-gaap' if accounting == 'GAAP' else 'ifrs-full'
+        document = client.json(f'{DATA}/api/xbrl/companyfacts/CIK{str(cik).zfill(10)}.json')
+        interim = document.get('facts', {}).get(taxonomy, {})
+    trailing = trailing_revenue(client, cik, interim, tag, currency, sales[0], latest_end, earnings.get('revenue'), today)
+    provenance = annual_source(annual_cik, filing, filed)
     trailing_input = (trailing[0], [trailing[1]]) if trailing else None
     revenue = revenue_projection(sales, base_year, latest_end, today, provenance, currency, accounting, trailing_input)
     result = {'revenue': revenue}
     if not estimate_fcf:
         return result
 
-    padded = str(cik).zfill(10)
+    padded = str(annual_cik).zfill(10)
     document = client.json(f'{DATA}/api/xbrl/companyfacts/CIK{padded}.json')
-    contexts = cash_flow_contexts(document, filing['accessionNumber'], filing['form'])
+    contexts = cash_flow_contexts(document, filing['accessionNumber'], filing['form'], symbol=earnings.get('symbol'))
     for basis in next(tags for standard, _, tags in CASH_FLOW_TAGS.values() if standard == accounting):
         history = []
         for (start, end), sales_value in sales:
@@ -164,4 +170,7 @@ def latest_operating_forecasts(client, cik, earnings, cash_flow, today, *, estim
         latest_end.isoformat(), currency, accounting, 'ttm', basis
     )
     result['fcf'] = fcf_projection(revenue, history, basis, cash_flow if aligned else None)
+    if continuity:
+        for metric in result.values():
+            metric.setdefault('supportingSources', []).append(continuity)
     return result
