@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T06:26:00+00:00",
+  "updatedAt": "2026-11-17T00:25:16+00:00",
   "results": [
     {
       "symbol": "CSCO",
@@ -2111,6 +2111,36 @@
       "value": 14282000000
     },
     {
+      "symbol": "LLY",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000108/lly-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "ppe",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 27420000000,
+        "capitalExpenditure": 8437000000,
+        "value": 18983000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-12",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000013/lly-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 30645000000,
+      "capitalExpenditure": 10984000000,
+      "value": 19661000000
+    },
+    {
       "symbol": "LRCX",
       "reportDate": "2026-10-22",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000054/lrcx-20260927.htm",
@@ -2979,6 +3009,36 @@
       "operatingCashFlow": 23728000000,
       "capitalExpenditure": 1671000000,
       "value": 22057000000
+    },
+    {
+      "symbol": "VZ",
+      "reportDate": "2026-10-29",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000052/vz-20260930.htm",
+      "sourceName": "SEC Form 10-Q",
+      "currency": "USD",
+      "accounting": "GAAP",
+      "capexBasis": "productive_assets",
+      "reportedPeriod": {
+        "periodStart": "2026-01-01",
+        "periodEnd": "2026-09-30",
+        "periodType": "ytd",
+        "operatingCashFlow": 29936000000,
+        "capitalExpenditure": 11926000000,
+        "value": 18010000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-02-17",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000007/vz-20251231.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "periodType": "ttm",
+      "operatingCashFlow": 39050000000,
+      "capitalExpenditure": 16674000000,
+      "value": 22376000000
     },
     {
       "symbol": "WDAY",
@@ -6250,6 +6310,71 @@
     {
       "symbol": "BA",
       "periodEnd": "2026-09-30",
+      "eps": {
+        "symbol": "BA",
+        "currency": "USD",
+        "epsBasis": "share",
+        "accounting": "GAAP",
+        "method": "historical_diluted_eps_change",
+        "periodEnd": "2026-09-30",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-01-30",
+        "baseEps": 2.48,
+        "baseFiscalYear": 2025,
+        "basePeriodEnd": "2025-12-31",
+        "basePeriodType": "annual",
+        "growthRate": null,
+        "annualChange": 0.9175,
+        "years": {
+          "2027": 4.31,
+          "2028": 5.23,
+          "2029": 6.15
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-01-30"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/R1.htm",
+            "sourceName": "SEC Form 10-K（上市股別）",
+            "reportDate": "2026-01-30"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/R1.htm",
+            "sourceName": "SEC Form 10-Q（上市股別）",
+            "reportDate": "2026-10-27"
+          }
+        ],
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "eps": 2.48,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-01-30"
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "eps": -18.36,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-01-30"
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "eps": -3.67,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-01-30"
+          }
+        ]
+      },
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
@@ -9773,6 +9898,64 @@
           "2028": 156130781488,
           "2029": 202970015934
         }
+      },
+      "fcf": {
+        "currency": "USD",
+        "accounting": "GAAP",
+        "periodEnd": "2026-09-30",
+        "baseFiscalYear": 2025,
+        "sourceName": "SEC Form 10-K",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000013/lly-20251231.htm",
+        "reportDate": "2026-02-12",
+        "basePeriodEnd": "2026-09-30",
+        "basePeriodType": "ttm",
+        "baseValue": 19661000000,
+        "supportingSources": [
+          {
+            "reportDate": "2026-10-29",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000108/lly-20260930.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000108/lly-20260930.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-10-29"
+          }
+        ],
+        "capexBasis": "ppe",
+        "margin": 0.11056374371676503,
+        "method": "annual_fcf_margin",
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "revenue": 65179000000,
+            "operatingCashFlow": 16813000000,
+            "capitalExpenditure": 7841000000,
+            "value": 8972000000
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "revenue": 45043000000,
+            "operatingCashFlow": 8818000000,
+            "capitalExpenditure": 5058000000,
+            "value": 3760000000
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "revenue": 34124000000,
+            "operatingCashFlow": 4240000000,
+            "capitalExpenditure": 3448000000,
+            "value": 792000000
+          }
+        ],
+        "years": {
+          "2027": 13278772085,
+          "2028": 17262403711,
+          "2029": 22441124824
+        }
       }
     },
     {
@@ -10675,6 +10858,71 @@
     {
       "symbol": "MS",
       "periodEnd": "2026-09-30",
+      "eps": {
+        "symbol": "MS",
+        "currency": "USD",
+        "epsBasis": "share",
+        "accounting": "GAAP",
+        "method": "historical_diluted_eps_growth",
+        "periodEnd": "2026-09-30",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/ms-20251231.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-02-19",
+        "baseEps": 10.21,
+        "baseFiscalYear": 2025,
+        "basePeriodEnd": "2025-12-31",
+        "basePeriodType": "annual",
+        "growthRate": 0.25,
+        "annualChange": null,
+        "years": {
+          "2027": 15.95,
+          "2028": 19.94,
+          "2029": 24.93
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/ms-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-19"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/R1.htm",
+            "sourceName": "SEC Form 10-K（上市股別）",
+            "reportDate": "2026-02-19"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000293/R1.htm",
+            "sourceName": "SEC Form 10-Q（上市股別）",
+            "reportDate": "2026-11-05"
+          }
+        ],
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "eps": 10.21,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/ms-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-19"
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "eps": 7.95,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/ms-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-19"
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "eps": 5.18,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/895421/000089542126000086/ms-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-19"
+          }
+        ]
+      },
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
@@ -11864,6 +12112,71 @@
     {
       "symbol": "ORCL",
       "periodEnd": "2026-08-31",
+      "eps": {
+        "symbol": "ORCL",
+        "currency": "USD",
+        "epsBasis": "share",
+        "accounting": "GAAP",
+        "method": "historical_diluted_eps_growth",
+        "periodEnd": "2026-08-31",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-06-22",
+        "baseEps": 5.83,
+        "baseFiscalYear": 2026,
+        "basePeriodEnd": "2026-05-31",
+        "basePeriodType": "annual",
+        "growthRate": 0.209968,
+        "annualChange": null,
+        "years": {
+          "2027": 7.05,
+          "2028": 8.54,
+          "2029": 10.33
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-06-22"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/R1.htm",
+            "sourceName": "SEC Form 10-K（上市股別）",
+            "reportDate": "2026-06-22"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/R1.htm",
+            "sourceName": "SEC Form 10-Q（上市股別）",
+            "reportDate": "2026-09-11"
+          }
+        ],
+        "history": [
+          {
+            "periodStart": "2025-06-01",
+            "periodEnd": "2026-05-31",
+            "eps": 5.83,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-06-22"
+          },
+          {
+            "periodStart": "2024-06-01",
+            "periodEnd": "2025-05-31",
+            "eps": 4.34,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-06-22"
+          },
+          {
+            "periodStart": "2023-06-01",
+            "periodEnd": "2024-05-31",
+            "eps": 3.71,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-06-22"
+          }
+        ]
+      },
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
@@ -14562,6 +14875,62 @@
     {
       "symbol": "V",
       "periodEnd": "2026-09-30",
+      "eps": {
+        "symbol": "V",
+        "currency": "USD",
+        "epsBasis": "share",
+        "accounting": "GAAP",
+        "method": "historical_diluted_eps_growth",
+        "periodEnd": "2026-09-30",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/R94.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-11-05",
+        "baseEps": 12.32,
+        "baseFiscalYear": 2026,
+        "basePeriodEnd": "2026-09-30",
+        "basePeriodType": "annual",
+        "growthRate": 0.128169,
+        "annualChange": null,
+        "years": {
+          "2027": 13.9,
+          "2028": 15.68,
+          "2029": 17.69
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/R94.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-11-05"
+          }
+        ],
+        "history": [
+          {
+            "periodStart": "2025-10-01",
+            "periodEnd": "2026-09-30",
+            "eps": 12.32,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/R94.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-11-05"
+          },
+          {
+            "periodStart": "2024-10-01",
+            "periodEnd": "2025-09-30",
+            "eps": 10.2,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/R94.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-11-05"
+          },
+          {
+            "periodStart": "2023-10-01",
+            "periodEnd": "2024-09-30",
+            "eps": 9.73,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/R94.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-11-05"
+          }
+        ],
+        "shareClass": "A"
+      },
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
@@ -14709,6 +15078,64 @@
           "2027": 141414472022,
           "2028": 143054296127,
           "2029": 144713135423
+        }
+      },
+      "fcf": {
+        "currency": "USD",
+        "accounting": "GAAP",
+        "periodEnd": "2026-09-30",
+        "baseFiscalYear": 2025,
+        "sourceName": "SEC Form 10-K",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000007/vz-20251231.htm",
+        "reportDate": "2026-02-17",
+        "basePeriodEnd": "2026-09-30",
+        "basePeriodType": "ttm",
+        "baseValue": 22376000000,
+        "supportingSources": [
+          {
+            "reportDate": "2026-10-29",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000052/vz-20260930.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000052/vz-20260930.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-10-29"
+          }
+        ],
+        "capexBasis": "productive_assets",
+        "margin": 0.1463497880359576,
+        "method": "annual_fcf_margin",
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "revenue": 138191000000,
+            "operatingCashFlow": 37137000000,
+            "capitalExpenditure": 17011000000,
+            "value": 20126000000
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "revenue": 134788000000,
+            "operatingCashFlow": 36912000000,
+            "capitalExpenditure": 17090000000,
+            "value": 19822000000
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "revenue": 133974000000,
+            "operatingCashFlow": 37475000000,
+            "capitalExpenditure": 18767000000,
+            "value": 18708000000
+          }
+        ],
+        "years": {
+          "2027": 20695978006,
+          "2028": 20935965916,
+          "2029": 21178736695
         }
       }
     },
@@ -15087,6 +15514,171 @@
           "2028": 15661658898,
           "2029": 16455706515
         }
+      }
+    },
+    {
+      "symbol": "XOM",
+      "periodEnd": "2026-09-30",
+      "eps": {
+        "symbol": "XOM",
+        "currency": "USD",
+        "epsBasis": "share",
+        "accounting": "GAAP",
+        "method": "historical_diluted_eps_growth",
+        "periodEnd": "2026-09-30",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-02-18",
+        "baseEps": 6.7,
+        "baseFiscalYear": 2025,
+        "basePeriodEnd": "2025-12-31",
+        "basePeriodType": "annual",
+        "growthRate": -0.131692,
+        "annualChange": null,
+        "years": {
+          "2027": 5.05,
+          "2028": 4.39,
+          "2029": 3.81
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-18"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000020/R9.htm",
+            "sourceName": "SEC Form 10-Q（ExxonMobil 申報主體變更）",
+            "reportDate": "2026-11-02"
+          }
+        ],
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "eps": 6.7,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-18"
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "eps": 7.84,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-18"
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "eps": 8.89,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-02-18"
+          }
+        ]
+      },
+      "revenue": {
+        "currency": "USD",
+        "accounting": "GAAP",
+        "periodEnd": "2026-09-30",
+        "baseFiscalYear": 2025,
+        "basePeriodEnd": "2026-09-30",
+        "basePeriodType": "ttm",
+        "reportDate": "2026-02-18",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+        "sourceName": "SEC Form 10-K",
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-02",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000020/xom-20260930.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000020/R9.htm",
+            "sourceName": "SEC Form 10-Q（ExxonMobil 申報主體變更）",
+            "reportDate": "2026-11-02"
+          }
+        ],
+        "baseValue": 396627000000,
+        "growthRate": 0.01451904046061614,
+        "method": "annual_revenue_growth",
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "value": 332238000000
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "value": 349585000000
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "value": 344582000000
+          }
+        ],
+        "years": {
+          "2027": 403853173640,
+          "2028": 409716734208,
+          "2029": 415665428050
+        }
+      },
+      "fcf": {
+        "currency": "USD",
+        "accounting": "GAAP",
+        "periodEnd": "2026-09-30",
+        "baseFiscalYear": 2025,
+        "sourceName": "SEC Form 10-K",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+        "reportDate": "2026-02-18",
+        "basePeriodEnd": "2025-12-31",
+        "basePeriodType": "annual",
+        "baseValue": 23612000000,
+        "capexBasis": "ppe",
+        "margin": 0.08786418181558134,
+        "method": "annual_fcf_margin",
+        "history": [
+          {
+            "periodStart": "2025-01-01",
+            "periodEnd": "2025-12-31",
+            "revenue": 332238000000,
+            "operatingCashFlow": 51970000000,
+            "capitalExpenditure": 28358000000,
+            "value": 23612000000
+          },
+          {
+            "periodStart": "2024-01-01",
+            "periodEnd": "2024-12-31",
+            "revenue": 349585000000,
+            "operatingCashFlow": 55022000000,
+            "capitalExpenditure": 24306000000,
+            "value": 30716000000
+          },
+          {
+            "periodStart": "2023-01-01",
+            "periodEnd": "2023-12-31",
+            "revenue": 344582000000,
+            "operatingCashFlow": 55369000000,
+            "capitalExpenditure": 21919000000,
+            "value": 33450000000
+          }
+        ],
+        "years": {
+          "2027": 35484228676,
+          "2028": 35999425627,
+          "2029": 36522102745
+        },
+        "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000020/R9.htm",
+            "sourceName": "SEC Form 10-Q（ExxonMobil 申報主體變更）",
+            "reportDate": "2026-11-02"
+          }
+        ]
       }
     }
   ]
