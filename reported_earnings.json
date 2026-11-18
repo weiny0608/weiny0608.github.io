@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-17T19:59:04+00:00",
+  "updatedAt": "2026-11-18T02:33:55+00:00",
   "results": [
+    {
+      "symbol": "NVDA",
+      "reportDate": "2026-11-17",
+      "periodEnd": "2026-10-25",
+      "quarter": "Q3 FY2027",
+      "revenue": 115800000000.0,
+      "eps": 2.7,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/q3fy27pr.htm",
+      "sourceName": "SEC Form 8-K"
+    },
     {
       "symbol": "HD",
       "reportDate": "2026-11-17",
@@ -990,19 +1003,6 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
-      "symbol": "NVDA",
-      "reportDate": "2026-08-26",
-      "periodEnd": "2026-07-26",
-      "quarter": "Q2 FY2027",
-      "revenue": 96221000000,
-      "eps": 2.46,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
       "symbol": "INTU",
       "reportDate": "2026-08-25",
       "periodEnd": "2026-07-31",
@@ -1587,18 +1587,33 @@
     },
     {
       "symbol": "CSCO",
-      "reportDate": "2026-09-02",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
-      "sourceName": "SEC Form 10-K",
+      "reportDate": "2026-11-17",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+      "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
-      "periodStart": "2025-07-27",
-      "periodEnd": "2026-07-25",
-      "periodType": "annual",
-      "operatingCashFlow": 14177000000,
-      "capitalExpenditure": 1410000000,
-      "value": 12767000000
+      "reportedPeriod": {
+        "periodStart": "2026-07-26",
+        "periodEnd": "2026-10-24",
+        "periodType": "quarter",
+        "operatingCashFlow": 4357000000,
+        "capitalExpenditure": 502000000,
+        "value": 3855000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-09-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-10-26",
+      "periodEnd": "2026-10-24",
+      "periodType": "ttm",
+      "operatingCashFlow": 15322000000,
+      "capitalExpenditure": 1589000000,
+      "value": 13733000000
     },
     {
       "symbol": "CVS",
@@ -3549,6 +3564,33 @@
       ]
     },
     {
+      "symbol": "CSCO",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "periodEnd": "2026-10-24",
+      "reportDate": "2026-11-17",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+      "sourceName": "SEC Form 10-Q",
+      "periodStart": "2025-10-26",
+      "eps": 3.7555,
+      "method": "calculated_ttm",
+      "netIncome": 14959000000,
+      "weightedShares": 3983250000,
+      "supportingSources": [
+        {
+          "reportDate": "2026-09-02",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
+          "sourceName": "SEC Form 10-K"
+        },
+        {
+          "reportDate": "2025-11-18",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887725000171/csco-20251025.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
       "symbol": "DIS",
       "currency": "USD",
       "epsBasis": "share",
@@ -3868,33 +3910,6 @@
         {
           "reportDate": "2025-10-01",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000097/nke-20250831.htm",
-          "sourceName": "SEC Form 10-Q"
-        }
-      ]
-    },
-    {
-      "symbol": "NVDA",
-      "currency": "USD",
-      "epsBasis": "share",
-      "accounting": "GAAP",
-      "periodEnd": "2026-07-26",
-      "reportDate": "2026-08-26",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-      "sourceName": "SEC Form 10-Q",
-      "periodStart": "2025-07-28",
-      "eps": 7.9057,
-      "method": "calculated_ttm",
-      "netIncome": 192880000000,
-      "weightedShares": 24397500000,
-      "supportingSources": [
-        {
-          "reportDate": "2026-02-25",
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
-          "sourceName": "SEC Form 10-K"
-        },
-        {
-          "reportDate": "2025-08-27",
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000209/nvda-20250727.htm",
           "sourceName": "SEC Form 10-Q"
         }
       ]
@@ -7352,25 +7367,35 @@
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
         "periodEnd": "2026-10-24",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
-        "sourceName": "SEC Form 10-K",
-        "reportDate": "2026-09-02",
-        "baseEps": 3.33,
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+        "sourceName": "SEC Form 10-Q",
+        "reportDate": "2026-11-17",
+        "baseEps": 3.7555,
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-25",
-        "basePeriodType": "annual",
-        "growthRate": 0.126975,
+        "basePeriodEnd": "2026-10-24",
+        "basePeriodType": "ttm",
+        "growthRate": 0.25,
         "annualChange": null,
         "years": {
-          "2027": 3.75,
-          "2028": 4.23,
-          "2029": 4.77
+          "2027": 4.44,
+          "2028": 5.55,
+          "2029": 6.94
         },
         "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-17"
+          },
           {
             "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
             "sourceName": "SEC Form 10-K",
             "reportDate": "2026-09-02"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887725000171/csco-20251025.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2025-11-18"
           }
         ],
         "history": [
@@ -7405,14 +7430,20 @@
         "accounting": "GAAP",
         "periodEnd": "2026-10-24",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-25",
-        "basePeriodType": "annual",
+        "basePeriodEnd": "2026-10-24",
+        "basePeriodType": "ttm",
         "reportDate": "2026-09-02",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
         "sourceName": "SEC Form 10-K",
-        "supportingSources": [],
-        "baseValue": 63325000000,
-        "growthRate": 0.08536973010562254,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-17",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+            "sourceName": "SEC Form 10-Q"
+          }
+        ],
+        "baseValue": 66959000000,
+        "growthRate": 0.1177498499664631,
         "method": "annual_revenue_growth",
         "history": [
           {
@@ -7432,9 +7463,9 @@
           }
         ],
         "years": {
-          "2027": 68731038159,
-          "2028": 74598588336,
-          "2029": 80967049689
+          "2027": 72796171508,
+          "2028": 81367909781,
+          "2029": 90948968950
         }
       },
       "fcf": {
@@ -7445,11 +7476,23 @@
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000132/csco-20260725.htm",
         "reportDate": "2026-09-02",
-        "basePeriodEnd": "2026-07-25",
-        "basePeriodType": "annual",
-        "baseValue": 12767000000,
+        "basePeriodEnd": "2026-10-24",
+        "basePeriodType": "ttm",
+        "baseValue": 13733000000,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-17",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/858877/000085887726000185/csco-20261024.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-17"
+          }
+        ],
         "capexBasis": "ppe",
-        "margin": 0.20161073825503356,
+        "margin": 0.20335319690272252,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -7478,9 +7521,9 @@
           }
         ],
         "years": {
-          "2027": 13856915344,
-          "2028": 15039876467,
-          "2029": 16323826662
+          "2027": 14803334198,
+          "2028": 16546424579,
+          "2029": 18494763591
         }
       }
     },
@@ -11531,43 +11574,33 @@
     },
     {
       "symbol": "NVDA",
-      "periodEnd": "2026-07-26",
+      "periodEnd": "2026-10-25",
       "eps": {
         "symbol": "NVDA",
         "currency": "USD",
         "epsBasis": "share",
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
-        "periodEnd": "2026-07-26",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-        "sourceName": "SEC Form 10-Q",
-        "reportDate": "2026-08-26",
-        "baseEps": 7.9057,
+        "periodEnd": "2026-10-25",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-02-25",
+        "baseEps": 4.9,
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-26",
-        "basePeriodType": "ttm",
+        "basePeriodEnd": "2026-01-25",
+        "basePeriodType": "annual",
         "growthRate": 0.25,
         "annualChange": null,
         "years": {
-          "2027": 8.84,
-          "2028": 11.05,
-          "2029": 13.82
+          "2027": 6.12,
+          "2028": 7.66,
+          "2029": 9.57
         },
         "supportingSources": [
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-26"
-          },
           {
             "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
             "sourceName": "SEC Form 10-K",
             "reportDate": "2026-02-25"
-          },
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000209/nvda-20250727.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2025-08-27"
           }
         ],
         "history": [
@@ -11600,21 +11633,15 @@
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-26",
+        "periodEnd": "2026-10-25",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-26",
-        "basePeriodType": "ttm",
+        "basePeriodEnd": "2026-01-25",
+        "basePeriodType": "annual",
         "reportDate": "2026-02-25",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
         "sourceName": "SEC Form 10-K",
-        "supportingSources": [
-          {
-            "reportDate": "2026-08-26",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-            "sourceName": "SEC Form 10-Q"
-          }
-        ],
-        "baseValue": 302970000000,
+        "supportingSources": [],
+        "baseValue": 215938000000,
         "growthRate": 0.3,
         "method": "annual_revenue_growth",
         "history": [
@@ -11635,36 +11662,24 @@
           }
         ],
         "years": {
-          "2027": 345593139174,
-          "2028": 449271080926,
-          "2029": 584052405204
+          "2027": 280719400000,
+          "2028": 364935220000,
+          "2029": 474415786000
         }
       },
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-26",
+        "periodEnd": "2026-10-25",
         "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
         "reportDate": "2026-02-25",
-        "basePeriodEnd": "2026-07-26",
-        "basePeriodType": "ttm",
-        "baseValue": 127006000000,
-        "supportingSources": [
-          {
-            "reportDate": "2026-08-26",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-            "sourceName": "SEC Form 10-Q"
-          },
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-26"
-          }
-        ],
+        "basePeriodEnd": "2026-01-25",
+        "basePeriodType": "annual",
+        "baseValue": 96676000000,
         "capexBasis": "productive_assets",
-        "margin": 0.4456184683508778,
+        "margin": 0.44770258129648327,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -11693,9 +11708,9 @@
           }
         ],
         "years": {
-          "2027": 154002685351,
-          "2028": 200203490957,
-          "2029": 260264538244
+          "2027": 125678800000,
+          "2028": 163382440000,
+          "2029": 212397172000
         }
       }
     },
