@@ -1,6 +1,6 @@
 {
   "schema": "company-comparison-feed.v1",
-  "checkedAt": "2026-11-17T22:56:59.683Z",
+  "checkedAt": "2026-11-18T04:29:18.873Z",
   "companies": [
     {
       "ticker": "MSFT",
@@ -20,7 +20,7 @@
       "interestB": 2.1,
       "rating": "Aaa / AAA",
       "asOf": null,
-      "modelAsOf": "2026-11-17T12:31:39+08:00",
+      "modelAsOf": "2026-11-18T11:43:14+08:00",
       "earningsDate": "2027-01-27",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -152,7 +152,7 @@
       "interestB": 0.4,
       "rating": "Aa2 / AA+",
       "asOf": null,
-      "modelAsOf": "2026-11-17T12:31:39+08:00",
+      "modelAsOf": "2026-11-18T11:43:14+08:00",
       "earningsDate": "2027-01-26",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -240,7 +240,7 @@
       "interestB": 0.8,
       "rating": "Aa3 / AA-",
       "asOf": null,
-      "modelAsOf": "2026-11-17T12:31:39+08:00",
+      "modelAsOf": "2026-11-18T11:43:14+08:00",
       "earningsDate": "2027-01-14",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -372,7 +372,7 @@
       "interestB": 0.4,
       "rating": "Aa3 / A+",
       "asOf": null,
-      "modelAsOf": "2026-11-17T12:31:39+08:00",
+      "modelAsOf": "2026-11-18T11:43:14+08:00",
       "earningsDate": "2027-01-21",
       "sourceNotes": [
         "股價依 CNBC 回傳報價時間顯示，可能含供應商延遲。",
@@ -1406,7 +1406,7 @@
     }
   ],
   "macro": {
-    "updatedAt": "2026-11-17T12:31:39+08:00",
+    "updatedAt": "2026-11-18T11:43:14+08:00",
     "indicators": [
       {
         "id": "core_pce",
@@ -1588,18 +1588,18 @@
     ]
   },
   "earnings": {
-    "updatedAt": "2026-11-17T12:31:39+08:00"
+    "updatedAt": "2026-11-18T11:43:14+08:00"
   },
   "treasury": {
-    "yieldPct": 5.109,
-    "observedAt": "2026-11-17T17:05:00.000-0500"
+    "yieldPct": 5.091,
+    "observedAt": "2026-11-17T23:27:21.000-0500"
   },
   "sourceStatus": {
     "valuation": "來源模型，資料期間未提供",
     "financials": "原工具財務模型，資料期間未提供",
     "quotes": "20/20 檔取得帶時間報價",
-    "earnings": "2026-11-17T12:31:39+08:00",
-    "macro": "2026-11-17T12:31:39+08:00"
+    "earnings": "2026-11-18T11:43:14+08:00",
+    "macro": "2026-11-18T11:43:14+08:00"
   },
   "syncWarnings": []
 }
