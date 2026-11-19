@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19T01:25:56+00:00",
+  "updatedAt": "2026-11-19T19:36:29+00:00",
   "results": [
     {
       "symbol": "PANW",
@@ -2547,18 +2547,33 @@
     },
     {
       "symbol": "PANW",
-      "reportDate": "2026-09-10",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
-      "sourceName": "SEC Form 10-K",
+      "reportDate": "2026-11-19",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+      "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "productive_assets",
-      "periodStart": "2025-08-01",
-      "periodEnd": "2026-07-31",
-      "periodType": "annual",
-      "operatingCashFlow": 4553000000,
-      "capitalExpenditure": 440000000,
-      "value": 4113000000
+      "reportedPeriod": {
+        "periodStart": "2026-08-01",
+        "periodEnd": "2026-10-31",
+        "periodType": "quarter",
+        "operatingCashFlow": 1929000000,
+        "capitalExpenditure": 87000000,
+        "value": 1842000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-09-10",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 4711000000,
+      "capitalExpenditure": 443000000,
+      "value": 4268000000
     },
     {
       "symbol": "PEP",
@@ -3937,6 +3952,74 @@
         {
           "reportDate": "2025-10-28",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1413447/000141344725000120/nxpi-20250928.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
+    },
+    {
+      "symbol": "PANW",
+      "currency": "USD",
+      "epsBasis": "share",
+      "accounting": "GAAP",
+      "method": "sum_reported_quarters",
+      "eps": 0.61,
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
+      "reportDate": "2026-11-19",
+      "sourceName": "SEC Form 10-Q",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+      "supportingSources": [
+        {
+          "reportDate": "2026-09-01",
+          "sourceName": "SEC Form 8-K",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000019/ex991q426earningsrelease.htm"
+        },
+        {
+          "reportDate": "2026-06-03",
+          "sourceName": "SEC Form 10-Q",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000015/panw-20260430.htm"
+        },
+        {
+          "reportDate": "2026-02-18",
+          "sourceName": "SEC Form 10-Q",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000005/panw-20260131.htm"
+        }
+      ],
+      "quarters": [
+        {
+          "periodStart": "2026-08-01",
+          "periodEnd": "2026-10-31",
+          "quarter": "Q1 FY2027",
+          "eps": 0.57,
+          "reportDate": "2026-11-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+          "sourceName": "SEC Form 10-Q"
+        },
+        {
+          "periodStart": "2026-05-01",
+          "periodEnd": "2026-07-31",
+          "quarter": "Q4 FY2026",
+          "eps": -0.35,
+          "reportDate": "2026-09-01",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000019/ex991q426earningsrelease.htm",
+          "sourceName": "SEC Form 8-K"
+        },
+        {
+          "periodStart": "2026-02-01",
+          "periodEnd": "2026-04-30",
+          "quarter": "Q3 FY2026",
+          "eps": -0.22,
+          "reportDate": "2026-06-03",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000015/panw-20260430.htm",
+          "sourceName": "SEC Form 10-Q"
+        },
+        {
+          "periodStart": "2025-11-01",
+          "periodEnd": "2026-01-31",
+          "quarter": "Q2 FY2026",
+          "eps": 0.61,
+          "reportDate": "2026-02-18",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000005/panw-20260131.htm",
           "sourceName": "SEC Form 10-Q"
         }
       ]
@@ -12033,21 +12116,41 @@
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
         "periodEnd": "2026-10-31",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
-        "sourceName": "SEC Form 10-K",
-        "reportDate": "2026-09-10",
-        "baseEps": 0.4,
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+        "sourceName": "SEC Form 10-Q",
+        "reportDate": "2026-11-19",
+        "baseEps": 0.61,
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
         "growthRate": -0.2,
         "annualChange": null,
         "years": {
-          "2027": 0.32,
-          "2028": 0.26,
-          "2029": 0.2
+          "2027": 0.52,
+          "2028": 0.41,
+          "2029": 0.33
         },
         "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-19"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000019/ex991q426earningsrelease.htm",
+            "sourceName": "SEC Form 8-K",
+            "reportDate": "2026-09-01"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000015/panw-20260430.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-06-03"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000005/panw-20260131.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-02-18"
+          },
           {
             "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
             "sourceName": "SEC Form 10-K",
@@ -12086,14 +12189,20 @@
         "accounting": "GAAP",
         "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
         "reportDate": "2026-09-10",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
         "sourceName": "SEC Form 10-K",
-        "supportingSources": [],
-        "baseValue": 11480000000,
-        "growthRate": 0.19686612530340508,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-19",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+            "sourceName": "SEC Form 10-Q"
+          }
+        ],
+        "baseValue": 12451000000,
+        "growthRate": 0.2449842750244009,
         "method": "annual_revenue_growth",
         "history": [
           {
@@ -12113,9 +12222,9 @@
           }
         ],
         "years": {
-          "2027": 13740023118,
-          "2028": 16444968231,
-          "2029": 19682425408
+          "2027": 14668898925,
+          "2028": 18262548494,
+          "2029": 22736585697
         }
       },
       "fcf": {
@@ -12126,11 +12235,23 @@
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
         "reportDate": "2026-09-10",
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
-        "baseValue": 4113000000,
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
+        "baseValue": 4268000000,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-19",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000033/panw-20261031.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-19"
+          }
+        ],
         "capexBasis": "productive_assets",
-        "margin": 0.3762064851968333,
+        "margin": 0.36724087326043753,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -12159,9 +12280,9 @@
           }
         ],
         "years": {
-          "2027": 5169085804,
-          "2028": 6186703697,
-          "2029": 7404656083
+          "2027": 5387019251,
+          "2028": 6706754257,
+          "2029": 8349803586
         }
       }
     },
