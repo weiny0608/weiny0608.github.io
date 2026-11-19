@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-18T02:33:55+00:00",
+  "updatedAt": "2026-11-19T01:25:56+00:00",
   "results": [
+    {
+      "symbol": "PANW",
+      "reportDate": "2026-11-18",
+      "periodEnd": "2026-10-31",
+      "quarter": "Q1 FY2027",
+      "revenue": 3445000000.0,
+      "eps": 0.57,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000030/ex991q127earningsrelease.htm",
+      "sourceName": "SEC Form 8-K"
+    },
     {
       "symbol": "NVDA",
       "reportDate": "2026-11-17",
@@ -909,19 +922,6 @@
       "accounting": "GAAP",
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000076/avgo-08022026x8kxex99.htm",
-      "sourceName": "SEC Form 8-K"
-    },
-    {
-      "symbol": "PANW",
-      "reportDate": "2026-09-01",
-      "periodEnd": "2026-07-31",
-      "quarter": "Q4 FY2026",
-      "revenue": 3410000000.0,
-      "eps": -0.35,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000019/ex991q426earningsrelease.htm",
       "sourceName": "SEC Form 8-K"
     },
     {
@@ -3940,19 +3940,6 @@
           "sourceName": "SEC Form 10-Q"
         }
       ]
-    },
-    {
-      "symbol": "PANW",
-      "currency": "USD",
-      "epsBasis": "share",
-      "accounting": "GAAP",
-      "periodEnd": "2026-07-31",
-      "reportDate": "2026-09-10",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
-      "sourceName": "SEC Form 10-K",
-      "periodStart": "2025-08-01",
-      "eps": 0.4,
-      "method": "reported_annual"
     },
     {
       "symbol": "PEP",
@@ -12038,14 +12025,14 @@
     },
     {
       "symbol": "PANW",
-      "periodEnd": "2026-07-31",
+      "periodEnd": "2026-10-31",
       "eps": {
         "symbol": "PANW",
         "currency": "USD",
         "epsBasis": "share",
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
         "sourceName": "SEC Form 10-K",
         "reportDate": "2026-09-10",
@@ -12097,7 +12084,7 @@
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
         "basePeriodEnd": "2026-07-31",
         "basePeriodType": "annual",
@@ -12134,7 +12121,7 @@
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
