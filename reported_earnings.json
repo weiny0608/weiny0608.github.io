@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-19T19:36:29+00:00",
+  "updatedAt": "2026-11-20T01:25:38+00:00",
   "results": [
+    {
+      "symbol": "INTU",
+      "reportDate": "2026-11-19",
+      "periodEnd": "2026-10-31",
+      "quarter": "Q1 FY2027",
+      "revenue": 4354000000,
+      "eps": 2.59,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+      "sourceName": "SEC Form 10-Q"
+    },
     {
       "symbol": "PANW",
       "reportDate": "2026-11-18",
@@ -1003,19 +1016,6 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
-      "symbol": "INTU",
-      "reportDate": "2026-08-25",
-      "periodEnd": "2026-07-31",
-      "quarter": "Q4 FY2026",
-      "revenue": 4354000000.0,
-      "eps": 1.34,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000029/fy26q4earningspressrelease.htm",
-      "sourceName": "SEC Form 8-K"
-    },
-    {
       "symbol": "AMAT",
       "reportDate": "2026-08-20",
       "periodEnd": "2026-07-26",
@@ -2007,18 +2007,33 @@
     },
     {
       "symbol": "INTU",
-      "reportDate": "2026-09-09",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
-      "sourceName": "SEC Form 10-K",
+      "reportDate": "2026-11-19",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+      "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
-      "periodStart": "2025-08-01",
-      "periodEnd": "2026-07-31",
-      "periodType": "annual",
-      "operatingCashFlow": 8838000000,
-      "capitalExpenditure": 175000000,
-      "value": 8663000000
+      "reportedPeriod": {
+        "periodStart": "2026-08-01",
+        "periodEnd": "2026-10-31",
+        "periodType": "quarter",
+        "operatingCashFlow": 1062000000,
+        "capitalExpenditure": 75000000,
+        "value": 987000000
+      },
+      "supportingSources": [
+        {
+          "reportDate": "2026-09-09",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
+          "sourceName": "SEC Form 10-K"
+        }
+      ],
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
+      "periodType": "ttm",
+      "operatingCashFlow": 9263000000,
+      "capitalExpenditure": 212000000,
+      "value": 9051000000
     },
     {
       "symbol": "JNJ",
@@ -3664,13 +3679,68 @@
       "currency": "USD",
       "epsBasis": "share",
       "accounting": "GAAP",
-      "periodEnd": "2026-07-31",
-      "reportDate": "2026-09-09",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
-      "sourceName": "SEC Form 10-K",
-      "periodStart": "2025-08-01",
-      "eps": 16.46,
-      "method": "reported_annual"
+      "method": "sum_reported_quarters",
+      "eps": 17.5,
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
+      "reportDate": "2026-11-19",
+      "sourceName": "SEC Form 10-Q",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+      "supportingSources": [
+        {
+          "reportDate": "2026-08-25",
+          "sourceName": "SEC Form 8-K",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000029/fy26q4earningspressrelease.htm"
+        },
+        {
+          "reportDate": "2026-05-20",
+          "sourceName": "SEC Form 10-Q",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000025/intu-20260430.htm"
+        },
+        {
+          "reportDate": "2026-02-26",
+          "sourceName": "SEC Form 10-Q",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000014/intu-20260131.htm"
+        }
+      ],
+      "quarters": [
+        {
+          "periodStart": "2026-08-01",
+          "periodEnd": "2026-10-31",
+          "quarter": "Q1 FY2027",
+          "eps": 2.59,
+          "reportDate": "2026-11-19",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+          "sourceName": "SEC Form 10-Q"
+        },
+        {
+          "periodStart": "2026-05-01",
+          "periodEnd": "2026-07-31",
+          "quarter": "Q4 FY2026",
+          "eps": 1.34,
+          "reportDate": "2026-08-25",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000029/fy26q4earningspressrelease.htm",
+          "sourceName": "SEC Form 8-K"
+        },
+        {
+          "periodStart": "2026-02-01",
+          "periodEnd": "2026-04-30",
+          "quarter": "Q3 FY2026",
+          "eps": 11.09,
+          "reportDate": "2026-05-20",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000025/intu-20260430.htm",
+          "sourceName": "SEC Form 10-Q"
+        },
+        {
+          "periodStart": "2025-11-01",
+          "periodEnd": "2026-01-31",
+          "quarter": "Q2 FY2026",
+          "eps": 2.48,
+          "reportDate": "2026-02-26",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000014/intu-20260131.htm",
+          "sourceName": "SEC Form 10-Q"
+        }
+      ]
     },
     {
       "symbol": "JNJ",
@@ -9000,29 +9070,49 @@
     },
     {
       "symbol": "INTU",
-      "periodEnd": "2026-07-31",
+      "periodEnd": "2026-10-31",
       "eps": {
         "symbol": "INTU",
         "currency": "USD",
         "epsBasis": "share",
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
-        "periodEnd": "2026-07-31",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
-        "sourceName": "SEC Form 10-K",
-        "reportDate": "2026-09-09",
-        "baseEps": 16.46,
+        "periodEnd": "2026-10-31",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+        "sourceName": "SEC Form 10-Q",
+        "reportDate": "2026-11-19",
+        "baseEps": 17.5,
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
-        "growthRate": 0.227125,
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
+        "growthRate": 0.25,
         "annualChange": null,
         "years": {
-          "2027": 20.2,
-          "2028": 24.79,
-          "2029": 30.42
+          "2027": 20.68,
+          "2028": 25.85,
+          "2029": 32.31
         },
         "supportingSources": [
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-19"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000029/fy26q4earningspressrelease.htm",
+            "sourceName": "SEC Form 8-K",
+            "reportDate": "2026-08-25"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000025/intu-20260430.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-05-20"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000014/intu-20260131.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-02-26"
+          },
           {
             "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
             "sourceName": "SEC Form 10-K",
@@ -9059,16 +9149,22 @@
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
         "reportDate": "2026-09-09",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
         "sourceName": "SEC Form 10-K",
-        "supportingSources": [],
-        "baseValue": 21448000000,
-        "growthRate": 0.14765658023085848,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-19",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+            "sourceName": "SEC Form 10-Q"
+          }
+        ],
+        "baseValue": 21917000000,
+        "growthRate": 0.13897297010249066,
         "method": "annual_revenue_growth",
         "history": [
           {
@@ -9088,24 +9184,36 @@
           }
         ],
         "years": {
-          "2027": 24614938333,
-          "2028": 28249495950,
-          "2029": 32420719915
+          "2027": 24157918116,
+          "2028": 27515215749,
+          "2029": 31339087004
         }
       },
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000037/intu-20260731.htm",
         "reportDate": "2026-09-09",
-        "basePeriodEnd": "2026-07-31",
-        "basePeriodType": "annual",
-        "baseValue": 8663000000,
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "ttm",
+        "baseValue": 9051000000,
+        "supportingSources": [
+          {
+            "reportDate": "2026-11-19",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+            "sourceName": "SEC Form 10-Q"
+          },
+          {
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/896878/000089687826000045/intu-20261031.htm",
+            "sourceName": "SEC Form 10-Q",
+            "reportDate": "2026-11-19"
+          }
+        ],
         "capexBasis": "ppe",
-        "margin": 0.32515532897881155,
+        "margin": 0.36453122659309845,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -9134,9 +9242,9 @@
           }
         ],
         "years": {
-          "2027": 8003678371,
-          "2028": 9185474149,
-          "2029": 10541769850
+          "2027": 8806315523,
+          "2028": 10030155347,
+          "2029": 11424075826
         }
       }
     },
