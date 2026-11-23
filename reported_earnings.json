@@ -1,6 +1,19 @@
 {
-  "updatedAt": "2026-11-21T00:55:59+00:00",
+  "updatedAt": "2026-11-23T22:52:45+00:00",
   "results": [
+    {
+      "symbol": "CRWD",
+      "reportDate": "2026-11-23",
+      "periodEnd": "2026-10-31",
+      "quarter": "Q3 FY2027",
+      "revenue": 1583419000,
+      "eps": 0.02,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000038/crwd-20261031.htm",
+      "sourceName": "SEC Form 10-Q"
+    },
     {
       "symbol": "INTU",
       "reportDate": "2026-11-19",
@@ -977,19 +990,6 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
-      "symbol": "CRWD",
-      "reportDate": "2026-08-27",
-      "periodEnd": "2026-07-31",
-      "quarter": "Q2 FY2027",
-      "revenue": 1470897000,
-      "eps": 0.01,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
       "symbol": "CRM",
       "reportDate": "2026-08-27",
       "periodEnd": "2026-07-31",
@@ -1557,19 +1557,19 @@
     },
     {
       "symbol": "CRWD",
-      "reportDate": "2026-08-27",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
+      "reportDate": "2026-11-23",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000038/crwd-20261031.htm",
       "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
       "reportedPeriod": {
         "periodStart": "2026-02-01",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "periodType": "ytd",
-        "operatingCashFlow": 1121205000,
-        "capitalExpenditure": 222037000,
-        "value": 899168000
+        "operatingCashFlow": 1786381000,
+        "capitalExpenditure": 384793000,
+        "value": 1401588000
       },
       "supportingSources": [
         {
@@ -1578,12 +1578,12 @@
           "sourceName": "SEC Form 10-K"
         }
       ],
-      "periodStart": "2025-08-01",
-      "periodEnd": "2026-07-31",
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
       "periodType": "ttm",
-      "operatingCashFlow": 2016615000,
-      "capitalExpenditure": 407897000,
-      "value": 1608718000
+      "operatingCashFlow": 2284250000,
+      "capitalExpenditure": 487258000,
+      "value": 1796992000
     },
     {
       "symbol": "CSCO",
@@ -7421,26 +7421,26 @@
     },
     {
       "symbol": "CRWD",
-      "periodEnd": "2026-07-31",
+      "periodEnd": "2026-10-31",
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
+        "basePeriodEnd": "2026-10-31",
         "basePeriodType": "ttm",
         "reportDate": "2026-03-05",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm",
         "sourceName": "SEC Form 10-K",
         "supportingSources": [
           {
-            "reportDate": "2026-08-27",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
+            "reportDate": "2026-11-23",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000038/crwd-20261031.htm",
             "sourceName": "SEC Form 10-Q"
           }
         ],
-        "baseValue": 5396145000,
-        "growthRate": 0.26010419413274,
+        "baseValue": 5745320000,
+        "growthRate": 0.26765555916464456,
         "method": "annual_revenue_growth",
         "history": [
           {
@@ -7460,36 +7460,36 @@
           }
         ],
         "years": {
-          "2027": 6063627683,
-          "2028": 7640802675,
-          "2029": 9628207497
+          "2027": 6099964889,
+          "2028": 7732654402,
+          "2029": 9802342340
         }
       },
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000010/crwd-20260131.htm",
         "reportDate": "2026-03-05",
-        "basePeriodEnd": "2026-07-31",
+        "basePeriodEnd": "2026-10-31",
         "basePeriodType": "ttm",
-        "baseValue": 1608718000,
+        "baseValue": 1796992000,
         "supportingSources": [
           {
-            "reportDate": "2026-08-27",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
+            "reportDate": "2026-11-23",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000038/crwd-20261031.htm",
             "sourceName": "SEC Form 10-Q"
           },
           {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000031/crwd-20260731.htm",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000038/crwd-20261031.htm",
             "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-27"
+            "reportDate": "2026-11-23"
           }
         ],
         "capexBasis": "ppe",
-        "margin": 0.2915734390512422,
+        "margin": 0.29889911483590714,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -7518,9 +7518,9 @@
           }
         ],
         "years": {
-          "2027": 1767992777,
-          "2028": 2227855113,
-          "2029": 2807329572
+          "2027": 1823274106,
+          "2028": 2311283556,
+          "2029": 2929911449
         }
       }
     },
