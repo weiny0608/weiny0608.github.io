@@ -1,6 +1,32 @@
 {
-  "updatedAt": "2026-11-23T22:52:45+00:00",
+  "updatedAt": "2026-11-24T21:28:04+00:00",
   "results": [
+    {
+      "symbol": "WDAY",
+      "reportDate": "2026-11-24",
+      "periodEnd": "2026-10-31",
+      "quarter": "Q3 FY2027",
+      "revenue": 2705000000,
+      "eps": 0.96,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000058/wday-20261031.htm",
+      "sourceName": "SEC Form 10-Q"
+    },
+    {
+      "symbol": "ADI",
+      "reportDate": "2026-11-24",
+      "periodEnd": "2026-10-31",
+      "quarter": "Q4 FY2026",
+      "revenue": 4373420000.0,
+      "eps": 3.4,
+      "currency": "USD",
+      "accounting": "GAAP",
+      "epsBasis": "share",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000087/adiq426exhibit991.htm",
+      "sourceName": "SEC Form 8-K"
+    },
     {
       "symbol": "CRWD",
       "reportDate": "2026-11-23",
@@ -977,19 +1003,6 @@
       "sourceName": "SEC Form 10-Q"
     },
     {
-      "symbol": "WDAY",
-      "reportDate": "2026-08-27",
-      "periodEnd": "2026-07-31",
-      "quarter": "Q2 FY2027",
-      "revenue": 2649000000,
-      "eps": 2.57,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
       "symbol": "CRM",
       "reportDate": "2026-08-27",
       "periodEnd": "2026-07-31",
@@ -1026,19 +1039,6 @@
       "accounting": "GAAP",
       "epsBasis": "share",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026058235/amat-20260726.htm",
-      "sourceName": "SEC Form 10-Q"
-    },
-    {
-      "symbol": "ADI",
-      "reportDate": "2026-08-19",
-      "periodEnd": "2026-08-01",
-      "quarter": "Q3 FY2026",
-      "revenue": 4021899000,
-      "eps": 2.74,
-      "currency": "USD",
-      "accounting": "GAAP",
-      "epsBasis": "share",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
       "sourceName": "SEC Form 10-Q"
     },
     {
@@ -1137,33 +1137,18 @@
     },
     {
       "symbol": "ADI",
-      "reportDate": "2026-08-19",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-      "sourceName": "SEC Form 10-Q",
+      "reportDate": "2026-11-24",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
+      "sourceName": "SEC Form 10-K",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
-      "reportedPeriod": {
-        "periodStart": "2025-11-02",
-        "periodEnd": "2026-08-01",
-        "periodType": "ytd",
-        "operatingCashFlow": 3844515000,
-        "capitalExpenditure": 392677000,
-        "value": 3451838000
-      },
-      "supportingSources": [
-        {
-          "reportDate": "2025-11-25",
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
-          "sourceName": "SEC Form 10-K"
-        }
-      ],
-      "periodStart": "2025-08-03",
-      "periodEnd": "2026-08-01",
-      "periodType": "ttm",
-      "operatingCashFlow": 5545325000,
-      "capitalExpenditure": 607830000,
-      "value": 4937495000
+      "periodStart": "2025-11-02",
+      "periodEnd": "2026-10-31",
+      "periodType": "annual",
+      "operatingCashFlow": 6185545000,
+      "capitalExpenditure": 732910000,
+      "value": 5452635000
     },
     {
       "symbol": "AMAT",
@@ -3072,19 +3057,19 @@
     },
     {
       "symbol": "WDAY",
-      "reportDate": "2026-08-27",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
+      "reportDate": "2026-11-24",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000058/wday-20261031.htm",
       "sourceName": "SEC Form 10-Q",
       "currency": "USD",
       "accounting": "GAAP",
       "capexBasis": "ppe",
       "reportedPeriod": {
         "periodStart": "2026-02-01",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "periodType": "ytd",
-        "operatingCashFlow": 1215000000,
-        "capitalExpenditure": 139000000,
-        "value": 1076000000
+        "operatingCashFlow": 1950000000,
+        "capitalExpenditure": 183000000,
+        "value": 1767000000
       },
       "supportingSources": [
         {
@@ -3093,12 +3078,12 @@
           "sourceName": "SEC Form 10-K"
         }
       ],
-      "periodStart": "2025-08-01",
-      "periodEnd": "2026-07-31",
+      "periodStart": "2025-11-01",
+      "periodEnd": "2026-10-31",
       "periodType": "ttm",
-      "operatingCashFlow": 3081000000,
-      "capitalExpenditure": 237000000,
-      "value": 2844000000
+      "operatingCashFlow": 3228000000,
+      "capitalExpenditure": 243000000,
+      "value": 2985000000
     },
     {
       "symbol": "WMT",
@@ -3260,27 +3245,13 @@
       "currency": "USD",
       "epsBasis": "share",
       "accounting": "GAAP",
-      "periodEnd": "2026-08-01",
-      "reportDate": "2026-08-19",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-      "sourceName": "SEC Form 10-Q",
-      "periodStart": "2025-08-03",
-      "eps": 8.4208,
-      "method": "calculated_ttm",
-      "netIncome": 4135004000,
-      "weightedShares": 491048000,
-      "supportingSources": [
-        {
-          "reportDate": "2025-11-25",
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
-          "sourceName": "SEC Form 10-K"
-        },
-        {
-          "reportDate": "2025-08-20",
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000144/adi-20250802.htm",
-          "sourceName": "SEC Form 10-Q"
-        }
-      ]
+      "periodEnd": "2026-10-31",
+      "reportDate": "2026-11-24",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
+      "sourceName": "SEC Form 10-K",
+      "periodStart": "2025-11-02",
+      "eps": 10.21,
+      "method": "reported_annual"
     },
     {
       "symbol": "AMAT",
@@ -5023,93 +4994,82 @@
     },
     {
       "symbol": "ADI",
-      "periodEnd": "2026-08-01",
+      "periodEnd": "2026-10-31",
       "eps": {
         "symbol": "ADI",
         "currency": "USD",
         "epsBasis": "share",
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
-        "periodEnd": "2026-08-01",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-        "sourceName": "SEC Form 10-Q",
-        "reportDate": "2026-08-19",
-        "baseEps": 8.4208,
-        "baseFiscalYear": 2025,
-        "basePeriodEnd": "2026-08-01",
-        "basePeriodType": "ttm",
+        "periodEnd": "2026-10-31",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
+        "sourceName": "SEC Form 10-K",
+        "reportDate": "2026-11-24",
+        "baseEps": 10.21,
+        "baseFiscalYear": 2026,
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "annual",
         "growthRate": 0.25,
         "annualChange": null,
         "years": {
-          "2027": 11.14,
-          "2028": 13.92,
-          "2029": 17.4
+          "2027": 12.76,
+          "2028": 15.95,
+          "2029": 19.94
         },
         "supportingSources": [
           {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-19"
-          },
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
             "sourceName": "SEC Form 10-K",
-            "reportDate": "2025-11-25"
-          },
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000144/adi-20250802.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2025-08-20"
+            "reportDate": "2026-11-24"
           }
         ],
         "history": [
           {
+            "periodStart": "2025-11-02",
+            "periodEnd": "2026-10-31",
+            "eps": 10.21,
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
+            "sourceName": "SEC Form 10-K",
+            "reportDate": "2026-11-24"
+          },
+          {
             "periodStart": "2024-11-03",
             "periodEnd": "2025-11-01",
             "eps": 4.56,
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
             "sourceName": "SEC Form 10-K",
-            "reportDate": "2025-11-25"
+            "reportDate": "2026-11-24"
           },
           {
             "periodStart": "2023-10-29",
             "periodEnd": "2024-11-02",
             "eps": 3.28,
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
             "sourceName": "SEC Form 10-K",
-            "reportDate": "2025-11-25"
-          },
-          {
-            "periodStart": "2022-10-30",
-            "periodEnd": "2023-10-28",
-            "eps": 6.55,
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
-            "sourceName": "SEC Form 10-K",
-            "reportDate": "2025-11-25"
+            "reportDate": "2026-11-24"
           }
         ]
       },
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-08-01",
-        "baseFiscalYear": 2025,
-        "basePeriodEnd": "2026-08-01",
-        "basePeriodType": "ttm",
-        "reportDate": "2025-11-25",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
+        "periodEnd": "2026-10-31",
+        "baseFiscalYear": 2026,
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "annual",
+        "reportDate": "2026-11-24",
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
         "sourceName": "SEC Form 10-K",
-        "supportingSources": [
-          {
-            "reportDate": "2026-08-19",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-            "sourceName": "SEC Form 10-Q"
-          }
-        ],
-        "baseValue": 13881744000,
-        "growthRate": 0.16893216056548122,
+        "supportingSources": [],
+        "baseValue": 15179047000,
+        "growthRate": 0.27318888389267326,
         "method": "annual_revenue_growth",
         "history": [
+          {
+            "periodStart": "2025-11-02",
+            "periodEnd": "2026-10-31",
+            "value": 15179047000
+          },
           {
             "periodStart": "2024-11-03",
             "periodEnd": "2025-11-01",
@@ -5119,46 +5079,37 @@
             "periodStart": "2023-10-29",
             "periodEnd": "2024-11-02",
             "value": 9427157000
-          },
-          {
-            "periodStart": "2022-10-30",
-            "periodEnd": "2023-10-28",
-            "value": 12305539000
           }
         ],
         "years": {
-          "2027": 16879268522,
-          "2028": 19730719823,
-          "2029": 23063872952
+          "2027": 19325793908,
+          "2028": 24605385977,
+          "2029": 31327303909
         }
       },
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-08-01",
-        "baseFiscalYear": 2025,
+        "periodEnd": "2026-10-31",
+        "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
-        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628125000153/adi-20251101.htm",
-        "reportDate": "2025-11-25",
-        "basePeriodEnd": "2026-08-01",
-        "basePeriodType": "ttm",
-        "baseValue": 4937495000,
-        "supportingSources": [
-          {
-            "reportDate": "2026-08-19",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-            "sourceName": "SEC Form 10-Q"
-          },
-          {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000073/adi-20260801.htm",
-            "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-19"
-          }
-        ],
+        "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6281/000000628126000089/adi-20261031.htm",
+        "reportDate": "2026-11-24",
+        "basePeriodEnd": "2026-10-31",
+        "basePeriodType": "annual",
+        "baseValue": 5452635000,
         "capexBasis": "ppe",
-        "margin": 0.3434302541709423,
+        "margin": 0.35922116849628305,
         "method": "annual_fcf_margin",
         "history": [
+          {
+            "periodStart": "2025-11-02",
+            "periodEnd": "2026-10-31",
+            "revenue": 15179047000,
+            "operatingCashFlow": 6185545000,
+            "capitalExpenditure": 732910000,
+            "value": 5452635000
+          },
           {
             "periodStart": "2024-11-03",
             "periodEnd": "2025-11-01",
@@ -5174,20 +5125,12 @@
             "operatingCashFlow": 3852529000,
             "capitalExpenditure": 730463000,
             "value": 3122066000
-          },
-          {
-            "periodStart": "2022-10-30",
-            "periodEnd": "2023-10-28",
-            "revenue": 12305539000,
-            "operatingCashFlow": 4817634000,
-            "capitalExpenditure": 1261463000,
-            "value": 3556171000
           }
         ],
         "years": {
-          "2027": 5796851479,
-          "2028": 6776126124,
-          "2029": 7920831750
+          "2027": 6942234270,
+          "2028": 8838775502,
+          "2029": 11253430716
         }
       }
     },
@@ -15187,14 +15130,14 @@
     },
     {
       "symbol": "WDAY",
-      "periodEnd": "2026-07-31",
+      "periodEnd": "2026-10-31",
       "eps": {
         "symbol": "WDAY",
         "currency": "USD",
         "epsBasis": "share",
         "accounting": "GAAP",
         "method": "historical_diluted_eps_growth",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000014/wday-20260131.htm",
         "sourceName": "SEC Form 10-K",
         "reportDate": "2026-03-06",
@@ -15246,22 +15189,22 @@
       "revenue": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
-        "basePeriodEnd": "2026-07-31",
+        "basePeriodEnd": "2026-10-31",
         "basePeriodType": "ttm",
         "reportDate": "2026-03-06",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000014/wday-20260131.htm",
         "sourceName": "SEC Form 10-K",
         "supportingSources": [
           {
-            "reportDate": "2026-08-27",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
+            "reportDate": "2026-11-24",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000058/wday-20261031.htm",
             "sourceName": "SEC Form 10-Q"
           }
         ],
-        "baseValue": 10155000000,
-        "growthRate": 0.13148159057738074,
+        "baseValue": 10429000000,
+        "growthRate": 0.1309495619228036,
         "method": "annual_revenue_growth",
         "history": [
           {
@@ -15281,36 +15224,36 @@
           }
         ],
         "years": {
-          "2027": 10807912153,
-          "2028": 12228953634,
-          "2029": 13836835909
+          "2027": 10758205382,
+          "2028": 12166987664,
+          "2029": 13760249368
         }
       },
       "fcf": {
         "currency": "USD",
         "accounting": "GAAP",
-        "periodEnd": "2026-07-31",
+        "periodEnd": "2026-10-31",
         "baseFiscalYear": 2026,
         "sourceName": "SEC Form 10-K",
         "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000014/wday-20260131.htm",
         "reportDate": "2026-03-06",
-        "basePeriodEnd": "2026-07-31",
+        "basePeriodEnd": "2026-10-31",
         "basePeriodType": "ttm",
-        "baseValue": 2844000000,
+        "baseValue": 2985000000,
         "supportingSources": [
           {
-            "reportDate": "2026-08-27",
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
+            "reportDate": "2026-11-24",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000058/wday-20261031.htm",
             "sourceName": "SEC Form 10-Q"
           },
           {
-            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000044/wday-20260731.htm",
+            "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1327811/000132781126000058/wday-20261031.htm",
             "sourceName": "SEC Form 10-Q",
-            "reportDate": "2026-08-27"
+            "reportDate": "2026-11-24"
           }
         ],
         "capexBasis": "ppe",
-        "margin": 0.2720725232243659,
+        "margin": 0.2751535382272701,
         "method": "annual_fcf_margin",
         "history": [
           {
@@ -15339,9 +15282,9 @@
           }
         ],
         "years": {
-          "2027": 2940535930,
-          "2028": 3327162272,
-          "2029": 3764622859
+          "2027": 2960158276,
+          "2028": 3347789705,
+          "2029": 3786181300
         }
       }
     },
