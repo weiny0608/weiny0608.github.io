@@ -24,7 +24,8 @@ concurrency:
 jobs:
   update:
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    # Pin a Playwright-supported image instead of the moving ubuntu-latest.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
