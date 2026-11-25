@@ -1,5 +1,5 @@
 {
-  "state": "error",
-  "last_attempt_at": "2026-11-25T06:16:35Z",
-  "message": "Official browser collection failed (Error)"
+  "state": "ok",
+  "last_attempt_at": "2026-11-25T06:18:57Z",
+  "message": "Updated 8 official meetings; data as of 2026-11-23"
 }
