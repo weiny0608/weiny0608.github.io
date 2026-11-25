@@ -193,7 +193,7 @@ def extract_meeting_downloads(hrefs: list[str], today: date) -> dict[date, str]:
     return downloads
 
 
-async def fetch_official_csvs(timeout_seconds: float = 120) -> dict[date, bytes]:
+async def fetch_official_csvs(timeout_seconds: float = 120, *, headless: bool = True) -> dict[date, bytes]:
     try:
         from playwright.async_api import async_playwright, TimeoutError as BrowserTimeout
     except ImportError:
@@ -201,7 +201,7 @@ async def fetch_official_csvs(timeout_seconds: float = 120) -> dict[date, bytes]
 
     async def fetch() -> dict[date, bytes]:
         async with async_playwright() as playwright:
-            browser = await playwright.chromium.launch(headless=True, channel="chromium")
+            browser = await playwright.chromium.launch(headless=headless, channel="chromium")
             try:
                 context = await browser.new_context(accept_downloads=True, locale="en-US")
                 page = await context.new_page()
@@ -251,7 +251,9 @@ async def fetch_official_csvs(timeout_seconds: float = 120) -> dict[date, bytes]
     except Exception as error:
         # Playwright exceptions may contain the entire session-bearing URL.
         # Only expose the exception class, never its raw message or traceback.
-        raise CollectionError(f"Official browser collection failed ({type(error).__name__})") from None
+        detail = re.sub(r"https?://\S+", "[official address]", str(error))
+        detail = re.sub(r"(?i)(insid|qsid)=[^\s&]+", r"\1=[redacted]", detail)
+        raise CollectionError(f"Official browser collection failed ({type(error).__name__}): {detail[:500]}") from None
 
 
 def atomic_write_json(path: Path, value: dict) -> None:
@@ -320,10 +322,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent)
     parser.add_argument("--timeout", type=float, default=120, help="Total collection timeout in seconds (default: 120)")
+    parser.add_argument("--headed", action="store_true", help="Use a regular browser window; on Linux run with xvfb-run")
     arguments = parser.parse_args()
     if not math.isfinite(arguments.timeout) or arguments.timeout <= 0:
         parser.error("--timeout must be a finite positive number")
-    return asyncio.run(update_files(arguments.output_dir, arguments.timeout))
+    async def download(timeout):
+        return await fetch_official_csvs(timeout, headless=not arguments.headed)
+    return asyncio.run(update_files(arguments.output_dir, arguments.timeout, downloader=download))
 
 
 if __name__ == "__main__":

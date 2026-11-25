@@ -6,7 +6,7 @@
 
 `.github/workflows/update-fedwatch.yml` 每天台灣時間 **11:23** 執行，也能在 GitHub Actions 手動選擇 **Run workflow**。GitHub 排程可能延遲；美國週末與假日資料日期可能不變。流程在 GitHub 的標準 Linux 執行環境運行，不依賴個人電腦開機，也不需要 CME API key 或付費 API 訂閱。
 
-1. 用一般 Chromium 瀏覽器正常開啟 CME 官方 FedWatch 頁面，載入內嵌工具。
+1. 在 Linux 虛擬螢幕中用一般 Chromium 瀏覽器正常開啟 CME 官方 FedWatch 頁面，載入內嵌工具。
 2. 進入 Downloads，讀取當次工作階段提供的未來會議 CSV 連結。`insid`／`qsid` 不寫死、不保存到公開資料。
 3. 下載並檢查會議日期、觀察日期、有效機率、區間完整性及機率總和；所有會議通過才更新 `latest.json`。
 4. 從相同官方歷史檔選出上一個可用交易日及一週前或更早的最後可用觀察，附上各自日期。

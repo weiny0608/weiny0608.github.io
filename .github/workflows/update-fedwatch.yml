@@ -43,7 +43,7 @@ jobs:
       - name: Download official historical probabilities
         id: collect
         continue-on-error: true
-        run: python3 -B fedwatch-data/collector.py --output-dir fedwatch-data
+        run: xvfb-run -a python3 -B fedwatch-data/collector.py --output-dir fedwatch-data --headed --timeout 180
       - name: Save the last valid snapshot and collection status
         if: always() && steps.collect.outcome != 'skipped'
         run: |
