@@ -1,0 +1,71 @@
+name: Update official FedWatch history
+
+on:
+  schedule:
+    # 每天台灣時間 11:23；資料日期以 CME 歷史檔為準，週末及假日可能不變。
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-fedwatch.yml'
+      - 'fedwatch-data/collector.py'
+      - 'fedwatch-data/test_collector.py'
+      - 'fedwatch-data/requirements.txt'
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: official-fedwatch-history
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify CSV validation and failure recovery
+        run: python3 -B -m unittest discover -s fedwatch-data -p 'test_*.py'
+      - name: Install the normal browser
+        run: |
+          python3 -m pip install -r fedwatch-data/requirements.txt
+          python3 -m playwright install --with-deps --no-shell chromium
+      - name: Download official historical probabilities
+        id: collect
+        continue-on-error: true
+        run: python3 -B fedwatch-data/collector.py --output-dir fedwatch-data
+      - name: Save the last valid snapshot and collection status
+        if: always() && steps.collect.outcome != 'skipped'
+        run: |
+          for file in fedwatch-data/latest.json fedwatch-data/status.json; do
+            if [ -f "$file" ]; then git add -- "$file"; fi
+          done
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update official FedWatch historical probabilities'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep "$((attempt * 2))"
+          done
+          exit 1
+      - name: Publish the updated snapshot to GitHub Pages
+        if: always() && steps.collect.outcome != 'skipped'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent
+      - name: Report unsuccessful collection
+        if: always() && steps.collect.outcome == 'failure'
+        run: |
+          echo 'Official download failed. The last valid probability snapshot was preserved; see status.json.'
+          exit 1

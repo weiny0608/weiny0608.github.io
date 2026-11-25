@@ -1,0 +1,4534 @@
+{
+  "schema_version": 1,
+  "source": {
+    "name": "CME FedWatch",
+    "url": "https://www.cmegroup.com/cn-t/markets/interest-rates/cme-fedwatch-tool.html"
+  },
+  "retrieved_at": "2026-11-25T06:13:52Z",
+  "data_as_of": "2026-11-23",
+  "meetings": [
+    {
+      "meeting_date": "2026-12-09",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.962963
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.037037
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.114074
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.885926
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.954815
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.045185
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-01-27",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.343813
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.632373
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.023813
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.048587
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.442826
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.508587
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.253203
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.713595
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.033203
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-03-17",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.155698
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.47449
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.356783
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.013029
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.025821
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.258097
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.477773
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.238309
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.081387
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.401186
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.494897
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.02253
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-04-28",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.125671
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.413009
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.379483
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.079325
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.002513
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 775,
+          "upper_bps": 800,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 800,
+          "upper_bps": 825,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 825,
+          "upper_bps": 850,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 850,
+          "upper_bps": 875,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 875,
+          "upper_bps": 900,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.021394
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.218278
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.440114
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.27936
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.040853
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.055227
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.298393
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.464776
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.174363
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.007242
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-06-09",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.095241
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.343432
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.387601
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.152006
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.021112
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.000608
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 775,
+          "upper_bps": 800,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 800,
+          "upper_bps": 825,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 825,
+          "upper_bps": 850,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 850,
+          "upper_bps": 875,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 875,
+          "upper_bps": 900,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 900,
+          "upper_bps": 925,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 925,
+          "upper_bps": 950,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 950,
+          "upper_bps": 975,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 975,
+          "upper_bps": 1000,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1000,
+          "upper_bps": 1025,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.017161
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.179323
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.396223
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.311167
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.088043
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.008083
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.034951
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.209116
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.40369
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.280986
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.068599
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.002659
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-07-28",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.002109
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.100736
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.34441
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.382384
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.149108
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.020658
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.000595
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 775,
+          "upper_bps": 800,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 800,
+          "upper_bps": 825,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 825,
+          "upper_bps": 850,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 850,
+          "upper_bps": 875,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 875,
+          "upper_bps": 900,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 900,
+          "upper_bps": 925,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 925,
+          "upper_bps": 950,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 950,
+          "upper_bps": 975,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 975,
+          "upper_bps": 1000,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1000,
+          "upper_bps": 1025,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1025,
+          "upper_bps": 1050,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1050,
+          "upper_bps": 1075,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1075,
+          "upper_bps": 1100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1100,
+          "upper_bps": 1125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1125,
+          "upper_bps": 1150,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.016781
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.175732
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.39142
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.31305
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.092984
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.009854
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.000179
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.030307
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.185977
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.377839
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.297288
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.096816
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.011419
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.000353
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-09-15",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.002109
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.100736
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.34441
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.382384
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.149108
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.020658
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.000595
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 775,
+          "upper_bps": 800,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 800,
+          "upper_bps": 825,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 825,
+          "upper_bps": 850,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 850,
+          "upper_bps": 875,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 875,
+          "upper_bps": 900,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 900,
+          "upper_bps": 925,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 925,
+          "upper_bps": 950,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 950,
+          "upper_bps": 975,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 975,
+          "upper_bps": 1000,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1000,
+          "upper_bps": 1025,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1025,
+          "upper_bps": 1050,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1050,
+          "upper_bps": 1075,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1075,
+          "upper_bps": 1100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1100,
+          "upper_bps": 1125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1125,
+          "upper_bps": 1150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1150,
+          "upper_bps": 1175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1175,
+          "upper_bps": 1200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1200,
+          "upper_bps": 1225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1225,
+          "upper_bps": 1250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1250,
+          "upper_bps": 1275,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.016446
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.172553
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.387106
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.314617
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.097385
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.011516
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.000372
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 4e-06
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1150,
+            "upper_bps": 1175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1175,
+            "upper_bps": 1200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1200,
+            "upper_bps": 1225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1225,
+            "upper_bps": 1250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1250,
+            "upper_bps": 1275,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.027276
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.17041
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.358653
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.305343
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.116863
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.019959
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.00146
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 3.5e-05
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1150,
+            "upper_bps": 1175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1175,
+            "upper_bps": 1200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1200,
+            "upper_bps": 1225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1225,
+            "upper_bps": 1250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1250,
+            "upper_bps": 1275,
+            "probability": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "meeting_date": "2027-11-17",
+      "as_of": "2026-11-23",
+      "rates": [
+        {
+          "lower_bps": 0,
+          "upper_bps": 25,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 25,
+          "upper_bps": 50,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 50,
+          "upper_bps": 75,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 75,
+          "upper_bps": 100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 100,
+          "upper_bps": 125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 125,
+          "upper_bps": 150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 150,
+          "upper_bps": 175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 175,
+          "upper_bps": 200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 200,
+          "upper_bps": 225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 225,
+          "upper_bps": 250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 250,
+          "upper_bps": 275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 275,
+          "upper_bps": 300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 300,
+          "upper_bps": 325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 325,
+          "upper_bps": 350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 350,
+          "upper_bps": 375,
+          "probability": 0.000584
+        },
+        {
+          "lower_bps": 375,
+          "upper_bps": 400,
+          "probability": 0.029421
+        },
+        {
+          "lower_bps": 400,
+          "upper_bps": 425,
+          "probability": 0.168215
+        },
+        {
+          "lower_bps": 425,
+          "upper_bps": 450,
+          "probability": 0.354926
+        },
+        {
+          "lower_bps": 450,
+          "upper_bps": 475,
+          "probability": 0.317785
+        },
+        {
+          "lower_bps": 475,
+          "upper_bps": 500,
+          "probability": 0.113537
+        },
+        {
+          "lower_bps": 500,
+          "upper_bps": 525,
+          "probability": 0.015102
+        },
+        {
+          "lower_bps": 525,
+          "upper_bps": 550,
+          "probability": 0.00043
+        },
+        {
+          "lower_bps": 550,
+          "upper_bps": 575,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 575,
+          "upper_bps": 600,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 600,
+          "upper_bps": 625,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 625,
+          "upper_bps": 650,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 650,
+          "upper_bps": 675,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 675,
+          "upper_bps": 700,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 700,
+          "upper_bps": 725,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 725,
+          "upper_bps": 750,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 750,
+          "upper_bps": 775,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 775,
+          "upper_bps": 800,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 800,
+          "upper_bps": 825,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 825,
+          "upper_bps": 850,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 850,
+          "upper_bps": 875,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 875,
+          "upper_bps": 900,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 900,
+          "upper_bps": 925,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 925,
+          "upper_bps": 950,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 950,
+          "upper_bps": 975,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 975,
+          "upper_bps": 1000,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1000,
+          "upper_bps": 1025,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1025,
+          "upper_bps": 1050,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1050,
+          "upper_bps": 1075,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1075,
+          "upper_bps": 1100,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1100,
+          "upper_bps": 1125,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1125,
+          "upper_bps": 1150,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1150,
+          "upper_bps": 1175,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1175,
+          "upper_bps": 1200,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1200,
+          "upper_bps": 1225,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1225,
+          "upper_bps": 1250,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1250,
+          "upper_bps": 1275,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1275,
+          "upper_bps": 1300,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1300,
+          "upper_bps": 1325,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1325,
+          "upper_bps": 1350,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1350,
+          "upper_bps": 1375,
+          "probability": 0.0
+        },
+        {
+          "lower_bps": 1375,
+          "upper_bps": 1400,
+          "probability": 0.0
+        }
+      ],
+      "previous_day": {
+        "as_of": "2026-11-20",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.003036
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.045265
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.212163
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.373723
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.274513
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.081533
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.009459
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.000304
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 3e-06
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1150,
+            "upper_bps": 1175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1175,
+            "upper_bps": 1200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1200,
+            "upper_bps": 1225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1225,
+            "upper_bps": 1250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1250,
+            "upper_bps": 1275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1275,
+            "upper_bps": 1300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1300,
+            "upper_bps": 1325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1325,
+            "upper_bps": 1350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1350,
+            "upper_bps": 1375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1375,
+            "upper_bps": 1400,
+            "probability": 0.0
+          }
+        ]
+      },
+      "previous_week": {
+        "as_of": "2026-11-16",
+        "rates": [
+          {
+            "lower_bps": 0,
+            "upper_bps": 25,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 25,
+            "upper_bps": 50,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 50,
+            "upper_bps": 75,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 75,
+            "upper_bps": 100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 100,
+            "upper_bps": 125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 125,
+            "upper_bps": 150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 150,
+            "upper_bps": 175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 175,
+            "upper_bps": 200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 200,
+            "upper_bps": 225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 225,
+            "upper_bps": 250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 250,
+            "upper_bps": 275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 275,
+            "upper_bps": 300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 300,
+            "upper_bps": 325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 325,
+            "upper_bps": 350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 350,
+            "upper_bps": 375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 375,
+            "upper_bps": 400,
+            "probability": 0.003777
+          },
+          {
+            "lower_bps": 400,
+            "upper_bps": 425,
+            "probability": 0.047095
+          },
+          {
+            "lower_bps": 425,
+            "upper_bps": 450,
+            "probability": 0.196475
+          },
+          {
+            "lower_bps": 450,
+            "upper_bps": 475,
+            "probability": 0.351272
+          },
+          {
+            "lower_bps": 475,
+            "upper_bps": 500,
+            "probability": 0.279246
+          },
+          {
+            "lower_bps": 500,
+            "upper_bps": 525,
+            "probability": 0.103446
+          },
+          {
+            "lower_bps": 525,
+            "upper_bps": 550,
+            "probability": 0.017398
+          },
+          {
+            "lower_bps": 550,
+            "upper_bps": 575,
+            "probability": 0.001263
+          },
+          {
+            "lower_bps": 575,
+            "upper_bps": 600,
+            "probability": 3e-05
+          },
+          {
+            "lower_bps": 600,
+            "upper_bps": 625,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 625,
+            "upper_bps": 650,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 650,
+            "upper_bps": 675,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 675,
+            "upper_bps": 700,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 700,
+            "upper_bps": 725,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 725,
+            "upper_bps": 750,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 750,
+            "upper_bps": 775,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 775,
+            "upper_bps": 800,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 800,
+            "upper_bps": 825,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 825,
+            "upper_bps": 850,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 850,
+            "upper_bps": 875,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 875,
+            "upper_bps": 900,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 900,
+            "upper_bps": 925,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 925,
+            "upper_bps": 950,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 950,
+            "upper_bps": 975,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 975,
+            "upper_bps": 1000,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1000,
+            "upper_bps": 1025,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1025,
+            "upper_bps": 1050,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1050,
+            "upper_bps": 1075,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1075,
+            "upper_bps": 1100,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1100,
+            "upper_bps": 1125,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1125,
+            "upper_bps": 1150,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1150,
+            "upper_bps": 1175,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1175,
+            "upper_bps": 1200,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1200,
+            "upper_bps": 1225,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1225,
+            "upper_bps": 1250,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1250,
+            "upper_bps": 1275,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1275,
+            "upper_bps": 1300,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1300,
+            "upper_bps": 1325,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1325,
+            "upper_bps": 1350,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1350,
+            "upper_bps": 1375,
+            "probability": 0.0
+          },
+          {
+            "lower_bps": 1375,
+            "upper_bps": 1400,
+            "probability": 0.0
+          }
+        ]
+      }
+    }
+  ]
+}
