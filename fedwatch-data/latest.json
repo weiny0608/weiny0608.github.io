@@ -4,12 +4,12 @@
     "name": "CME FedWatch",
     "url": "https://www.cmegroup.com/cn-t/markets/interest-rates/cme-fedwatch-tool.html"
   },
-  "retrieved_at": "2026-11-27T12:43:31Z",
-  "data_as_of": "2026-11-25",
+  "retrieved_at": "2026-11-28T11:58:41Z",
+  "data_as_of": "2026-11-27",
   "meetings": [
     {
       "meeting_date": "2026-12-09",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 250,
@@ -39,12 +39,12 @@
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.03
+          "probability": 0.015926
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.97
+          "probability": 0.984074
         },
         {
           "lower_bps": 425,
@@ -68,7 +68,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 250,
@@ -98,17 +98,17 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.03
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.975926
+            "probability": 0.97
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.024074
+            "probability": 0.0
           },
           {
             "lower_bps": 450,
@@ -128,7 +128,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 250,
@@ -158,17 +158,17 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.114074
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.934815
+            "probability": 0.885926
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.065185
+            "probability": 0.0
           },
           {
             "lower_bps": 450,
@@ -190,7 +190,7 @@
     },
     {
       "meeting_date": "2027-01-27",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 125,
@@ -245,17 +245,17 @@
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.0114
+          "probability": 0.00532
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.3872
+          "probability": 0.339359
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.6014
+          "probability": 0.65532
         },
         {
           "lower_bps": 450,
@@ -299,7 +299,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 125,
@@ -354,22 +354,22 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.0114
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.326032
+            "probability": 0.3872
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.657937
+            "probability": 0.6014
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.016032
+            "probability": 0.0
           },
           {
             "lower_bps": 475,
@@ -409,7 +409,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 125,
@@ -464,22 +464,22 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.048587
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.247899
+            "probability": 0.442826
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.704202
+            "probability": 0.508587
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.047899
+            "probability": 0.0
           },
           {
             "lower_bps": 475,
@@ -521,7 +521,7 @@
     },
     {
       "meeting_date": "2027-03-17",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -601,22 +601,22 @@
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.004723
+          "probability": 0.002007
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.167089
+          "probability": 0.131301
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.47594
+          "probability": 0.458522
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.352249
+          "probability": 0.408171
         },
         {
           "lower_bps": 475,
@@ -680,7 +680,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -760,27 +760,27 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.004723
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.129015
+            "probability": 0.167089
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.457371
+            "probability": 0.47594
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.403926
+            "probability": 0.352249
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.009688
+            "probability": 0.0
           },
           {
             "lower_bps": 500,
@@ -840,7 +840,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -920,27 +920,27 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.025821
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.089244
+            "probability": 0.258097
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.412168
+            "probability": 0.477773
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.467933
+            "probability": 0.238309
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.030655
+            "probability": 0.0
           },
           {
             "lower_bps": 500,
@@ -1002,7 +1002,7 @@
     },
     {
       "meeting_date": "2027-04-28",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -1082,27 +1082,27 @@
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.003711
+          "probability": 0.001491
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.132296
+          "probability": 0.098054
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.409758
+          "probability": 0.374379
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.378754
+          "probability": 0.421118
         },
         {
           "lower_bps": 475,
           "upper_bps": 500,
-          "probability": 0.075482
+          "probability": 0.104958
         },
         {
           "lower_bps": 500,
@@ -1186,7 +1186,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -1266,32 +1266,32 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.003711
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.098605
+            "probability": 0.132296
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.379973
+            "probability": 0.409758
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.416524
+            "probability": 0.378754
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.102615
+            "probability": 0.075482
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.002284
+            "probability": 0.0
           },
           {
             "lower_bps": 525,
@@ -1371,7 +1371,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -1451,32 +1451,32 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.021394
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.062471
+            "probability": 0.218278
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.315291
+            "probability": 0.440114
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.451203
+            "probability": 0.27936
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.161839
+            "probability": 0.040853
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.009197
+            "probability": 0.0
           },
           {
             "lower_bps": 525,
@@ -1558,7 +1558,7 @@
     },
     {
       "meeting_date": "2027-06-09",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -1638,32 +1638,32 @@
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.002738
+          "probability": 0.001017
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.098588
+          "probability": 0.06736
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.337023
+          "probability": 0.286547
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.386881
+          "probability": 0.406262
         },
         {
           "lower_bps": 475,
           "upper_bps": 500,
-          "probability": 0.154982
+          "probability": 0.205452
         },
         {
           "lower_bps": 500,
           "upper_bps": 525,
-          "probability": 0.019787
+          "probability": 0.033362
         },
         {
           "lower_bps": 525,
@@ -1767,7 +1767,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -1847,37 +1847,37 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.002738
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.072967
+            "probability": 0.098588
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.306817
+            "probability": 0.337023
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.40702
+            "probability": 0.386881
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.184231
+            "probability": 0.154982
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.02837
+            "probability": 0.019787
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.000594
+            "probability": 0.0
           },
           {
             "lower_bps": 550,
@@ -1977,7 +1977,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -2057,37 +2057,37 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.017161
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.0419
+            "probability": 0.179323
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.232041
+            "probability": 0.396223
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.406449
+            "probability": 0.311167
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.257122
+            "probability": 0.088043
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.059459
+            "probability": 0.008083
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.003028
+            "probability": 0.0
           },
           {
             "lower_bps": 550,
@@ -2189,7 +2189,7 @@
     },
     {
       "meeting_date": "2027-07-28",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -2264,42 +2264,42 @@
         {
           "lower_bps": 350,
           "upper_bps": 375,
-          "probability": 6.1e-05
+          "probability": 0.0
         },
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.00486
+          "probability": 0.000994
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.103868
+          "probability": 0.065891
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.338127
+          "probability": 0.281694
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.381746
+          "probability": 0.403611
         },
         {
           "lower_bps": 475,
           "upper_bps": 500,
-          "probability": 0.151989
+          "probability": 0.209899
         },
         {
           "lower_bps": 500,
           "upper_bps": 525,
-          "probability": 0.019349
+          "probability": 0.037172
         },
         {
           "lower_bps": 525,
           "upper_bps": 550,
-          "probability": 0.0
+          "probability": 0.000739
         },
         {
           "lower_bps": 550,
@@ -2423,7 +2423,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -2498,42 +2498,42 @@
           {
             "lower_bps": 350,
             "upper_bps": 375,
-            "probability": 0.0
+            "probability": 6.1e-05
           },
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.00486
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.072967
+            "probability": 0.103868
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.306817
+            "probability": 0.338127
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.40702
+            "probability": 0.381746
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.184231
+            "probability": 0.151989
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.02837
+            "probability": 0.019349
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.000594
+            "probability": 0.0
           },
           {
             "lower_bps": 550,
@@ -2658,7 +2658,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -2738,42 +2738,42 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.016781
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.037261
+            "probability": 0.175732
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.210989
+            "probability": 0.39142
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.38714
+            "probability": 0.31305
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.273655
+            "probability": 0.092984
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.081344
+            "probability": 0.009854
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.009276
+            "probability": 0.000179
           },
           {
             "lower_bps": 550,
             "upper_bps": 575,
-            "probability": 0.000335
+            "probability": 0.0
           },
           {
             "lower_bps": 575,
@@ -2895,7 +2895,7 @@
     },
     {
       "meeting_date": "2027-09-15",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -2965,47 +2965,47 @@
         {
           "lower_bps": 325,
           "upper_bps": 350,
-          "probability": 2e-06
+          "probability": 0.0
         },
         {
           "lower_bps": 350,
           "upper_bps": 375,
-          "probability": 0.000253
+          "probability": 0.0
         },
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.008821
+          "probability": 0.000994
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.113238
+          "probability": 0.065891
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.339872
+          "probability": 0.281694
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.372556
+          "probability": 0.403611
         },
         {
           "lower_bps": 475,
           "upper_bps": 500,
-          "probability": 0.146683
+          "probability": 0.209899
         },
         {
           "lower_bps": 500,
           "upper_bps": 525,
-          "probability": 0.018575
+          "probability": 0.037172
         },
         {
           "lower_bps": 525,
           "upper_bps": 550,
-          "probability": 0.0
+          "probability": 0.000739
         },
         {
           "lower_bps": 550,
@@ -3154,7 +3154,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -3224,47 +3224,47 @@
           {
             "lower_bps": 325,
             "upper_bps": 350,
-            "probability": 0.0
+            "probability": 2e-06
           },
           {
             "lower_bps": 350,
             "upper_bps": 375,
-            "probability": 0.0
+            "probability": 0.000253
           },
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.001459
+            "probability": 0.008821
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.077644
+            "probability": 0.113238
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.308821
+            "probability": 0.339872
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.402565
+            "probability": 0.372556
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.181114
+            "probability": 0.146683
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.027814
+            "probability": 0.018575
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.000582
+            "probability": 0.0
           },
           {
             "lower_bps": 550,
@@ -3414,7 +3414,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -3494,47 +3494,47 @@
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.0
+            "probability": 0.016446
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.035025
+            "probability": 0.172553
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.200566
+            "probability": 0.387106
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.376571
+            "probability": 0.314617
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.280464
+            "probability": 0.097385
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.092882
+            "probability": 0.011516
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.0136
+            "probability": 0.000372
           },
           {
             "lower_bps": 550,
             "upper_bps": 575,
-            "probability": 0.000872
+            "probability": 4e-06
           },
           {
             "lower_bps": 575,
             "upper_bps": 600,
-            "probability": 2e-05
+            "probability": 0.0
           },
           {
             "lower_bps": 600,
@@ -3676,7 +3676,7 @@
     },
     {
       "meeting_date": "2027-11-17",
-      "as_of": "2026-11-25",
+      "as_of": "2026-11-27",
       "rates": [
         {
           "lower_bps": 0,
@@ -3741,52 +3741,52 @@
         {
           "lower_bps": 300,
           "upper_bps": 325,
-          "probability": 1e-06
+          "probability": 0.0
         },
         {
           "lower_bps": 325,
           "upper_bps": 350,
-          "probability": 7.2e-05
+          "probability": 0.0
         },
         {
           "lower_bps": 350,
           "upper_bps": 375,
-          "probability": 0.002625
+          "probability": 0.000275
         },
         {
           "lower_bps": 375,
           "upper_bps": 400,
-          "probability": 0.037736
+          "probability": 0.018966
         },
         {
           "lower_bps": 400,
           "upper_bps": 425,
-          "probability": 0.175998
+          "probability": 0.125652
         },
         {
           "lower_bps": 425,
           "upper_bps": 450,
-          "probability": 0.348923
+          "probability": 0.315455
         },
         {
           "lower_bps": 450,
           "upper_bps": 475,
-          "probability": 0.310007
+          "probability": 0.349968
         },
         {
           "lower_bps": 475,
           "upper_bps": 500,
-          "probability": 0.111207
+          "probability": 0.162067
         },
         {
           "lower_bps": 500,
           "upper_bps": 525,
-          "probability": 0.013431
+          "probability": 0.027083
         },
         {
           "lower_bps": 525,
           "upper_bps": 550,
-          "probability": 0.0
+          "probability": 0.000534
         },
         {
           "lower_bps": 550,
@@ -3960,7 +3960,7 @@
         }
       ],
       "previous_day": {
-        "as_of": "2026-11-24",
+        "as_of": "2026-11-25",
         "rates": [
           {
             "lower_bps": 0,
@@ -4025,52 +4025,52 @@
           {
             "lower_bps": 300,
             "upper_bps": 325,
-            "probability": 0.0
+            "probability": 1e-06
           },
           {
             "lower_bps": 325,
             "upper_bps": 350,
-            "probability": 0.0
+            "probability": 7.2e-05
           },
           {
             "lower_bps": 350,
             "upper_bps": 375,
-            "probability": 0.000404
+            "probability": 0.002625
           },
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.022557
+            "probability": 0.037736
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.141663
+            "probability": 0.175998
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.334781
+            "probability": 0.348923
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.34124
+            "probability": 0.310007
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.138662
+            "probability": 0.111207
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.020273
+            "probability": 0.013431
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.000421
+            "probability": 0.0
           },
           {
             "lower_bps": 550,
@@ -4245,7 +4245,7 @@
         ]
       },
       "previous_week": {
-        "as_of": "2026-11-18",
+        "as_of": "2026-11-20",
         "rates": [
           {
             "lower_bps": 0,
@@ -4320,52 +4320,52 @@
           {
             "lower_bps": 350,
             "upper_bps": 375,
-            "probability": 0.0
+            "probability": 0.003036
           },
           {
             "lower_bps": 375,
             "upper_bps": 400,
-            "probability": 0.00485
+            "probability": 0.045265
           },
           {
             "lower_bps": 400,
             "upper_bps": 425,
-            "probability": 0.057946
+            "probability": 0.212163
           },
           {
             "lower_bps": 425,
             "upper_bps": 450,
-            "probability": 0.224936
+            "probability": 0.373723
           },
           {
             "lower_bps": 450,
             "upper_bps": 475,
-            "probability": 0.363264
+            "probability": 0.274513
           },
           {
             "lower_bps": 475,
             "upper_bps": 500,
-            "probability": 0.254491
+            "probability": 0.081533
           },
           {
             "lower_bps": 500,
             "upper_bps": 525,
-            "probability": 0.081905
+            "probability": 0.009459
           },
           {
             "lower_bps": 525,
             "upper_bps": 550,
-            "probability": 0.011838
+            "probability": 0.000304
           },
           {
             "lower_bps": 550,
             "upper_bps": 575,
-            "probability": 0.000754
+            "probability": 3e-06
           },
           {
             "lower_bps": 575,
             "upper_bps": 600,
-            "probability": 1.7e-05
+            "probability": 0.0
           },
           {
             "lower_bps": 600,
